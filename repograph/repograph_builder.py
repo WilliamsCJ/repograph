@@ -1,34 +1,23 @@
-import enum
-from neo4j import GraphDatabase
+from types.nodes import NodeABC, Repository
+from typing import Dict, Any
 
-class NodeTypes(enum):
-  PACKAGE = "Package"
-  MODULE = "Module"
-  
+from repograph.neo4j import Neo4JDatabase
+from repograph.repograph import Repograph
 
-class RepographBuilder:
-  database: str
+class RepographBuilder: 
+  repograph: Repograph
   
   def __init__(self, uri, user, password, database) -> None:
-    self.driver = GraphDatabase.driver(uri, auth=(user, password))
-    self.database = database
+    self.repograph = Repograph(uri, user, password, database)
     
-  def build(directory_info):
-    # Create modules
+  def build(directory_info: Dict[str, any]) -> Repograph:
+    # TODO: Create repository node
+    self._create_repository()
     
-  def _create_module():
+    # TODO: For directory node in repository create directory
+      # TODO: For file node in directory node, create file
+    pass
     
-    
-  @staticmethod
-  def _create_and_return_node(tx, name, ):
-      query = (
-        "CREATE (node:Module { name: $name })"
-        "RETURN node"
-      )
-      
-      result = tx.run(
-        query,
-        name=name
-      )
-    
-      return result.single()[0]
+  def _create_repository(self, name):
+    repository = Repository(name=name)
+    self.repograph.create_node(repository)

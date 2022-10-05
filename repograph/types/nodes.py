@@ -1,3 +1,4 @@
+import ast
 import json
 import logging
 from pydantic import BaseModel
@@ -10,6 +11,26 @@ class NodeABC(BaseModel):
     return template
   
 
-class Package(NodeABC):
+class Repository(NodeABC):
+  type: str
+
+
+class Folder(NodeABC):
   name: str
+  path: str
+  
+
+class File(NodeABC):
+  name: str
+  path: str
+  
+  
+class Class(NodeABC):
+  name: str
+  
+  
+class Function(NodeABC):
+  name: str
+  source_code: str
+  ast: ast.AST
   

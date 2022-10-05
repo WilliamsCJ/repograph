@@ -1,5 +1,6 @@
 import click
 from repograph import Repograph
+from repograph.utils import read_json_from_file
 
 @click.command()
 @click.option(
@@ -20,11 +21,19 @@ from repograph import Repograph
 @click.option(
   "--database",
   type=str,
-  help="The database name to use")
+  help="The database name to use.")
+@click.option(
+  "-i",
+  "--input",
+  is_flag=False,
+  help="The directory_info.json file."
+)
 def main(uri, username, password, database):
+  database = Ne
+  builder = RepographBuilder(username, password, database)
+  
   repograph = Repograph(uri, username, password, database)
-  print("Connected")
-  repograph.createModule()
+  
 
 if __name__ == "__main__":
   main()
