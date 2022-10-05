@@ -2,6 +2,7 @@ import ast
 import json
 import logging
 from pydantic import BaseModel
+from typing import Union
 
 class NodeABC(BaseModel):  
   def create_cypher_template(self):
@@ -18,6 +19,7 @@ class Repository(NodeABC):
 class Folder(NodeABC):
   name: str
   path: str
+  parent: Union['Folder', Repository]
   
 
 class File(NodeABC):

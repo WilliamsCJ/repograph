@@ -1,5 +1,6 @@
 import click
-from repograph import Repograph
+import repograph
+from repograph.repograph_builder import RepographBuilder
 from repograph.utils import read_json_from_file
 
 @click.command()
@@ -28,12 +29,10 @@ from repograph.utils import read_json_from_file
   is_flag=False,
   help="The directory_info.json file."
 )
-def main(uri, username, password, database):
-  database = Ne
+def main(uri, username, password, database, input):
   builder = RepographBuilder(username, password, database)
-  
-  repograph = Repograph(uri, username, password, database)
-  
+  directory_info = read_json_from_file(input)
+  repograph = builder.build(directory_info)  
 
 if __name__ == "__main__":
   main()
