@@ -1,14 +1,24 @@
 from unicodedata import name
 import unittest
-from repograph.types.nodes import Package
+from parameterized import parameterized
+from repograph.types.nodes import Folder
 
-class TestPackageNode(unittest.TestCase):
-  def test_attributes(self):
-    package = Package(name="test")
-    assert package.name == "test"
+class TestFolder(unittest.TestCase):
+  
+  @parameterized.expand([
+    ["name", "path", "parent"]
+  ])
+  def test_attributes(self, name, path, parent):
+    package = Folder(name=name, path=path, parent=parent)
+    self.assertEqual(package.name, name)
+    self.assertEqual(package.parent, parent)
+    self.assertEqual(package.path, path)
     
-  def test_create_cypher_template(self):
-    package = Package(name="test")
+  @parameterized.expand([
+    ["name", "path", "parent"]
+  ])
+  def test_create_cypher_template(self, name, path, parent):
+    package = Folder(name=name, path=path, parent=parent)
     template = package.create_cypher_template()
-    assert template == "CREATE (node:Package {name: $name})"
+    self.assertEqual(template, "CREATE (node:Folder {name: $name, parent: $parent, path: $path})")
 

@@ -3,6 +3,8 @@ from typing import Dict, Any
 
 from repograph.neo4j import Neo4JDatabase
 from repograph.repograph import Repograph
+from repograph.types.nodes import Folder, File
+import repograph.utils as utils
 
 ADDITIONAL_KEYS = [
   "requirements",
@@ -37,16 +39,21 @@ class RepographBuilder:
     directories = list(directory_info.keys()).sort()
 
     for directory in directories:
-      # TODO: Strip the first part of the path
-      # 
+      self._parse_directory(directory, directory_info[directory])
     
-    # TODO: For directory node in repository create directory
-      # TODO: For file node in directory node, create file
-    pass
-  
-  def _create_folder(folder_info, parent):
+      
+  def _parse_directory(self, directory_name, directory_info):
+    stripped_path = utils.strip_file_path_prefix(directory_name)
+    folder = Folder(stripped_path)
+    self.repograph.add_node(folder)
     
+    for file in directory_info.values():
+      file = File(file["file"]["fileNameBase"], file["file"]["path"], file["file"]["extension"])
+      self.repograph.add_node(file)
+      self.repograph.add_relationship(folder, file)
+
     
   def _create_repository(self, name):
     repository = Repository(name=name)
     self.repograph.create_node(repository)
+

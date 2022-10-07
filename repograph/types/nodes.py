@@ -1,30 +1,44 @@
+import abc
 import ast
-import json
-import logging
-from pydantic import BaseModel
-from typing import Union
+from py2neo import Node
 
-class NodeABC(BaseModel):  
-  def create_cypher_template(self):
-    attributes = "{" + ",".join([f"{field}: ${field}" for field in self.__fields_set__]) + "}"
-    template = f"CREATE (node:{self.__class__.__name__} {attributes})"
+import repograph.utils as utils
+
+class NodeABC(abc.ABC, Node):
+  def __init__(self, **kwargs) -> None:
+    super().__init__(self.__class__.__name, **kwargs)
     
-    return template
-  
-
-class Repository(NodeABC):
-  type: str
-
 
 class Folder(NodeABC):
   name: str
   path: str
-  parent: Union['Folder', Repository]
+  parent: str
+  
+  def __init__(self, path):
+    self.path = path
+    self.name = utils.get_path_name(path)
+    self.parent = utils.get_path_parent(path)
+    super().__init__( path=self.path, name=self.name, parent=self.parent)
+  
+
+class Repository(NodeABC):
+  type: str
+  
+  def __init__(self, type) -> None:
+    self.type = type
+    super().__init__(type=type)
   
 
 class File(NodeABC):
   name: str
   path: str
+  extension: str
+  
+  def __init__(self, name, path, extension) -> None:
+    self.path = path
+    self.name = name
+    self.extension = extension
+    super().__init__(type=self.type, name=self.name)
   
   
 class Class(NodeABC):
@@ -35,4 +49,6 @@ class Function(NodeABC):
   name: str
   source_code: str
   ast: ast.AST
-  
+
+class Body(NodeABC):
+  pass
