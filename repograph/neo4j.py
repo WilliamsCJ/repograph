@@ -1,10 +1,10 @@
 """
 Neo4J Graph Database related functionality.
 """
+from py2neo import Graph, Subgraph
+from typing import Union
 
-from neo4j import GraphDatabase, Driver
-
-from repograph.types import NodeABC
+from repograph.models import NodeABC, RelationshipABC
 
 class Neo4JDatabase:
   """A connected Neo4J database.
@@ -12,10 +12,10 @@ class Neo4JDatabase:
   Represents a connection to a Neo4J graph database, 
   and provides functionality for interacting with it.
   """
-  driver: Driver
+  graph: Graph
   database: str
   
-  def __init__(self, uri, user, password, database) -> None:
+  def __init__(self, uri: str, user: str, password:str, database: str = "neo4j") -> None:
     """Neo4JDatabase constructor.
 
     Args:
@@ -24,25 +24,14 @@ class Neo4JDatabase:
         password (_type_): _description_
         database (_type_): _description_
     """
-    self.driver = GraphDatabase.driver(uri, auth=(user, password))
+    self.graph = Graph(uri, auth=(user, password), name=database)
     self.database = database
     
-  def create_node(self, node: NodeABC) -> NodeABC:
-    """Creates a node in the database.
-
-    Args:
-        node (NodeABC): The Node to create in the database.
-
-    Returns:
-        NodeABC: The created node.
-    """
-    # TODO: Do we want to return this? Given that it is an argument also?
-    with self.driver.session(database=self.database) as session:
-      def transaction_func(tx, node: NodeABC):
-        query = node.create_cypher_template()
-        result = tx.run(query, node.dict())
-        record = result.single()
-        return record[0]
-      
-      result = session.execute_write(transaction_func, node)
-      return result
+  def add(self, *args: Union[NodeABC, RelationshipABC]):
+    if len(args) == 1:
+      self.graph.create(*args)
+    else:
+      tx = self.graph.begin()
+      for arg in args:
+        tx.create(arg)
+      tx.commit()

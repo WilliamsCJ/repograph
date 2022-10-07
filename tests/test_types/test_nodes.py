@@ -1,7 +1,7 @@
 from unicodedata import name
 import unittest
 from parameterized import parameterized
-from repograph.types.nodes import Folder
+from repograph.models.nodes import Folder
 
 class TestFolder(unittest.TestCase):
   

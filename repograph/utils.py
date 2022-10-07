@@ -2,6 +2,7 @@
 Utility functions.
 """
 import json
+import os
 from pathlib import PurePath
 from typing import Any, Dict
 
@@ -54,3 +55,22 @@ def get_path_parent(file_path: str) -> str:
   """
   pure_path = PurePath(file_path)
   return str(pure_path.parent)
+
+def is_root_folder(file_path: str) -> bool:
+    """Checks file path to see if path represents the root of a repository.
+
+    Args:
+        file_path (str): File path
+
+    Returns:
+        bool: Whether the path represents the root of the repository.
+    """
+    pure_path = PurePath(file_path)
+    return len(pure_path.parts) == 1
+
+def sort_path(x):
+    return int(os.path.splitext(os.path.basename(x))[0])
+
+def get_path_root(file_path: str) -> str:
+    pure_path = PurePath(file_path)
+    return pure_path.parts[0]

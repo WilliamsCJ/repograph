@@ -26,3 +26,21 @@ class TestUtils(unittest.TestCase):
   ])
   def test_get_path_parent(self, original, result):
    self.assertEqual(get_path_parent(original), result)
+   
+  @parameterized.expand([
+    ["a/b/c", False],
+    ["b/c", False],
+    ["b", True],
+    ["c/", True]
+  ])
+  def test_is_root_folder(self, path, result):
+   self.assertEqual(is_root_folder(path), result)
+   
+  @parameterized.expand([
+    ["a/b/c", "a"],
+    ["b/c", "b"],
+    ["b", "b"],
+    ["c/", "c"]
+  ])
+  def test_get_path_root(self, path, result):
+   self.assertEqual(get_path_root(path), result)

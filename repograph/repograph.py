@@ -1,5 +1,3 @@
-from neo4j import GraphDatabase
-
 from repograph.neo4j import Neo4JDatabase
 
 class Repograph(Neo4JDatabase):

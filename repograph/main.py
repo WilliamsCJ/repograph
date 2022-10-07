@@ -1,5 +1,4 @@
 import click
-import repograph
 from repograph.repograph_builder import RepographBuilder
 from repograph.utils import read_json_from_file
 
@@ -29,8 +28,14 @@ from repograph.utils import read_json_from_file
   is_flag=False,
   help="The directory_info.json file."
 )
-def main(uri, username, password, database, input):
-  builder = RepographBuilder(username, password, database)
+@click.option(
+  "--prune",
+  is_flag=True,
+  type=bool,
+  help="Prune any existing nodes and relationships from the database."
+)
+def main(uri, username, password, database, input, prune):
+  builder = RepographBuilder(uri, username, password, database, prune)
   directory_info = read_json_from_file(input)
   repograph = builder.build(directory_info)  
 
