@@ -1,9 +1,11 @@
 repos:
--   repo: https://github.com/PyCQA/flake8
-    hooks:
-    -   id: flake8
-
--   id: unittest
+- repo: https://github.com/PyCQA/flake8
+  rev: 5.0.4
+  hooks:
+  - id: flake8
+- repo: local
+  hooks:
+  - id: unittest
     name: unittest
     entry: python -m unittest 
     language: python
