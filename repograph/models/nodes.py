@@ -16,7 +16,6 @@ class Folder(NodeABC):
     parent: str
 
     def __init__(self, path):
-        print(path)
         self.path = path
         self.name = utils.get_path_name(path)
         self.parent = utils.get_path_parent(path)

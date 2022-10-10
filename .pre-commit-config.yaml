@@ -7,8 +7,17 @@ repos:
   hooks:
   - id: unittest
     name: unittest
-    entry: python -m unittest 
+    entry: python3 -m unittest 
     language: python
     'types': [python]
+    pass_filenames: false
+    additional_dependencies: [parameterized, py2neo, click, neo4j]
+    stages: [commit]
+  - id: reindent
+    name: reindent
+    entry: reindent -r -n repograph tests
+    language: python
+    'types': [python]
+    additional_dependencies: [reindent]
     pass_filenames: false
     stages: [commit]

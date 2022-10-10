@@ -7,5 +7,8 @@
     "test_*.py"
   ],
   "python.testing.pytestEnabled": false,
-  "python.testing.unittestEnabled": true
+  "python.testing.unittestEnabled": true,
+  "editor.tabSize": 4,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false
 }
