@@ -1,10 +1,11 @@
 """
 Neo4J Graph Database related functionality.
 """
-from py2neo import Graph, Subgraph
+from py2neo import Graph
 from typing import Union
 
 from repograph.models import NodeABC, RelationshipABC
+
 
 class Neo4JDatabase:
     """A connected Neo4J database.
@@ -15,7 +16,7 @@ class Neo4JDatabase:
     graph: Graph
     database: str
 
-    def __init__(self, uri: str, user: str, password:str, database: str = "neo4j") -> None:
+    def __init__(self, uri: str, user: str, password: str, database: str = "neo4j") -> None:
         """Neo4JDatabase constructor.
 
         Args:

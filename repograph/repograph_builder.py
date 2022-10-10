@@ -4,7 +4,6 @@ RepographBuilder generates a populated Repograph from inspect4py JSON output.
 import os
 from typing import Dict, Union
 
-from repograph.neo4j import Neo4JDatabase
 from repograph.repograph import Repograph
 from repograph.models.nodes import Folder, File, Repository
 from repograph.models.relationships import Contains
@@ -16,6 +15,7 @@ ADDITIONAL_KEYS = [
   "license",
   "readme_files"
 ]
+
 
 class RepographBuilder:
     repograph: Repograph
@@ -69,7 +69,11 @@ class RepographBuilder:
         self.folders[folder.path] = folder
 
         for file in directory_info:
-            file = File(file["file"]["fileNameBase"], file["file"]["path"], file["file"]["extension"])
+            file = File(
+                file["file"]["fileNameBase"],
+                file["file"]["path"],
+                file["file"]["extension"]
+            )
             relationship = Contains(folder, file)
             self.repograph.add(file)
             self.repograph.add(relationship)
@@ -87,10 +91,14 @@ class RepographBuilder:
         # TODO: Create readme nodes
         self._parse_readme(directory_info.pop("readme_files", None))
 
-        # Create a sorted list of directory paths, as dictionaries are not always sortable in Python.
-        directories = sorted(list(directory_info.keys()), key=lambda file: (os.path.dirname(file), os.path.basename(file)))
+        # Create a sorted list of directory paths, as dictionaries are not
+        # always sortable in Python.
+        directories = sorted(
+            list(directory_info.keys()),
+            key=lambda file: (os.path.dirname(file), os.path.basename(file)))
 
-        # Parse repository root folder if it exists, otherwise manually create the repository node.
+        # Parse repository root folder if it exists, otherwise manually create
+        # the repository node.
         path = utils.strip_file_path_prefix(directories[0])
         print(path)
         if utils.is_root_folder(path):

@@ -1,5 +1,6 @@
 from repograph.neo4j import Neo4JDatabase
 
+
 class Repograph(Neo4JDatabase):
     database: str
 

@@ -4,6 +4,7 @@ from py2neo import Node
 
 import repograph.utils as utils
 
+
 class NodeABC(abc.ABC, Node):
     def __init__(self, **kwargs) -> None:
         super().__init__(self.__class__.__name__, **kwargs)
@@ -19,7 +20,7 @@ class Folder(NodeABC):
         self.path = path
         self.name = utils.get_path_name(path)
         self.parent = utils.get_path_parent(path)
-        super().__init__( path=self.path, name=self.name, parent=self.parent)
+        super().__init__(path=self.path, name=self.name, parent=self.parent)
 
 
 class Repository(NodeABC):
@@ -52,6 +53,7 @@ class Function(NodeABC):
     name: str
     source_code: str
     ast: ast.AST
+
 
 class Body(NodeABC):
     pass

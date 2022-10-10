@@ -2,6 +2,7 @@ import click
 from repograph.repograph_builder import RepographBuilder
 from repograph.utils import read_json_from_file
 
+
 @click.command()
 @click.option(
   '--uri',
@@ -37,7 +38,8 @@ from repograph.utils import read_json_from_file
 def main(uri, username, password, database, input, prune):
     builder = RepographBuilder(uri, username, password, database, prune)
     directory_info = read_json_from_file(input)
-    repograph = builder.build(directory_info)
+    repograph = builder.build(directory_info)  # noqa
+
 
 if __name__ == "__main__":
     main()

@@ -1,10 +1,8 @@
 import abc
-import ast
 from py2neo import Node, Relationship
 from typing import Dict, Set
 
 from repograph.models.nodes import Repository, Folder, File, Function, Class, Body, NodeABC
-import repograph.utils as utils
 
 
 class RelationshipABC(abc.ABC, Relationship):
@@ -33,7 +31,10 @@ class RelationshipABC(abc.ABC, Relationship):
 
 class InvalidRelationshipException(TypeError):
     def __init__(self, parent: NodeABC, child: NodeABC, relationship: str) -> None:
-        message = f"{type(parent)} -> {type(child)} is not a valid not pairing for relationship of type: {relationship}"
+        message = f"""
+          {type(parent)} -> {type(child)} is not a valid
+          pairing for relationship of type: {relationship}
+          """
         super().__init__(message)
 
 
@@ -52,11 +53,12 @@ class Contains(Relationship):
 
     def __init__(self, parent: NodeABC, child: NodeABC):
         # If parent is a Folder Node, child must be another Folder or a File.
-        if (isinstance(parent, Folder) and not(isinstance(child, (Folder, File)))):
+        if (isinstance(parent, Folder) and not (isinstance(child, (Folder, File)))):
             raise InvalidRelationshipException()
 
-        # If parent is a File Node, child must be a Function, Class or Body node.
-        if (isinstance(parent, File) and not(isinstance(child, (Function, Class, Body)))):
+        # If parent is a File Node, child must be a Function,
+        # Class or Body node.
+        if (isinstance(parent, File) and not (isinstance(child, (Function, Class, Body)))):
             raise InvalidRelationshipException
 
         super().__init__(parent, child)
