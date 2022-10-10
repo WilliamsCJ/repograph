@@ -1,9 +1,6 @@
 name: Repograph Python Package Workflow
-on:  
-  push:
-  pull_request:
-    branches:
-      - main
+on: [push]  
+
 jobs:
   lint:
     runs-on: ubuntu-latest
