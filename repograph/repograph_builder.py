@@ -90,10 +90,10 @@ class RepographBuilder:
         """
         for name, info in class_info.items():
             classNode = Class(
-                name=name,
-                min_line_number=info["min_max_lineno"]["min_lineno"],
-                max_line_number=info["min_max_lineno"]["max_lineno"],
-                extends=info.get("extend", [])
+                name,
+                info["min_max_lineno"]["min_lineno"],
+                info["min_max_lineno"]["max_lineno"],
+                info.get("extend", [])
             )
             relationship = Contains(parent, classNode)
             self.repograph.add(classNode)

@@ -61,6 +61,32 @@ class Class(NodeABC):
     max_line_number: int
     extends: List[str]
 
+    def __init__(
+        self,
+        name: str,
+        min_line_number: int,
+        max_line_number: int,
+        extends: List[str]
+    ) -> None:
+        """Class constructor.
+
+        Args:
+            name (str): The class name.
+            min_line_number (int): The first line of the class definition.
+            max_line_number (int): The last line of the class definition.
+            extends (List[str]): A list of other classes/types that the class extends.
+        """
+        self.name = name
+        self.min_line_number = min_line_number
+        self.max_line_number = max_line_number
+        self.extends = extends
+        super().__init__(
+            name=name,
+            min_line_number=min_line_number,
+            max_line_number=max_line_number,
+            extends=extends
+        )
+
 
 class Function(NodeABC):
     name: str
