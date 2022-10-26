@@ -60,7 +60,7 @@ class Contains(Relationship):
         super().__init__(parent, child)
 
 
-class HasMethod(RelationshipABC):
+class HasMethod(Relationship):
     _allowed_types = {
         Class: {Function}
     }
@@ -69,7 +69,7 @@ class HasMethod(RelationshipABC):
         super().__init__(parent, child, **kwargs)
 
 
-class HasArgument(RelationshipABC):
+class HasArgument(Relationship):
     _allowed_types = {
         Function: {Argument}
     }
