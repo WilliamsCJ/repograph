@@ -119,7 +119,7 @@ class RepographBuilder:
                 name,
                 str(Function.FunctionType.FUNCTION),
                 info.get("source_code", ""),
-                None,  # TODO: Figure out how to use AST as a property
+                None,  # TODO: (SH-5) Figure out how to use AST as a property
                 min_lineno,
                 max_lineno
             )
