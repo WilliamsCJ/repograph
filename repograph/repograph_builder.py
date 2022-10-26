@@ -117,9 +117,9 @@ class RepographBuilder:
             min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
             function = Function(
                 name,
-                Function.FunctionType.FUNCTION,
+                str(Function.FunctionType.FUNCTION),
                 info.get("source_code", ""),
-                info.get("ast", []),
+                None,  # TODO: Figure out how to use AST as a property
                 min_lineno,
                 max_lineno
             )
@@ -132,9 +132,11 @@ class RepographBuilder:
             for arg in info.get("args"):
                 if arg_types:
                     type = arg_types.get(arg, "Any")
+                else:
+                    type = "Any"
 
                 argument = Argument(arg, type)
-                relationship = HasArgument(Function, argument)
+                relationship = HasArgument(function, argument)
                 self.repograph.add(argument, relationship)
 
             # Add a call mapping for each call in the call list to a set
