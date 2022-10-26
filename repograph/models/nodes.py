@@ -1,5 +1,6 @@
 import abc
 import ast
+from enum import Enum
 from py2neo import Node
 from typing import List
 
@@ -89,9 +90,54 @@ class Class(NodeABC):
 
 
 class Function(NodeABC):
+    """Node representing a Python function, including methods.
+
+    Extends NodeABC.
+
+    Attributes:
+        name (str): The name of the function or method.
+        type (FunctionType): Whether this is a function or a method.
+        source_code (str): The original source code string.
+        ast (ast.AST): Abstract Syntax Tree extracted from the source code.
+    """
+    class FunctionType(Enum):
+        """Enum for FunctionType.
+
+        Either Method or Function.
+        """
+        METHOD = "Method"
+        FUNCTION = "Function"
+
     name: str
+    type: FunctionType
     source_code: str
     ast: ast.AST
+
+    def __init__(
+        self,
+        name: str,
+        type: FunctionType,
+        source_code: str,
+        ast: ast.AST
+    ) -> None:
+        """Function constructor.
+
+        Args:
+            name (str): The name of the function or method.
+            type (FunctionType): Whether this is a function or a method.
+            source_code (str): The original source code string.
+            ast (ast.AST): Abstract Syntax Tree extracted from the source code.
+        """
+        self.name = name
+        self.type = type
+        self.source_code = source_code
+        self.ast = ast
+        super().__init__(
+            name=name,
+            type=type,
+            source_code=source_code,
+            ast=ast
+        )
 
 
 class Body(NodeABC):

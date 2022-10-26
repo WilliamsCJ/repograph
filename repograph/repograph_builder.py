@@ -80,7 +80,7 @@ class RepographBuilder:
 
             self._parse_classes(file_info.get("classes", {}), file)
 
-    def _parse_classes(self, class_info: Dict, parent: File):
+    def _parse_classes(self, class_info: Dict, parent: File) -> None:
         """Parses class information into Class nodes and
         adds links to parent File node.
 
@@ -98,6 +98,10 @@ class RepographBuilder:
             relationship = Contains(parent, classNode)
             self.repograph.add(classNode)
             self.repograph.add(relationship)
+
+    def _parse_methods(self, methods_info, parent: Class) -> None:
+        for name, info in methods_info.items():
+            pass
 
     def build(self, directory_info: Dict[str, any]) -> Repograph:
         # TODO: Parse requirements to create dependency nodes
