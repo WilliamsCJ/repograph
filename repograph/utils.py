@@ -4,7 +4,10 @@ Utility functions.
 import json
 import os
 from pathlib import PurePath
-from typing import Any, Dict
+from typing import Any, Dict, Optional, Tuple
+
+"JSONDict type hint"
+JSONDict = Dict[str, Any]
 
 
 def read_json_from_file(file_path: str) -> Dict[str, Any]:
@@ -81,3 +84,22 @@ def sort_path(x):
 def get_path_root(file_path: str) -> str:
     pure_path = PurePath(file_path)
     return pure_path.parts[0]
+
+
+def parse_min_max_line_numbers(json: JSONDict) -> Tuple[Optional[int], Optional[int]]:
+    """Retrieve a tuple of minimum and maximum line numbers from
+    the "min_max_lineno" JSON entry.
+
+    Uses .get() to avoid KeyErrors.
+
+    Args:
+        json (JSONDict): The JSON dictionary.
+
+    Returns:
+        Tuple[Optional[int], Optional[int]]: _description_
+    """
+    min_max = json.get("min_max_lineno", None)
+    if not min_max:
+        return None, None
+
+    return min_max.get("min_lineno", None), min_max.get("max_lineno", None)

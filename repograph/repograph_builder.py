@@ -2,11 +2,11 @@
 RepographBuilder generates a populated Repograph from inspect4py JSON output.
 """
 import os
-from typing import Dict, Union
+from typing import Dict, Set, Tuple, Union
 
 from repograph.repograph import Repograph
-from repograph.models.nodes import Class, Folder, File, Repository
-from repograph.models.relationships import Contains
+from repograph.models.nodes import Argument, Class, Folder, File, Function, Repository
+from repograph.models.relationships import Contains, HasArgument, HasMethod
 import repograph.utils as utils
 
 ADDITIONAL_KEYS = [
@@ -20,6 +20,7 @@ ADDITIONAL_KEYS = [
 class RepographBuilder:
     repograph: Repograph
     folders: Dict[str, Union[Repository, Folder]] = {}
+    calls: Set[Tuple[str, str]] = {}
 
     def __init__(self, uri, user, password, database, prune=False) -> None:
         self.repograph = Repograph(uri, user, password, database)
@@ -100,8 +101,41 @@ class RepographBuilder:
             self.repograph.add(relationship)
 
     def _parse_methods(self, methods_info, parent: Class) -> None:
+        """Parses method information for a class
+
+        Args:
+            methods_info (_type_): _description_
+            parent (Class): _description_
+        """
         for name, info in methods_info.items():
-            pass
+            # Create Function node
+            min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
+            function = Function(
+                name,
+                Function.FunctionType.FUNCTION,
+                info.get("source_code", ""),
+                info.get("ast", []),
+                min_lineno,
+                max_lineno
+            )
+            relationship = HasMethod(parent, function)
+            self.repoggraph.add(function)
+            self.repograph.add(relationship)
+
+            # Create argument node for each arugment and add link to Function
+            arg_types = info.get("annoted_arg_types", None)
+            for arg in info.get("args"):
+                if arg_types:
+                    type = arg_types.get(arg, "Any")
+
+                argument = Argument(arg, type)
+                relationship = HasArgument(Function, argument)
+                self.repograph.add(argument, relationship)
+
+            # Add a call mapping for each call in the call list to a set
+            # so call relationships can be created later.
+            for call in info.get("calls", []):
+                self.calls.add((function.name, call))
 
     def build(self, directory_info: Dict[str, any]) -> Repograph:
         # TODO: Parse requirements to create dependency nodes

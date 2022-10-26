@@ -1,7 +1,7 @@
 import unittest
 from parameterized import parameterized
-from repograph.utils import strip_file_path_prefix, get_path_name, get_path_parent, \
-                            is_root_folder, get_path_root
+from repograph.utils import parse_min_max_line_numbers, strip_file_path_prefix, get_path_name, \
+                            get_path_parent, is_root_folder, get_path_root
 
 
 class TestUtils(unittest.TestCase):
@@ -46,3 +46,24 @@ class TestUtils(unittest.TestCase):
     ])
     def test_get_path_root(self, path, result):
         self.assertEqual(get_path_root(path), result)
+
+    @parameterized.expand([
+        [{"min_max_lineno": {"min_lineno": 0, "max_lineno": 1}}, 0, 1],
+        [{"min_max_lineno": {"min_lineno": 0}}, 0, None],
+        [{"min_max_lineno": {"max_lineno": 1}}, None, 1],
+        [{"minmax_lineno": {"min_lineno": 0, "max_lineno": 1}}, None, None],
+        [{}, None, None]
+    ])
+    def test_parse_min_max_line_numbers(self, json, min, max):
+        """Test for parse_min_max_line_numbers.
+
+        Should return None for either min or max if information is missing.
+
+        Args:
+            json (JSONDict): Test JSON
+            min (Optional[int]): Expected min line number
+            max (Optional[int]): Expected max line number
+        """
+        minimum, maximum = parse_min_max_line_numbers(json)
+        self.assertEqual(min, minimum)
+        self.assertEqual(max, maximum)

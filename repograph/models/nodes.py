@@ -1,8 +1,7 @@
 import abc
-import ast
 from enum import Enum
 from py2neo import Node
-from typing import List
+from typing import Any, List
 
 import repograph.utils as utils
 
@@ -99,6 +98,8 @@ class Function(NodeABC):
         type (FunctionType): Whether this is a function or a method.
         source_code (str): The original source code string.
         ast (ast.AST): Abstract Syntax Tree extracted from the source code.
+        min_line_number (int): The first line of the function definition.
+        max_line_number (int): The last line of the function definition.
     """
     class FunctionType(Enum):
         """Enum for FunctionType.
@@ -111,14 +112,18 @@ class Function(NodeABC):
     name: str
     type: FunctionType
     source_code: str
-    ast: ast.AST
+    ast: Any
+    min_line_number: int
+    max_line_number: int
 
     def __init__(
         self,
         name: str,
         type: FunctionType,
         source_code: str,
-        ast: ast.AST
+        ast: Any,
+        min_line_number: int,
+        max_line_number: int
     ) -> None:
         """Function constructor.
 
@@ -132,12 +137,41 @@ class Function(NodeABC):
         self.type = type
         self.source_code = source_code
         self.ast = ast
+        self.min_line_number = min_line_number
+        self.max_line_number = max_line_number
+
         super().__init__(
             name=name,
             type=type,
             source_code=source_code,
-            ast=ast
+            ast=ast,
+            min_line_number=min_line_number,
+            max_line_number=min_line_number,
         )
+
+
+class Argument(NodeABC):
+    """Node representing an argument to a function.
+
+    Extends NodeABC.
+
+    Attributes:
+        name (str): The argument name.
+        type (str): The type of the argument.
+    """
+    name: str
+    type: str
+
+    def __init__(self, name: str, type: str = "Any") -> None:
+        """Argument constructor
+
+        Args:
+            name (str): The argument name.
+            type (str, optional): The type of the argument. Defaults to "Any".
+        """
+        self.name = name
+        self.type = type
+        super().__init__(name=name, type=type)
 
 
 class Body(NodeABC):
