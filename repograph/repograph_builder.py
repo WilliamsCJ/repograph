@@ -124,7 +124,7 @@ class RepographBuilder:
                 max_lineno
             )
             relationship = HasMethod(parent, function)
-            self.repoggraph.add(function)
+            self.repograph.add(function)
             self.repograph.add(relationship)
 
             # Create argument node for each arugment and add link to Function
