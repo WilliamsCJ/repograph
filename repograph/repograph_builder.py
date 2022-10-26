@@ -19,8 +19,8 @@ ADDITIONAL_KEYS = [
 
 class RepographBuilder:
     repograph: Repograph
-    folders: Dict[str, Union[Repository, Folder]] = {}
-    calls: Set[Tuple[str, str]] = {}
+    folders: Dict[str, Union[Repository, Folder]] = dict()
+    calls: Set[Tuple[str, str]] = set()
 
     def __init__(self, uri, user, password, database, prune=False) -> None:
         self.repograph = Repograph(uri, user, password, database)
