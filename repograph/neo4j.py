@@ -1,8 +1,9 @@
 """
 Neo4J Graph Database related functionality.
 """
-from py2neo import Graph
 from typing import Union
+
+from py2neo import Graph
 
 from repograph.models import NodeABC, RelationshipABC
 

@@ -5,7 +5,7 @@ import os
 from typing import Dict, Union
 
 from repograph.repograph import Repograph
-from repograph.models.nodes import Folder, File, Repository
+from repograph.models.nodes import Class, Folder, File, Repository
 from repograph.models.relationships import Contains
 import repograph.utils as utils
 
@@ -68,14 +68,35 @@ class RepographBuilder:
         self._add_parent_relationship(folder)
         self.folders[folder.path] = folder
 
-        for file in directory_info:
+        for file_info in directory_info:
             file = File(
-                file["file"]["fileNameBase"],
-                file["file"]["path"],
-                file["file"]["extension"]
+                file_info["file"]["fileNameBase"],
+                file_info["file"]["path"],
+                file_info["file"]["extension"]
             )
             relationship = Contains(folder, file)
             self.repograph.add(file)
+            self.repograph.add(relationship)
+
+            self._parse_classes(file_info.get("classes", {}), file)
+
+    def _parse_classes(self, class_info: Dict, parent: File):
+        """Parses class information into Class nodes and
+        adds links to parent File node.
+
+        Args:
+            class_info (Dict): Dictionary containing class information.
+            parent (File): Parent Filen node.
+        """
+        for name, info in class_info.items():
+            classNode = Class(
+                name,
+                info["min_max_lineno"]["min_lineno"],
+                info["min_max_lineno"]["max_lineno"],
+                info.get("extend", [])
+            )
+            relationship = Contains(parent, classNode)
+            self.repograph.add(classNode)
             self.repograph.add(relationship)
 
     def build(self, directory_info: Dict[str, any]) -> Repograph:

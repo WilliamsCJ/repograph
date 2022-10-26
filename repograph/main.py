@@ -1,4 +1,5 @@
 import click
+
 from repograph.repograph_builder import RepographBuilder
 from repograph.utils import read_json_from_file
 
