@@ -100,6 +100,11 @@ class RepographBuilder:
             self.repograph.add(classNode)
             self.repograph.add(relationship)
 
+            # Parse method info inside class if available
+            methods_info = info.get("methods", None)
+            if methods_info:
+                self._parse_methods(methods_info, classNode)
+
     def _parse_methods(self, methods_info, parent: Class) -> None:
         """Parses method information for a class
 
