@@ -69,6 +69,15 @@ class HasMethod(Relationship):
         super().__init__(parent, child, **kwargs)
 
 
+class HasFunction(Relationship):
+    _allowed_types = {
+        File: {Function}
+    }
+
+    def __init__(self, parent: Class, child: Function, **kwargs) -> RelationshipABC:
+        super().__init__(parent, child, **kwargs)
+
+
 class HasArgument(Relationship):
     _allowed_types = {
         Function: {Argument}

@@ -2,11 +2,11 @@
 RepographBuilder generates a populated Repograph from inspect4py JSON output.
 """
 import os
-from typing import Dict, Set, Tuple, Union
+from typing import Dict, Set, List, Tuple, Union
 
 from repograph.repograph import Repograph
 from repograph.models.nodes import Argument, Class, Folder, File, Function, Repository
-from repograph.models.relationships import Contains, HasArgument, HasMethod
+from repograph.models.relationships import Contains, HasArgument, HasFunction, HasMethod
 import repograph.utils as utils
 
 ADDITIONAL_KEYS = [
@@ -79,7 +79,42 @@ class RepographBuilder:
             self.repograph.add(file)
             self.repograph.add(relationship)
 
+            self._parse_functions(file_info.get("functions", {}), file)
             self._parse_classes(file_info.get("classes", {}), file)
+
+    def _parse_functions(self, functions_info: utils.JSONDict, parent: File, ) -> None:
+        """Parses function information into Function nodes and adds links
+        to the parent File node.
+
+        Args:
+            functions_info (utils.JSONDict): JSON dictionary containing the functions information.
+            parent (File): Parent file node.
+        """
+        for name, info in functions_info.items():
+            min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
+            function = Function(
+                name,
+                str(Function.FunctionType.FUNCTION),
+                info.get("source_code", ""),
+                None,  # TODO: (SH-5) Figure out how to use AST as a property,
+                min_lineno,
+                max_lineno
+            )
+            relationship = HasFunction(parent, function)
+            self.repograph.add(function)
+            self.repograph.add(relationship)
+
+            # Parse arguments and create Argument nodes
+            self._parse_arguments(
+                info.get("args", []),
+                info.get("annotated_arg_types", {}),
+                function
+            )
+
+            # Add a call mapping for each call in the call list to a set
+            # so call relationships can be created later.
+            for call in info.get("calls", []):
+                self.calls.add((function.name, call))
 
     def _parse_classes(self, class_info: Dict, parent: File) -> None:
         """Parses class information into Class nodes and
@@ -87,13 +122,14 @@ class RepographBuilder:
 
         Args:
             class_info (Dict): Dictionary containing class information.
-            parent (File): Parent Filen node.
+            parent (File): Parent File node.
         """
         for name, info in class_info.items():
+            min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
             classNode = Class(
                 name,
-                info["min_max_lineno"]["min_lineno"],
-                info["min_max_lineno"]["max_lineno"],
+                min_lineno,
+                max_lineno,
                 info.get("extend", [])
             )
             relationship = Contains(parent, classNode)
@@ -117,7 +153,7 @@ class RepographBuilder:
             min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
             function = Function(
                 name,
-                str(Function.FunctionType.FUNCTION),
+                str(Function.FunctionType.METHOD),
                 info.get("source_code", ""),
                 None,  # TODO: (SH-5) Figure out how to use AST as a property
                 min_lineno,
@@ -127,22 +163,41 @@ class RepographBuilder:
             self.repograph.add(function)
             self.repograph.add(relationship)
 
-            # Create argument node for each arugment and add link to Function
-            arg_types = info.get("annoted_arg_types", None)
-            for arg in info.get("args"):
-                if arg_types:
-                    type = arg_types.get(arg, "Any")
-                else:
-                    type = "Any"
-
-                argument = Argument(arg, type)
-                relationship = HasArgument(function, argument)
-                self.repograph.add(argument, relationship)
+            # Parse arguments and create Argument nodes
+            self._parse_arguments(
+                info.get("args", []),
+                info.get("annotated_arg_types", {}),
+                function
+            )
 
             # Add a call mapping for each call in the call list to a set
             # so call relationships can be created later.
             for call in info.get("calls", []):
                 self.calls.add((function.name, call))
+
+    def _parse_arguments(
+        self,
+        args_list: List[str],
+        annotated_arg_types: Dict[str, str],
+        parent: Function
+    ) -> None:
+        """Parse arguments from method information.
+
+        Args:
+            args_list (List[str]): The list of argument names.
+            annotated_arg_types (Dict[str, str]): The annotated argument types.
+            parent (Function): The parent function the arguments belong to.
+        """
+        arg_types = annotated_arg_types
+        for arg in args_list:
+            if arg_types:
+                type = arg_types.get(arg, "Any")
+            else:
+                type = "Any"
+
+            argument = Argument(arg, type)
+            relationship = HasArgument(parent, argument)
+            self.repograph.add(argument, relationship)
 
     def build(self, directory_info: Dict[str, any]) -> Repograph:
         # TODO: Parse requirements to create dependency nodes
