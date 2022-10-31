@@ -3,7 +3,7 @@ from py2neo import Node, Relationship
 from typing import Dict, Set, Union
 
 from repograph.models.nodes import Argument, Body, Class, File, Folder, Function, \
-                                   NodeABC, Repository
+                                   NodeABC, Repository, ReturnValue
 
 
 class RelationshipABC(abc.ABC, Relationship):
@@ -79,9 +79,10 @@ class HasFunction(Relationship):
 
 
 class HasArgument(Relationship):
-    _allowed_types = {
-        Function: {Argument}
-    }
-
     def __init__(self, parent: Function, child: Argument) -> RelationshipABC:
+        super().__init__(parent, child)
+
+
+class Returns(Relationship):
+    def __init__(self, parent: Function, child: ReturnValue) -> Relationship:
         super().__init__(parent, child)

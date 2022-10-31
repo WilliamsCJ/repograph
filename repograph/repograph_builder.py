@@ -5,8 +5,8 @@ import os
 from typing import Dict, Set, List, Tuple, Union
 
 from repograph.repograph import Repograph
-from repograph.models.nodes import Argument, Class, Folder, File, Function, Repository
-from repograph.models.relationships import Contains, HasArgument, HasFunction, HasMethod
+from repograph.models.nodes import Argument, Class, Folder, File, Function, Repository, ReturnValue
+from repograph.models.relationships import Contains, HasArgument, HasFunction, HasMethod, Returns
 import repograph.utils as utils
 
 ADDITIONAL_KEYS = [
@@ -111,6 +111,13 @@ class RepographBuilder:
                 function
             )
 
+            # Parse return values and create ReturnValue nodes
+            self._parse_return_values(
+                info.get("returns", []),
+                info.get("annotated_return_type", {}),
+                function
+            )
+
             # Add a call mapping for each call in the call list to a set
             # so call relationships can be created later.
             for call in info.get("calls", []):
@@ -170,6 +177,13 @@ class RepographBuilder:
                 function
             )
 
+            # Parse return values and create ReturnValue nodes
+            self._parse_return_values(
+                info.get("returns", []),
+                info.get("annotated_return_type", {}),
+                function
+            )
+
             # Add a call mapping for each call in the call list to a set
             # so call relationships can be created later.
             for call in info.get("calls", []):
@@ -198,6 +212,30 @@ class RepographBuilder:
             argument = Argument(arg, type)
             relationship = HasArgument(parent, argument)
             self.repograph.add(argument, relationship)
+
+    def _parse_return_values(
+        self,
+        return_values: List[str],
+        annotated_types: Dict[str, str],
+        parent: Function
+    ) -> None:
+        """Parse return values from function/method information.
+
+        Args:
+            args_list (List[str]): The list of return value names.
+            annotated_arg_types (Dict[str, str]): The annotated return value types.
+            parent (Function): The parent function the return values belong to.
+        """
+        arg_types = annotated_types
+        for arg in return_values:
+            if arg_types:
+                type = arg_types.get(arg, "Any")
+            else:
+                type = "Any"
+
+            return_value = ReturnValue(arg, type)
+            relationship = Returns(parent, return_value)
+            self.repograph.add(return_value, relationship)
 
     def build(self, directory_info: Dict[str, any]) -> Repograph:
         # TODO: Parse requirements to create dependency nodes

@@ -150,28 +150,34 @@ class Function(NodeABC):
         )
 
 
-class Argument(NodeABC):
-    """Node representing an argument to a function.
-
-    Extends NodeABC.
-
-    Attributes:
-        name (str): The argument name.
-        type (str): The type of the argument.
-    """
+class Variable(NodeABC):
     name: str
     type: str
 
     def __init__(self, name: str, type: str = "Any") -> None:
-        """Argument constructor
+        """Constructor
 
         Args:
-            name (str): The argument name.
-            type (str, optional): The type of the argument. Defaults to "Any".
+            name (str): The variable name.
+            type (str, optional): The type of the variable. Defaults to "Any".
         """
         self.name = name
         self.type = type
         super().__init__(name=name, type=type)
+
+
+class Argument(Variable):
+    """Node representing an argument to a function.
+
+    Extends Variable
+    """
+
+
+class ReturnValue(Variable):
+    """Node representing a return value from a function.
+
+    Extends Variable.
+    """
 
 
 class Body(NodeABC):
