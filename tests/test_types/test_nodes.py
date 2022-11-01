@@ -1,6 +1,6 @@
 import unittest
 from parameterized import parameterized
-from repograph.models.nodes import Class, Folder
+from repograph.models.nodes import Class, File, Folder
 
 
 class TestFolder(unittest.TestCase):
@@ -13,6 +13,19 @@ class TestFolder(unittest.TestCase):
         self.assertEqual(package.name, name)
         self.assertEqual(package.parent, parent)
         self.assertEqual(package.path, path)
+
+
+class TestFile(unittest.TestCase):
+
+    @parameterized.expand([
+      ["file.py", "/dir/file.py", ".py", False]
+    ])
+    def test_attributes(self, name, path, extension, is_test):
+        file = File(name, path, extension, is_test)
+        self.assertEqual(file.name, name)
+        self.assertEqual(file.path, path)
+        self.assertEqual(file.extension, extension)
+        self.assertEqual(file.is_test, is_test)
 
 
 class TestClass(unittest.TestCase):
