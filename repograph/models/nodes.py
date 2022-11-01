@@ -34,15 +34,27 @@ class Repository(NodeABC):
 
 
 class File(NodeABC):
+    """Node representing file in a repository.
+
+    Extends NodeABC.
+
+    Attributes:
+       name (str): The file.
+       path (str): The file path within the repository.
+       extension (str): The file extension.
+       is_test (bool): Whether the file has been assessed to be a test file.
+    """
     name: str
     path: str
     extension: str
+    is_test: bool
 
-    def __init__(self, name, path, extension) -> None:
+    def __init__(self, name, path, extension, is_test) -> None:
         self.path = path
         self.name = name
         self.extension = extension
-        super().__init__(name=name, path=path, extension=extension)
+        self.is_test = is_test
+        super().__init__(name=name, path=path, extension=extension, is_test=is_test)
 
 
 class Class(NodeABC):

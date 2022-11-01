@@ -73,7 +73,8 @@ class RepographBuilder:
             file = File(
                 file_info["file"]["fileNameBase"],
                 file_info["file"]["path"],
-                file_info["file"]["extension"]
+                file_info["file"]["extension"],
+                file_info.get("is_test", False)
             )
             relationship = Contains(folder, file)
             self.repograph.add(file)
