@@ -65,7 +65,7 @@ class HasMethod(Relationship):
         Class: {Function}
     }
 
-    def __init__(self, parent: Class, child: Function, **kwargs) -> RelationshipABC:
+    def __init__(self, parent: Class, child: Function, **kwargs) -> None:
         super().__init__(parent, child, **kwargs)
 
 
@@ -74,15 +74,29 @@ class HasFunction(Relationship):
         File: {Function}
     }
 
-    def __init__(self, parent: Class, child: Function, **kwargs) -> RelationshipABC:
+    def __init__(self, parent: Class, child: Function, **kwargs) -> None:
         super().__init__(parent, child, **kwargs)
 
 
 class HasArgument(Relationship):
-    def __init__(self, parent: Function, child: Argument) -> RelationshipABC:
+    def __init__(self, parent: Function, child: Argument) -> None:
         super().__init__(parent, child)
 
 
 class Returns(Relationship):
-    def __init__(self, parent: Function, child: ReturnValue) -> Relationship:
+    def __init__(self, parent: Function, child: ReturnValue) -> None:
+        super().__init__(parent, child)
+
+
+class Calls(Relationship):
+    """
+    Represents the Calls relationship between TODO: Finish
+    """
+    def __init__(self, parent: NodeABC, child: Node) -> None:
+        """Calls constructor.
+
+        Args:
+            parent (NodeABC): TODO: Make this more precise
+            child (Node): The Node being called
+        """
         super().__init__(parent, child)

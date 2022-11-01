@@ -5,8 +5,10 @@ import os
 from typing import Dict, Set, List, Tuple, Union
 
 from repograph.repograph import Repograph
-from repograph.models.nodes import Argument, Class, Folder, File, Function, Repository, ReturnValue
-from repograph.models.relationships import Contains, HasArgument, HasFunction, HasMethod, Returns
+from repograph.models.nodes import Argument, Class, Folder, File, Function, Repository, \
+    ReturnValue, NodeABC
+from repograph.models.relationships import Calls, Contains, HasArgument, HasFunction, \
+    HasMethod, Returns
 import repograph.utils as utils
 
 ADDITIONAL_KEYS = [
@@ -20,7 +22,7 @@ ADDITIONAL_KEYS = [
 class RepographBuilder:
     repograph: Repograph
     folders: Dict[str, Union[Repository, Folder]] = dict()
-    calls: Set[Tuple[str, str]] = set()
+    calls: Set[Tuple[NodeABC, str]] = set()
 
     def __init__(self, uri, user, password, database, prune=False) -> None:
         self.repograph = Repograph(uri, user, password, database)
@@ -122,7 +124,7 @@ class RepographBuilder:
             # Add a call mapping for each call in the call list to a set
             # so call relationships can be created later.
             for call in info.get("calls", []):
-                self.calls.add((function.name, call))
+                self.calls.add((function, call))
 
     def _parse_classes(self, class_info: Dict, parent: File) -> None:
         """Parses class information into Class nodes and
@@ -188,7 +190,7 @@ class RepographBuilder:
             # Add a call mapping for each call in the call list to a set
             # so call relationships can be created later.
             for call in info.get("calls", []):
-                self.calls.add((function.name, call))
+                self.calls.add((function, call))
 
     def _parse_arguments(
         self,
@@ -262,7 +264,6 @@ class RepographBuilder:
         # Parse repository root folder if it exists, otherwise manually create
         # the repository node.
         path = utils.strip_file_path_prefix(directories[0])
-        print(path)
         if utils.is_root_folder(path):
             self._parse_repository(path)
             directories.pop(0)
@@ -271,6 +272,16 @@ class RepographBuilder:
 
         for directory in directories:
             self._parse_directory(directory, directory_info[directory])
+
+        for caller, destination in self.calls:
+            destination_node = self.repograph.find("Function", destination)
+            if destination_node:
+                relationship = Calls(caller, destination_node)
+                self.repograph.add(relationship)
+                print(relationship)
+            else:
+                continue
+                # TODO: Create the node?
 
         # TODO: Calculate name and package
         self._parse_repository_info("test", "package")

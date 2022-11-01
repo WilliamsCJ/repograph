@@ -1,7 +1,7 @@
 """
 Neo4J Graph Database related functionality.
 """
-from typing import Union
+from typing import Optional, Union
 
 from py2neo import Graph
 
@@ -30,6 +30,14 @@ class Neo4JDatabase:
         self.database = database
 
     def add(self, *args: Union[NodeABC, RelationshipABC]):
+        """Adds a node to the Neo4J graph.
+
+        Args:
+            *args: Nodes or relationships to add.
+
+        Returns:
+            None
+        """
         if len(args) == 1:
             self.graph.create(*args)
         else:
@@ -37,3 +45,16 @@ class Neo4JDatabase:
             for arg in args:
                 tx.create(arg)
             tx.commit()
+
+    def find(self, node_type: str, name: str) -> Optional[NodeABC]:
+        """
+
+        Args:
+            node_type:
+            name:
+
+        Returns:
+
+        """
+        result = self.graph.nodes.match(name=name)
+        return result.first()
