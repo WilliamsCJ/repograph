@@ -15,7 +15,7 @@ class TestableRepographBuilder(RepographBuilder):
 
 
 class TestRepographBuilderIntegration(unittest.TestCase):
-    def test_no_errors(self):
+    def test_build_no_errors(self):
         try:
             builder = TestableRepographBuilder(
                 "uri",
