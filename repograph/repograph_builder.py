@@ -115,7 +115,7 @@ class RepographBuilder:
             # Parse return values and create ReturnValue nodes
             self._parse_return_values(
                 info.get("returns", []),
-                info.get("annotated_return_type", {}),
+                info.get("annotated_return_type", "Any"),
                 function
             )
 
@@ -181,7 +181,7 @@ class RepographBuilder:
             # Parse return values and create ReturnValue nodes
             self._parse_return_values(
                 info.get("returns", []),
-                info.get("annotated_return_type", {}),
+                info.get("annotated_return_type", "Any"),
                 function
             )
 
@@ -217,7 +217,7 @@ class RepographBuilder:
     def _parse_return_values(
         self,
         return_values: List[str],
-        annotated_types: Dict[str, str],
+        annotated_type: str,
         parent: Function
     ) -> None:
         """Parse return values from function/method information.
@@ -227,14 +227,16 @@ class RepographBuilder:
             annotated_arg_types (Dict[str, str]): The annotated return value types.
             parent (Function): The parent function the return values belong to.
         """
-        arg_types = annotated_types
-        for arg in return_values:
-            if arg_types:
-                type = arg_types.get(arg, "Any")
-            else:
-                type = "Any"
+        if len(return_values) > 1:
+            return_type = "Any"
+            # TODO: SH-16 Regex extraction?
+        elif len(return_values) == 1:
+            return_type = annotated_type
+        else:
+            return
 
-            return_value = ReturnValue(arg, type)
+        for arg in return_values:
+            return_value = ReturnValue(arg, return_type)
             relationship = Returns(parent, return_value)
             self.repograph.add(return_value, relationship)
 
