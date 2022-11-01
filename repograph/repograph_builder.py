@@ -2,11 +2,11 @@
 RepographBuilder generates a populated Repograph from inspect4py JSON output.
 """
 import os
-from typing import Dict, Union
+from typing import Dict, Set, List, Tuple, Union
 
 from repograph.repograph import Repograph
-from repograph.models.nodes import Class, Folder, File, Repository
-from repograph.models.relationships import Contains
+from repograph.models.nodes import Argument, Class, Folder, File, Function, Repository, ReturnValue
+from repograph.models.relationships import Contains, HasArgument, HasFunction, HasMethod, Returns
 import repograph.utils as utils
 
 ADDITIONAL_KEYS = [
@@ -19,7 +19,8 @@ ADDITIONAL_KEYS = [
 
 class RepographBuilder:
     repograph: Repograph
-    folders: Dict[str, Union[Repository, Folder]] = {}
+    folders: Dict[str, Union[Repository, Folder]] = dict()
+    calls: Set[Tuple[str, str]] = set()
 
     def __init__(self, uri, user, password, database, prune=False) -> None:
         self.repograph = Repograph(uri, user, password, database)
@@ -78,26 +79,163 @@ class RepographBuilder:
             self.repograph.add(file)
             self.repograph.add(relationship)
 
+            self._parse_functions(file_info.get("functions", {}), file)
             self._parse_classes(file_info.get("classes", {}), file)
 
-    def _parse_classes(self, class_info: Dict, parent: File):
+    def _parse_functions(self, functions_info: utils.JSONDict, parent: File, ) -> None:
+        """Parses function information into Function nodes and adds links
+        to the parent File node.
+
+        Args:
+            functions_info (utils.JSONDict): JSON dictionary containing the functions information.
+            parent (File): Parent file node.
+        """
+        for name, info in functions_info.items():
+            min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
+            function = Function(
+                name,
+                str(Function.FunctionType.FUNCTION),
+                info.get("source_code", ""),
+                None,  # TODO: (SH-5) Figure out how to use AST as a property,
+                min_lineno,
+                max_lineno
+            )
+            relationship = HasFunction(parent, function)
+            self.repograph.add(function)
+            self.repograph.add(relationship)
+
+            # Parse arguments and create Argument nodes
+            self._parse_arguments(
+                info.get("args", []),
+                info.get("annotated_arg_types", {}),
+                function
+            )
+
+            # Parse return values and create ReturnValue nodes
+            self._parse_return_values(
+                info.get("returns", []),
+                info.get("annotated_return_type", {}),
+                function
+            )
+
+            # Add a call mapping for each call in the call list to a set
+            # so call relationships can be created later.
+            for call in info.get("calls", []):
+                self.calls.add((function.name, call))
+
+    def _parse_classes(self, class_info: Dict, parent: File) -> None:
         """Parses class information into Class nodes and
         adds links to parent File node.
 
         Args:
             class_info (Dict): Dictionary containing class information.
-            parent (File): Parent Filen node.
+            parent (File): Parent File node.
         """
         for name, info in class_info.items():
+            min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
             classNode = Class(
                 name,
-                info["min_max_lineno"]["min_lineno"],
-                info["min_max_lineno"]["max_lineno"],
+                min_lineno,
+                max_lineno,
                 info.get("extend", [])
             )
             relationship = Contains(parent, classNode)
             self.repograph.add(classNode)
             self.repograph.add(relationship)
+
+            # Parse method info inside class if available
+            methods_info = info.get("methods", None)
+            if methods_info:
+                self._parse_methods(methods_info, classNode)
+
+    def _parse_methods(self, methods_info, parent: Class) -> None:
+        """Parses method information for a class
+
+        Args:
+            methods_info (_type_): _description_
+            parent (Class): _description_
+        """
+        for name, info in methods_info.items():
+            # Create Function node
+            min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
+            function = Function(
+                name,
+                str(Function.FunctionType.METHOD),
+                info.get("source_code", ""),
+                None,  # TODO: (SH-5) Figure out how to use AST as a property
+                min_lineno,
+                max_lineno
+            )
+            relationship = HasMethod(parent, function)
+            self.repograph.add(function)
+            self.repograph.add(relationship)
+
+            # Parse arguments and create Argument nodes
+            self._parse_arguments(
+                info.get("args", []),
+                info.get("annotated_arg_types", {}),
+                function
+            )
+
+            # Parse return values and create ReturnValue nodes
+            self._parse_return_values(
+                info.get("returns", []),
+                info.get("annotated_return_type", {}),
+                function
+            )
+
+            # Add a call mapping for each call in the call list to a set
+            # so call relationships can be created later.
+            for call in info.get("calls", []):
+                self.calls.add((function.name, call))
+
+    def _parse_arguments(
+        self,
+        args_list: List[str],
+        annotated_arg_types: Dict[str, str],
+        parent: Function
+    ) -> None:
+        """Parse arguments from method information.
+
+        Args:
+            args_list (List[str]): The list of argument names.
+            annotated_arg_types (Dict[str, str]): The annotated argument types.
+            parent (Function): The parent function the arguments belong to.
+        """
+        arg_types = annotated_arg_types
+        for arg in args_list:
+            if arg_types:
+                type = arg_types.get(arg, "Any")
+            else:
+                type = "Any"
+
+            argument = Argument(arg, type)
+            relationship = HasArgument(parent, argument)
+            self.repograph.add(argument, relationship)
+
+    def _parse_return_values(
+        self,
+        return_values: List[str],
+        annotated_types: Dict[str, str],
+        parent: Function
+    ) -> None:
+        """Parse return values from function/method information.
+
+        Args:
+            args_list (List[str]): The list of return value names.
+            annotated_arg_types (Dict[str, str]): The annotated return value types.
+            parent (Function): The parent function the return values belong to.
+        """
+        arg_types = annotated_types
+        for arg in return_values:
+            if arg_types:
+                type = arg_types.get(arg, "Any")
+            else:
+                type = "Any"
+
+            return_value = ReturnValue(arg, type)
+            relationship = Returns(parent, return_value)
+            self.repograph.add(return_value, relationship)
 
     def build(self, directory_info: Dict[str, any]) -> Repograph:
         # TODO: Parse requirements to create dependency nodes

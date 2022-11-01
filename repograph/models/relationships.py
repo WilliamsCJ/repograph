@@ -1,8 +1,9 @@
 import abc
 from py2neo import Node, Relationship
-from typing import Dict, Set
+from typing import Dict, Set, Union
 
-from repograph.models.nodes import Repository, Folder, File, Function, Class, Body, NodeABC
+from repograph.models.nodes import Argument, Body, Class, File, Folder, Function, \
+                                   NodeABC, Repository, ReturnValue
 
 
 class RelationshipABC(abc.ABC, Relationship):
@@ -51,14 +52,37 @@ class Contains(Relationship):
       File: {Function, Class, Body}
     }
 
-    def __init__(self, parent: NodeABC, child: NodeABC):
-        # If parent is a Folder Node, child must be another Folder or a File.
-        if (isinstance(parent, Folder) and not (isinstance(child, (Folder, File)))):
-            raise InvalidRelationshipException()
+    def __init__(
+        self,
+        parent: Union[File, Folder, Repository],
+        child: Union[Body, Class, File, Folder, Function]
+    ) -> None:
+        super().__init__(parent, child)
 
-        # If parent is a File Node, child must be a Function,
-        # Class or Body node.
-        if (isinstance(parent, File) and not (isinstance(child, (Function, Class, Body)))):
-            raise InvalidRelationshipException
 
+class HasMethod(Relationship):
+    _allowed_types = {
+        Class: {Function}
+    }
+
+    def __init__(self, parent: Class, child: Function, **kwargs) -> RelationshipABC:
+        super().__init__(parent, child, **kwargs)
+
+
+class HasFunction(Relationship):
+    _allowed_types = {
+        File: {Function}
+    }
+
+    def __init__(self, parent: Class, child: Function, **kwargs) -> RelationshipABC:
+        super().__init__(parent, child, **kwargs)
+
+
+class HasArgument(Relationship):
+    def __init__(self, parent: Function, child: Argument) -> RelationshipABC:
+        super().__init__(parent, child)
+
+
+class Returns(Relationship):
+    def __init__(self, parent: Function, child: ReturnValue) -> Relationship:
         super().__init__(parent, child)
