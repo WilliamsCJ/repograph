@@ -11,7 +11,7 @@ from typing import Any, Dict, Optional, Tuple
 JSONDict = Dict[str, Any]
 
 
-log = logging.getLogger("utils")
+log = logging.getLogger("repograph.utils")
 
 
 def read_json_from_file(file_path: str) -> Dict[str, Any]:

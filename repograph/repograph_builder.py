@@ -17,7 +17,7 @@ ADDITIONAL_KEYS = [
   "readme_files"
 ]
 
-log = logging.getLogger('repograph_builder')
+log = logging.getLogger('repograph.repograph_builder')
 
 
 class RepographBuilder:
@@ -67,6 +67,8 @@ class RepographBuilder:
 
     def _parse_directory(self, directory_name, directory_info):
         directory_path = utils.strip_file_path_prefix(directory_name)
+        log.debug("Parsing directory '%s'", directory_path)
+
         folder = Folder(directory_path)
 
         self._add_parent_relationship(folder)
@@ -239,6 +241,8 @@ class RepographBuilder:
             self.repograph.add(return_value, relationship)
 
     def build(self, directory_info: Dict[str, any]) -> Repograph:
+        log.info("Building Repograph...")
+
         # TODO: Parse requirements to create dependency nodes
         self._parse_requirements(directory_info.pop("requirements", None))
 
@@ -253,6 +257,7 @@ class RepographBuilder:
 
         # Create a sorted list of directory paths, as dictionaries are not
         # always sortable in Python.
+        log.info("Sorting directories with hierarchical ordering...")
         directories = sorted(
             list(directory_info.keys()),
             key=lambda file: (os.path.dirname(file), os.path.basename(file)))
@@ -267,8 +272,11 @@ class RepographBuilder:
         else:
             self._parse_repository(utils.get_path_root(path))
 
+        # Parse each directory
+        log.info("Extracting information from directories...")
         for directory in directories:
             self._parse_directory(directory, directory_info[directory])
 
         # TODO: Calculate name and package
         self._parse_repository_info("test", "package")
+        log.info("Successfully built a Repograph!")
