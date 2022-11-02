@@ -1,7 +1,14 @@
+"""
+Main module.
+"""
+
 import click
 
+from repograph.logging import configure_logging
 from repograph.repograph_builder import RepographBuilder
 from repograph.utils import read_json_from_file
+
+configure_logging()
 
 
 @click.command()

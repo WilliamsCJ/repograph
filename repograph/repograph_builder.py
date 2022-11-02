@@ -1,6 +1,7 @@
 """
 RepographBuilder generates a populated Repograph from inspect4py JSON output.
 """
+import logging
 import os
 from typing import Dict, Set, List, Tuple, Union
 
@@ -15,6 +16,8 @@ ADDITIONAL_KEYS = [
   "license",
   "readme_files"
 ]
+
+log = logging.getLogger('repograph.repograph_builder')
 
 
 class RepographBuilder:
@@ -64,6 +67,8 @@ class RepographBuilder:
 
     def _parse_directory(self, directory_name, directory_info):
         directory_path = utils.strip_file_path_prefix(directory_name)
+        log.debug("Parsing directory '%s'", directory_path)
+
         folder = Folder(directory_path)
 
         self._add_parent_relationship(folder)
@@ -80,29 +85,65 @@ class RepographBuilder:
             self.repograph.add(file)
             self.repograph.add(relationship)
 
-            self._parse_functions(file_info.get("functions", {}), file)
+            self._parse_functions_and_methods(file_info.get("functions", {}), file)
             self._parse_classes(file_info.get("classes", {}), file)
 
-    def _parse_functions(self, functions_info: utils.JSONDict, parent: File, ) -> None:
-        """Parses function information into Function nodes and adds links
-        to the parent File node.
+    def _parse_functions_and_methods(
+            self,
+            functions_info: utils.JSONDict,
+            parent: Union[File, Class],
+            methods: bool = False
+    ) -> None:
+        """Parses function/method information into Function/Method nodes and adds links
+        to the parent File/Class node.
 
         Args:
-            functions_info (utils.JSONDict): JSON dictionary containing the functions information.
-            parent (File): Parent file node.
+            functions_info (utils.JSONDict): JSON dictionary containing the function information.
+            parent (Union[File, Class]): Parent File or Class node.
+            methods (bool): Whether to create Method nodes rather than Function nodes.
         """
         for name, info in functions_info.items():
+            # Get min-max line numbers
             min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
+            if not min_lineno or not max_lineno:
+                log.warning("Missing line number information for function '%s'", name)
+
+            # Serialise the AST
+            ast = info.get("ast")
+            if ast:
+                ast_string = utils.marshall_json_to_string(ast)
+                if not ast:
+                    log.error("Couldn't serialise AST for function %s", name)
+            else:
+                log.warning("AST missing for function %s", name)
+                ast_string = None
+
+            # Check source_code is available
+            source_code = info.get("source_code", None)
+            if not source_code:
+                log.warning("Source code missing for function %s", name)
+
+            # Create Function Node
+            if methods:
+                function_type = str(Function.FunctionType.METHOD)
+            else:
+                function_type = str(Function.FunctionType.FUNCTION)
+
             function = Function(
                 name,
-                str(Function.FunctionType.FUNCTION),
-                info.get("source_code", ""),
-                None,  # TODO: (SH-5) Figure out how to use AST as a property,
+                function_type,
+                source_code,
+                ast_string,
                 min_lineno,
                 max_lineno
             )
-            relationship = HasFunction(parent, function)
             self.repograph.add(function)
+
+            # Create HasFunction Relationship
+            if methods:
+                relationship = HasMethod(parent, function)
+            else:
+                relationship = HasFunction(parent, function)
             self.repograph.add(relationship)
 
             # Parse arguments and create Argument nodes
@@ -147,48 +188,7 @@ class RepographBuilder:
             # Parse method info inside class if available
             methods_info = info.get("methods", None)
             if methods_info:
-                self._parse_methods(methods_info, classNode)
-
-    def _parse_methods(self, methods_info, parent: Class) -> None:
-        """Parses method information for a class
-
-        Args:
-            methods_info (_type_): _description_
-            parent (Class): _description_
-        """
-        for name, info in methods_info.items():
-            # Create Function node
-            min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
-            function = Function(
-                name,
-                str(Function.FunctionType.METHOD),
-                info.get("source_code", ""),
-                None,  # TODO: (SH-5) Figure out how to use AST as a property
-                min_lineno,
-                max_lineno
-            )
-            relationship = HasMethod(parent, function)
-            self.repograph.add(function)
-            self.repograph.add(relationship)
-
-            # Parse arguments and create Argument nodes
-            self._parse_arguments(
-                info.get("args", []),
-                info.get("annotated_arg_types", {}),
-                function
-            )
-
-            # Parse return values and create ReturnValue nodes
-            self._parse_return_values(
-                info.get("returns", []),
-                info.get("annotated_return_type", "Any"),
-                function
-            )
-
-            # Add a call mapping for each call in the call list to a set
-            # so call relationships can be created later.
-            for call in info.get("calls", []):
-                self.calls.add((function.name, call))
+                self._parse_functions_and_methods(methods_info, classNode, methods=True)
 
     def _parse_arguments(
         self,
@@ -241,6 +241,8 @@ class RepographBuilder:
             self.repograph.add(return_value, relationship)
 
     def build(self, directory_info: Dict[str, any]) -> Repograph:
+        log.info("Building Repograph...")
+
         # TODO: Parse requirements to create dependency nodes
         self._parse_requirements(directory_info.pop("requirements", None))
 
@@ -255,6 +257,7 @@ class RepographBuilder:
 
         # Create a sorted list of directory paths, as dictionaries are not
         # always sortable in Python.
+        log.info("Sorting directories with hierarchical ordering...")
         directories = sorted(
             list(directory_info.keys()),
             key=lambda file: (os.path.dirname(file), os.path.basename(file)))
@@ -269,8 +272,11 @@ class RepographBuilder:
         else:
             self._parse_repository(utils.get_path_root(path))
 
+        # Parse each directory
+        log.info("Extracting information from directories...")
         for directory in directories:
             self._parse_directory(directory, directory_info[directory])
 
         # TODO: Calculate name and package
         self._parse_repository_info("test", "package")
+        log.info("Successfully built a Repograph!")
