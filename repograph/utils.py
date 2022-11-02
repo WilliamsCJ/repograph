@@ -2,12 +2,16 @@
 Utility functions.
 """
 import json
+import logging
 import os
 from pathlib import PurePath
 from typing import Any, Dict, Optional, Tuple
 
 "JSONDict type hint"
 JSONDict = Dict[str, Any]
+
+
+log = logging.getLogger("utils")
 
 
 def read_json_from_file(file_path: str) -> Dict[str, Any]:
@@ -103,3 +107,22 @@ def parse_min_max_line_numbers(json: JSONDict) -> Tuple[Optional[int], Optional[
         return None, None
 
     return min_max.get("min_lineno", None), min_max.get("max_lineno", None)
+
+
+def marshall_json_to_string(json_dict: JSONDict) -> Optional[str]:
+    """Serialises a JSONDict to a str.
+
+    Args:
+        json_dict (JSONDict): The JSON to serialise.
+
+    Returns:
+        str, if serialisable. Otherwise None.
+    """
+    if not json_dict:
+        return None
+    else:
+        try:
+            return json.dumps(json_dict)
+        except TypeError:
+            log.error("Couldn't serialise JSON to string.")
+            return None
