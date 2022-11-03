@@ -1,20 +1,26 @@
-import abc
+"""
+Nodes.
+"""
 from enum import Enum
-from py2neo import Node
 from typing import Any, List
 
+from repograph.models.base import Node
 import repograph.utils as utils
 
 
-class NodeABC(abc.ABC, Node):
-    def __init__(self, **kwargs) -> None:
-        super().__init__(self.__class__.__name__, **kwargs)
+class Repository(Node):
+    """Represents a software repository.
+
+    Attributes:
+        name: The name of the repository.
+        type: The inferred repository type.
+    """
+    name: str
+    type: str  # TODO: Is this correct? Invocation?
 
 
-class Package(NodeABC):
-    """Node representing a Python package.
-
-    Extends NodeABC.
+class Package(Node):
+    """Represents a Python package.
 
     Attributes:
         name (str): The name of the package
@@ -24,38 +30,32 @@ class Package(NodeABC):
     name: str
     external: bool
 
-    def __init__(self, name: str, external: bool) -> None:
-        self.name = name
-        self.external = external
-        super().__init__(name=name, external=external)
 
+class Folder(Node):
+    """Represents a folder in a repository.
 
-class Folder(NodeABC):
+    Attributes:
+        name (str): The name of the folder.
+        path (str): The path of the folder.
+        parent (str): The parent directory of the folder.
+    """
     name: str
     path: str
     parent: str
 
     def __init__(self, path):
-        self.path = path
-        self.name = utils.get_path_name(path)
-        self.parent = utils.get_path_parent(path)
-        super().__init__(path=self.path, name=self.name, parent=self.parent)
+        """_summary_
+
+        Args:
+            path (_type_): _description_
+        """
+        name = utils.get_path_name(path)
+        parent = utils.get_path_parent(path)
+        super().__init__(path=path, name=name, parent=parent)
 
 
-class Repository(NodeABC):
-    name: str
-    type: str
-
-    def __init__(self, name, type) -> None:
-        self.name = name
-        self.type = type
-        super().__init__(name=name, type=type)
-
-
-class File(NodeABC):
-    """Node representing file in a repository.
-
-    Extends NodeABC.
+class File(Node):
+    """Represents a File within the repository.
 
     Attributes:
        name (str): The file.
@@ -68,18 +68,9 @@ class File(NodeABC):
     extension: str
     is_test: bool
 
-    def __init__(self, name, path, extension, is_test) -> None:
-        self.path = path
-        self.name = name
-        self.extension = extension
-        self.is_test = is_test
-        super().__init__(name=name, path=path, extension=extension, is_test=is_test)
 
-
-class Class(NodeABC):
-    """Node representing a Python class.
-
-    Extends NodeABC.
+class Class(Node):
+    """Represents a Python class.
 
     Attributes:
         name (str): The class name.
@@ -92,37 +83,9 @@ class Class(NodeABC):
     max_line_number: int
     extends: List[str]
 
-    def __init__(
-        self,
-        name: str,
-        min_line_number: int,
-        max_line_number: int,
-        extends: List[str]
-    ) -> None:
-        """Class constructor.
 
-        Args:
-            name (str): The class name.
-            min_line_number (int): The first line of the class definition.
-            max_line_number (int): The last line of the class definition.
-            extends (List[str]): A list of other classes/types that the class extends.
-        """
-        self.name = name
-        self.min_line_number = min_line_number
-        self.max_line_number = max_line_number
-        self.extends = extends
-        super().__init__(
-            name=name,
-            min_line_number=min_line_number,
-            max_line_number=max_line_number,
-            extends=extends
-        )
-
-
-class Function(NodeABC):
-    """Node representing a Python function, including methods.
-
-    Extends NodeABC.
+class Function(Node):
+    """Represents a Python function or method.
 
     Attributes:
         name (str): The name of the function or method.
@@ -147,69 +110,27 @@ class Function(NodeABC):
     min_line_number: int
     max_line_number: int
 
-    def __init__(
-        self,
-        name: str,
-        type: FunctionType,
-        source_code: str,
-        ast: Any,
-        min_line_number: int,
-        max_line_number: int
-    ) -> None:
-        """Function constructor.
 
-        Args:
-            name (str): The name of the function or method.
-            type (FunctionType): Whether this is a function or a method.
-            source_code (str): The original source code string.
-            ast (ast.AST): Abstract Syntax Tree extracted from the source code.
-        """
-        self.name = name
-        self.type = type
-        self.source_code = source_code
-        self.ast = ast
-        self.min_line_number = min_line_number
-        self.max_line_number = max_line_number
+class Variable(Node):
+    """Represents a Python variable.
 
-        super().__init__(
-            name=name,
-            type=type,
-            source_code=source_code,
-            ast=ast,
-            min_line_number=min_line_number,
-            max_line_number=min_line_number,
-        )
-
-
-class Variable(NodeABC):
+    Attributes:
+        name (str): The variable name
+        type (str): The inferred type of the variable, usually from a type hint.
+    """
     name: str
-    type: str
-
-    def __init__(self, name: str, type: str = "Any") -> None:
-        """Constructor
-
-        Args:
-            name (str): The variable name.
-            type (str, optional): The type of the variable. Defaults to "Any".
-        """
-        self.name = name
-        self.type = type
-        super().__init__(name=name, type=type)
+    type: str = "Any"
 
 
 class Argument(Variable):
     """Node representing an argument to a function.
-
-    Extends Variable
     """
 
 
 class ReturnValue(Variable):
     """Node representing a return value from a function.
-
-    Extends Variable.
     """
 
 
-class Body(NodeABC):
+class Body(Node):
     pass

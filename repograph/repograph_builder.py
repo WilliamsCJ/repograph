@@ -44,7 +44,7 @@ class RepographBuilder:
         Returns:
             Repository: The created Repository node
         """
-        repository = Repository(path, "type")
+        repository = Repository(name=path, type="tbc")  # TODO: Implement type.
         self.repograph.add(repository)
         self.folders[repository.name] = repository
         return repository
@@ -77,7 +77,7 @@ class RepographBuilder:
     def _parse_readme(self, info):
         pass
 
-    def _add_parent_relationship(self, child) -> Folder:
+    def _add_parent_relationship(self, child) -> Optional[Folder]:
         parent = self.folders.get(child.parent, None)
 
         if not parent:
@@ -102,10 +102,10 @@ class RepographBuilder:
 
         for file_info in directory_info:
             file = File(
-                file_info["file"]["fileNameBase"],
-                file_info["file"]["path"],
-                file_info["file"]["extension"],
-                file_info.get("is_test", False)
+                name=file_info["file"]["fileNameBase"],
+                path=file_info["file"]["path"],
+                extension=file_info["file"]["extension"],
+                is_test=file_info.get("is_test", False)
             )
             relationship = Contains(folder, file)
             self.repograph.add(file)
@@ -151,17 +151,17 @@ class RepographBuilder:
 
             # Create Function Node
             if methods:
-                function_type = str(Function.FunctionType.METHOD)
+                function_type = str(Function.FunctionType.METHOD.value)
             else:
-                function_type = str(Function.FunctionType.FUNCTION)
+                function_type = str(Function.FunctionType.FUNCTION.value)
 
             function = Function(
-                name,
-                function_type,
-                source_code,
-                ast_string,
-                min_lineno,
-                max_lineno
+                name=name,
+                type=function_type,
+                source_code=source_code,
+                ast=ast_string,
+                min_line_number=min_lineno,
+                max_line_number=max_lineno
             )
             self.repograph.add(function)
 
@@ -201,20 +201,20 @@ class RepographBuilder:
         """
         for name, info in class_info.items():
             min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
-            classNode = Class(
-                name,
-                min_lineno,
-                max_lineno,
-                info.get("extend", [])
+            class_node = Class(
+                name=name,
+                min_line_number=min_lineno,
+                max_line_number=max_lineno,
+                extends=info.get("extend", [])
             )
-            relationship = Contains(parent, classNode)
-            self.repograph.add(classNode)
+            relationship = Contains(parent, class_node)
+            self.repograph.add(class_node)
             self.repograph.add(relationship)
 
             # Parse method info inside class if available
             methods_info = info.get("methods", None)
             if methods_info:
-                self._parse_functions_and_methods(methods_info, classNode, methods=True)
+                self._parse_functions_and_methods(methods_info, class_node, methods=True)
 
     def _parse_arguments(
         self,
@@ -232,11 +232,11 @@ class RepographBuilder:
         arg_types = annotated_arg_types
         for arg in args_list:
             if arg_types:
-                type = arg_types.get(arg, "Any")
+                arg_type = arg_types.get(arg, "Any")
             else:
-                type = "Any"
+                arg_type = "Any"
 
-            argument = Argument(arg, type)
+            argument = Argument(name=arg, type=arg_type)
             relationship = HasArgument(parent, argument)
             self.repograph.add(argument, relationship)
 
@@ -249,8 +249,8 @@ class RepographBuilder:
         """Parse return values from function/method information.
 
         Args:
-            args_list (List[str]): The list of return value names.
-            annotated_arg_types (Dict[str, str]): The annotated return value types.
+            return_values (List[str]): The list of return value names.
+            annotated_type (Dict[str, str]): The annotated return value types.
             parent (Function): The parent function the return values belong to.
         """
         if len(return_values) > 1:
@@ -261,8 +261,9 @@ class RepographBuilder:
         else:
             return
 
-        for arg in return_values:
-            return_value = ReturnValue(arg, return_type)
+        # https://stackoverflow.com/questions/952914/how-do-i-make-a-flat-list-out-of-a-list-of-lists
+        for arg in [item for sublist in return_values for item in sublist]:
+            return_value = ReturnValue(name=arg, type=return_type)
             relationship = Returns(parent, return_value)
             self.repograph.add(return_value, relationship)
 
@@ -300,3 +301,4 @@ class RepographBuilder:
             self._parse_directory(directory, directory_info[directory])
 
         log.info("Successfully built a Repograph!")
+        return self.repograph
