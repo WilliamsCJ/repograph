@@ -3,12 +3,15 @@ RepographBuilder generates a populated Repograph from inspect4py JSON output.
 """
 import logging
 import os
-from typing import Dict, Set, List, Tuple, Union
+from typing import Dict, Set, List, Optional, Tuple, Union
 
 from repograph.repograph import Repograph
-from repograph.models.nodes import Argument, Class, Folder, File, Function, Repository, ReturnValue
-from repograph.models.relationships import Contains, HasArgument, HasFunction, HasMethod, Returns
+from repograph.models.nodes import Argument, Class, Folder, File, \
+                                   Function, Package, Repository, ReturnValue
+from repograph.models.relationships import Contains, HasArgument, HasFunction, \
+                                           HasMethod, Returns, Requires
 import repograph.utils as utils
+from repograph.utils import JSONDict
 
 ADDITIONAL_KEYS = [
   "requirements",
@@ -31,16 +34,39 @@ class RepographBuilder:
         if prune:
             self.repograph.graph.delete_all()
 
-    def _parse_repository(self, path):
+    def _parse_repository(self, path: str) -> Repository:
+        """Parses information about the repository, i.e. the root,
+        itself.
+
+        Args:
+            path (str): The path of the repository.
+
+        Returns:
+            Repository: The created Repository node
+        """
         repository = Repository(path, "type")
         self.repograph.add(repository)
         self.folders[repository.name] = repository
+        return repository
 
-    def _parse_repository_info(self, name, type):
-        pass
+    def _parse_requirements(self, requirements: Optional[JSONDict], repository: Repository) -> None:
+        """Parses information extracted from the requirements.txt file.
 
-    def _parse_requirements(self, info):
-        pass
+        Args:
+            requirements (Optional[JSONDict]): The JSON describing the requirements.
+                                               May be None if not found.
+            repository (Repository): The parent Repository node for any created
+                                     Package nodes.
+        """
+        if not requirements:
+            log.warning("No requirements information found.")
+        else:
+            log.info("Parsing requirements information...")
+            for requirement, version in requirements.items():
+                package = Package(name=requirement, external=True)
+                self.repograph.add(package)
+                relationship = Requires(repository, package, version=version)
+                self.repograph.add(package, relationship)
 
     def _parse_directory_tree(self, info):
         pass
@@ -243,17 +269,11 @@ class RepographBuilder:
     def build(self, directory_info: Dict[str, any]) -> Repograph:
         log.info("Building Repograph...")
 
-        # TODO: Parse requirements to create dependency nodes
-        self._parse_requirements(directory_info.pop("requirements", None))
-
-        # TODO: Parse directory for an unknown reason
-        self._parse_directory_tree(directory_info.pop("directory_tree", None))
-
-        # TODO: Create license node
-        self._parse_license(directory_info.pop("license", None))
-
-        # TODO: Create readme nodes
-        self._parse_readme(directory_info.pop("readme_files", None))
+        # Pop off non-directory entries from the JSON, for parsing later
+        requirements = directory_info.pop("requirements", None)
+        _ = directory_info.pop("directory_tree", None)
+        _ = directory_info.pop("license", None)
+        _ = directory_info.pop("readme_files", None)
 
         # Create a sorted list of directory paths, as dictionaries are not
         # always sortable in Python.
@@ -265,18 +285,18 @@ class RepographBuilder:
         # Parse repository root folder if it exists, otherwise manually create
         # the repository node.
         path = utils.strip_file_path_prefix(directories[0])
-        print(path)
         if utils.is_root_folder(path):
-            self._parse_repository(path)
+            repository = self._parse_repository(path)
             directories.pop(0)
         else:
-            self._parse_repository(utils.get_path_root(path))
+            repository = self._parse_repository(utils.get_path_root(path))
+
+        # Parse requirements
+        self._parse_requirements(requirements, repository)
 
         # Parse each directory
         log.info("Extracting information from directories...")
         for directory in directories:
             self._parse_directory(directory, directory_info[directory])
 
-        # TODO: Calculate name and package
-        self._parse_repository_info("test", "package")
         log.info("Successfully built a Repograph!")

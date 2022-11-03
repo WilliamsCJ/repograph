@@ -11,6 +11,25 @@ class NodeABC(abc.ABC, Node):
         super().__init__(self.__class__.__name__, **kwargs)
 
 
+class Package(NodeABC):
+    """Node representing a Python package.
+
+    Extends NodeABC.
+
+    Attributes:
+        name (str): The name of the package
+        external (bool): Whether this package is external to the parent repository
+                         (i.e. installed from PyPi).
+    """
+    name: str
+    external: bool
+
+    def __init__(self, name: str, external: bool) -> None:
+        self.name = name
+        self.external = external
+        super().__init__(name=name, external=external)
+
+
 class Folder(NodeABC):
     name: str
     path: str

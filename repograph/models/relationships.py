@@ -3,7 +3,7 @@ from py2neo import Node, Relationship
 from typing import Dict, Set, Union
 
 from repograph.models.nodes import Argument, Body, Class, File, Folder, Function, \
-                                   NodeABC, Repository, ReturnValue
+                                   NodeABC, Repository, ReturnValue, Package
 
 
 class RelationshipABC(abc.ABC, Relationship):
@@ -37,6 +37,13 @@ class InvalidRelationshipException(TypeError):
           pairing for relationship of type: {relationship}
           """
         super().__init__(message)
+
+
+class Requires(Relationship):
+    version: str
+
+    def __init__(self, parent: Repository, child: Package, version=None):
+        super().__init__(parent, child, version=version)
 
 
 class Contains(Relationship):
