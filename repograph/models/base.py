@@ -107,10 +107,10 @@ class Relationship(BaseSubgraph):
                                           the mappings in _allowed_types.
         """
         if self._allowed_types and (type(child) not in self._allowed_types.get(type(parent), set())):  # noqa: E501
-            raise InvalidRelationshipException(parent, child, self.__class__.__name)
+            raise InvalidRelationshipException(parent, child, self)
 
         super().__init__(
-            py2neo.Relationship(parent, self.__class__.__name, child, **data),
+            py2neo.Relationship(parent._subgraph, self.__class__.__name__, child._subgraph, **data),
             parent=parent, child=child,
             **data
         )
