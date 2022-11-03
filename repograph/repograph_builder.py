@@ -265,7 +265,6 @@ class RepographBuilder:
         # Parse repository root folder if it exists, otherwise manually create
         # the repository node.
         path = utils.strip_file_path_prefix(directories[0])
-        print(path)
         if utils.is_root_folder(path):
             self._parse_repository(path)
             directories.pop(0)
