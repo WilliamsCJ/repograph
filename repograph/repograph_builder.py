@@ -77,7 +77,7 @@ class RepographBuilder:
     def _parse_readme(self, info):
         pass
 
-    def _add_parent_relationship(self, child) -> Folder:
+    def _add_parent_relationship(self, child) -> Optional[Folder]:
         parent = self.folders.get(child.parent, None)
 
         if not parent:
@@ -249,8 +249,8 @@ class RepographBuilder:
         """Parse return values from function/method information.
 
         Args:
-            args_list (List[str]): The list of return value names.
-            annotated_arg_types (Dict[str, str]): The annotated return value types.
+            return_values (List[str]): The list of return value names.
+            annotated_type (Dict[str, str]): The annotated return value types.
             parent (Function): The parent function the return values belong to.
         """
         if len(return_values) > 1:
@@ -301,3 +301,4 @@ class RepographBuilder:
             self._parse_directory(directory, directory_info[directory])
 
         log.info("Successfully built a Repograph!")
+        return self.repograph

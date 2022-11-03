@@ -30,5 +30,5 @@ class Neo4JDatabase:
     def add(self, *args: BaseSubgraph):
         tx = self.graph.begin()
         for arg in args:
-            tx.create(arg._node)
+            tx.create(arg._subgraph)
         tx.commit()
