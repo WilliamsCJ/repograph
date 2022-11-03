@@ -1,11 +1,9 @@
 """
 Neo4J Graph Database related functionality.
 """
-from typing import Union
-
 from py2neo import Graph
 
-from repograph.models import NodeABC, RelationshipABC
+from repograph.models.base import BaseSubgraph
 
 
 class Neo4JDatabase:
@@ -29,11 +27,8 @@ class Neo4JDatabase:
         self.graph = Graph(uri, auth=(user, password), name=database)
         self.database = database
 
-    def add(self, *args: Union[NodeABC, RelationshipABC]):
-        if len(args) == 1:
-            self.graph.create(*args)
-        else:
-            tx = self.graph.begin()
-            for arg in args:
-                tx.create(arg)
-            tx.commit()
+    def add(self, *args: BaseSubgraph):
+        tx = self.graph.begin()
+        for arg in args:
+            tx.create(arg._node)
+        tx.commit()

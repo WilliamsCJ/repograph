@@ -1,49 +1,25 @@
-import abc
-from py2neo import Node, Relationship
-from typing import Dict, Set, Union
-
-from repograph.models.nodes import Argument, Body, Class, File, Folder, Function, \
-                                   NodeABC, Repository, ReturnValue, Package
-
-
-class RelationshipABC(abc.ABC, Relationship):
-    """Abstract Base Class for Relationships.
-
-    Extends the Relationship class from py2neo
-    """
-    _allowed_types: Dict[Node, Set[Node]]
-
-    def __init__(self, parent, child, **kwargs) -> "RelationshipABC":
-        """RelationshipABC constructor.
-
-        Args:
-          **kwargs: Keyword arguments
-
-        Returns:
-          RelationshipABC: An instance of a RelationshipABC subclass.
-        """
-        allowed_types = self._allowed_types(type(parent))
-
-        if not allowed_types or type(child) not in allowed_types:
-            raise InvalidRelationshipException(parent, child, self.__class__.__name)
-
-        Relationship.__init__(parent, self.__class__.__name, child, **kwargs)
-
-
-class InvalidRelationshipException(TypeError):
-    def __init__(self, parent: NodeABC, child: NodeABC, relationship: str) -> None:
-        message = f"""
-          {type(parent)} -> {type(child)} is not a valid
-          pairing for relationship of type: {relationship}
-          """
-        super().__init__(message)
+"""
+Relationships between Nodes.
+"""
+from repograph.models.base import Relationship
+from repograph.models.nodes import Argument, Body, Class, File, Folder, Function, Repository, \
+                                   ReturnValue, Package
 
 
 class Requires(Relationship):
-    version: str
+    """Requires Relationship.
 
-    def __init__(self, parent: Repository, child: Package, version=None):
-        super().__init__(parent, child, version=version)
+    Between Repository and (external) Package,
+    representing a dependency from a requirements file.
+
+    Attributes:
+       version (str): The specific version that is required.
+    """
+    _allowed_types = {
+        Repository: {Package}
+    }
+
+    version: str
 
 
 class Contains(Relationship):
@@ -59,37 +35,42 @@ class Contains(Relationship):
       File: {Function, Class, Body}
     }
 
-    def __init__(
-        self,
-        parent: Union[File, Folder, Repository],
-        child: Union[Body, Class, File, Folder, Function]
-    ) -> None:
-        super().__init__(parent, child)
-
 
 class HasMethod(Relationship):
+    """HasMethod Relationship
+
+    Class -> Function
+    """
     _allowed_types = {
         Class: {Function}
     }
 
-    def __init__(self, parent: Class, child: Function, **kwargs) -> RelationshipABC:
-        super().__init__(parent, child, **kwargs)
-
 
 class HasFunction(Relationship):
+    """HasFunction Relationship
+
+    File -> Function
+    """
     _allowed_types = {
         File: {Function}
     }
 
-    def __init__(self, parent: Class, child: Function, **kwargs) -> RelationshipABC:
-        super().__init__(parent, child, **kwargs)
-
 
 class HasArgument(Relationship):
-    def __init__(self, parent: Function, child: Argument) -> RelationshipABC:
-        super().__init__(parent, child)
+    """HasArgument Relationship
+
+    Function -> Argument
+    """
+    _allowed_types = {
+        Function: {Argument}
+    }
 
 
 class Returns(Relationship):
-    def __init__(self, parent: Function, child: ReturnValue) -> Relationship:
-        super().__init__(parent, child)
+    """Returns Relationship
+
+    Function -> ReturnValue
+    """
+    _allowed_types = {
+        Function: {ReturnValue}
+    }

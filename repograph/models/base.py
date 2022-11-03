@@ -2,7 +2,7 @@
 """
 from __future__ import annotations
 import py2neo
-from pydantic import BaseModel
+from pydantic import BaseModel, PrivateAttr
 from typing import Any, Dict, Optional, Set
 
 
@@ -21,7 +21,19 @@ class BaseSubgraph(BaseModel):
     Attributes:
         _subgraph (py2neo.Subgraph): Py2neo Node representation.
     """
-    _subgraph: py2neo.Subgraph
+    _subgraph: py2neo.Subgraph = PrivateAttr()
+
+    class Config:
+        arbitrary_types_allowed = True
+
+    def __init__(self, subgraph: py2neo.Subgraph, **data: Any) -> None:
+        """Constructor
+
+        Args:
+            subgraph (py2neo.Subgraph): Subgraph - either Node or Relationship.
+        """
+        self._subgraph = subgraph
+        super().__init__(**data)
 
 
 class Node(BaseSubgraph):
@@ -41,8 +53,10 @@ class Node(BaseSubgraph):
 
         Class name used as Py2neo Node label.
         """
-        super().__init__(self, **data)
-        self._subgraph = py2neo.Node(self, self.__class__.__name__, **data)
+        super().__init__(
+            py2neo.Node(self.__class__.__name__, **data),
+            **data
+        )
 
 
 class InvalidRelationshipException(TypeError):
@@ -95,5 +109,8 @@ class Relationship(BaseSubgraph):
         if self._allowed_types and (type(child) not in self._allowed_types.get(type(parent), set())):  # noqa: E501
             raise InvalidRelationshipException(parent, child, self.__class__.__name)
 
-        super().__init__(parent=parent, child=child, **data)
-        self._subgraph(parent, self.__class__.__name, child, **data)
+        super().__init__(
+            py2neo.Relationship(parent, self.__class__.__name, child, **data),
+            parent=parent, child=child,
+            **data
+        )

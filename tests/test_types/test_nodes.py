@@ -21,7 +21,7 @@ class TestFile(unittest.TestCase):
       ["file.py", "/dir/file.py", ".py", False]
     ])
     def test_attributes(self, name, path, extension, is_test):
-        file = File(name, path, extension, is_test)
+        file = File(name=name, path=path, extension=extension, is_test=is_test)
         self.assertEqual(file.name, name)
         self.assertEqual(file.path, path)
         self.assertEqual(file.extension, extension)
@@ -34,7 +34,12 @@ class TestClass(unittest.TestCase):
       ["Class", 1, 2, ["SuperClass"]]
     ])
     def test_attributes(self, name, min_line, max_line, extends):
-        classNode = Class(name, min_line, max_line, extends)
+        classNode = Class(
+            name=name,
+            min_line_number=min_line,
+            max_line_number=max_line,
+            extends=extends
+        )
         self.assertEqual(classNode.name, name)
         self.assertEqual(classNode.min_line_number, min_line)
         self.assertEqual(classNode.max_line_number, max_line)
