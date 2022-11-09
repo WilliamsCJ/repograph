@@ -142,9 +142,9 @@ class License(Node):
 
     Attributes:
         text (str): The raw text of the license.
-        type (type): The suspected license type.
+        license_type (str): The suspected license type.
         confidence (float): The confidence that the specified type matches the extracted text.
     """
     text: str
-    type: str
+    license_type: str
     confidence: float

@@ -1,6 +1,8 @@
 import unittest
+
+import py2neo
 from parameterized import parameterized
-from repograph.models.nodes import Class, File, Folder
+from repograph.models.nodes import Class, File, Folder, License
 
 
 class TestFolder(unittest.TestCase):
@@ -44,3 +46,34 @@ class TestClass(unittest.TestCase):
         self.assertEqual(classNode.min_line_number, min_line)
         self.assertEqual(classNode.max_line_number, max_line)
         self.assertEqual(classNode.extends, extends)
+
+
+class TestLicense(unittest.TestCase):
+    @parameterized.expand([
+        ["Some text", "MIT", 0.9]
+    ])
+    def test_attributes(self, text, license_type, confidence):
+        license = License(
+            text=text,
+            license_type=license_type,
+            confidence=confidence,
+        )
+        self.assertEqual(license.text, text)
+        self.assertEqual(license.license_type, license_type)
+        self.assertEqual(license.confidence, confidence)
+
+    @parameterized.expand([
+        ["Some text", "MIT", 0.9]
+    ])
+    def test_py2neo(self, text, license_type, confidence):
+        license = License(
+            text=text,
+            license_type=license_type,
+            confidence=confidence,
+        )
+
+        self.assertIsInstance(license._subgraph, py2neo.Node)
+
+        self.assertEqual(license._subgraph.get("text"), text)
+        self.assertEqual(license._subgraph.get("license_type"), license_type)
+        self.assertEqual(license._subgraph.get("confidence"), confidence)
