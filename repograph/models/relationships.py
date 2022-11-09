@@ -3,7 +3,7 @@ Relationships between Nodes.
 """
 from repograph.models.base import Relationship
 from repograph.models.nodes import Argument, Body, Class, File, Folder, Function, Repository, \
-                                   ReturnValue, Package
+                                   ReturnValue, Package, License
 
 
 class Requires(Relationship):
@@ -73,4 +73,14 @@ class Returns(Relationship):
     """
     _allowed_types = {
         Function: {ReturnValue}
+    }
+
+
+class LicensedBy(Relationship):
+    """LicensedBy Relationship
+
+    Repository -> License
+    """
+    _allowed_types = {
+        Repository: {License}
     }

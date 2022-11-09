@@ -7,9 +7,9 @@ from typing import Dict, Set, List, Optional, Tuple, Union
 
 from repograph.repograph import Repograph
 from repograph.models.nodes import Argument, Class, Folder, File, \
-                                   Function, Package, Repository, ReturnValue
+                                   Function, License, Package, Repository, ReturnValue
 from repograph.models.relationships import Contains, HasArgument, HasFunction, \
-                                           HasMethod, Returns, Requires
+                                           HasMethod, LicensedBy, Returns, Requires
 import repograph.utils as utils
 from repograph.utils import JSONDict
 
@@ -71,8 +71,33 @@ class RepographBuilder:
     def _parse_directory_tree(self, info):
         pass
 
-    def _parse_license(self, info):
-        pass
+    def _parse_license(self, licenses: Optional[JSONDict], repository: Repository) -> None:
+        """Parses extracted license information.
+
+        Args:
+            licenses (Optional[JSONDict]): The JSON describing the extracted licenses.
+            repository (Repository): The parent Repository node for any created License nodes.
+
+        Returns:
+            None
+        """
+        if not licenses:
+            log.warning("No license information found.")
+        else:
+            log.info("Parsing repository license information.")
+            detected_types = licenses.get("detected_type", [])
+            if len(detected_types) == 0:
+                log.warning("No license types detected")
+
+            for detected in detected_types:
+                for detected_type, confidence in detected.items():
+                    license_node = License(
+                        text=licenses.get("text", ""),
+                        license_type=detected_type,
+                        confidence=(float(confidence.strip('%')) / 100)
+                    )
+                    relationship = LicensedBy(repository, license_node)
+                    self.repograph.add(license_node, relationship)
 
     def _parse_readme(self, info):
         pass
@@ -273,7 +298,7 @@ class RepographBuilder:
         # Pop off non-directory entries from the JSON, for parsing later
         requirements = directory_info.pop("requirements", None)
         _ = directory_info.pop("directory_tree", None)
-        _ = directory_info.pop("license", None)
+        licenses = directory_info.pop("license", None)
         _ = directory_info.pop("readme_files", None)
 
         # Create a sorted list of directory paths, as dictionaries are not
@@ -294,6 +319,9 @@ class RepographBuilder:
 
         # Parse requirements
         self._parse_requirements(requirements, repository)
+
+        # Parse license
+        self._parse_license(licenses, repository)
 
         # Parse each directory
         log.info("Extracting information from directories...")

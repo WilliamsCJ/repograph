@@ -134,3 +134,17 @@ class ReturnValue(Variable):
 
 class Body(Node):
     pass
+
+
+class License(Node):
+    """Represents a software license.
+    Defines the licensing terms of a repository.
+
+    Attributes:
+        text (str): The raw text of the license.
+        license_type (str): The suspected license type.
+        confidence (float): The confidence that the specified type matches the extracted text.
+    """
+    text: str
+    license_type: str
+    confidence: float
