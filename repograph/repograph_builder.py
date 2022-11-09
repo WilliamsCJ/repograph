@@ -242,7 +242,7 @@ class RepographBuilder:
 
     def _parse_return_values(
         self,
-        return_values: List[str],
+        return_values: List[List[str]],
         annotated_type: str,
         parent: Function
     ) -> None:
@@ -262,7 +262,7 @@ class RepographBuilder:
             return
 
         # https://stackoverflow.com/questions/952914/how-do-i-make-a-flat-list-out-of-a-list-of-lists
-        for arg in [item for sublist in return_values for item in sublist]:
+        for arg in set([item for sublist in return_values for item in sublist]):
             return_value = ReturnValue(name=arg, type=return_type)
             relationship = Returns(parent, return_value)
             self.repograph.add(return_value, relationship)
