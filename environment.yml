@@ -110,12 +110,25 @@ dependencies:
   - zipp=3.10.0=pyhd8ed1ab_0
   - zstd=1.5.2=h8128057_4
   - pip:
+    - cfgv==3.3.1
+    - distlib==0.3.6
+    - flake8==5.0.4
+    - identify==2.5.9
     - interchange==2021.0.4
+    - mccabe==0.7.0
     - monotonic==1.6
     - neo4j==5.2.1
+    - nodeenv==1.7.0
     - pansi==2020.7.3
+    - parameterized==0.8.1
+    - platformdirs==2.5.4
+    - pre-commit==2.20.0
     - py2neo==2021.2.3
+    - pycodestyle==2.9.1
     - pydantic==1.10.2
+    - pyflakes==2.5.0
     - pygments==2.13.0
     - pytz==2022.6
-prefix: /opt/homebrew/Caskroom/miniforge/base/envs/repograph
+    - reindent==3.5.1
+    - toml==0.10.2
+    - virtualenv==20.16.7
