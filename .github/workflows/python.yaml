@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9"]
+        python-version: ["3.9", "3.10"]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -21,8 +21,9 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.python-version }}
-          channels: conda-forge,pytorch,huggingface
+          channels: conda-forge,pytorch,huggingface,defaults
           channel-priority: true
+          activate-environment: repograph
           environment-file: environment.yml
 #      - name: Install dependencies
 #        run: |
@@ -51,6 +52,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           channels: conda-forge,defaults
           channel-priority: true
+          activate-environment: repograph
           environment-file: environment.yml
 #      - name: Install dependencies
 #        run: |
