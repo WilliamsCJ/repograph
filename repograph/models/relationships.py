@@ -2,8 +2,9 @@
 Relationships between Nodes.
 """
 from repograph.models.base import Relationship
-from repograph.models.nodes import Argument, Body, Class, Docstring, File, Folder, Function, \
-                                   Repository, ReturnValue, Package, License
+from repograph.models.nodes import Argument, Body, Class, Docstring, DocstringArgument, \
+                                   DocstringReturnValue, File, Folder, Function, Repository, \
+                                   ReturnValue, Package, License
 
 
 class Requires(Relationship):
@@ -92,5 +93,7 @@ class Documents(Relationship):
     Docstring -> Function
     """
     _allowed_types = {
-        Docstring: {Function}
+        Docstring: {Function},
+        DocstringArgument: {Argument},
+        DocstringReturnValue: {ReturnValue}
     }

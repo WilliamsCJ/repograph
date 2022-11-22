@@ -85,18 +85,18 @@ class TestDocstring(unittest.TestCase):
     ])
     def test_attributes(self, summary):
         docstring = Docstring(
-            summary=summary,
+            summarization=summary,
         )
-        self.assertEqual(docstring.summary, summary)
+        self.assertEqual(docstring.summarization, summary)
 
     @parameterized.expand([
         ["Some text"]
     ])
     def test_py2neo(self, summary):
         docstring = Docstring(
-            summary=summary,
+            summarization=summary,
         )
 
         self.assertIsInstance(docstring._subgraph, py2neo.Node)
 
-        self.assertEqual(docstring._subgraph.get("summary"), summary)
+        self.assertEqual(docstring._subgraph.get("summarization"), summary)

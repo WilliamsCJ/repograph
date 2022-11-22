@@ -2,7 +2,7 @@
 Nodes.
 """
 from enum import Enum
-from typing import Any, List
+from typing import Any, List, Optional
 
 from repograph.models.base import Node
 import repograph.utils as utils
@@ -154,8 +154,38 @@ class Docstring(Node):
     """Represents a docstring for a function or class.
 
     Attributes:
-        summary (str): The text summary of whatever the docstring is documenting.
-
-    TODO: Add other attributes for typed-hinted arguments, etc.
+        short_description (Optional[str]): The short headline description of the docstring.
+        long_description (Optional[str]): The main body of the docstring.
+        summarization (str): The generated text summary of whatever the docstring is documenting.
     """
-    summary: str
+    short_description: Optional[str]
+    long_description: Optional[str]
+    summarization: str
+
+
+class DocstringArgument(Argument):
+    """Represents an argument description with a docstring.
+
+    Attributes:
+        name (str): The argument name.
+        description (str): The description of the argument.
+        type (str): The inferred type of the variable, usually from a type hint.
+        is_optional (bool): Whether the argument is optional.
+        default (Optional[Any]): The default value of the argument, if it is optional.
+    """
+    description: Optional[str]
+    is_optional: bool
+    default: Optional[Any]
+
+
+class DocstringReturnValue(ReturnValue):
+    """Represents a return value description within a docstring.
+
+    Attributes:
+        name (str): The argument name.
+        description (str): The description of the argument.
+        type (str): The inferred type of the variable, usually from a type hint.
+        is_generator (bool): Whether the return value is a generator.
+    """
+    description: Optional[str]
+    is_generator: bool
