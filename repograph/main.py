@@ -49,8 +49,9 @@ configure_logging()
     type=bool,
     help="Generate code summarizations."
 )
-def main(uri, username, password, database, input, prune):
-    builder = RepographBuilder(uri, username, password, database, prune)
+def main(uri, username, password, database, input, prune, summarize):
+    print(summarize)
+    builder = RepographBuilder(uri, username, password, database, prune, summarize)
     directory_info = read_json_from_file(input)
     repograph = builder.build(directory_info)  # noqa
 

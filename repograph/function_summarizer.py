@@ -8,10 +8,8 @@ Typical usage:
 """
 from logging import getLogger
 from transformers import RobertaTokenizerFast, T5ForConditionalGeneration
-from typing import Tuple
 
-from repograph.models.nodes import Docstring, Function
-from repograph.models.relationships import Documents
+from repograph.models.nodes import Function
 
 
 log = getLogger('repograph.function_summarizer')
@@ -33,30 +31,31 @@ class FunctionSummarizer:
         self.model = T5ForConditionalGeneration.from_pretrained("Salesforce/codet5-base-multi-sum")
         log.info("Ready!")
 
-    def create_docstring_node(self, function: Function) -> Tuple[Docstring, Documents]:
-        """Generate a Docstring node.
-
-        Uses generated function summarization.
+    def summarize_function(self, function: Function) -> str:
+        """Summarize a function
 
         Args:
-            function (Function): The Function node to generate a Docstring node for.
+            function (Function): The function node to summarize.
 
         Returns:
-            Tuple[Docstring, Relationship]: The new Docstring node and Documents
-                                            relationship with Function node.
+            str: The summarization
         """
         log.debug(f'Create Docstring node for function `{function.name}`...')
+        return self._summarize_code(function.source_code)
 
+    def _summarize_code(self, source_code: str) -> str:
+        """Summarize code.
+
+        Args:
+            source_code (str): The source code to summarize.
+
+        Returns:
+            str: The summarization.
+        """
         log.debug("Tokenizing...")
-        input_ids = self.tokenizer(function.source_code, return_tensors="pt").input_ids
+        input_ids = self.tokenizer(source_code, return_tensors="pt").input_ids
 
         log.debug("Summarizing...")
         generated_ids = self.model.generate(input_ids, max_length=200)
 
-        log.debug("Creating Node/Relationship and returning!")
-        docstring = Docstring(
-            summary=self.tokenizer.decode(generated_ids[0], skip_special_tokens=True)
-        )
-        relationship = Documents(docstring, function)
-
-        return docstring, relationship
+        return self.tokenizer.decode(generated_ids[0], skip_special_tokens=True)

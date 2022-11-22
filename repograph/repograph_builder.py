@@ -7,9 +7,9 @@ from typing import Dict, Set, List, Optional, Tuple, Union
 
 from repograph.function_summarizer import FunctionSummarizer
 from repograph.repograph import Repograph
-from repograph.models.nodes import Argument, Class, Folder, File, \
+from repograph.models.nodes import Argument, Class, Docstring, Folder, File, \
                                    Function, License, Package, Repository, ReturnValue
-from repograph.models.relationships import Contains, HasArgument, HasFunction, \
+from repograph.models.relationships import Contains, Documents, HasArgument, HasFunction, \
                                            HasMethod, LicensedBy, Returns, Requires
 import repograph.utils as utils
 from repograph.utils import JSONDict
@@ -34,8 +34,10 @@ class RepographBuilder:
 
     def __init__(self, uri, user, password, database, prune=False, summarize=False) -> None:
         self.repograph = Repograph(uri, user, password, database)
-        self.function_summarizer = FunctionSummarizer()
-        self.summarize = summarize
+
+        if summarize:
+            self.function_summarizer = FunctionSummarizer()
+            self.summarize = summarize
 
         if prune:
             self.repograph.graph.delete_all()
@@ -206,10 +208,7 @@ class RepographBuilder:
             # Add to graph
             self.repograph.add(function)
 
-            # If summarization enabled, then generate function summarizations
-            if self.summarize:
-                docstring, documents = self.function_summarizer.create_docstring_node(function)
-                self.repograph.add(docstring, documents)
+            # TODO: Call _parse_docstring
 
             # Create HasFunction Relationship
             if methods:
@@ -312,6 +311,36 @@ class RepographBuilder:
             return_value = ReturnValue(name=arg, type=return_type)
             relationship = Returns(parent, return_value)
             self.repograph.add(return_value, relationship)
+
+    def _parse_docstring(self, docstring_info, parent: Union[Function, Class]) -> None:
+        """Parse docstring information for function or class
+
+        # TODO: Module?
+
+        Args:
+            docstring_info (JSONDict): The JSONDict containing docstring information.
+            parent (Union[Function, Class): The parent node the docstring describes.
+
+        Returns:
+            None
+        """
+        # If summarization enabled, then generate function summarizations
+        if self.summarize and isinstance(parent, Function):
+            summary = self.function_summarizer.summarize_function(parent)
+        else:
+            summary = None
+
+        docstring = Docstring(
+            summarization=summary,
+            short_description=docstring_info.get("short_description", None),
+            long_description=docstring_info.get("long_description", None)
+        )
+
+        # TODO: Arguments
+        # TODO: Return values
+
+        relationship = Documents(docstring, parent)
+        self.repograph.add(docstring, relationship)
 
     def build(self, directory_info: Dict[str, any]) -> Repograph:
         log.info("Building Repograph...")
