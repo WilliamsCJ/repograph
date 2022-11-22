@@ -15,8 +15,7 @@ def configure_logging():
     """
     # Configure root logger
     logger = logging.getLogger("repograph")
-    logger.setLevel(logging.DEBUG)
-    logger.info("test")
+    logger.setLevel(logging.INFO)
 
     # Create file handler to capture all logs to file
     fh = logging.FileHandler('debug.log')

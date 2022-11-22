@@ -10,8 +10,11 @@ THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class TestableRepographBuilder(RepographBuilder):
-    def __init__(self, uri, user, password, database, prune=False) -> None:
+    summarize: bool = False
+
+    def __init__(self, uri, user, password, database, prune=False, summarize=False) -> None:
         self.repograph = MagicMock()
+        self.function_summarizer = MagicMock()
 
 
 class TestRepographBuilderIntegration(unittest.TestCase):
@@ -22,7 +25,8 @@ class TestRepographBuilderIntegration(unittest.TestCase):
                 "user",
                 "password",
                 "database",
-                True
+                True,
+                False
             )
             directory_info = read_json_from_file(
                 os.path.join(

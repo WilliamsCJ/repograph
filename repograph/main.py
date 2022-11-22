@@ -43,6 +43,12 @@ configure_logging()
   type=bool,
   help="Prune any existing nodes and relationships from the database."
 )
+@click.option(
+    "-s", "--summarize",
+    is_flag=True,
+    type=bool,
+    help="Generate code summarizations."
+)
 def main(uri, username, password, database, input, prune):
     builder = RepographBuilder(uri, username, password, database, prune)
     directory_info = read_json_from_file(input)

@@ -148,3 +148,14 @@ class License(Node):
     text: str
     license_type: str
     confidence: float
+
+
+class Docstring(Node):
+    """Represents a docstring for a function or class.
+
+    Attributes:
+        summary (str): The text summary of whatever the docstring is documenting.
+
+    TODO: Add other attributes for typed-hinted arguments, etc.
+    """
+    summary: str
