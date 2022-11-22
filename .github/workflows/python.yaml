@@ -17,6 +17,7 @@ jobs:
       - name: Install dependencies
         uses: conda-incubator/setup-miniconda@v2
         with:
+          activate-environment: repograph
           python-version: 3.9.12
           channels: conda-forge,pytorch,huggingface,defaults
           channel-priority: true
@@ -37,6 +38,7 @@ jobs:
       - name: Install dependencies
         uses: conda-incubator/setup-miniconda@v2
         with:
+          activate-environment: repograph
           python-version: 3.9.12
           channels: conda-forge,pytorch,huggingface,defaults
           channel-priority: true
