@@ -13,6 +13,7 @@ from repograph.models.relationships import Contains, HasArgument, HasFunction, \
 import repograph.utils as utils
 from repograph.utils import JSONDict
 
+
 ADDITIONAL_KEYS = [
   "requirements",
   "directory_tree",
