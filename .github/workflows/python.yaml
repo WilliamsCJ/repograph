@@ -17,11 +17,14 @@ jobs:
       - name: Install dependencies
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: repograph
           python-version: 3.9.12
           channels: conda-forge,pytorch,huggingface,defaults
           channel-priority: true
           environment-file: environment.yml
+          auto-activate-base: false
+        run: |
+          conda info
+          conda list
       - name: Lint with flake8
         run: |
           flake8 repograph --count --max-complexity=10 --max-line-length=127 --statistics
@@ -38,11 +41,14 @@ jobs:
       - name: Install dependencies
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: repograph
           python-version: 3.9.12
           channels: conda-forge,pytorch,huggingface,defaults
           channel-priority: true
           environment-file: environment.yml
+          auto-activate-base: false
+        run: |
+          conda info
+          conda list
       - name: Test with unittest
         run: |
           python3 -m unittest
