@@ -1,4 +1,0 @@
-parameterized
-flake8
-pre-commit
-reindent
