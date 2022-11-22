@@ -14,6 +14,7 @@ class TestableRepographBuilder(RepographBuilder):
 
     def __init__(self, uri, user, password, database, prune=False, summarize=False) -> None:
         self.repograph = MagicMock()
+        self.function_summarizer = MagicMock()
 
 
 class TestRepographBuilderIntegration(unittest.TestCase):
