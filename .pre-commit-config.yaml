@@ -11,7 +11,7 @@ repos:
     language: python
     'types': [python]
     pass_filenames: false
-    additional_dependencies: [parameterized, py2neo, click, neo4j, pydantic]
+    additional_dependencies: [parameterized, py2neo, click, neo4j, pydantic, transformers]
     stages: [commit]
   - id: reindent
     name: reindent

@@ -6,11 +6,15 @@ Typical usage:
 
     docstring_node = FunctionSummarizer.create_docstring_node(function_node)
 """
+from logging import getLogger
 from transformers import AutoTokenizer, T5ForConditionalGeneration
 from typing import Tuple
 
 from repograph.models.nodes import Docstring, Function
 from repograph.models.relationships import Documents
+
+
+log = getLogger('repograph.function_summarizer')
 
 
 class FunctionSummarizer:
@@ -20,11 +24,16 @@ class FunctionSummarizer:
         tokenizer: The function tokenizer.
         model: The specific CodeT5 that summarises tokenized functions.
     """
-    tokenizer = AutoTokenizer.from_pretrained("Salesforce/codet5-large-ntp-py")
-    model = T5ForConditionalGeneration.from_pretrained("Salesforce/codet5-large-ntp-py")
+    tokenizer: any
+    model: any
 
-    @classmethod
-    def create_docstring_node(cls, function: Function) -> Tuple[Docstring, Documents]:
+    def __init__(self):
+        log.info("Initialising CodeT5 model...")
+        self.tokenizer = AutoTokenizer.from_pretrained("Salesforce/codet5-large-ntp-py")
+        self.model = T5ForConditionalGeneration.from_pretrained("Salesforce/codet5-large-ntp-py")
+        log.info("Ready!")
+
+    def create_docstring_node(self, function: Function) -> Tuple[Docstring, Documents]:
         """Generate a Docstring node.
 
         Uses generated function summarization.
@@ -36,11 +45,17 @@ class FunctionSummarizer:
             Tuple[Docstring, Relationship]: The new Docstring node and Documents
                                             relationship with Function node.
         """
-        input_ids = cls.tokenizer(function.source_code, return_tensors="pt").input_ids
-        generated_ids = cls.model.generate(input_ids, max_length=128)
+        log.debug(f'Create Docstring node for function `{function.name}`...')
 
+        log.debug("Tokenizing...")
+        input_ids = self.tokenizer(function.source_code, return_tensors="pt").input_ids
+
+        log.debug("Summarizing...")
+        generated_ids = self.model.generate(input_ids, max_length=8)
+
+        log.debug("Creating Node/Relationship and returning!")
         docstring = Docstring(
-            summary=cls.tokenizer.decode(generated_ids[0], skip_special_tokens=True)
+            summary=self.tokenizer.decode(generated_ids[0], skip_special_tokens=True)
         )
         relationship = Documents(docstring, function)
 

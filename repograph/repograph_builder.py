@@ -5,6 +5,7 @@ import logging
 import os
 from typing import Dict, Set, List, Optional, Tuple, Union
 
+from repograph.function_summarizer import FunctionSummarizer
 from repograph.repograph import Repograph
 from repograph.models.nodes import Argument, Class, Folder, File, \
                                    Function, License, Package, Repository, ReturnValue
@@ -26,11 +27,13 @@ log = logging.getLogger('repograph.repograph_builder')
 
 class RepographBuilder:
     repograph: Repograph
+    function_summarizer: FunctionSummarizer
     folders: Dict[str, Union[Repository, Folder]] = dict()
     calls: Set[Tuple[str, str]] = set()
 
     def __init__(self, uri, user, password, database, prune=False) -> None:
         self.repograph = Repograph(uri, user, password, database)
+        self.function_summarizer = FunctionSummarizer()
 
         if prune:
             self.repograph.graph.delete_all()
@@ -117,16 +120,24 @@ class RepographBuilder:
             self.repograph.add(child, parent_relationship)
             return
 
-    def _parse_directory(self, directory_name, directory_info):
+    def _parse_directory(self, directory_name, directory_info, index, total):
         directory_path = utils.strip_file_path_prefix(directory_name)
-        log.debug("Parsing directory '%s'", directory_path)
+        log.info("Parsing directory '%s' (%d/%d)", directory_path, index, total)
 
         folder = Folder(directory_path)
 
         self._add_parent_relationship(folder)
         self.folders[folder.path] = folder
 
-        for file_info in directory_info:
+        for file_index, file_info in enumerate(directory_info):
+            log.info(
+                "--> Parsing file `%s` in `%s` (%d/%d)",
+                file_info["file"]["fileNameBase"],
+                directory_path,
+                file_index,
+                len(directory_info)
+            )
+
             file = File(
                 name=file_info["file"]["fileNameBase"],
                 path=file_info["file"]["path"],
@@ -189,7 +200,12 @@ class RepographBuilder:
                 min_line_number=min_lineno,
                 max_line_number=max_lineno
             )
-            self.repograph.add(function)
+
+            # Create Docstring node and relationship
+            docstring, documents = self.function_summarizer.create_docstring_node(function)
+
+            # Add to graph
+            self.repograph.add(function, docstring, documents)
 
             # Create HasFunction Relationship
             if methods:
@@ -326,8 +342,8 @@ class RepographBuilder:
 
         # Parse each directory
         log.info("Extracting information from directories...")
-        for directory in directories:
-            self._parse_directory(directory, directory_info[directory])
+        for index, directory in enumerate(directories):
+            self._parse_directory(directory, directory_info[directory], index, len(directories))
 
         log.info("Successfully built a Repograph!")
         return self.repograph
