@@ -28,12 +28,14 @@ log = logging.getLogger('repograph.repograph_builder')
 class RepographBuilder:
     repograph: Repograph
     function_summarizer: FunctionSummarizer
+    summarize: bool
     folders: Dict[str, Union[Repository, Folder]] = dict()
     calls: Set[Tuple[str, str]] = set()
 
-    def __init__(self, uri, user, password, database, prune=False) -> None:
+    def __init__(self, uri, user, password, database, prune=False, summarize=False) -> None:
         self.repograph = Repograph(uri, user, password, database)
         self.function_summarizer = FunctionSummarizer()
+        self.summarize = summarize
 
         if prune:
             self.repograph.graph.delete_all()
@@ -201,11 +203,13 @@ class RepographBuilder:
                 max_line_number=max_lineno
             )
 
-            # Create Docstring node and relationship
-            docstring, documents = self.function_summarizer.create_docstring_node(function)
-
             # Add to graph
-            self.repograph.add(function, docstring, documents)
+            self.repograph.add(function)
+
+            # If summarization enabled, then generate function summarizations
+            if self.summarize:
+                docstring, documents = self.function_summarizer.create_docstring_node(function)
+                self.repograph.add(docstring, documents)
 
             # Create HasFunction Relationship
             if methods:

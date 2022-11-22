@@ -7,7 +7,7 @@ Typical usage:
     docstring_node = FunctionSummarizer.create_docstring_node(function_node)
 """
 from logging import getLogger
-from transformers import AutoTokenizer, T5ForConditionalGeneration
+from transformers import RobertaTokenizerFast, T5ForConditionalGeneration
 from typing import Tuple
 
 from repograph.models.nodes import Docstring, Function
@@ -29,8 +29,8 @@ class FunctionSummarizer:
 
     def __init__(self):
         log.info("Initialising CodeT5 model...")
-        self.tokenizer = AutoTokenizer.from_pretrained("Salesforce/codet5-large-ntp-py")
-        self.model = T5ForConditionalGeneration.from_pretrained("Salesforce/codet5-large-ntp-py")
+        self.tokenizer = RobertaTokenizerFast.from_pretrained("Salesforce/codet5-base")
+        self.model = T5ForConditionalGeneration.from_pretrained("Salesforce/codet5-base-multi-sum")
         log.info("Ready!")
 
     def create_docstring_node(self, function: Function) -> Tuple[Docstring, Documents]:
@@ -51,7 +51,7 @@ class FunctionSummarizer:
         input_ids = self.tokenizer(function.source_code, return_tensors="pt").input_ids
 
         log.debug("Summarizing...")
-        generated_ids = self.model.generate(input_ids, max_length=8)
+        generated_ids = self.model.generate(input_ids, max_length=200)
 
         log.debug("Creating Node/Relationship and returning!")
         docstring = Docstring(
