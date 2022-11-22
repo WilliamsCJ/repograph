@@ -18,6 +18,7 @@ dependencies:
   - expat=2.5.0
   - ffmpeg=5.1.2
   - filelock=3.8.0
+  - flake8=5.0.4
   - font-ttf-dejavu-sans-mono=2.37
   - font-ttf-inconsolata=3.000
   - font-ttf-source-code-pro=2.038
@@ -57,6 +58,7 @@ dependencies:
   - libxml2=2.10.3
   - libzlib=1.2.13
   - llvm-openmp=15.0.5
+  - mccabe=0.7.0
   - ncurses=6.3
   - nettle=3.8.1
   - openh264=2.3.1
@@ -68,7 +70,9 @@ dependencies:
   - pip=22.3.1
   - protobuf=4.21.9
   - pthread-stubs=0.4
+  - pycodestyle=2.9.1
   - pycparser=2.21
+  - pyflakes=2.5.0
   - pyopenssl=22.1.0
   - pyparsing=3.0.9
   - pysocks=1.7.1
@@ -103,10 +107,8 @@ dependencies:
   - pip:
     - cfgv==3.3.1
     - distlib==0.3.6
-    - flake8==5.0.4
     - identify==2.5.9
     - interchange==2021.0.4
-    - mccabe==0.7.0
     - monotonic==1.6
     - neo4j==5.2.1
     - nodeenv==1.7.0
@@ -115,9 +117,7 @@ dependencies:
     - platformdirs==2.5.4
     - pre-commit==2.20.0
     - py2neo==2021.2.3
-    - pycodestyle==2.9.1
     - pydantic==1.10.2
-    - pyflakes==2.5.0
     - pygments==2.13.0
     - pytz==2022.6
     - reindent==3.5.1
