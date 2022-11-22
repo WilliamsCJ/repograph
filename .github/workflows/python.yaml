@@ -21,7 +21,8 @@ jobs:
           channels: conda-forge,pytorch,huggingface,defaults
           channel-priority: true
           environment-file: environment.yml
-          auto-activate-base: false
+          auto-activate-base: true
+          activate-environment: ""
       - name: Lint with flake8
         run: |
           flake8 repograph --count --max-complexity=10 --max-line-length=127 --statistics
@@ -42,7 +43,8 @@ jobs:
           channels: conda-forge,pytorch,huggingface,defaults
           channel-priority: true
           environment-file: environment.yml
-          auto-activate-base: false
+          auto-activate-base: true
+          activate-environment: ""
       - name: Test with unittest
         run: |
           python3 -m unittest
