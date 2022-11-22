@@ -5,6 +5,7 @@ import logging
 import os
 from typing import Dict, Set, List, Optional, Tuple, Union
 
+from repograph.function_summarizer import FunctionSummarizer
 from repograph.repograph import Repograph
 from repograph.models.nodes import Argument, Class, Folder, File, \
                                    Function, License, Package, Repository, ReturnValue
@@ -26,13 +27,12 @@ log = logging.getLogger('repograph.repograph_builder')
 
 class RepographBuilder:
     repograph: Repograph
+    function_summarizer: FunctionSummarizer
     summarize: bool
     folders: Dict[str, Union[Repository, Folder]] = dict()
     calls: Set[Tuple[str, str]] = set()
 
     def __init__(self, uri, user, password, database, prune=False, summarize=False) -> None:
-        from repograph.function_summarizer import FunctionSummarizer
-
         self.repograph = Repograph(uri, user, password, database)
         self.function_summarizer = FunctionSummarizer()
         self.summarize = summarize
