@@ -130,4 +130,3 @@ dependencies:
     - reindent==3.5.1
     - toml==0.10.2
     - virtualenv==20.16.7
-prefix: /opt/homebrew/Caskroom/miniforge/base/envs/repograph
