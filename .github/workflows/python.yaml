@@ -23,7 +23,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           channels: conda-forge,pytorch,huggingface,defaults
           channel-priority: true
-          activate-environment: repograph
+#          activate-environment: repograph
           environment-file: environment.yml
 #      - name: Install dependencies
 #        run: |
@@ -50,9 +50,9 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.python-version }}
-          channels: conda-forge,defaults
+          channels: conda-forge,pytorch,huggingface,defaults
           channel-priority: true
-          activate-environment: repograph
+#          activate-environment: repograph
           environment-file: environment.yml
 #      - name: Install dependencies
 #        run: |
