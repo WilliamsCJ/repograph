@@ -28,8 +28,8 @@ class RepographBuilder:
     folders: Dict[str, Union[Repository, Folder]] = dict()
     calls: Set[Tuple[str, str]] = set()
 
-    def __init__(self, uri, user, password, database, prune=False) -> None:
-        self.repograph = Repograph(uri, user, password, database)
+    def __init__(self, uri=None, username=None, password=None, database=None, prune=False, **kwargs) -> None:  # noqa
+        self.repograph = Repograph(uri, username, password, database)
 
         if prune:
             self.repograph.graph.delete_all()
