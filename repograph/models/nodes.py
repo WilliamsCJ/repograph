@@ -118,8 +118,8 @@ class Variable(Node):
         name (str): The variable name
         type (str): The inferred type of the variable, usually from a type hint.
     """
-    name: str
-    type: str = "Any"
+    name: Optional[str]
+    type: Optional[str] = "Any"
 
 
 class Argument(Variable):
@@ -154,13 +154,13 @@ class Docstring(Node):
     """Represents a docstring for a function or class.
 
     Attributes:
-        short_description (Optional[str]): The short headline description of the docstring.
+        short_description (str): The short headline description of the docstring.
         long_description (Optional[str]): The main body of the docstring.
         summarization (str): The generated text summary of whatever the docstring is documenting.
     """
-    short_description: Optional[str]
+    short_description: str
     long_description: Optional[str]
-    summarization: str
+    summarization: Optional[str]
 
 
 class DocstringArgument(Argument):

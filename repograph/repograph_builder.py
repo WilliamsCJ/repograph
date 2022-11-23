@@ -37,9 +37,10 @@ class RepographBuilder:
     def __init__(self, uri, user, password, database, prune=False, summarize=False) -> None:
         self.repograph = Repograph(uri, user, password, database)
 
+        self.summarize = summarize
+
         if summarize:
             self.function_summarizer = FunctionSummarizer()
-            self.summarize = summarize
 
         if prune:
             self.repograph.graph.delete_all()
@@ -211,6 +212,7 @@ class RepographBuilder:
             self.repograph.add(function)
 
             # TODO: Call _parse_docstring
+            self._parse_docstring(info.get("doc", {}), function)
 
             # Create HasFunction Relationship
             if methods:
@@ -257,6 +259,9 @@ class RepographBuilder:
             relationship = Contains(parent, class_node)
             self.repograph.add(class_node)
             self.repograph.add(relationship)
+
+            # Parse docstring
+            self._parse_docstring(info.get("doc", {}), class_node)
 
             # Parse method info inside class if available
             methods_info = info.get("methods", None)
@@ -314,10 +319,12 @@ class RepographBuilder:
             relationship = Returns(parent, return_value)
             self.repograph.add(return_value, relationship)
 
-    def _parse_docstring(self, docstring_info, parent: Union[Function, Class]) -> None:
+    def _parse_docstring(
+        self,
+        docstring_info: Optional[JSONDict],
+        parent: Union[Function, Class]
+    ) -> None:
         """Parse docstring information for function or class
-
-        # TODO: Module?
 
         Args:
             docstring_info (JSONDict): The JSONDict containing docstring information.
@@ -326,15 +333,24 @@ class RepographBuilder:
         Returns:
             None
         """
-        # If summarization enabled, then generate function summarizations
-        if self.summarize and isinstance(parent, Function):
-            summary = self.function_summarizer.summarize_function(parent)
+        # Return immediately depending on whether Class/Function, if docstring info
+        # provided, and whether summarization enabled.
+        if (isinstance(parent, Class)):
+            if (not docstring_info):
+                log.debug(f"No docstring information for class {parent.name}")
+                return
+        elif (isinstance(parent, Function)):
+            if (not docstring_info and not self.summarize):
+                log.debug(f"No docstring information for {parent.name}")
+                return
         else:
-            summary = None
+            return
 
         # Initialise empty arrays for storing created nodes/reationships
         nodes = []
         relationships = []
+
+        summary = self.function_summarizer.summarize_function(parent) if self.summarize else None
 
         # Parse docstring description
         docstring = Docstring(
@@ -343,41 +359,45 @@ class RepographBuilder:
             long_description=docstring_info.get("long_description", None)
         )
         relationship = Documents(docstring, parent)
-
-        # Parse docstring arguments
-        for arg, arg_info in docstring_info.get("args", {}).items():
-            docstring_arg = DocstringArgument(
-                name=arg,
-                type=arg_info.get("type_name", None),
-                description=arg_info.get("description", None),
-                is_optional=arg_info.get("is_optional", False),
-                default=arg_info.get("default", None)
-            )
-            relationship = Describes(docstring, docstring_arg)
-            nodes.append(docstring_arg)
-            relationships.append(relationship)
-
-        # Parse docstring return values
-        returns_info = docstring_info.get("returns", {})
-        docstring_return_value = DocstringReturnValue(
-            name=returns_info.get("return_name", None),
-            description=returns_info.get("description", None),
-            type=returns_info.get("type_name", None),
-            is_generator=returns_info.get("is_generator", False)
-        )
-        relationship = Describes(docstring, docstring_return_value)
-        nodes.append(docstring_return_value)
+        nodes.append(docstring)
         relationships.append(relationship)
 
-        # Parse docstring raises
-        for raises in docstring_info.get("raises", []):
-            docstring_raises = DocstringRaises(
-                description=raises.get("description", None),
-                type=raises.get("type_name", None)
-            )
-            relationship = Describes(docstring, docstring_raises)
-            nodes.append(docstring_raises)
-            relationships.append(relationship)
+        if isinstance(parent, Class):
+            # Parse docstring arguments
+            for arg, arg_info in docstring_info.get("args", {}).items():
+                docstring_arg = DocstringArgument(
+                    name=arg,
+                    type=arg_info.get("type_name", None),
+                    description=arg_info.get("description", None),
+                    is_optional=arg_info.get("is_optional", False),
+                    default=arg_info.get("default", None)
+                )
+                relationship = Describes(docstring, docstring_arg)
+                nodes.append(docstring_arg)
+                relationships.append(relationship)
+
+            if "returns" in docstring_info:
+                # Parse docstring return values
+                returns_info = docstring_info.get("returns", {})
+                docstring_return_value = DocstringReturnValue(
+                    name=returns_info.get("return_name", None),
+                    description=returns_info.get("description", None),
+                    type=returns_info.get("type_name", None),
+                    is_generator=returns_info.get("is_generator", False)
+                )
+                relationship = Describes(docstring, docstring_return_value)
+                nodes.append(docstring_return_value)
+                relationships.append(relationship)
+
+            # Parse docstring raises
+            for raises in docstring_info.get("raises", []):
+                docstring_raises = DocstringRaises(
+                    description=raises.get("description", None),
+                    type=raises.get("type_name", None)
+                )
+                relationship = Describes(docstring, docstring_raises)
+                nodes.append(docstring_raises)
+                relationships.append(relationship)
 
         # Add nodes and relationshiops to graph
         self.repograph.add(*nodes, *relationships)
