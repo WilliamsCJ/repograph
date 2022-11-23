@@ -93,7 +93,7 @@ class Documents(Relationship):
     Docstring -> Function
     """
     _allowed_types = {
-        Docstring: {Function},
+        Docstring: {Function, Class},
     }
 
 
