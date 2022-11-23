@@ -1,6 +1,8 @@
 name: Repograph Python Package Workflow
-on:  
+on:
   push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
