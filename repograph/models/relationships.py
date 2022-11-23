@@ -94,6 +94,14 @@ class Documents(Relationship):
     """
     _allowed_types = {
         Docstring: {Function},
-        DocstringArgument: {Argument},
-        DocstringReturnValue: {ReturnValue}
+    }
+
+
+class Describes(Relationship):
+    """Describes relationship.
+
+    Docstring -> DocstringArgument OR DocstringReturnValue
+    """
+    _allowed_types = {
+        Docstring: {DocstringArgument, DocstringReturnValue}
     }

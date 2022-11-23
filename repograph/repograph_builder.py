@@ -7,10 +7,12 @@ from typing import Dict, Set, List, Optional, Tuple, Union
 
 from repograph.function_summarizer import FunctionSummarizer
 from repograph.repograph import Repograph
-from repograph.models.nodes import Argument, Class, Docstring, Folder, File, \
-                                   Function, License, Package, Repository, ReturnValue
-from repograph.models.relationships import Contains, Documents, HasArgument, HasFunction, \
-                                           HasMethod, LicensedBy, Returns, Requires
+from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
+                                   DocstringReturnValue, Folder, File, Function, \
+                                   License, Package, Repository, ReturnValue
+from repograph.models.relationships import Contains, Describes, Documents, HasArgument, \
+                                           HasFunction, HasMethod, LicensedBy, Returns, \
+                                           Requires
 import repograph.utils as utils
 from repograph.utils import JSONDict
 
@@ -330,17 +332,45 @@ class RepographBuilder:
         else:
             summary = None
 
+        # Initialise empty arrays for storing created nodes/reationships
+        nodes = []
+        relationships = []
+
+        # Parse docstring description
         docstring = Docstring(
             summarization=summary,
             short_description=docstring_info.get("short_description", None),
             long_description=docstring_info.get("long_description", None)
         )
-
-        # TODO: Arguments
-        # TODO: Return values
-
         relationship = Documents(docstring, parent)
-        self.repograph.add(docstring, relationship)
+
+        # Parse docstring arguments
+        for arg, arg_info in docstring_info.get("args", {}).items():
+            docstring_arg = DocstringArgument(
+                name=arg,
+                type=arg_info.get("type_name", None),
+                description=arg_info.get("description", None),
+                is_optional=arg_info.get("is_optional", False),
+                default=arg_info.get("default", None)
+            )
+            relationship = Describes(docstring, docstring_arg)
+            nodes.append(docstring_arg)
+            relationships.append(relationship)
+
+        # Parse docstring return values
+        returns_info = docstring_info.get("returns", {})
+        docstring_return_value = DocstringReturnValue(
+            name=returns_info.get("return_name", None),
+            description=returns_info.get("description", None),
+            type=returns_info.get("type_name", None),
+            is_generator=returns_info.get("is_generator", False)
+        )
+        relationship = Describes(docstring, docstring_return_value)
+        nodes.append(docstring_return_value)
+        relationships.append(relationship)
+
+        # Add nodes and relationshiops to graph
+        self.repograph.add(*nodes, *relationships)
 
     def build(self, directory_info: Dict[str, any]) -> Repograph:
         log.info("Building Repograph...")
