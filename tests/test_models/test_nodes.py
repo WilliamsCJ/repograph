@@ -81,22 +81,27 @@ class TestLicense(unittest.TestCase):
 
 class TestDocstring(unittest.TestCase):
     @parameterized.expand([
-        ["Some text"]
+        ["Summarization", "Short Description", "Long description"]
     ])
-    def test_attributes(self, summary):
+    def test_attributes(self, summary, short_description, long_description):
         docstring = Docstring(
+            short_description=short_description,
+            long_description=long_description,
             summarization=summary,
         )
         self.assertEqual(docstring.summarization, summary)
 
     @parameterized.expand([
-        ["Some text"]
+        ["Summarization", "Short Description", "Long description"]
     ])
-    def test_py2neo(self, summary):
+    def test_py2neo(self, summary, short_description, long_description):
         docstring = Docstring(
+            short_description=short_description,
+            long_description=long_description,
             summarization=summary,
         )
 
         self.assertIsInstance(docstring._subgraph, py2neo.Node)
-
         self.assertEqual(docstring._subgraph.get("summarization"), summary)
+        self.assertEqual(docstring._subgraph.get("short_description"), short_description)
+        self.assertEqual(docstring._subgraph.get("long_description"), long_description)
