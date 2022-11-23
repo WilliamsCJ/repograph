@@ -189,3 +189,14 @@ class DocstringReturnValue(ReturnValue):
     """
     description: Optional[str]
     is_generator: bool
+
+
+class DocstringRaises(Node):
+    """Represents a raises/exception descritpion within a docstring.
+
+    Args:
+        description (str): The description of the exception that may be raised.
+        type (str): The inferred type of the exception, usually from a type hint.
+    """
+    description: str
+    type: Optional[str]

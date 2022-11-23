@@ -8,8 +8,8 @@ from typing import Dict, Set, List, Optional, Tuple, Union
 from repograph.function_summarizer import FunctionSummarizer
 from repograph.repograph import Repograph
 from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
-                                   DocstringReturnValue, Folder, File, Function, \
-                                   License, Package, Repository, ReturnValue
+                                   DocstringRaises, DocstringReturnValue, Folder, File, \
+                                   Function, License, Package, Repository, ReturnValue
 from repograph.models.relationships import Contains, Describes, Documents, HasArgument, \
                                            HasFunction, HasMethod, LicensedBy, Returns, \
                                            Requires
@@ -368,6 +368,16 @@ class RepographBuilder:
         relationship = Describes(docstring, docstring_return_value)
         nodes.append(docstring_return_value)
         relationships.append(relationship)
+
+        # Parse docstring raises
+        for raises in docstring_info.get("raises", []):
+            docstring_raises = DocstringRaises(
+                description=raises.get("description", None),
+                type=raises.get("type_name", None)
+            )
+            relationship = Describes(docstring, docstring_raises)
+            nodes.append(docstring_raises)
+            relationships.append(relationship)
 
         # Add nodes and relationshiops to graph
         self.repograph.add(*nodes, *relationships)

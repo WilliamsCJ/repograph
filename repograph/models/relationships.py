@@ -3,8 +3,8 @@ Relationships between Nodes.
 """
 from repograph.models.base import Relationship
 from repograph.models.nodes import Argument, Body, Class, Docstring, DocstringArgument, \
-                                   DocstringReturnValue, File, Folder, Function, Repository, \
-                                   ReturnValue, Package, License
+                                   DocstringRaises, DocstringReturnValue, File, Folder, \
+                                   Function, Repository, ReturnValue, Package, License
 
 
 class Requires(Relationship):
@@ -103,5 +103,5 @@ class Describes(Relationship):
     Docstring -> DocstringArgument OR DocstringReturnValue
     """
     _allowed_types = {
-        Docstring: {DocstringArgument, DocstringReturnValue}
+        Docstring: {DocstringArgument, DocstringRaises, DocstringReturnValue}
     }
