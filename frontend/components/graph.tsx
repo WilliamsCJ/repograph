@@ -22,8 +22,8 @@ type GraphCardProps = {
  * @constructor
  */
 const GraphCard: React.FC<GraphCardProps> = ({ data }) => {
-  // @ts-ignore
-  const [ref, { x, y, width, height }] = useDimensions(); // TODO: Fix this error
+  // @ts-ignore - TODO: Fix this error
+  const [ref, { x, y, width, height }] = useDimensions();
   const fgRef = useRef();
 
   return (
@@ -34,6 +34,7 @@ const GraphCard: React.FC<GraphCardProps> = ({ data }) => {
           graphData={data}
           width={width}
           height={height}
+          // @ts-ignore - TODO: Look into this
           onEngineStop={() => fgRef.current.zoomToFit(400)}
         />
       </FullContainer>
