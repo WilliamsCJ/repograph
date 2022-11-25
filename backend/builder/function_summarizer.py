@@ -9,7 +9,7 @@ Typical usage:
 from logging import getLogger
 from transformers import RobertaTokenizerFast, T5ForConditionalGeneration
 
-from repograph.models.nodes import Function
+from backend.repograph.models.nodes import Function
 
 
 log = getLogger('repograph.function_summarizer')

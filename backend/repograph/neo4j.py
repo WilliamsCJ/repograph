@@ -3,7 +3,7 @@ Neo4J Graph Database related functionality.
 """
 from py2neo import Graph
 
-from repograph.models.base import BaseSubgraph
+from backend.repograph.models.base import BaseSubgraph
 
 
 class Neo4JDatabase:

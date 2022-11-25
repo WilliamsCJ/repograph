@@ -1,6 +1,6 @@
 import unittest
 from parameterized import parameterized
-from repograph.utils import parse_min_max_line_numbers, strip_file_path_prefix, get_path_name, \
+from backend.builder.utils import parse_min_max_line_numbers, strip_file_path_prefix, get_path_name, \
                             get_path_parent, is_root_folder, get_path_root
 
 

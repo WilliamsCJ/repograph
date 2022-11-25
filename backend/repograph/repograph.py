@@ -1,4 +1,4 @@
-from repograph.neo4j import Neo4JDatabase
+from backend.repograph.neo4j import Neo4JDatabase
 
 
 class Repograph(Neo4JDatabase):

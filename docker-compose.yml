@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  neo4j:
+    container_name: neo4j
+    hostname: neo4j
+    image: neo4j:latest
+    restart: always
+    ports:
+      - '7474:7474'
+      - '7687:7687'
+    environment:
+      NEO4J_AUTH: neo4j/s3cr3t
+    networks:
+      - repograph-network
+    healthcheck:
+      test: "exit 0"
+
+  repograph-backend:
+    container_name: repograph-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - backend/.env
+    ports:
+      - "3000:80"
+    networks:
+      - repograph-network
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    links:
+      - neo4j
+
+  repograph-frontend:
+    container_name: repograph-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+        - '1337:80'
+    networks:
+      - repograph-network
+    links:
+      - repograph-backend
+
+volumes:
+  neo4j:
+    driver: local
+
+networks:
+  repograph-network:
+    driver: bridge

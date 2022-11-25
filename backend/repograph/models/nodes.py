@@ -4,8 +4,8 @@ Nodes.
 from enum import Enum
 from typing import Any, List, Optional
 
-from repograph.models.base import Node
-import repograph.utils as utils
+from backend.repograph.models.base import Node
+from backend.builder.utils import get_path_parent, get_path_name
 
 
 class Repository(Node):
@@ -49,8 +49,8 @@ class Folder(Node):
         Args:
             path (_type_): _description_
         """
-        name = utils.get_path_name(path)
-        parent = utils.get_path_parent(path)
+        name = get_path_name(path)
+        parent = get_path_parent(path)
         super().__init__(path=path, name=name, parent=parent)
 
 

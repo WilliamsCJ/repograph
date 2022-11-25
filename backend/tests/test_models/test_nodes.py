@@ -2,7 +2,7 @@ import unittest
 
 import py2neo
 from parameterized import parameterized
-from repograph.models.nodes import Class, Docstring, File, Folder, License
+from backend.repograph.models.nodes import Class, Docstring, File, Folder, License
 
 
 class TestFolder(unittest.TestCase):
