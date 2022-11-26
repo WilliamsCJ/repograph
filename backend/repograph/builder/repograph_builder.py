@@ -5,7 +5,7 @@ import logging
 import os
 from typing import Dict, Set, List, Optional, Tuple, Union
 
-from repograph.function_summarizer import FunctionSummarizer
+from repograph.builder.function_summarizer import FunctionSummarizer
 from repograph.repograph import Repograph
 from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
                                    DocstringRaises, DocstringReturnValue, Folder, File, \
@@ -13,9 +13,9 @@ from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument
 from repograph.models.relationships import Contains, Describes, Documents, HasArgument, \
                                            HasFunction, HasMethod, LicensedBy, Returns, \
                                            Requires
-import repograph.utils as utils
-from repograph.utils import JSONDict
-
+from repograph.utils.json import JSONDict, parse_min_max_line_numbers, \
+    marshall_json_to_string
+from repograph.utils.paths import strip_file_path_prefix, is_root_folder, get_path_root
 
 ADDITIONAL_KEYS = [
   "requirements",
@@ -128,7 +128,7 @@ class RepographBuilder:
             return
 
     def _parse_directory(self, directory_name, directory_info, index, total):
-        directory_path = utils.strip_file_path_prefix(directory_name)
+        directory_path = strip_file_path_prefix(directory_name)
         log.info("Parsing directory '%s' (%d/%d)", directory_path, index, total)
 
         folder = Folder(directory_path)
@@ -160,7 +160,7 @@ class RepographBuilder:
 
     def _parse_functions_and_methods(
             self,
-            functions_info: utils.JSONDict,
+            functions_info: JSONDict,
             parent: Union[File, Class],
             methods: bool = False
     ) -> None:
@@ -168,20 +168,20 @@ class RepographBuilder:
         to the parent File/Class node.
 
         Args:
-            functions_info (utils.JSONDict): JSON dictionary containing the function information.
+            functions_info (JSONDict): JSON dictionary containing the function information.
             parent (Union[File, Class]): Parent File or Class node.
             methods (bool): Whether to create Method nodes rather than Function nodes.
         """
         for name, info in functions_info.items():
             # Get min-max line numbers
-            min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
+            min_lineno, max_lineno = parse_min_max_line_numbers(info)
             if not min_lineno or not max_lineno:
                 log.warning("Missing line number information for function '%s'", name)
 
             # Serialise the AST
             ast = info.get("ast")
             if ast:
-                ast_string = utils.marshall_json_to_string(ast)
+                ast_string = marshall_json_to_string(ast)
                 if not ast:
                     log.error("Couldn't serialise AST for function %s", name)
             else:
@@ -249,7 +249,7 @@ class RepographBuilder:
             parent (File): Parent File node.
         """
         for name, info in class_info.items():
-            min_lineno, max_lineno = utils.parse_min_max_line_numbers(info)
+            min_lineno, max_lineno = parse_min_max_line_numbers(info)
             class_node = Class(
                 name=name,
                 min_line_number=min_lineno,
@@ -411,7 +411,7 @@ class RepographBuilder:
         licenses = directory_info.pop("license", None)
         _ = directory_info.pop("readme_files", None)
 
-        # Create a sorted list of directory paths, as dictionaries are not
+        # Create a sorted list of directory paths.py, as dictionaries are not
         # always sortable in Python.
         log.info("Sorting directories with hierarchical ordering...")
         directories = sorted(
@@ -420,12 +420,12 @@ class RepographBuilder:
 
         # Parse repository root folder if it exists, otherwise manually create
         # the repository node.
-        path = utils.strip_file_path_prefix(directories[0])
-        if utils.is_root_folder(path):
+        path = strip_file_path_prefix(directories[0])
+        if is_root_folder(path):
             repository = self._parse_repository(path)
             directories.pop(0)
         else:
-            repository = self._parse_repository(utils.get_path_root(path))
+            repository = self._parse_repository(get_path_root(path))
 
         # Parse requirements
         self._parse_requirements(requirements, repository)

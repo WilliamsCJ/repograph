@@ -1,12 +1,12 @@
 """
-Main module.
+Command-Line Interface for manual invocation.
 """
 
 import click
 
-from repograph.logging import configure_logging
-from repograph.repograph_builder import RepographBuilder
-from repograph.utils import read_json_from_file
+from repograph.utils.logging import configure_logging
+from repograph.builder.repograph_builder import RepographBuilder
+from repograph.utils.json import read_json_from_file
 
 configure_logging()
 
@@ -50,7 +50,6 @@ configure_logging()
     help="Generate code summarizations."
 )
 def main(uri, username, password, database, input, prune, summarize):
-    print(summarize)
     builder = RepographBuilder(uri, username, password, database, prune, summarize)
     directory_info = read_json_from_file(input)
     repograph = builder.build(directory_info)  # noqa
