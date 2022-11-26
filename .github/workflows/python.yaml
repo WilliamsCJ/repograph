@@ -4,14 +4,13 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
+    types: [opened, synchronize, reopened]
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     defaults:
-      run:
-        shell: bash -el {0}
+      working-directory: backend
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -20,26 +19,15 @@ jobs:
         with:
           python-version: 3.9.12
       - name: Install dependencies
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          channels: conda-forge,pytorch,huggingface,defaults
-          channel-priority: true
-          python-version: 3.9.12
-          environment-file: environment.yml
-          auto-activate-base: false
-          activate-environment: repograph
-      - run: |
-          conda info
-          conda list
+        run: pip3 install -r requirements.txt
       - name: Lint with flake8
         run: |
-          flake8 repograph --count --max-complexity=10 --max-line-length=127 --statistics
+          flake8 repograph --count --max-complexity=10 --max-line-length=100 --statistics
   
   test:
     runs-on: ubuntu-latest
     defaults:
-      run:
-        shell: bash -el {0}
+      working-directory: backend
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -48,17 +36,7 @@ jobs:
         with:
           python-version: 3.9.12
       - name: Install dependencies
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          channels: conda-forge,pytorch,huggingface,defaults
-          channel-priority: true
-          python-version: 3.9.12
-          environment-file: environment.yml
-          auto-activate-base: false
-          activate-environment: repograph
-      - run: |
-          conda info
-          conda list
+        run: pip3 install -r requirements.txt tests/requirements.txtg
       - name: Test with unittest
         run: |
           python3 -m unittest
