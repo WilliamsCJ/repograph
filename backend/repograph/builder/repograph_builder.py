@@ -5,17 +5,17 @@ import logging
 import os
 from typing import Dict, Set, List, Optional, Tuple, Union
 
-from backend.builder.function_summarizer import FunctionSummarizer
-from backend.repograph.repograph import Repograph
-from backend.repograph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
+from repograph.builder.function_summarizer import FunctionSummarizer
+from repograph.repograph import Repograph
+from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
                                    DocstringRaises, DocstringReturnValue, Folder, File, \
                                    Function, License, Package, Repository, ReturnValue
-from backend.repograph.models.relationships import Contains, Describes, Documents, HasArgument, \
+from repograph.models.relationships import Contains, Describes, Documents, HasArgument, \
                                            HasFunction, HasMethod, LicensedBy, Returns, \
                                            Requires
-
-from backend.builder.utils import JSONDict, get_path_root, strip_file_path_prefix, is_root_folder, \
-                                  marshall_json_to_string, parse_min_max_line_numbers
+from repograph.utils.json import JSONDict, parse_min_max_line_numbers, \
+    marshall_json_to_string
+from repograph.utils.paths import strip_file_path_prefix, is_root_folder, get_path_root
 
 ADDITIONAL_KEYS = [
   "requirements",
@@ -411,7 +411,7 @@ class RepographBuilder:
         licenses = directory_info.pop("license", None)
         _ = directory_info.pop("readme_files", None)
 
-        # Create a sorted list of directory paths, as dictionaries are not
+        # Create a sorted list of directory paths.py, as dictionaries are not
         # always sortable in Python.
         log.info("Sorting directories with hierarchical ordering...")
         directories = sorted(

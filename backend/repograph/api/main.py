@@ -5,8 +5,8 @@ import os
 
 from fastapi import FastAPI, status
 
-from backend.repograph.repograph import Repograph
-from backend.repograph.models.graph import GraphSummary
+from repograph.repograph import Repograph
+from repograph.models.repograph import GraphSummary
 
 app = FastAPI()
 

@@ -17,10 +17,10 @@ services:
       test: "exit 0"
 
   repograph-backend:
-    container_name: repograph-backend
+    container_name: repograph-repograph
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: backend/repograph
+      dockerfile: backend/Dockerfile
     env_file:
       - backend/.env
     ports:

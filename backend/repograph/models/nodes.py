@@ -4,8 +4,8 @@ Nodes.
 from enum import Enum
 from typing import Any, List, Optional
 
-from backend.repograph.models.base import Node
-from backend.builder.utils import get_path_parent, get_path_name
+from repograph.models.base import Node
+from repograph.utils.paths import get_path_name, get_path_parent
 
 
 class Repository(Node):

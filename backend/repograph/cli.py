@@ -1,12 +1,12 @@
 """
-Main module.
+Command-Line Interface for manual invocation.
 """
 
 import click
 
-from backend.repograph.logging import configure_logging
-from backend.builder.repograph_builder import RepographBuilder
-from backend.builder.utils import read_json_from_file
+from repograph.utils.logging import configure_logging
+from repograph.builder.repograph_builder import RepographBuilder
+from repograph.utils.json import read_json_from_file
 
 configure_logging()
 

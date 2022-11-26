@@ -1,8 +1,8 @@
 """
 Relationships between Nodes.
 """
-from backend.repograph.models.base import Relationship
-from backend.repograph.models.nodes import Argument, Body, Class, Docstring, DocstringArgument, \
+from repograph.models.base import Relationship
+from repograph.models.nodes import Argument, Body, Class, Docstring, DocstringArgument, \
                                    DocstringRaises, DocstringReturnValue, File, Folder, \
                                    Function, Repository, ReturnValue, Package, License
 

@@ -3,7 +3,9 @@ repos:
   rev: 5.0.4
   hooks:
   - id: flake8
-    exclude: ^backend/tests/
+    exclude: ^backend/repograph/tests/
+    args:
+      - "--max-line-length=100"
 - repo: local
   hooks:
   - id: unittest

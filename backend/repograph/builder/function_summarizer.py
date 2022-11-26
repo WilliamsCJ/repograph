@@ -9,10 +9,10 @@ Typical usage:
 from logging import getLogger
 from transformers import RobertaTokenizerFast, T5ForConditionalGeneration
 
-from backend.repograph.models.nodes import Function
+from repograph.models.nodes import Function
 
 
-log = getLogger('repograph.function_summarizer')
+log = getLogger('repograph.builder.function_summarizer')
 
 
 class FunctionSummarizer:
