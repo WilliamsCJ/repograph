@@ -19,8 +19,8 @@ services:
   repograph-backend:
     container_name: repograph-repograph
     build:
-      context: backend/repograph
-      dockerfile: backend/Dockerfile
+      context: backend
+      dockerfile: Dockerfile
     env_file:
       - backend/.env
     ports:

@@ -6,7 +6,7 @@ import os
 from fastapi import FastAPI, status
 
 from repograph.repograph import Repograph
-from repograph.models.repograph import GraphSummary
+from repograph.models.repograph import RepographSummary
 
 app = FastAPI()
 
@@ -20,7 +20,7 @@ repograph: Repograph = Repograph(
 
 @app.get(
     "/graph/summary",
-    response_model=GraphSummary,
+    response_model=RepographSummary,
     status_code=status.HTTP_200_OK
 )
 async def get_summary():
