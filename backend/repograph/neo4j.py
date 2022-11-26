@@ -1,7 +1,7 @@
 """
 Neo4J Graph Database related functionality.
 """
-from py2neo import Graph
+from py2neo import Graph, NodeMatch
 
 from backend.repograph.models.base import BaseSubgraph
 
@@ -32,3 +32,9 @@ class Neo4JDatabase:
         for arg in args:
             tx.create(arg._subgraph)
         tx.commit()
+
+    def has_nodes(self) -> bool:
+        return self.graph.nodes.match("*").count() != 0
+
+    def get_all(self, label: str) -> NodeMatch:
+        return self.graph.nodes.match(label).all()
