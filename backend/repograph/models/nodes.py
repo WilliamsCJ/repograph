@@ -2,7 +2,7 @@
 Nodes.
 """
 from enum import Enum
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from repograph.models.base import Node
 from repograph.utils.paths import get_path_name, get_path_parent
@@ -74,14 +74,12 @@ class Class(Node):
 
     Attributes:
         name (str): The class name.
-        min_line_number (int): The first line of the class definition.
-        max_line_number (int): The last line of the class definition.
-        extends (List[str]): A list of other classes/types that the class extends.
+        min_line_number (Optional[int]): The first line of the class definition.
+        max_line_number (Optional[int): The last line of the class definition.
     """
     name: str
-    min_line_number: int
-    max_line_number: int
-    extends: List[str]
+    min_line_number: Optional[int]
+    max_line_number: Optional[int]
 
 
 class Function(Node):
