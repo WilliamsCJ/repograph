@@ -10,7 +10,7 @@ from repograph.repograph import Repograph
 from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
                                    DocstringRaises, DocstringReturnValue, Folder, File, \
                                    Function, License, Package, Repository, ReturnValue
-from repograph.models.relationships import Contains, Describes, Documents, HasArgument, \
+from repograph.models.relationships import Contains, Describes, Documents, Extends, HasArgument, \
                                            HasFunction, HasMethod, LicensedBy, Returns, \
                                            Requires
 from repograph.utils.json import JSONDict, parse_min_max_line_numbers, \
@@ -254,11 +254,13 @@ class RepographBuilder:
                 name=name,
                 min_line_number=min_lineno,
                 max_line_number=max_lineno,
-                extends=info.get("extend", [])
             )
             relationship = Contains(parent, class_node)
             self.repograph.add(class_node)
             self.repograph.add(relationship)
+
+            # Parse extends
+            self._parse_extends(info.get("extend", []), class_node)
 
             # Parse docstring
             self._parse_docstring(info.get("doc", {}), class_node)
@@ -399,8 +401,27 @@ class RepographBuilder:
                 nodes.append(docstring_raises)
                 relationships.append(relationship)
 
-        # Add nodes and relationshiops to graph
+        # Add nodes and relationships to graph
         self.repograph.add(*nodes, *relationships)
+
+    def _parse_extends(self, extends_info: List[str], class_node: Class) -> None:
+        """Parse extends/super class information for a Class node.
+
+        Args:
+            extends_info (List[str]): The names of Classes that the Class node extends.
+            class_node (Class): The Class node itself.
+
+        Returns:
+            None
+        """
+        if len(extends_info) == 0:
+            log.debug("Class `%s` doesn't not extend any other classes", class_node.name)
+            return
+
+        for extends in extends_info:
+            super_class = Class(name=extends)
+            relationship = Extends(class_node, super_class)
+            self.repograph.add(super_class, relationship)
 
     def build(self, directory_info: Dict[str, any]) -> Repograph:
         log.info("Building Repograph...")

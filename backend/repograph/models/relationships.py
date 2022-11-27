@@ -47,6 +47,16 @@ class HasMethod(Relationship):
     }
 
 
+class Extends(Relationship):
+    """Extends Relationship
+
+    Class -> Class
+    """
+    _allowed_types = {
+        Class: {Class}
+    }
+
+
 class HasFunction(Relationship):
     """HasFunction Relationship
 
