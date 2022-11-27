@@ -254,7 +254,6 @@ class RepographBuilder:
                 name=name,
                 min_line_number=min_lineno,
                 max_line_number=max_lineno,
-                extends=info.get("extend", [])
             )
             relationship = Contains(parent, class_node)
             self.repograph.add(class_node)
@@ -406,14 +405,23 @@ class RepographBuilder:
         self.repograph.add(*nodes, *relationships)
 
     def _parse_extends(self, extends_info: List[str], class_node: Class) -> None:
+        """Parse extends/super class information for a Class node.
+
+        Args:
+            extends_info (List[str]): The names of Classes that the Class node extends.
+            class_node (Class): The Class node itself.
+
+        Returns:
+            None
+        """
         if len(extends_info) == 0:
             log.debug("Class `%s` doesn't not extend any other classes", class_node.name)
             return
 
         for extends in extends_info:
             super_class = Class(name=extends)
-            relationshiop = Extends(class_node, super_class)
-            self.repograph.add(super_class, relationshiop)
+            relationship = Extends(class_node, super_class)
+            self.repograph.add(super_class, relationship)
 
     def build(self, directory_info: Dict[str, any]) -> Repograph:
         log.info("Building Repograph...")

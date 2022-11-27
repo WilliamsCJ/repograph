@@ -33,19 +33,21 @@ class TestFile(unittest.TestCase):
 class TestClass(unittest.TestCase):
 
     @parameterized.expand([
-      ["Class", 1, 2, ["SuperClass"]]
+      ["Class", 1, 2],
+      ["Class", None, 2],
+      ["Class", 1, None],
+      ["Class", None, None]
+
     ])
-    def test_attributes(self, name, min_line, max_line, extends):
-        classNode = Class(
+    def test_attributes(self, name, min_line, max_line):
+        class_node = Class(
             name=name,
             min_line_number=min_line,
             max_line_number=max_line,
-            extends=extends
         )
-        self.assertEqual(classNode.name, name)
-        self.assertEqual(classNode.min_line_number, min_line)
-        self.assertEqual(classNode.max_line_number, max_line)
-        self.assertEqual(classNode.extends, extends)
+        self.assertEqual(class_node.name, name)
+        self.assertEqual(class_node.min_line_number, min_line)
+        self.assertEqual(class_node.max_line_number, max_line)
 
 
 class TestLicense(unittest.TestCase):
