@@ -260,7 +260,7 @@ class RepographBuilder:
             self.repograph.add(relationship)
 
             # Parse extends
-            self._parse_extends(info.get("extends", []), class_node)
+            self._parse_extends(info.get("extend", []), class_node)
 
             # Parse docstring
             self._parse_docstring(info.get("doc", {}), class_node)
