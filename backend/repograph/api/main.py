@@ -1,12 +1,15 @@
 """
 API Main
 """
+import logging
 import os
 
 from fastapi import FastAPI, status
 
 from repograph.repograph import Repograph
 from repograph.models.repograph import RepographSummary
+
+log = logging.getLogger('repograph.api')
 
 app = FastAPI()
 

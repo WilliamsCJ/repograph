@@ -17,10 +17,6 @@ def configure_logging():
     logger = logging.getLogger("repograph")
     logger.setLevel(logging.INFO)
 
-    # Create file handler to capture all logs to file
-    fh = logging.FileHandler('debug.log')
-    fh.setLevel(logging.DEBUG)
-
     # Create stream handler to display logs to stdout
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)
@@ -28,8 +24,6 @@ def configure_logging():
 
     # Format logs
     formatter = logging.Formatter('%(levelname)s:%(name)s | %(message)s')
-    fh.setFormatter(formatter)
     ch.setFormatter(formatter)
 
-    logger.addHandler(fh)
     logger.addHandler(ch)

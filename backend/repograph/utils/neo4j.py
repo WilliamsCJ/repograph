@@ -1,9 +1,13 @@
 """
 Neo4J Graph Database related functionality.
 """
+import logging
 from py2neo import Graph, NodeMatch
+from typing import Tuple
 
 from repograph.models.base import BaseSubgraph
+
+log = logging.getLogger('repograph.utils.neo4j')
 
 
 class Neo4JDatabase:
@@ -34,7 +38,8 @@ class Neo4JDatabase:
         tx.commit()
 
     def has_nodes(self) -> bool:
-        return self.graph.nodes.match("*").count() != 0
+        return self.graph.nodes.match().count() != 0
 
-    def get_all(self, label: str) -> NodeMatch:
-        return self.graph.nodes.match(label).all()
+    def get_all(self, label: str) -> Tuple[NodeMatch, int]:
+        match: NodeMatch = self.graph.nodes.match(label)
+        return match.all(), match.count()

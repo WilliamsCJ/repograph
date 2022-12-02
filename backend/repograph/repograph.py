@@ -1,11 +1,13 @@
 """
 This module defines the Repograph class and the operations/queries that can be performed on it
 """
-
+import logging
 from typing import List
 
 from repograph.models.repograph import RepographSummary
 from repograph.utils.neo4j import Neo4JDatabase
+
+log = logging.getLogger('repograph.repograph')
 
 
 class Repograph(Neo4JDatabase):
@@ -20,16 +22,17 @@ class Repograph(Neo4JDatabase):
 
     def get_summary(self) -> RepographSummary:
         if not self.has_nodes():
+            log.warning("Graph has no nodes")
             return RepographSummary()
 
         summary = RepographSummary(is_empty=False)
 
         # Classes
-        match = self.get_all("Class")
-        summary.classes = match.count()
+        _, count = self.get_all("Class")
+        summary.classes = count
 
         # Functions
-        match = self.get_all("Function")
-        summary.functions = match.count()
+        _, count = self.get_all("Function")
+        summary.functions = count
 
         return summary
