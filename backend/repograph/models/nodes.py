@@ -60,12 +60,12 @@ class Package(Directory):
     def create_from_directory(cls, path: str, canonical_name: str) -> Package:
         parent, name = get_package_parent_and_name(canonical_name)
         return Package(
-            name=get_path_name(path),
+            name,
+            canonical_name,
+            parent,
             path=path,
-            parent_directory=get_path_parent(path),
+            parent_path=get_path_parent(path),
             parent_package=parent,
-            canonical_name=canonical_name,
-            external=False
         )
 
     @classmethod
@@ -80,19 +80,40 @@ class Package(Directory):
         """
         parent, name = get_package_parent_and_name(package)
         return Package(
-            name=name,
-            canonical_name=package,
-            parent_package=parent,
+            name,
+            package,
+            parent,
             external=True
         )
 
-    def __init__(self, *args, **kwargs):
-        """Placeholder constructor
+    def __init__(
+        self,
+        name: str,
+        canonical_name: str,
+        parent_package: str,
+        path: Optional[str] = None,
+        parent_path: Optional[str] = None,
+        external: bool = False
+    ):
+        """Constructor
 
-        Raises:
-            Exception: Class methods should be used in place of constructor.
+        Args:
+            name (str): The name of the package.
+            canonical_name (str): The full canonical name (including all parents) of the package.
+            parent_package (str): The canonical name of the
+            path (Optional[str], optional): The path of the package. Defaults to None.
+            parent_path (Optional[str], optional): The path of the parent package. Defaults to None.
+            external (bool, optional): Whether the package is an external dependency of
+                                       the repository. Defaults to False.
         """
-        raise Exception("Cannot construct a Package object directly. Use a class method instead.")
+        super(Directory, self).__init__(
+            name=name,
+            canonical_name=canonical_name,
+            parent_package=parent_package,
+            path=path,
+            parent_path=parent_path,
+            external=external
+        )
 
 
 class Module(Node):

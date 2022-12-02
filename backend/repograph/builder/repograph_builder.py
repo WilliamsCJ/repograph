@@ -77,7 +77,7 @@ class RepographBuilder:
         else:
             log.info("Parsing requirements information...")
             for requirement, version in requirements.items():
-                package = Package(name=requirement, external=True)
+                package = Package.create_from_external_dependency(requirement)
                 self.repograph.add(package)
                 relationship = Requires(repository, package, version=version)
                 self.repograph.add(package, relationship)
