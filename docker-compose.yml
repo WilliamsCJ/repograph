@@ -13,6 +13,11 @@ services:
       NEO4J_AUTH: neo4j/s3cr3t
     networks:
       - repograph-network
+    volumes:
+      - ./.neo4j/data:/data
+      - ./.neo4j/import:/import
+      - ./.neo4j/logs:/logs
+      - ./.neo4j/plugins:/plugins
     healthcheck:
       test: "exit 0"
 
