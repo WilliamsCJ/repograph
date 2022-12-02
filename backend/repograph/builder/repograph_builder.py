@@ -137,10 +137,10 @@ class RepographBuilder:
             Returns:
                 None
             """
-            parent = self.directories.get(child.parent, None)
+            parent = self.directories.get(child.parent_path, None)
 
             if not parent:
-                parent = Directory(child.parent)
+                parent = Directory(child.parent_path)
                 relationship = Contains(parent, child)
                 self.repograph.add(parent, relationship)
                 self.directories[parent.path] = parent

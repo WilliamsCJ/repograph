@@ -28,8 +28,8 @@ class Directory(Node):
         parent (str): The parent directory of the folder.
     """
     name: str
-    path: Optional[str]
-    parent_path: Optional[str]
+    path: str
+    parent_path: str
 
     def __init__(self, path=None):
         """_summary_
@@ -42,15 +42,21 @@ class Directory(Node):
         super().__init__(path=path, name=name, parent=parent)
 
 
-class Package(Directory):
+class Package(Node):
     """Represents a Python package, either within the repository or external.
 
      Attributes:
+        name (str): The name of the directory.
+        path (Optional[str]): The path of the directory.
+        parent (Optional[str]): The parent directory of the folder.
         canonical_name (str): The full package name.
         parent_package (str): The canonical name of the parent package.
         external (bool): Whether this package is external to the parent repository
                          (i.e. installed from PyPi).
     """
+    name: str
+    path: Optional[str]
+    parent_path: Optional[str]
     canonical_name: str
     parent_package: str
     external: bool
@@ -105,7 +111,7 @@ class Package(Directory):
             external (bool, optional): Whether the package is an external dependency of
                                        the repository. Defaults to False.
         """
-        super(Directory, self).__init__(
+        super().__init__(
             name=name,
             canonical_name=canonical_name,
             parent_package=parent_package,
