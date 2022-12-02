@@ -200,7 +200,7 @@ class RepographBuilder:
             total (int): The total number of directories within the repository.
         """
         directory_path = strip_file_path_prefix(directory_name)
-        log.info("Parsing directory '%s' (%d/%d)", directory_path, index, total)
+        log.info("Parsing directory '%s' (%d/%d)", directory_path, index + 1, total)
 
         # Whether the directory is a Package. We start
         # by assuming that it isn't.
@@ -226,9 +226,11 @@ class RepographBuilder:
         else:
             directory = Directory(directory_path)
 
-        # Add the list of created directories and to the Repograph.
+        # Add the list of created directories, the directory node,
+        # and the relationship to its parent, to the Repograph.
         self.directories[directory.path] = directory
-        self.repograph.add(parent)
+        relationship = Contains(parent, directory)
+        self.repograph.add(parent, relationship)
 
         # Parse each of the files within the directory.
         for file in files:
@@ -249,7 +251,7 @@ class RepographBuilder:
         log.info(
             "--> Parsing file `%s` (%d/%d)",
             file_info["file"]["fileNameBase"],
-            index,
+            index + 1,
             total
         )
 
