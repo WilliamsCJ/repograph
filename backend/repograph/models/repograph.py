@@ -12,3 +12,5 @@ class RepographSummary(BaseModel):
     is_empty: bool = True
     classes: int = 0
     functions: int = 0
+    modules: int = 0
+    packages: int = 0

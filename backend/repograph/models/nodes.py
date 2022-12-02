@@ -1,11 +1,12 @@
 """
 Nodes.
 """
+from __future__ import annotations
 from enum import Enum
 from typing import Any, Optional
 
 from repograph.models.base import Node
-from repograph.utils.paths import get_path_name, get_path_parent
+from repograph.utils.paths import get_path_name, get_path_parent, get_package_parent_and_name
 
 
 class Repository(Node):
@@ -19,31 +20,19 @@ class Repository(Node):
     type: str  # TODO: Is this correct? Invocation?
 
 
-class Package(Node):
-    """Represents a Python package.
-
-    Attributes:
-        name (str): The name of the package
-        external (bool): Whether this package is external to the parent repository
-                         (i.e. installed from PyPi).
-    """
-    name: str
-    external: bool
-
-
-class Folder(Node):
+class Directory(Node):
     """Represents a folder in a repository.
 
     Attributes:
-        name (str): The name of the folder.
-        path (str): The path of the folder.
+        name (str): The name of the directory.
+        path (str): The path of the directory.
         parent (str): The parent directory of the folder.
     """
     name: str
-    path: str
-    parent: str
+    path: Optional[str]
+    parent_path: Optional[str]
 
-    def __init__(self, path):
+    def __init__(self, path=None):
         """_summary_
 
         Args:
@@ -54,8 +43,60 @@ class Folder(Node):
         super().__init__(path=path, name=name, parent=parent)
 
 
-class File(Node):
-    """Represents a File within the repository.
+class Package(Directory):
+    """Represents a Python package, either within the repository or external.
+
+     Attributes:
+        canonical_name (str): The full package name.
+        parent_package (str): The canonical name of the parent package.
+        external (bool): Whether this package is external to the parent repository
+                         (i.e. installed from PyPi).
+    """
+    canonical_name: str
+    parent_package: str
+    external: bool
+
+    @classmethod
+    def create_from_directory(cls, path: str, canonical_name: str) -> Package:
+        parent, name = get_package_parent_and_name(canonical_name)
+        return Package(
+            name=get_path_name(path),
+            path=path,
+            parent_directory=get_path_parent(path),
+            parent_package=parent,
+            canonical_name=canonical_name,
+            external=False
+        )
+
+    @classmethod
+    def create_from_external_dependency(cls, package: str):
+        """Creates a Package instance from an external dependency.
+
+        Args:
+            package (str): The dependency name.
+
+        Returns:
+            Package: A Package instance.
+        """
+        parent, name = get_package_parent_and_name(package)
+        return Package(
+            name=name,
+            canonical_name=package,
+            parent_package=parent,
+            external=True
+        )
+
+    def __init__(self, *args, **kwargs):
+        """Placeholder constructor
+
+        Raises:
+            Exception: Class methods should be used in place of constructor.
+        """
+        raise Exception("Cannot construct a Package object directly. Use a class method instead.")
+
+
+class Module(Node):
+    """Represents a Module within the repository.
 
     Attributes:
        name (str): The file.

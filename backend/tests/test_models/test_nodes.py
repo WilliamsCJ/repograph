@@ -2,7 +2,7 @@ import unittest
 
 import py2neo
 from parameterized import parameterized
-from repograph.models.nodes import Class, Docstring, File, Folder, License
+from repograph.models.nodes import Class, Docstring, Module, Directory, License
 
 
 class TestFolder(unittest.TestCase):
@@ -11,7 +11,7 @@ class TestFolder(unittest.TestCase):
       ["a/b/c", "c", "a/b"]
     ])
     def test_attributes(self, path, name, parent):
-        package = Folder(path)
+        package = Directory(path)
         self.assertEqual(package.name, name)
         self.assertEqual(package.parent, parent)
         self.assertEqual(package.path, path)
@@ -23,7 +23,7 @@ class TestFile(unittest.TestCase):
       ["file.py", "/dir/file.py", ".py", False]
     ])
     def test_attributes(self, name, path, extension, is_test):
-        file = File(name=name, path=path, extension=extension, is_test=is_test)
+        file = Module(name=name, path=path, extension=extension, is_test=is_test)
         self.assertEqual(file.name, name)
         self.assertEqual(file.path, path)
         self.assertEqual(file.extension, extension)
