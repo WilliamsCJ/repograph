@@ -70,7 +70,6 @@ class Package(Node):
             parent,
             path=path,
             parent_path=get_path_parent(path),
-            parent_package=parent,
         )
 
     @classmethod

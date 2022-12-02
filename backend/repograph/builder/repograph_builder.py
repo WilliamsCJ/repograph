@@ -25,7 +25,7 @@ ADDITIONAL_KEYS = [
   "readme_files"
 ]
 
-INIT = "__init__.py"
+INIT = "__init__"
 
 log = logging.getLogger('repograph.repograph_builder')
 
@@ -211,7 +211,7 @@ class RepographBuilder:
         # with result (whether file is __init__.py), and add to list
         # of Files.
         for file_index, file_info in enumerate(directory_info):
-            file = is_package or self._parse_module(file_info, file_index, len(directory_info))
+            file = self._parse_module(file_info, file_index, len(directory_info))
             is_package = is_package or file.name == INIT
             files.append(file)
 

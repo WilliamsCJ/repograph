@@ -31,9 +31,10 @@ class Contains(Relationship):
       - Module -> Class/Function, Body
     """
     _allowed_types = {
-      Repository: {Directory, Module},
-      Directory: {Directory, Module},
-      Module: {Function, Class, Body}
+        Repository: {Directory, Module, Package},
+        Directory: {Directory, Module, Package},
+        Package: {Directory, Module, Package},
+        Module: {Function, Class, Body}
     }
 
 
