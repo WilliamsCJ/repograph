@@ -1,7 +1,6 @@
 """
 Nodes.
 """
-from __future__ import annotations
 from enum import Enum
 from typing import Any, Optional
 
@@ -57,7 +56,7 @@ class Package(Directory):
     external: bool
 
     @classmethod
-    def create_from_directory(cls, path: str, canonical_name: str) -> Package:
+    def create_from_directory(cls, path: str, canonical_name: str) -> "Package":
         parent, name = get_package_parent_and_name(canonical_name)
         return Package(
             name,
@@ -69,7 +68,7 @@ class Package(Directory):
         )
 
     @classmethod
-    def create_from_external_dependency(cls, package: str):
+    def create_from_external_dependency(cls, package: str) -> "Package":
         """Creates a Package instance from an external dependency.
 
         Args:
