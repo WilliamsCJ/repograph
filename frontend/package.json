@@ -24,7 +24,6 @@
     "react-router-dom": "^6.4.3",
     "react-sizeme": "^3.0.2",
     "react-use-dimensions": "^1.2.1",
-    "sort-by": "^1.2.0",
     "styled-components": "^5.3.6"
   },
   "devDependencies": {
