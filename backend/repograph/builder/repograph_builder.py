@@ -424,11 +424,22 @@ class RepographBuilder:
         else:
             return
 
-        # https://stackoverflow.com/questions/952914/how-do-i-make-a-flat-list-out-of-a-list-of-lists
-        for arg in set([item for sublist in return_values for item in sublist]):
-            return_value = ReturnValue(name=arg, type=return_type)
-            relationship = Returns(parent, return_value)
-            self.repograph.add(return_value, relationship)
+        def parse(values):
+            for value in values:
+                if isinstance(value, list):
+                    parse(value)
+                elif isinstance(value, str):
+                    return_value = ReturnValue(name=value, type=return_type)
+                    relationship = Returns(parent, return_value)
+                    self.repograph.add(return_value, relationship)
+                else:
+                    log.error(
+                        "Unexpected return value type `%s` for function `%s`",
+                        type(value),
+                        parent.name
+                    )
+
+        parse(return_values)
 
     def _parse_docstring(
         self,
