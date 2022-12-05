@@ -177,8 +177,8 @@ class RepographBuilder:
 
         while parent != "":
             if isinstance(self.directories.get(parent, None), Package):
-                parts = [get_path_name(directory_path)] + parts
-                parent = get_path_parent
+                parts = [get_path_name(parent)] + parts
+                parent = get_path_parent(parent)
             else:
                 return ".".join(parts)
 

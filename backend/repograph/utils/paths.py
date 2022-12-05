@@ -87,4 +87,4 @@ def get_package_parent_and_name(package: str) -> Tuple[str, str]:
     if len(parts) == 1:
         return "", package
 
-    return ".".join(parts[:-1]), package[-1]
+    return ".".join(parts[:-1]), parts[-1]
