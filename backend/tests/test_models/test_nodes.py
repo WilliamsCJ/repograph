@@ -2,19 +2,49 @@ import unittest
 
 import py2neo
 from parameterized import parameterized
-from repograph.models.nodes import Class, Docstring, File, Folder, License
+from repograph.models.nodes import Class, Docstring, Module, Directory, License, Package
 
 
-class TestFolder(unittest.TestCase):
+class TestDirectory(unittest.TestCase):
 
     @parameterized.expand([
       ["a/b/c", "c", "a/b"]
     ])
     def test_attributes(self, path, name, parent):
-        package = Folder(path)
+        package = Directory(path)
         self.assertEqual(package.name, name)
-        self.assertEqual(package.parent, parent)
+        self.assertEqual(package.parent_path, parent)
         self.assertEqual(package.path, path)
+
+
+class TestPackage(unittest.TestCase):
+    @parameterized.expand([
+        ["a/b/c", "a.b.c", "c", "a.b", "a/b"],
+        ["a/b/c", "b.c", "c", "b", "a/b"]
+    ])
+    def test_create_from_directory(self, path, canonical_name, name, parent_package, parent_path):
+        package = Package.create_from_directory(path, canonical_name)
+
+        self.assertEqual(package.name, name)
+        self.assertEqual(package.canonical_name, canonical_name)
+        self.assertEqual(package.parent_package, parent_package)
+        self.assertEqual(package.path, path)
+        self.assertEqual(package.parent_path, parent_path)
+        self.assertFalse(package.external)
+
+    @parameterized.expand([
+        ["a.b.c", "c", "a.b"],
+        ["b.c", "c", "b"]
+    ])
+    def test_create_external_dependency(self, canonical_name, name, parent_package):
+        package = Package.create_from_external_dependency(canonical_name)
+
+        self.assertEqual(package.name, name)
+        self.assertEqual(package.canonical_name, canonical_name)
+        self.assertEqual(package.parent_package, parent_package)
+        self.assertIsNone(package.path)
+        self.assertIsNone(package.parent_path)
+        self.assertTrue(package.external)
 
 
 class TestFile(unittest.TestCase):
@@ -23,7 +53,7 @@ class TestFile(unittest.TestCase):
       ["file.py", "/dir/file.py", ".py", False]
     ])
     def test_attributes(self, name, path, extension, is_test):
-        file = File(name=name, path=path, extension=extension, is_test=is_test)
+        file = Module(name=name, path=path, extension=extension, is_test=is_test)
         self.assertEqual(file.name, name)
         self.assertEqual(file.path, path)
         self.assertEqual(file.extension, extension)

@@ -27,6 +27,10 @@ class Repograph(Neo4JDatabase):
 
         summary = RepographSummary(is_empty=False)
 
+        # Modules
+        _, count = self.get_all("Module")
+        summary.modules = count
+
         # Classes
         _, count = self.get_all("Class")
         summary.classes = count

@@ -3,7 +3,7 @@ Relationships between Nodes.
 """
 from repograph.models.base import Relationship
 from repograph.models.nodes import Argument, Body, Class, Docstring, DocstringArgument, \
-                                   DocstringRaises, DocstringReturnValue, File, Folder, \
+                                   DocstringRaises, DocstringReturnValue, Module, Directory, \
                                    Function, Repository, ReturnValue, Package, License
 
 
@@ -27,13 +27,14 @@ class Contains(Relationship):
     """Contains Relationship
 
     Usage:
-      - Folder -> Folder/File
-      - File -> Class/Function, Body
+      - Folder -> Folder/Module
+      - Module -> Class/Function, Body
     """
     _allowed_types = {
-      Repository: {Folder, File},
-      Folder: {Folder, File},
-      File: {Function, Class, Body}
+        Repository: {Directory, Module, Package},
+        Directory: {Directory, Module, Package},
+        Package: {Directory, Module, Package},
+        Module: {Function, Class, Body}
     }
 
 
@@ -60,10 +61,10 @@ class Extends(Relationship):
 class HasFunction(Relationship):
     """HasFunction Relationship
 
-    File -> Function
+    Module -> Function
     """
     _allowed_types = {
-        File: {Function}
+        Module: {Function}
     }
 
 

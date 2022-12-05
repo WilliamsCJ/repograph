@@ -4,6 +4,7 @@ Utility functions for handling file paths.
 import os
 import logging
 from pathlib import PurePath
+from typing import Tuple
 
 
 log = logging.getLogger("repograph.utils.paths")
@@ -13,7 +14,7 @@ def strip_file_path_prefix(file_path: str) -> str:
     """Strips the first part of a file_path.
 
     Args:
-        file_path (str): File path to strip.
+        file_path (str): Module path to strip.
 
     Returns:
         str: The stripped file path.
@@ -53,7 +54,7 @@ def is_root_folder(file_path: str) -> bool:
     """Checks file path to see if path represents the root of a repository.
 
     Args:
-        file_path (str): File path
+        file_path (str): Module path
 
     Returns:
         bool: Whether the path represents the root of the repository.
@@ -69,3 +70,21 @@ def sort_path(x):
 def get_path_root(file_path: str) -> str:
     pure_path = PurePath(file_path)
     return pure_path.parts[0]
+
+
+def get_package_parent_and_name(package: str) -> Tuple[str, str]:
+    """Get the package
+
+    Args:
+        package (str): _description_
+
+    Returns:
+        str: The parent package
+        str: The package name
+    """
+    parts = package.split(".")
+
+    if len(parts) == 1:
+        return "", package
+
+    return ".".join(parts[:-1]), parts[-1]

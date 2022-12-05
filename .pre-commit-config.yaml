@@ -10,11 +10,11 @@ repos:
   hooks:
   - id: unittest
     name: unittest
-    entry: python3 -m unittest 
+    entry: nosetests backend
     language: python
     'types': [python]
     pass_filenames: false
-    additional_dependencies: [parameterized, py2neo, click, neo4j, pydantic, transformers, torch]
+    additional_dependencies: [parameterized, py2neo, click, neo4j, pydantic, transformers, torch, nose]
     stages: [commit]
   - id: reindent
     name: reindent
