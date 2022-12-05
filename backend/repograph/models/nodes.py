@@ -25,7 +25,7 @@ class Directory(Node):
     Attributes:
         name (str): The name of the directory.
         path (str): The path of the directory.
-        parent (str): The parent directory of the folder.
+        parent_path (str): The parent directory of the folder.
     """
     name: str
     path: str
@@ -55,10 +55,10 @@ class Package(Node):
                          (i.e. installed from PyPi).
     """
     name: str
-    path: Optional[str]
-    parent_path: Optional[str]
     canonical_name: str
     parent_package: str
+    path: Optional[str]
+    parent_path: Optional[str]
     external: bool
 
     @classmethod
