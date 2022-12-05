@@ -132,7 +132,7 @@ class RepographBuilder:
 
             Args:
                 child (Directory): The immediate parent directory to the true child directory.
-                                   i.e the Directory with the path of parent_path.
+                                   i.e. the Directory with the path of parent_path.
 
             Returns:
                 None
@@ -446,18 +446,18 @@ class RepographBuilder:
         """
         # Return immediately depending on whether Class/Function, if docstring info
         # provided, and whether summarization enabled.
-        if (isinstance(parent, Class)):
-            if (not docstring_info):
+        if isinstance(parent, Class):
+            if not docstring_info:
                 log.debug(f"No docstring information for class {parent.name}")
                 return
-        elif (isinstance(parent, Function)):
-            if (not docstring_info and not self.summarize):
+        elif isinstance(parent, Function):
+            if not docstring_info and not self.summarize:
                 log.debug(f"No docstring information for {parent.name}")
                 return
         else:
             return
 
-        # Initialise empty arrays for storing created nodes/reationships
+        # Initialise empty arrays for storing created nodes/relationships
         nodes = []
         relationships = []
 
