@@ -73,7 +73,7 @@ def get_path_root(file_path: str) -> str:
 
 
 def get_package_parent_and_name(package: str) -> Tuple[str, str]:
-    """Get the packa
+    """Get the package
 
     Args:
         package (str): _description_

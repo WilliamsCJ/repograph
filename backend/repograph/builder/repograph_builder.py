@@ -3,7 +3,7 @@ RepographBuilder generates a populated Repograph from inspect4py JSON output.
 """
 import logging
 import os
-from typing import Dict, Set, List, Optional, Tuple, Type, Union
+from typing import Dict, Set, List, Optional, Tuple, Union
 
 from repograph.builder.function_summarizer import FunctionSummarizer
 from repograph.repograph import Repograph
@@ -116,7 +116,7 @@ class RepographBuilder:
     def _parse_readme(self, info):
         pass
 
-    def _get_parent_directory(self, parent_path: str) -> Type[Directory]:
+    def _get_parent_directory(self, parent_path: str) -> Directory:
         """Retrieves the parent directory for supplied path.
 
         Recursively creates missing parent directories and adds relationship.
@@ -127,7 +127,7 @@ class RepographBuilder:
         Returns:
             Type[Directory]: The parent Directory.
         """
-        def add_parents_recursively(child: Directory) -> Directory:
+        def add_parents_recursively(child: Directory) -> None:
             """Recursively adds further missing parent directories
 
             Args:
@@ -144,24 +144,24 @@ class RepographBuilder:
                 relationship = Contains(parent, child)
                 self.repograph.add(parent, relationship)
                 self.directories[parent.path] = parent
-                return self._add_parent_relationship(parent)
+                return add_parents_recursively(parent)
             else:
                 parent_relationship = Contains(parent, child)
                 self.repograph.add(child, parent_relationship)
                 return
 
         # Attempt to get the parent directory from the list of created directories.
-        parent = self.directories.get(parent_path, None)
+        existing_parent = self.directories.get(parent_path, None)
+        if existing_parent:
+            return existing_parent
 
         # If it doesn't exist create a new Directory and then call the recursive function.
-        if not parent:
-            parent = Directory(parent_path)
-            self.repograph.add(parent)
-            self.directories[parent.path] = parent
+        new_parent = Directory(parent_path)
+        self.repograph.add(new_parent)
+        self.directories[new_parent.path] = new_parent
+        add_parents_recursively(new_parent)
 
-            add_parents_recursively(parent)
-
-        return parent
+        return new_parent
 
     def _create_canonical_package_name(self, directory_path: str) -> str:
         """Create canonical package name for a directory path
@@ -187,7 +187,7 @@ class RepographBuilder:
     def _parse_directory(
         self,
         directory_name: str,
-        directory_info: JSONDict,
+        directory_info: List[JSONDict],
         index: int,
         total: int
     ) -> None:
@@ -205,15 +205,15 @@ class RepographBuilder:
         # Whether the directory is a Package. We start
         # by assuming that it isn't.
         is_package = False
-        files = []
+        modules = []
 
         # Parse each file within the directory, update is_package
         # with result (whether file is __init__.py), and add to list
         # of Files.
         for file_index, file_info in enumerate(directory_info):
-            file = self._parse_module(file_info, file_index, len(directory_info))
-            is_package = is_package or file.name == INIT
-            files.append(file)
+            module = self._parse_module(file_info, file_index, len(directory_info))
+            is_package = is_package or module.name == INIT
+            modules.append(module)
 
         # Get the parent directory
         parent = self._get_parent_directory(get_path_parent(directory_path))
@@ -233,11 +233,11 @@ class RepographBuilder:
         self.repograph.add(parent, relationship)
 
         # Parse each of the files within the directory.
-        for file in files:
-            relationship = Contains(directory, file)
-            self.repograph.add(file, relationship)
+        for module in modules:
+            relationship = Contains(directory, module)
+            self.repograph.add(module, relationship)
 
-    def _parse_module(self, file_info: JSONDict, index: int, total: int) -> bool:
+    def _parse_module(self, file_info: JSONDict, index: int, total: int) -> Module:
         """Parses a Python module with a parent directory.
 
         Args:
@@ -255,17 +255,17 @@ class RepographBuilder:
             total
         )
 
-        file = Module(
+        module = Module(
             name=file_info["file"]["fileNameBase"],
             path=file_info["file"]["path"],
             extension=file_info["file"]["extension"],
             is_test=file_info.get("is_test", False)
         )
 
-        self._parse_functions_and_methods(file_info.get("functions", {}), file)
-        self._parse_classes(file_info.get("classes", {}), file)
+        self._parse_functions_and_methods(file_info.get("functions", {}), module)
+        self._parse_classes(file_info.get("classes", {}), module)
 
-        return file
+        return module
 
     def _parse_functions_and_methods(
             self,
