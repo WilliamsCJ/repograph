@@ -5,6 +5,7 @@ import logging
 import os
 
 from fastapi import FastAPI, status
+from fastapi.middleware.cors import CORSMiddleware
 
 from repograph.repograph import Repograph
 from repograph.models.repograph import RepographSummary
@@ -12,6 +13,14 @@ from repograph.models.repograph import RepographSummary
 log = logging.getLogger('repograph.api')
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 repograph: Repograph = Repograph(
     os.environ.get("NEO4J_URI"),
