@@ -1,16 +1,11 @@
 import tw from "twin.macro";
 import { SideBar } from "./layout";
-
-import {
-  HomeIcon,
-  MagnifyingGlassIcon,
-  ExclamationTriangleIcon,
-} from "@heroicons/react/24/outline";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
 
 export type NavIconProps = {
   href: string;
   icon: any;
+  active: boolean
 };
 
 export type NavigationRoute = {
@@ -21,15 +16,13 @@ export type NavigationRoute = {
 
 export type NavigationBarProps = {
   routes: NavigationRoute[];
+  currentPath: string
 };
 
-const NavIcon = ({ icon, href }: NavIconProps) => {
-  const location = useLocation();
-
-  const active = location.pathname === href;
+const NavIcon = ({ icon, href, active }: NavIconProps) => {
 
   return (
-    <Link to={href}>
+    <Link href={href}>
       <div tw="flex h-10">
         <div
           css={[
@@ -44,10 +37,10 @@ const NavIcon = ({ icon, href }: NavIconProps) => {
   );
 };
 
-const NavigationBar = ({ routes }: NavigationBarProps) => (
+const NavigationBar = ({ routes, currentPath }: NavigationBarProps) => (
   <SideBar>
     {routes.map((route, index) => (
-      <NavIcon href={route.href} icon={route.icon} />
+      <NavIcon key={index} href={route.href} icon={route.icon} active={route.href === currentPath} />
     ))}
   </SideBar>
 );

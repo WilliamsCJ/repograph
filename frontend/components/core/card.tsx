@@ -49,4 +49,4 @@ const FullWidthCard: React.FC<CardProps> = ({children, ...props}) => (
 )
 
 
-export { FullWidthCard };
+export { FullWidthCard, Card };

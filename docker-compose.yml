@@ -41,7 +41,7 @@ services:
   repograph-frontend:
     container_name: repograph-frontend
     build:
-      context: ./frontend
+      context: frontend-old
       dockerfile: Dockerfile
     ports:
         - '1337:80'

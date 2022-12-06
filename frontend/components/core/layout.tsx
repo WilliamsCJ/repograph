@@ -4,7 +4,7 @@ import React from "react";
 import tw from "twin.macro";
 
 // Prop types
-import type { DefaultLayoutProps } from "../types/layout";
+import type { DefaultLayoutProps } from "../../types/components/core/layout";
 
 // Other components
 import { Heading } from "./text";
@@ -36,7 +36,11 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
     <RowLayout>
       <HeadingRow>
         <Heading>{heading}</Heading>
-        <ButtonGroup>{buttons}</ButtonGroup>
+        <ButtonGroup>
+          {buttons.map((button, index) => (
+            <React.Fragment key={index}>{button}</React.Fragment>
+          ))}
+        </ButtonGroup>
       </HeadingRow>
       {children}
     </RowLayout>

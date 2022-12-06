@@ -1,9 +1,14 @@
 import React, { useRef } from "react";
 
+/* Next */
+import dynamic from "next/dynamic";
+
 /* External dependencies */
 import "twin.macro";
-import { ForceGraph2D } from "react-force-graph";
 import useDimensions from "react-use-dimensions";
+const ForceGraph2D = dynamic(() => import("./force-graph"), {
+  ssr: false,
+})
 
 /* Components */
 import { FullWidthCard } from "./card";
@@ -42,4 +47,4 @@ const GraphCard: React.FC<GraphCardProps> = ({ data }) => {
   );
 };
 
-export { GraphCard };
+export default GraphCard;

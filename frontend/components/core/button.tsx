@@ -1,6 +1,6 @@
 import tw from "twin.macro";
-import { ButtonProps, LinkButtonProps } from "../types/button";
-import { Link } from "react-router-dom";
+import { ButtonProps, LinkButtonProps } from "../../types/components/core/button";
+import Link from "next/link";
 
 /**
  * Base Button
@@ -29,7 +29,7 @@ const Button = ({ icon, text }: ButtonProps) => {
  * @constructor
  */
 const LinkButton = ({ href, ...props }: LinkButtonProps) => (
-  <Link to={href}>
+  <Link href={href}>
     <Button {...props} />
   </Link>
 );
