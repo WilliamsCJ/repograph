@@ -9,8 +9,8 @@ import { Error, Home, Issues, Search } from "./routes";
 import GlobalStyles from "./styles/GlobalStyles";
 
 // Components
-import NavigationBar, { NavigationRoute } from "./components/navigation";
-import { ApplicationShell, MainContainer } from "./components/layout";
+import NavigationBar, { NavigationRoute } from "./components/core/navigation";
+import { ApplicationShell, MainContainer } from "./components/core/layout";
 import {
   ExclamationTriangleIcon,
   HomeIcon,

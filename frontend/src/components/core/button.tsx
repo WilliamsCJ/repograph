@@ -1,5 +1,5 @@
 import tw from "twin.macro";
-import { ButtonProps, LinkButtonProps } from "../types/button";
+import { ButtonProps, LinkButtonProps } from "../../types/button";
 import { Link } from "react-router-dom";
 
 /**

@@ -4,7 +4,7 @@ import React from "react";
 import tw from "twin.macro";
 
 // Prop types
-import type { DefaultLayoutProps } from "../types/layout";
+import type { DefaultLayoutProps } from "../../types/layout";
 
 // Other components
 import { Heading } from "./text";

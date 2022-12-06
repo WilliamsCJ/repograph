@@ -4,9 +4,9 @@ import React from "react";
 import "twin.macro";
 
 // Components
-import { CenteredLayout, FullContainer } from "../components/layout";
-import { Heading } from "../components/text";
-import { LinkButton } from "../components/button";
+import { CenteredLayout, FullContainer } from "../components/core/layout";
+import { Heading } from "../components/core/text";
+import { LinkButton } from "../components/core/button";
 
 // Icons
 import { HomeIcon } from "@heroicons/react/24/outline";

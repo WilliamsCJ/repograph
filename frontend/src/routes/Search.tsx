@@ -1,5 +1,5 @@
 import React from "react";
-import { DefaultLayout } from "../components/layout";
+import { DefaultLayout } from "../components/core/layout";
 
 function Search() {
   return (
