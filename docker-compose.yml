@@ -22,14 +22,14 @@ services:
       test: "exit 0"
 
   repograph-backend:
-    container_name: repograph-repograph
+    container_name: repograph-backend
     build:
       context: backend
       dockerfile: Dockerfile
     env_file:
       - backend/.env
     ports:
-      - "3000:80"
+      - "3000:3000"
     networks:
       - repograph-network
     depends_on:
@@ -41,10 +41,10 @@ services:
   repograph-frontend:
     container_name: repograph-frontend
     build:
-      context: frontend-old
+      context: frontend
       dockerfile: Dockerfile
     ports:
-        - '1337:80'
+        - '8080:80'
     networks:
       - repograph-network
     links:
