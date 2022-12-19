@@ -543,7 +543,15 @@ class RepographBuilder:
             relationship = Extends(class_node, super_class)
             self.repograph.add(super_class, relationship)
 
-    def build(self, directory_info: Dict[str, any]) -> Repograph:
+    def build(self, directory_info: JSONDict) -> Repograph:
+        """Build a repograph from directory_info JSON.
+
+        Args:
+            directory_info (JSONDict): Directory info JSON.
+
+        Returns:
+            Repograph
+        """
         log.info("Building Repograph...")
 
         # Pop off non-directory entries from the JSON, for parsing later
