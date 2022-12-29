@@ -11,8 +11,8 @@ from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument
                                    DocstringRaises, DocstringReturnValue, Directory, Module, \
                                    Function, License, Package, Repository, ReturnValue
 from repograph.models.relationships import Contains, Describes, Documents, Extends, HasArgument, \
-                                           HasFunction, HasMethod, LicensedBy, Returns, \
-                                           Requires
+                                           HasFunction, HasMethod, ImportedBy, LicensedBy, \
+                                           Returns, Requires
 from repograph.utils.json import JSONDict, parse_min_max_line_numbers, \
     marshall_json_to_string
 from repograph.utils.paths import strip_file_path_prefix, is_root_folder, get_path_name, \
@@ -35,6 +35,7 @@ class RepographBuilder:
     function_summarizer: FunctionSummarizer
     summarize: bool
     directories: Dict[str, Union[Repository, Directory]] = dict()
+    modules: Dict[str, Union[Package, Module]] = dict()
     calls: Set[Tuple[str, str]] = set()
 
     def __init__(self, uri, user, password, database, prune=False, summarize=False) -> None:
@@ -264,6 +265,7 @@ class RepographBuilder:
 
         self._parse_functions_and_methods(file_info.get("functions", {}), module)
         self._parse_classes(file_info.get("classes", {}), module)
+        self._parse_dependencies()
 
         return module
 
@@ -320,7 +322,7 @@ class RepographBuilder:
             # Add to graph
             self.repograph.add(function)
 
-            # TODO: Call _parse_docstring
+            # Parse the docstring for the function
             self._parse_docstring(info.get("doc", {}), function)
 
             # Create HasFunction Relationship
@@ -523,6 +525,30 @@ class RepographBuilder:
 
         # Add nodes and relationships to graph
         self.repograph.add(*nodes, *relationships)
+
+    def _parse_dependencies(self, dependency_info: List[JSONDict], module: Module) -> None:
+        for dependency in dependency_info:
+            if "from_module" in dependency:
+                imported_module = dependency["from_module"]
+                imported_object = dependency["import"]
+            else:
+                imported_object = imported_module = dependency["import"]
+
+            # If importing a module directly....
+            if imported_object == imported_module:
+                # and it already exists create the relationship
+                if imported_object in self.modules:
+                    relationship = ImportedBy(imported_object, module)
+                # and if it doesn't recursively create it
+                else:
+                    pass
+            # If importing a class, etc. check that the object exists
+            else:
+                # TODO: Store classes and functions
+                if imported_object in self:
+                    pass
+                else:
+                    pass
 
     def _parse_extends(self, extends_info: List[str], class_node: Class) -> None:
         """Parse extends/super class information for a Class node.

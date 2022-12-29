@@ -38,6 +38,21 @@ class Contains(Relationship):
     }
 
 
+class ImportedBy(Relationship):
+    """Imports Relationship
+
+    Usage:
+        - Module -> Module
+        - Package -> Module
+    """
+    _allowed_types = {
+        Module: {Module},
+        Package: {Module}
+    }
+
+    alias: str
+
+
 class HasMethod(Relationship):
     """HasMethod Relationship
 
