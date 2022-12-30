@@ -10,7 +10,7 @@ from repograph.repograph import Repograph
 from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
                                    DocstringRaises, DocstringReturnValue, Directory, Module, \
                                    Function, License, Package, Repository, ReturnValue
-from repograph.models.relationships import Contains, Describes, Documents, Extends, HasArgument, \
+from repograph.models.relationships import Contains, Describes, Documents, HasArgument, \
                                            HasFunction, HasMethod, ImportedBy, LicensedBy, \
                                            Returns, Requires
 from repograph.utils.json import JSONDict, parse_min_max_line_numbers, \
@@ -592,10 +592,11 @@ class RepographBuilder:
             log.debug("Class `%s` doesn't not extend any other classes", class_node.name)
             return
 
-        for extends in extends_info:
-            super_class = Class(name=extends)
-            relationship = Extends(class_node, super_class)
-            self.repograph.add(super_class, relationship)
+        # TODO: Implement Extends properly
+        # for extends in extends_info:
+        #     super_class = Class(name=extends)
+        #     relationship = Extends(class_node, super_class)
+        #     self.repograph.add(super_class, relationship)
 
     def build(self, directory_info: JSONDict) -> Repograph:
         """Build a repograph from directory_info JSON.
