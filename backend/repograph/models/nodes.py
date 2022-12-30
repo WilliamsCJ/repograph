@@ -17,6 +17,7 @@ class Repository(Node):
     """
     name: str
     type: str  # TODO: Is this correct? Invocation?
+    is_root_package: bool
 
 
 class Directory(Node):
@@ -48,7 +49,7 @@ class Package(Node):
      Attributes:
         name (str): The name of the directory.
         path (Optional[str]): The path of the directory.
-        parent (Optional[str]): The parent directory of the folder.
+        parent_path (Optional[str]): The parent directory of the folder.
         canonical_name (str): The full package name.
         parent_package (str): The canonical name of the parent package.
         external (bool): Whether this package is external to the parent repository

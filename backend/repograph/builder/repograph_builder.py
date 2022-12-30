@@ -49,7 +49,7 @@ class RepographBuilder:
         if prune:
             self.repograph.graph.delete_all()
 
-    def _parse_repository(self, path: str) -> Repository:
+    def _parse_repository(self, path: str, directory_info: List[JSONDict] = None) -> Repository:
         """Parses information about the repository, i.e. the root,
         itself.
 
@@ -59,9 +59,23 @@ class RepographBuilder:
         Returns:
             Repository: The created Repository node
         """
-        repository = Repository(name=path, type="tbc")  # TODO: Implement type.
+        is_package = False
+        modules = []
+
+        # Parse files within this folder, as Python files may be contained in the repository root
+        if directory_info:
+            modules, is_package = self._parse_files_in_directory(directory_info)
+
+        # TODO: Implement type.
+        repository = Repository(name=path, type="tbc", is_root_package=is_package)
         self.repograph.add(repository)
         self.directories[repository.name] = repository
+
+        # Create Contains relationship between Repository node and each child module
+        for module in modules:
+            relationship = Contains(repository, module)
+            self.repograph.add(module, relationship)
+
         return repository
 
     def _parse_requirements(self, requirements: Optional[JSONDict], repository: Repository) -> None:
@@ -203,18 +217,10 @@ class RepographBuilder:
         directory_path = strip_file_path_prefix(directory_name)
         log.info("Parsing directory '%s' (%d/%d)", directory_path, index + 1, total)
 
-        # Whether the directory is a Package. We start
-        # by assuming that it isn't.
-        is_package = False
-        modules = []
-
         # Parse each file within the directory, update is_package
         # with result (whether file is __init__.py), and add to list
         # of Files.
-        for file_index, file_info in enumerate(directory_info):
-            module = self._parse_module(file_info, file_index, len(directory_info))
-            is_package = is_package or module.name == INIT
-            modules.append(module)
+        modules, is_package = self._parse_files_in_directory(directory_info)
 
         # Get the parent directory
         parent = self._get_parent_directory(get_path_parent(directory_path))
@@ -237,6 +243,26 @@ class RepographBuilder:
         for module in modules:
             relationship = Contains(directory, module)
             self.repograph.add(module, relationship)
+
+    def _parse_files_in_directory(self, directory_info: List[JSONDict]) -> Tuple[List[Module], bool]:  # noqa: 501
+        """Parses files within a directory into Python Module nodes.
+
+        Args:
+            directory_info (List[JSONDict]): The list of JSONDict objects to parse.
+
+        Returns:
+            Tuple[List[Module], bool]: The list of parsed Module nodes and whether the enclosing
+                                       directory is a package.
+        """
+        is_package = False
+        modules = []
+
+        for file_index, file_info in enumerate(directory_info):
+            module = self._parse_module(file_info, file_index, len(directory_info))
+            is_package = is_package or module.name == INIT
+            modules.append(module)
+
+        return modules, is_package
 
     def _parse_module(self, file_info: JSONDict, index: int, total: int) -> Module:
         """Parses a Python module with a parent directory.
@@ -265,7 +291,7 @@ class RepographBuilder:
 
         self._parse_functions_and_methods(file_info.get("functions", {}), module)
         self._parse_classes(file_info.get("classes", {}), module)
-        self._parse_dependencies()
+        # self._parse_dependencies()
 
         return module
 
@@ -538,17 +564,19 @@ class RepographBuilder:
             if imported_object == imported_module:
                 # and it already exists create the relationship
                 if imported_object in self.modules:
-                    relationship = ImportedBy(imported_object, module)
+                    _ = ImportedBy(imported_object, module)
                 # and if it doesn't recursively create it
                 else:
                     pass
-            # If importing a class, etc. check that the object exists
+            # If importing a class, function, etc...
             else:
                 # TODO: Store classes and functions
                 if imported_object in self:
                     pass
                 else:
                     pass
+
+            # TODO: Add the relationship
 
     def _parse_extends(self, extends_info: List[str], class_node: Class) -> None:
         """Parse extends/super class information for a Class node.
@@ -597,8 +625,8 @@ class RepographBuilder:
         # the repository node.
         path = strip_file_path_prefix(directories[0])
         if is_root_folder(path):
-            repository = self._parse_repository(path)
-            directories.pop(0)
+            directory = directories.pop(0)
+            repository = self._parse_repository(path, directory_info[directory])
         else:
             repository = self._parse_repository(get_path_root(path))
 
