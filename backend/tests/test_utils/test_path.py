@@ -1,7 +1,7 @@
 import unittest
 from parameterized import parameterized
 from repograph.utils.paths import strip_file_path_prefix, get_path_name, get_path_parent, \
-    is_root_folder, get_path_root
+    is_root_folder, get_path_root, get_canonical_package_root_and_child
 
 
 class TestPathUtils(unittest.TestCase):
@@ -46,3 +46,13 @@ class TestPathUtils(unittest.TestCase):
     ])
     def test_get_path_root(self, path, result):
         self.assertEqual(get_path_root(path), result)
+
+    @parameterized.expand([
+        ["a.b.c", "a", "b.c"],
+        ["a.b", "a", "b"],
+        ["a", "a", ""]
+    ])
+    def test_get_canonical_package_root_and_child(self, path, root, child):
+        result_root, result_child = get_canonical_package_root_and_child(path)
+        self.assertEqual(root, result_root)
+        self.assertEqual(child, result_child)

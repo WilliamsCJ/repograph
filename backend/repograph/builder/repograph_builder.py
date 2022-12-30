@@ -291,7 +291,7 @@ class RepographBuilder:
 
         self._parse_functions_and_methods(file_info.get("functions", {}), module)
         self._parse_classes(file_info.get("classes", {}), module)
-        # self._parse_dependencies()
+        self._parse_dependencies(file_info.get("dependencies", []), module)
 
         return module
 
@@ -553,6 +553,7 @@ class RepographBuilder:
         self.repograph.add(*nodes, *relationships)
 
     def _parse_dependencies(self, dependency_info: List[JSONDict], module: Module) -> None:
+        log.info(self.directories)
         for dependency in dependency_info:
             if "from_module" in dependency:
                 imported_module = dependency["from_module"]
@@ -571,10 +572,11 @@ class RepographBuilder:
             # If importing a class, function, etc...
             else:
                 # TODO: Store classes and functions
-                if imported_object in self:
-                    pass
-                else:
-                    pass
+                pass
+                # if imported_object in self:
+                #     pass
+                # else:
+                #     pass
 
             # TODO: Add the relationship
 
