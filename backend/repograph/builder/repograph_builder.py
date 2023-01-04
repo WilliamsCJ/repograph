@@ -16,7 +16,8 @@ from repograph.models.relationships import Contains, Describes, Documents, HasAr
 from repograph.utils.json import JSONDict, parse_min_max_line_numbers, \
     marshall_json_to_string
 from repograph.utils.paths import strip_file_path_prefix, is_root_folder, get_path_name, \
-                                  get_path_root, get_path_parent
+                                  get_path_root, get_path_parent, get_package_parent_and_name, \
+                                  get_canonical_package_root_and_child
 
 ADDITIONAL_KEYS = [
   "requirements",
@@ -31,14 +32,48 @@ log = logging.getLogger('repograph.repograph_builder')
 
 
 class RepographBuilder:
+    """
+    Generates a Repograph from inspect4py output.
+    """
+
+    # The Repograph object used to read/write to the graph
     repograph: Repograph
+
+    # The function summarizer function
     function_summarizer: FunctionSummarizer
+
+    # Summarization flag
     summarize: bool
+
+    # Mapping of paths to Directory (or the Repository) object
     directories: Dict[str, Union[Repository, Directory]] = dict()
-    modules: Dict[str, Union[Package, Module]] = dict()
+
+    # Mapping of paths/pacakge names to modules
+    modules: Dict[str, Module] = dict()
+
+    # Mapping of Module objects to Classes/Function objects
+    module_objects: Dict[Module, List[Union[Class, Function]]] = dict()
+
+    # Mapping Module dependencies for retrospective parsing
+    module_dependencies: List[Tuple[List[JSONDict], Module]] = []
+
+    # Packages from requirements file
+    requirements: Dict[str, Package] = dict()
+
+    # TODO:
     calls: Set[Tuple[str, str]] = set()
 
     def __init__(self, uri, user, password, database, prune=False, summarize=False) -> None:
+        """Constructor
+
+        Args:
+            uri:
+            user:
+            password:
+            database:
+            prune:
+            summarize:
+        """
         self.repograph = Repograph(uri, user, password, database)
 
         self.summarize = summarize
@@ -73,8 +108,16 @@ class RepographBuilder:
 
         # Create Contains relationship between Repository node and each child module
         for module in modules:
+            # If repository root is a package, add the full canonical name as such
+
+            if repository.is_root_package:
+                module.canonical_name = f"{repository.name}.{module.name}"
+            else:
+                module.canonical_name = name
+
             relationship = Contains(repository, module)
             self.repograph.add(module, relationship)
+            self.modules[module.canonical_name] = module
 
         return repository
 
@@ -96,6 +139,7 @@ class RepographBuilder:
                 self.repograph.add(package)
                 relationship = Requires(repository, package, version=version)
                 self.repograph.add(package, relationship)
+                self.requirements[requirement] = package
 
     def _parse_directory_tree(self, info):
         pass
@@ -191,7 +235,9 @@ class RepographBuilder:
         parent = get_path_parent(directory_path)
 
         while parent != "":
-            if isinstance(self.directories.get(parent, None), Package):
+            parent_node = self.directories.get(parent, None)
+
+            if isinstance(parent_node, Package) or (isinstance(parent_node, Repository) and parent_node.is_root_package):
                 parts = [get_path_name(parent)] + parts
                 parent = get_path_parent(parent)
             else:
@@ -241,8 +287,15 @@ class RepographBuilder:
 
         # Parse each of the files within the directory.
         for module in modules:
+            # If parent is a package, add the full canonical path name and
+            # add to modules
+            if isinstance(directory, Package):
+                module.canonical_name = f"{directory.canonical_name}.{module.name}"
+                self.modules[module.canonical_name] = module
+
             relationship = Contains(directory, module)
             self.repograph.add(module, relationship)
+            self.modules[module.path] = module
 
     def _parse_files_in_directory(self, directory_info: List[JSONDict]) -> Tuple[List[Module], bool]:  # noqa: 501
         """Parses files within a directory into Python Module nodes.
@@ -285,13 +338,16 @@ class RepographBuilder:
         module = Module(
             name=file_info["file"]["fileNameBase"],
             path=file_info["file"]["path"],
+            parent_path=get_path_parent(file_info["file"]["path"]),
             extension=file_info["file"]["extension"],
             is_test=file_info.get("is_test", False)
         )
 
         self._parse_functions_and_methods(file_info.get("functions", {}), module)
         self._parse_classes(file_info.get("classes", {}), module)
-        self._parse_dependencies(file_info.get("dependencies", []), module)
+
+        if "dependencies" in file_info:
+            self.module_dependencies.append((file_info.get("dependencies", []), module))
 
         return module
 
@@ -358,6 +414,10 @@ class RepographBuilder:
                 relationship = HasFunction(parent, function)
             self.repograph.add(relationship)
 
+            # If parent is a module, add to the module_objects set
+            if isinstance(parent, Module):
+                self.module_objects[parent] = self.module_objects.get(parent, []) + [function]
+
             # Parse arguments and create Argument nodes
             self._parse_arguments(
                 info.get("args", []),
@@ -395,6 +455,9 @@ class RepographBuilder:
             relationship = Contains(parent, class_node)
             self.repograph.add(class_node)
             self.repograph.add(relationship)
+
+            # Add to module objects set
+            self.module_objects[parent] = self.module_objects.get(parent, []) + [class_node]
 
             # Parse extends
             self._parse_extends(info.get("extend", []), class_node)
@@ -552,33 +615,159 @@ class RepographBuilder:
         # Add nodes and relationships to graph
         self.repograph.add(*nodes, *relationships)
 
-    def _parse_dependencies(self, dependency_info: List[JSONDict], module: Module) -> None:
-        log.info(self.directories)
-        for dependency in dependency_info:
-            if "from_module" in dependency:
-                imported_module = dependency["from_module"]
-                imported_object = dependency["import"]
-            else:
-                imported_object = imported_module = dependency["import"]
+    def _parse_dependencies(self) -> None:
+        relationships = []
 
-            # If importing a module directly....
-            if imported_object == imported_module:
-                # and it already exists create the relationship
-                if imported_object in self.modules:
-                    _ = ImportedBy(imported_object, module)
-                # and if it doesn't recursively create it
+        # Iterate through dependencies for each required module
+        for dependency_info, module in self.module_dependencies:
+            # Iterate through each dependency in the module
+            for dependency in dependency_info:
+                log.info(f"Module: {module.name}")
+                log.info("Dependency:")
+                log.info(dependency)
+                # Check whether a module object or module itself is being imported
+                if "from_module" in dependency:
+                    imports_module = False
                 else:
-                    pass
-            # If importing a class, function, etc...
-            else:
-                # TODO: Store classes and functions
-                pass
-                # if imported_object in self:
-                #     pass
-                # else:
-                #     pass
+                    imports_module = True
 
-            # TODO: Add the relationship
+                # Get the imported object (either module or object)
+                imported_object = dependency["import"]
+                source_module = dependency["from_module"]
+
+                # Find the module
+                if dependency["type"] == "internal":
+                    imported_module = self.modules.get(
+                        f"{module.parent_path}/{source_module}.py",
+                        None
+                    )
+                else:
+                    imported_module = self.modules.get(source_module, None)
+                    log.info(dependency["from_module"])
+
+                # If importing a module directly....
+                if imports_module:
+                    # ...and it already exists create the relationship
+                    if imported_module:
+                        self.repograph.add(ImportedBy(imported_object, module))
+                    # ...and if it doesn't recursively create it
+                    else:
+                        source_module, missing = self._calculate_missing_packages(source_module)
+
+                        if source_module == "":
+                            self._create_missing_nodes(missing)
+                        elif source_module in self.requirements:
+                            self._create_missing_nodes(
+                                missing,
+                                parent=self.requirements[source_module]
+                            )
+                        else:
+                            self._create_missing_nodes(
+                                missing,
+                                parent=self.modules[source_module]
+                            )
+                # If importing a class, function, etc...
+                else:
+                    # ...and it already exists create the relationship
+                    if imported_module:
+                        module_objects = self.module_objects.get(imported_module, None)
+                        if not module_objects:
+                            log.warning("Module provides no objects")
+                            continue
+
+                        # Filter the module objects for only those with the imported name
+                        matching_objects = [obj for obj in module_objects if obj.name == imported_object]
+
+                        # If no matches, log an error and move onto the next dependency
+                        if len(matching_objects) == 0:
+                            log.error("No matching objects")
+                            continue
+
+                        # If more than one match we log this inconsistency,
+                        # but add all import relationships
+                        if len(matching_objects) > 1:
+                            log.warning("More than 1 matching object found in import.")
+
+                        for match in matching_objects:
+                            self.repograph.add(ImportedBy(match, module))
+                    # ...and if it doesn't recursively create it
+                    else:
+                        print("HELLO")
+                        if imported_object[0].isupper():
+                            print("Class")
+                            imported_object = Class(name=imported_object)
+                        else:
+                            print("Function")
+                            imported_object = Function(name=imported_object)
+
+                        print(imported_object)
+                        source_module, missing = self._calculate_missing_packages(source_module)
+                        print(source_module)
+                        print(missing)
+
+                        if source_module == "":
+                            self._create_missing_nodes(missing)
+                        elif source_module in self.requirements:
+                            self._create_missing_nodes(
+                                missing,
+                                parent=self.requirements[source_module],
+                                import_object=imported_object
+                            )
+                        else:
+                            self._create_missing_nodes(
+                                missing,
+                                parent=self.modules[source_module],
+                                import_object=imported_object
+                            )
+
+                        self.repograph.add(ImportedBy(imported_object, module))
+
+    def _calculate_missing_packages(self, source_module) -> Tuple[str, List[str]]:
+        missing = []
+        print("Requirements: ", self.requirements.keys())
+        while source_module not in self.modules and source_module not in self.requirements and source_module != "":  # noqa: 501
+            parent, child = get_package_parent_and_name(source_module)
+            missing.append(child)
+            source_module = parent
+
+        return source_module, missing
+
+    def _create_missing_nodes(
+            self,
+            missing: List[str],
+            parent: Package = None,
+            import_object: Union[Class, Function] = None
+    ) -> Tuple[List[Package], List[Contains]]:
+        nodes = []
+        relationships = []
+
+        max = len(missing) - 1
+        for index, m in enumerate(missing):
+            if index == max:
+                new = Module(name=m)
+            else:
+                new = Package(
+                    name=m,
+                    canonical_name=f"{parent.canonical_name}.{m}" if parent else m,
+                    parent_package=parent.canonical_name if parent else "",
+                    external=True
+                )
+
+            if parent:
+                relationships.append(Contains(parent, new))
+
+            parent = new
+            nodes.append(new)
+
+        if import_object:
+            relationships.append(Contains(parent, import_object))
+
+        self.repograph.add(*nodes, *relationships)
+
+        print(nodes)
+        print(relationships)
+        print(import_object)
+        return nodes, relationships
 
     def _parse_extends(self, extends_info: List[str], class_node: Class) -> None:
         """Parse extends/super class information for a Class node.
@@ -643,6 +832,10 @@ class RepographBuilder:
         log.info("Extracting information from directories...")
         for index, directory in enumerate(directories):
             self._parse_directory(directory, directory_info[directory], index, len(directories))
+
+        # Retrospectively parse module dependencies
+        log.info("Parsing module dependencies...")
+        self._parse_dependencies()
 
         log.info("Successfully built a Repograph!")
         return self.repograph

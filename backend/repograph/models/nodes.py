@@ -8,6 +8,9 @@ from repograph.models.base import Node
 from repograph.utils.paths import get_path_name, get_path_parent, get_package_parent_and_name
 
 
+PYTHON_EXTENSION = ".py"
+
+
 class Repository(Node):
     """Represents a software repository.
 
@@ -130,10 +133,18 @@ class Module(Node):
        extension (str): The file extension.
        is_test (bool): Whether the file has been assessed to be a test file.
     """
+    canonical_name: Optional[str]
     name: str
-    path: str
-    extension: str
-    is_test: bool
+    path: Optional[str]
+    parent_path: Optional[str]
+    extension: str = PYTHON_EXTENSION
+    is_test: bool = False
+
+    def __hash__(self):
+        return hash((self.name, self.path))
+
+    def __eq__(self, other):
+        return (self.name, self.path) == (other.name, other.path)
 
 
 class Class(Node):
