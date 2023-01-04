@@ -107,16 +107,19 @@ class RepographBuilder:
         self.directories[repository.name] = repository
 
         # Create Contains relationship between Repository node and each child module
-        for module in modules:
+        for module, file_info in modules:
             # If repository root is a package, add the full canonical name as such
 
             if repository.is_root_package:
-                module.canonical_name = f"{repository.name}.{module.name}"
+                module = module.update_canonical_name(f"{repository.name}.{module.name}")
             else:
-                module.canonical_name = name
+                module = module.update_canonical_name(name)
+
+            self._parse_module_contents(module, file_info)
 
             relationship = Contains(repository, module)
             self.repograph.add(module, relationship)
+
             self.modules[module.canonical_name] = module
 
         return repository
@@ -286,18 +289,22 @@ class RepographBuilder:
         self.repograph.add(parent, relationship)
 
         # Parse each of the files within the directory.
-        for module in modules:
+        for module, file_info in modules:
             # If parent is a package, add the full canonical path name and
             # add to modules
             if isinstance(directory, Package):
-                module.canonical_name = f"{directory.canonical_name}.{module.name}"
+                module = module.update_canonical_name(f"{directory.canonical_name}.{module.name}")
                 self.modules[module.canonical_name] = module
+
+            self._parse_module_contents(module, file_info)
 
             relationship = Contains(directory, module)
             self.repograph.add(module, relationship)
-            self.modules[module.path] = module
 
-    def _parse_files_in_directory(self, directory_info: List[JSONDict]) -> Tuple[List[Module], bool]:  # noqa: 501
+            self.modules[module.path] = module
+            self.modules[module.canonical_name] = module
+
+    def _parse_files_in_directory(self, directory_info: List[JSONDict]) -> Tuple[List[Tuple[Module, JSONDict]], bool]:  # noqa: 501
         """Parses files within a directory into Python Module nodes.
 
         Args:
@@ -313,7 +320,7 @@ class RepographBuilder:
         for file_index, file_info in enumerate(directory_info):
             module = self._parse_module(file_info, file_index, len(directory_info))
             is_package = is_package or module.name == INIT
-            modules.append(module)
+            modules.append((module, file_info))  # TODO: Update docstring
 
         return modules, is_package
 
@@ -337,19 +344,21 @@ class RepographBuilder:
 
         module = Module(
             name=file_info["file"]["fileNameBase"],
+            canonical_name=file_info["file"]["fileNameBase"],
             path=file_info["file"]["path"],
             parent_path=get_path_parent(file_info["file"]["path"]),
             extension=file_info["file"]["extension"],
             is_test=file_info.get("is_test", False)
         )
 
+        return module
+
+    def _parse_module_contents(self, module: Module, file_info: JSONDict):
         self._parse_functions_and_methods(file_info.get("functions", {}), module)
         self._parse_classes(file_info.get("classes", {}), module)
 
         if "dependencies" in file_info:
             self.module_dependencies.append((file_info.get("dependencies", []), module))
-
-        return module
 
     def _parse_functions_and_methods(
             self,

@@ -133,8 +133,8 @@ class Module(Node):
        extension (str): The file extension.
        is_test (bool): Whether the file has been assessed to be a test file.
     """
-    canonical_name: Optional[str]
     name: str
+    canonical_name: Optional[str]
     path: Optional[str]
     parent_path: Optional[str]
     extension: str = PYTHON_EXTENSION
@@ -145,6 +145,19 @@ class Module(Node):
 
     def __eq__(self, other):
         return (self.name, self.path) == (other.name, other.path)
+
+    # def set_canonical_name(self, canonical_name):
+    #     self.__setattr__("canonical_name", canonical_name)
+
+    def update_canonical_name(self, canonical_name):
+        return Module(
+            canonical_name=canonical_name,
+            name=self.name,
+            path=self.path,
+            parent_path=self.parent_path,
+            extension=self.extension,
+            is_test=self.is_test
+        )
 
 
 class Class(Node):
