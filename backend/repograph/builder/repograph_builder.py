@@ -16,8 +16,7 @@ from repograph.models.relationships import Contains, Describes, Documents, HasAr
 from repograph.utils.json import JSONDict, parse_min_max_line_numbers, \
     marshall_json_to_string
 from repograph.utils.paths import strip_file_path_prefix, is_root_folder, get_path_name, \
-                                  get_path_root, get_path_parent, get_package_parent_and_name, \
-                                  get_canonical_package_root_and_child
+                                  get_path_root, get_path_parent, get_package_parent_and_name
 
 ADDITIONAL_KEYS = [
   "requirements",
@@ -106,21 +105,22 @@ class RepographBuilder:
         self.repograph.add(repository)
         self.directories[repository.name] = repository
 
-        # Create Contains relationship between Repository node and each child module
+        # Parse each extracted module
         for module, file_info in modules:
             # If repository root is a package, add the full canonical name as such
-
             if repository.is_root_package:
                 module = module.update_canonical_name(f"{repository.name}.{module.name}")
-            else:
-                module = module.update_canonical_name(name)
 
+            # Now parse the contents of the  module
             self._parse_module_contents(module, file_info)
 
+            # Create a relationship between the Repository and the Module
             relationship = Contains(repository, module)
             self.repograph.add(module, relationship)
 
+            # Finally add the module to the list of stored modules
             self.modules[module.canonical_name] = module
+            self.modules[module.path] = module
 
         return repository
 
@@ -240,7 +240,7 @@ class RepographBuilder:
         while parent != "":
             parent_node = self.directories.get(parent, None)
 
-            if isinstance(parent_node, Package) or (isinstance(parent_node, Repository) and parent_node.is_root_package):
+            if isinstance(parent_node, Package) or (isinstance(parent_node, Repository) and parent_node.is_root_package):  # noqa: 501
                 parts = [get_path_name(parent)] + parts
                 parent = get_path_parent(parent)
             else:
@@ -288,19 +288,21 @@ class RepographBuilder:
         relationship = Contains(parent, directory)
         self.repograph.add(parent, relationship)
 
-        # Parse each of the files within the directory.
+        # Parse each extracted module
         for module, file_info in modules:
-            # If parent is a package, add the full canonical path name and
-            # add to modules
+            # If parent is a package, add the full canonical path name and add to modules.
             if isinstance(directory, Package):
                 module = module.update_canonical_name(f"{directory.canonical_name}.{module.name}")
                 self.modules[module.canonical_name] = module
 
+            # Now parse the contents of the module.
             self._parse_module_contents(module, file_info)
 
+            # Create a relationship between the Directory and the Module.
             relationship = Contains(directory, module)
             self.repograph.add(module, relationship)
 
+            # Finally add the module to the list of stored modules.
             self.modules[module.path] = module
             self.modules[module.canonical_name] = module
 
@@ -311,8 +313,8 @@ class RepographBuilder:
             directory_info (List[JSONDict]): The list of JSONDict objects to parse.
 
         Returns:
-            Tuple[List[Module], bool]: The list of parsed Module nodes and whether the enclosing
-                                       directory is a package.
+            Tuple[List[Tuple[Module, JSONDict]], bool]: The list of parsed Module nodes and whether
+                                                        the enclosing directory is a package.
         """
         is_package = False
         modules = []
@@ -320,7 +322,7 @@ class RepographBuilder:
         for file_index, file_info in enumerate(directory_info):
             module = self._parse_module(file_info, file_index, len(directory_info))
             is_package = is_package or module.name == INIT
-            modules.append((module, file_info))  # TODO: Update docstring
+            modules.append((module, file_info))
 
         return modules, is_package
 
@@ -353,7 +355,19 @@ class RepographBuilder:
 
         return module
 
-    def _parse_module_contents(self, module: Module, file_info: JSONDict):
+    def _parse_module_contents(self, module: Module, file_info: JSONDict) -> None:
+        """Parse the contents of the module.
+
+        This includes functions/methods and classes.
+
+        Args:
+            module (Module): Module object to link extracted functions/classes to.
+            file_info (JSONDict): The JSONDict of information containing information about
+                                  the module.
+
+        Returns:
+            None
+        """
         self._parse_functions_and_methods(file_info.get("functions", {}), module)
         self._parse_classes(file_info.get("classes", {}), module)
 
@@ -625,8 +639,11 @@ class RepographBuilder:
         self.repograph.add(*nodes, *relationships)
 
     def _parse_dependencies(self) -> None:
-        relationships = []
+        """Parse the dependencies between Modules.
 
+        Returns:
+            None
+        """
         # Iterate through dependencies for each required module
         for dependency_info, module in self.module_dependencies:
             # Iterate through each dependency in the module
@@ -685,7 +702,7 @@ class RepographBuilder:
                             continue
 
                         # Filter the module objects for only those with the imported name
-                        matching_objects = [obj for obj in module_objects if obj.name == imported_object]
+                        matching_objects = [obj for obj in module_objects if obj.name == imported_object]  # noqa: 501
 
                         # If no matches, log an error and move onto the next dependency
                         if len(matching_objects) == 0:
