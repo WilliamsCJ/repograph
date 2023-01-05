@@ -146,10 +146,15 @@ class Module(Node):
     def __eq__(self, other):
         return (self.name, self.path) == (other.name, other.path)
 
-    # def set_canonical_name(self, canonical_name):
-    #     self.__setattr__("canonical_name", canonical_name)
+    def update_canonical_name(self, canonical_name: str) -> "Module":
+        """Update the canonical name of a Module.
 
-    def update_canonical_name(self, canonical_name):
+        Args:
+            canonical_name (str): The canonical name to update.
+
+        Returns:
+            Module: New Module object.
+        """
         return Module(
             canonical_name=canonical_name,
             name=self.name,
@@ -157,6 +162,21 @@ class Module(Node):
             parent_path=self.parent_path,
             extension=self.extension,
             is_test=self.is_test
+        )
+
+    @classmethod
+    def create_init_module(cls, parent_canonical_name: str) -> "Module":
+        """Create an __init__ module for a Package.
+
+        Args:
+            parent_canonical_name (str): The canonical name of the parent Package.
+
+        Returns:
+            Module: __init__
+        """
+        return Module(
+            name="__init__",
+            canonical_name=f"{parent_canonical_name}.__init__",
         )
 
 
@@ -194,10 +214,10 @@ class Function(Node):
 
     name: str
     type: FunctionType
-    source_code: str
-    ast: Any
-    min_line_number: int
-    max_line_number: int
+    source_code: Optional[str]
+    ast: Optional[Any]
+    min_line_number: Optional[int]
+    max_line_number: Optional[int]
 
 
 class Variable(Node):

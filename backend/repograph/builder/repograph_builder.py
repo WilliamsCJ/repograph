@@ -657,9 +657,11 @@ class RepographBuilder:
                 else:
                     imports_module = True
 
+                print(dependency)
+
                 # Get the imported object (either module or object)
                 imported_object = dependency["import"]
-                source_module = dependency["from_module"]
+                source_module = dependency.get("from_module", imported_object)
 
                 # Find the module
                 if dependency["type"] == "internal":
@@ -669,7 +671,6 @@ class RepographBuilder:
                     )
                 else:
                     imported_module = self.modules.get(source_module, None)
-                    log.info(dependency["from_module"])
 
                 # If importing a module directly....
                 if imports_module:
@@ -718,18 +719,15 @@ class RepographBuilder:
                             self.repograph.add(ImportedBy(match, module))
                     # ...and if it doesn't recursively create it
                     else:
-                        print("HELLO")
                         if imported_object[0].isupper():
-                            print("Class")
                             imported_object = Class(name=imported_object)
                         else:
-                            print("Function")
-                            imported_object = Function(name=imported_object)
+                            imported_object = Function(
+                                name=imported_object,
+                                type=Function.FunctionType.FUNCTION
+                            )
 
-                        print(imported_object)
                         source_module, missing = self._calculate_missing_packages(source_module)
-                        print(source_module)
-                        print(missing)
 
                         if source_module == "":
                             self._create_missing_nodes(missing)
@@ -750,7 +748,6 @@ class RepographBuilder:
 
     def _calculate_missing_packages(self, source_module) -> Tuple[str, List[str]]:
         missing = []
-        print("Requirements: ", self.requirements.keys())
         while source_module not in self.modules and source_module not in self.requirements and source_module != "":  # noqa: 501
             parent, child = get_package_parent_and_name(source_module)
             missing.append(child)
@@ -785,14 +782,20 @@ class RepographBuilder:
             parent = new
             nodes.append(new)
 
+        # If we have an import_object, but the parent is a Package, create an __init__ Module
+        # as this is actually where the import_object is being imported from.
+        if import_object and parent and isinstance(parent, Package):
+            new = Module.create_init_module(parent.canonical_name)
+            relationships.append(Contains(parent, new))
+            parent = new
+
+        # If we have an import object, create a Contains relationship with the parent module.
         if import_object:
             relationships.append(Contains(parent, import_object))
 
+        # Add the created nodes and relationships to the Repograph.
         self.repograph.add(*nodes, *relationships)
 
-        print(nodes)
-        print(relationships)
-        print(import_object)
         return nodes, relationships
 
     def _parse_extends(self, extends_info: List[str], class_node: Class) -> None:
