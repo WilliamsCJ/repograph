@@ -676,7 +676,7 @@ class RepographBuilder:
                 if imports_module:
                     # ...and it already exists create the relationship
                     if imported_module:
-                        self.repograph.add(ImportedBy(imported_object, module))
+                        self.repograph.add(ImportedBy(imported_module, module))
                     # ...and if it doesn't recursively create it
                     else:
                         source_module, missing = self._calculate_missing_packages(source_module)
@@ -724,7 +724,7 @@ class RepographBuilder:
                         else:
                             imported_object = Function(
                                 name=imported_object,
-                                type=Function.FunctionType.FUNCTION
+                                type=str(Function.FunctionType.FUNCTION.value)
                             )
 
                         source_module, missing = self._calculate_missing_packages(source_module)
