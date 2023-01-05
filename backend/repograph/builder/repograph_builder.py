@@ -644,20 +644,17 @@ class RepographBuilder:
         Returns:
             None
         """
+        log.info("Parsing dependencies...")
+
         # Iterate through dependencies for each required module
         for dependency_info, module in self.module_dependencies:
             # Iterate through each dependency in the module
             for dependency in dependency_info:
-                log.info(f"Module: {module.name}")
-                log.info("Dependency:")
-                log.info(dependency)
                 # Check whether a module object or module itself is being imported
                 if "from_module" in dependency:
                     imports_module = False
                 else:
                     imports_module = True
-
-                print(dependency)
 
                 # Get the imported object (either module or object)
                 imported_object = dependency["import"]
@@ -746,7 +743,18 @@ class RepographBuilder:
 
                         self.repograph.add(ImportedBy(imported_object, module))
 
-    def _calculate_missing_packages(self, source_module) -> Tuple[str, List[str]]:
+    def _calculate_missing_packages(self, source_module: str) -> Tuple[str, List[str]]:
+        """Calculates missing packages for a given import source Module.
+
+        Checks both parsed Modules and Repository level requirements.
+
+        Args:
+            source_module (str): The canonical name of the source module.
+
+        Returns:
+            str: Any pre-existing source package.
+            List[str]: Missing packages/modules.
+        """
         missing = []
         while source_module not in self.modules and source_module not in self.requirements and source_module != "":  # noqa: 501
             parent, child = get_package_parent_and_name(source_module)
@@ -760,7 +768,19 @@ class RepographBuilder:
             missing: List[str],
             parent: Package = None,
             import_object: Union[Class, Function] = None
-    ) -> Tuple[List[Package], List[Contains]]:
+    ) -> Tuple[List[Union[Package, Module]], List[Contains]]:
+        """Create missing nodes.
+
+        Args:
+            missing (List[str]):
+            parent (Package): The parent Package. Optional.
+            import_object (Union[Class, Function]): The Class or Function being imported from the
+
+
+        Returns:
+            List[Union[Package, Module]]: List of created Package or Module nodes.
+            List[Contains]: List of created relationships.
+        """
         nodes = []
         relationships = []
 
