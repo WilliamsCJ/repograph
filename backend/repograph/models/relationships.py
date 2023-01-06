@@ -1,6 +1,8 @@
 """
 Relationships between Nodes.
 """
+from typing import Optional
+
 from repograph.models.base import Relationship
 from repograph.models.nodes import Argument, Body, Class, Docstring, DocstringArgument, \
                                    DocstringRaises, DocstringReturnValue, Module, Directory, \
@@ -36,6 +38,23 @@ class Contains(Relationship):
         Package: {Directory, Module, Package},
         Module: {Function, Class, Body}
     }
+
+
+class ImportedBy(Relationship):
+    """Imports Relationship
+
+    Usage:
+        - Module -> Module
+        - Package -> Module
+    """
+    _allowed_types = {
+        Module: {Module},
+        Class: {Module},
+        Function: {Module},
+        Package: {Module}
+    }
+
+    alias: Optional[str]
 
 
 class HasMethod(Relationship):

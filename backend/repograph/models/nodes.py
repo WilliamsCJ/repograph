@@ -8,6 +8,9 @@ from repograph.models.base import Node
 from repograph.utils.paths import get_path_name, get_path_parent, get_package_parent_and_name
 
 
+PYTHON_EXTENSION = ".py"
+
+
 class Repository(Node):
     """Represents a software repository.
 
@@ -17,6 +20,7 @@ class Repository(Node):
     """
     name: str
     type: str  # TODO: Is this correct? Invocation?
+    is_root_package: bool
 
 
 class Directory(Node):
@@ -48,7 +52,7 @@ class Package(Node):
      Attributes:
         name (str): The name of the directory.
         path (Optional[str]): The path of the directory.
-        parent (Optional[str]): The parent directory of the folder.
+        parent_path (Optional[str]): The parent directory of the folder.
         canonical_name (str): The full package name.
         parent_package (str): The canonical name of the parent package.
         external (bool): Whether this package is external to the parent repository
@@ -130,9 +134,50 @@ class Module(Node):
        is_test (bool): Whether the file has been assessed to be a test file.
     """
     name: str
-    path: str
-    extension: str
-    is_test: bool
+    canonical_name: Optional[str]
+    path: Optional[str]
+    parent_path: Optional[str]
+    extension: str = PYTHON_EXTENSION
+    is_test: bool = False
+
+    def __hash__(self):
+        return hash((self.name, self.path))
+
+    def __eq__(self, other):
+        return (self.name, self.path) == (other.name, other.path)
+
+    def update_canonical_name(self, canonical_name: str) -> "Module":
+        """Update the canonical name of a Module.
+
+        Args:
+            canonical_name (str): The canonical name to update.
+
+        Returns:
+            Module: New Module object.
+        """
+        return Module(
+            canonical_name=canonical_name,
+            name=self.name,
+            path=self.path,
+            parent_path=self.parent_path,
+            extension=self.extension,
+            is_test=self.is_test
+        )
+
+    @classmethod
+    def create_init_module(cls, parent_canonical_name: str) -> "Module":
+        """Create an __init__ module for a Package.
+
+        Args:
+            parent_canonical_name (str): The canonical name of the parent Package.
+
+        Returns:
+            Module: __init__
+        """
+        return Module(
+            name="__init__",
+            canonical_name=f"{parent_canonical_name}.__init__",
+        )
 
 
 class Class(Node):
@@ -169,10 +214,10 @@ class Function(Node):
 
     name: str
     type: FunctionType
-    source_code: str
-    ast: Any
-    min_line_number: int
-    max_line_number: int
+    source_code: Optional[str]
+    ast: Optional[Any]
+    min_line_number: Optional[int]
+    max_line_number: Optional[int]
 
 
 class Variable(Node):
