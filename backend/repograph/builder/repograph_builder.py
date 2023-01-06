@@ -638,6 +638,7 @@ class RepographBuilder:
         # Add nodes and relationships to graph
         self.repograph.add(*nodes, *relationships)
 
+    # noqa: C901
     def _parse_dependencies(self) -> None:
         """Parse the dependencies between Modules.
 
