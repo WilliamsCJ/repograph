@@ -1,0 +1,5 @@
+uri: neo4j://localhost:7687
+username: neo4j
+password: s3cr3t
+input: ../test/directory_info.json
+prune: True
