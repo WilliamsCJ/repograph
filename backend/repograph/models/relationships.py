@@ -6,7 +6,7 @@ from typing import Optional
 from repograph.models.base import Relationship
 from repograph.models.nodes import Argument, Body, Class, Docstring, DocstringArgument, \
                                    DocstringRaises, DocstringReturnValue, Module, Directory, \
-                                   Function, Repository, ReturnValue, Package, License
+                                   Function, README, Repository, ReturnValue, Package, License
 
 
 class Requires(Relationship):
@@ -33,9 +33,9 @@ class Contains(Relationship):
       - Module -> Class/Function, Body
     """
     _allowed_types = {
-        Repository: {Directory, Module, Package},
-        Directory: {Directory, Module, Package},
-        Package: {Directory, Module, Package},
+        Repository: {Directory, Module, Package, README},
+        Directory: {Directory, Module, Package, README},
+        Package: {Directory, Module, Package, README},
         Module: {Function, Class, Body}
     }
 
