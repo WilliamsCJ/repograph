@@ -9,7 +9,7 @@ from repograph.builder.function_summarizer import FunctionSummarizer
 from repograph.repograph import Repograph
 from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
                                    DocstringRaises, DocstringReturnValue, Directory, Module, \
-                                   Function, License, Package, Repository, ReturnValue
+                                   Function, License, Package, README, Repository, ReturnValue
 from repograph.models.relationships import Contains, Describes, Documents, HasArgument, \
                                            HasFunction, HasMethod, ImportedBy, LicensedBy, \
                                            Returns, Requires
@@ -175,8 +175,26 @@ class RepographBuilder:
                     relationship = LicensedBy(repository, license_node)
                     self.repograph.add(license_node, relationship)
 
-    def _parse_readme(self, info):
-        pass
+    def _parse_readme(self, info: JSONDict, repository: Repository):
+        """Parse README files in the repository
+
+        Args:
+            info (JSONDict): README files information.
+
+        Returns:
+            None
+        """
+        readmes = []
+        relationships = []
+
+        for path, content in info.items():
+            readme = README(path=path, content=content)
+            relationship = Contains(repository, readme)
+
+            readmes.append(readme)
+            relationships.append(relationship)
+
+        self.repograph.add(*readmes, *relationships)
 
     def _get_parent_directory(self, parent_path: str) -> Directory:
         """Retrieves the parent directory for supplied path.
@@ -853,7 +871,7 @@ class RepographBuilder:
         requirements = directory_info.pop("requirements", None)
         _ = directory_info.pop("directory_tree", None)
         licenses = directory_info.pop("license", None)
-        _ = directory_info.pop("readme_files", None)
+        readmes = directory_info.pop("readme_files", None)
 
         # Create a sorted list of directory paths.py, as dictionaries are not
         # always sortable in Python.
@@ -876,6 +894,9 @@ class RepographBuilder:
 
         # Parse license
         self._parse_license(licenses, repository)
+
+        # Parse READMEs
+        self._parse_readme(readmes, repository)
 
         # Parse each directory
         log.info("Extracting information from directories...")
