@@ -23,6 +23,17 @@ class Repository(Node):
     is_root_package: bool
 
 
+class README(Node):
+    """Represents a README file in a repository.
+
+    Attributes:
+        path (str): The path of the README file.
+        content (str): The content of the README file.
+    """
+    path: str
+    content: str
+
+
 class Directory(Node):
     """Represents a folder in a repository.
 
