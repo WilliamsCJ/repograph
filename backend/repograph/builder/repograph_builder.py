@@ -175,7 +175,7 @@ class RepographBuilder:
                     relationship = LicensedBy(repository, license_node)
                     self.repograph.add(license_node, relationship)
 
-    def _parse_readme(self, info: JSONDict, repository: Repository):
+    def _parse_readme(self, info: JSONDict):
         """Parse README files in the repository
 
         Args:
@@ -184,15 +184,23 @@ class RepographBuilder:
         Returns:
             None
         """
+        log.info("Parsing README files...")
+
         readmes = []
         relationships = []
 
         for path, content in info.items():
             readme = README(path=path, content=content)
-            relationship = Contains(repository, readme)
-
             readmes.append(readme)
-            relationships.append(relationship)
+
+            parent_path = get_path_parent(path)
+            parent = self.directories.get(parent_path, None)
+
+            if parent:
+                relationship = Contains(parent, readme)
+                relationships.append(relationship)
+            else:
+                log.error("Couldn't find parent for README at path: %s", path)
 
         self.repograph.add(*readmes, *relationships)
 
@@ -895,9 +903,6 @@ class RepographBuilder:
         # Parse license
         self._parse_license(licenses, repository)
 
-        # Parse READMEs
-        self._parse_readme(readmes, repository)
-
         # Parse each directory
         log.info("Extracting information from directories...")
         for index, directory in enumerate(directories):
@@ -906,6 +911,9 @@ class RepographBuilder:
         # Retrospectively parse module dependencies
         log.info("Parsing module dependencies...")
         self._parse_dependencies()
+
+        # Parse READMEs
+        self._parse_readme(readmes)
 
         log.info("Successfully built a Repograph!")
         return self.repograph
