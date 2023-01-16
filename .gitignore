@@ -3,6 +3,11 @@
 **/.neo4j
 **/.VSCodeCounter
 
+# Demo repositories
+demo/*
+!demo/clone.sh
+!demo/README.md
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
