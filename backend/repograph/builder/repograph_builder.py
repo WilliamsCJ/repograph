@@ -812,7 +812,6 @@ class RepographBuilder:
             parent (Package): The parent Package. Optional.
             import_object (Union[Class, Function]): The Class or Function being imported from the
 
-
         Returns:
             List[Union[Package, Module]]: List of created Package or Module nodes.
             List[Contains]: List of created relationships.
@@ -895,6 +894,9 @@ class RepographBuilder:
         licenses = directory_info.pop("license", None)
         readmes = directory_info.pop("readme_files", None)
         metadata = directory_info.pop("metadata", None)
+        _ = directory_info.pop("software_invocation", None)
+        _ = directory_info.pop("software_type", None)
+        _ = directory_info.pop("tests", None)
 
         # Create a sorted list of directory paths.py, as dictionaries are not
         # always sortable in Python.
