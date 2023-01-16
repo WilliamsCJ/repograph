@@ -1,10 +1,12 @@
 """
 Nodes.
 """
+import datetime
 from enum import Enum
 from typing import Any, Optional
 
 from repograph.models.base import Node
+from repograph.utils.json import JSONDict
 from repograph.utils.paths import get_path_name, get_path_parent, get_package_parent_and_name
 
 
@@ -18,9 +20,116 @@ class Repository(Node):
         name: The name of the repository.
         type: The inferred repository type.
     """
+    class SoftwareType(Enum):
+        """Enum for SoftwareType of Repository."""
+        SERVICE = "Service"
+        SCRIPT = "Script with main"
+
+    # Core
     name: str
-    type: str  # TODO: Is this correct? Invocation?
+    full_name: Optional[str]
+    description: Optional[str]
+    type: Optional[SoftwareType]
+    homepage: Optional[str]
+    html_url: Optional[str]
+    url: Optional[str]
+    default_branch: Optional[str]
+    visibility: Optional[str]
+    language: Optional[str]
+    # Timestamps
+    created_at: Optional[datetime.datetime]
+    updated_at: Optional[datetime.datetime]
+    pushed_at: Optional[datetime.datetime]
+    # Metrics
+    size: Optional[int]
+    stargazers_count: Optional[int]
+    watchers_count: Optional[int]
+    forks_count: Optional[int]
+    open_issues_count: Optional[int]
+    forks: Optional[int]
+    open_issues: Optional[int]
+    watchers: Optional[int]
+    network_count: Optional[int]
+    subscribers_count: Optional[int]
+    # Flags
     is_root_package: bool
+    private: Optional[bool]
+    fork: Optional[bool]
+    has_issues: Optional[bool]
+    has_projects: Optional[bool]
+    has_downloads: Optional[bool]
+    has_wiki: Optional[bool]
+    has_pages: Optional[bool]
+    has_discussions: Optional[bool]
+    archived: Optional[bool]
+    disabled: Optional[bool]
+    allows_forking: Optional[bool]
+    is_template: Optional[bool]
+    web_commit_signoff_required: Optional[bool]
+    # URLs
+    forks_url: Optional[str]
+    keys_url: Optional[str]
+    collaborators_url: Optional[str]
+    teams_url: Optional[str]
+    hooks_url: Optional[str]
+    issue_events_url: Optional[str]
+    events_url: Optional[str]
+    assignees_url: Optional[str]
+    branches_url: Optional[str]
+    tags_url: Optional[str]
+    blobs_url: Optional[str]
+    git_tags_url: Optional[str]
+    git_refs_url: Optional[str]
+    trees_url: Optional[str]
+    statuses_url: Optional[str]
+    languages_url: Optional[str]
+    stargazers_url: Optional[str]
+    contributors_url: Optional[str]
+    subscribers_url: Optional[str]
+    subscription_url: Optional[str]
+    commits_url: Optional[str]
+    git_commits_url: Optional[str]
+    comments_url: Optional[str]
+    issue_comment_url: Optional[str]
+    contents_url: Optional[str]
+    compare_url: Optional[str]
+    merges_url: Optional[str]
+    archive_url: Optional[str]
+    downloads_url: Optional[str]
+    issues_url: Optional[str]
+    pulls_url: Optional[str]
+    milestones_url: Optional[str]
+    notifications_url: Optional[str]
+    labels_url: Optional[str]
+    releases_url: Optional[str]
+    deployments_url: Optional[str]
+    git_url: Optional[str]
+    ssh_url: Optional[str]
+    clone_url: Optional[str]
+    svn_url: Optional[str]
+
+    @classmethod
+    def create_from_metadata(
+            cls,
+            name: str,
+            metadata: JSONDict,
+            is_root_package: bool
+    ) -> 'Repository':
+        """Create from metadata JSON.
+
+        Args:
+            name (str): Fallback name for the repository.
+            metadata (JSONDict): The metadata JSONDict.
+            is_root_package (bool): Whether the repository root is a package.
+
+        Returns:
+            Repository
+        """
+        return Repository(
+            name=name,
+            is_root_package=is_root_package,
+            **metadata
+        )
 
 
 class README(Node):

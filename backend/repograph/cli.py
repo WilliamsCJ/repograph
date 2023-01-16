@@ -2,7 +2,9 @@
 Command-Line Interface for manual invocation.
 """
 import configargparse
+import logging
 import os
+from typing import Any, Tuple
 
 from repograph.utils.logging import configure_logging
 from repograph.builder.repograph_builder import RepographBuilder
@@ -10,6 +12,8 @@ from repograph.utils.json import read_json_from_file
 
 # Configure logging format
 configure_logging()
+log = logging.getLogger('repograph.cli')
+
 
 # Command-line / config-file argument parsing
 p = configargparse.ArgParser()
@@ -33,9 +37,30 @@ p.add_argument(
 )
 
 
-def parse_inspect4py_output(path):
-    return read_json_from_file(os.path.join(path, "directory_info.json")), \
-        read_json_from_file(os.path.join(path, "call_graph.json"))
+def parse_inspect4py_output(path) -> Tuple[dict[str, Any], dict[str, Any]]:
+    """Parse the output directory of inspect4py.
+
+    Args:
+        path (str): Path to the output directory.
+
+    Returns:
+        dict[str, Any]: directory_info.json
+        dict[str, Any]: call_graph.json
+    """
+    di = None
+    cg = None
+
+    try:
+        di = read_json_from_file(os.path.join(path, "directory_info.json"))
+    except FileNotFoundError:
+        log.error("Couldn't find directory_info.json in input directory!")
+
+    try:
+        cg = read_json_from_file(os.path.join(path, "call_graph.json"))
+    except FileNotFoundError:
+        log.error("Couldn't find call_graph.json in input directory!")
+
+    return di, cg
 
 
 if __name__ == "__main__":
