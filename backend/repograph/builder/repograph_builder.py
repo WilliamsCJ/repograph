@@ -880,6 +880,10 @@ class RepographBuilder:
         _ = directory_info.pop("directory_tree", None)
         licenses = directory_info.pop("license", None)
         readmes = directory_info.pop("readme_files", None)
+        _ = directory_info.pop("metadata", None)
+        _ = directory_info.pop("software_invocation", None)
+        _ = directory_info.pop("software_type", None)
+        _ = directory_info.pop("tests", None)
 
         # Create a sorted list of directory paths.py, as dictionaries are not
         # always sortable in Python.
