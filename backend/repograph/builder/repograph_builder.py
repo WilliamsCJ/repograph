@@ -13,6 +13,7 @@ from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument
 from repograph.models.relationships import Contains, Describes, Documents, HasArgument, \
                                            HasFunction, HasMethod, ImportedBy, LicensedBy, \
                                            Returns, Requires
+from repograph.utils.exceptions import RepographBuildError
 from repograph.utils.json import JSONDict, parse_min_max_line_numbers, \
     marshall_json_to_string
 from repograph.utils.paths import strip_file_path_prefix, is_root_folder, get_path_name, \
@@ -83,12 +84,20 @@ class RepographBuilder:
         if prune:
             self.repograph.graph.delete_all()
 
-    def _parse_repository(self, path: str, directory_info: List[JSONDict] = None) -> Repository:
+    def _parse_repository(
+            self,
+            path: str,
+            metadata: JSONDict = None,
+            software_type: str = None,
+            directory_info: List[JSONDict] = None
+    ) -> Repository:
         """Parses information about the repository, i.e. the root,
         itself.
 
         Args:
             path (str): The path of the repository.
+            metadata (Optional[JSONDict]): Optional metadata describing the repository.
+            directory_info (Optional[List[JSONDict]]): Optional list of directories to parse
 
         Returns:
             Repository: The created Repository node
@@ -100,8 +109,15 @@ class RepographBuilder:
         if directory_info:
             modules, is_package = self._parse_files_in_directory(directory_info)
 
-        # TODO: Implement type.
-        repository = Repository(name=path, type="tbc", is_root_package=is_package)
+        if metadata:
+            repository = Repository.create_from_metadata(path, metadata, is_package, software_type)
+        else:
+            repository = Repository(
+                name=path,
+                is_root_package=is_package,
+                type=software_type
+            )
+
         self.repograph.add(repository)
         self.directories[repository.name] = repository
 
@@ -802,7 +818,6 @@ class RepographBuilder:
             parent (Package): The parent Package. Optional.
             import_object (Union[Class, Function]): The Class or Function being imported from the
 
-
         Returns:
             List[Union[Package, Module]]: List of created Package or Module nodes.
             List[Contains]: List of created relationships.
@@ -864,7 +879,7 @@ class RepographBuilder:
         #     relationship = Extends(class_node, super_class)
         #     self.repograph.add(super_class, relationship)
 
-    def build(self, directory_info: JSONDict) -> Repograph:
+    def build(self, directory_info: Optional[JSONDict]) -> Repograph:
         """Build a repograph from directory_info JSON.
 
         Args:
@@ -872,14 +887,25 @@ class RepographBuilder:
 
         Returns:
             Repograph
+
+        Raises:
+            RepographBuildError
         """
         log.info("Building Repograph...")
+
+        if not directory_info:
+            log.error("Directory info is empty! Aborting!")
+            raise RepographBuildError("Directory info is empty")
 
         # Pop off non-directory entries from the JSON, for parsing later
         requirements = directory_info.pop("requirements", None)
         _ = directory_info.pop("directory_tree", None)
         licenses = directory_info.pop("license", None)
         readmes = directory_info.pop("readme_files", None)
+        metadata = directory_info.pop("metadata", None)
+        _ = directory_info.pop("software_invocation", None)
+        software_type = directory_info.pop("software_type", None)
+        _ = directory_info.pop("tests", None)
 
         # Create a sorted list of directory paths.py, as dictionaries are not
         # always sortable in Python.
@@ -893,9 +919,18 @@ class RepographBuilder:
         path = strip_file_path_prefix(directories[0])
         if is_root_folder(path):
             directory = directories.pop(0)
-            repository = self._parse_repository(path, directory_info[directory])
+            repository = self._parse_repository(
+                path,
+                directory_info=directory_info[directory],
+                metadata=metadata,
+                software_type=software_type
+            )
         else:
-            repository = self._parse_repository(get_path_root(path))
+            repository = self._parse_repository(
+                get_path_root(path),
+                metadata=metadata,
+                software_type=software_type
+            )
 
         # Parse requirements
         self._parse_requirements(requirements, repository)
