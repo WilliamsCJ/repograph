@@ -9,6 +9,7 @@ from typing import Any, Tuple
 
 from repograph.builder.repograph_builder import RepographBuilder
 from repograph.builder.code_analyser import call_inspect4py, cleanup_inspect4py_output
+from repograph.utils.exceptions import RepographBuildError
 from repograph.utils.json import read_json_from_file
 from repograph.utils.logging import configure_logging
 
@@ -85,7 +86,6 @@ if __name__ == "__main__":
 
     temp_output = f"./tmp/{args.name}"
 
-    print(args.skip_inspect4py)
     try:
         if args.skip_inspect4py:
             directory_info, call_graph = parse_inspect4py_output(args.input)
@@ -96,7 +96,7 @@ if __name__ == "__main__":
         repograph = builder.build(directory_info)  # noqa
     except subprocess.CalledProcessError as e:
         log.error("Error invoking inspect4py - %s", str(e))
-    except Exception as e:
+    except RepographBuildError as e:
         log.error("Error building repograph - %s", str(e))
     finally:
         if not args.skip_inspect4py:

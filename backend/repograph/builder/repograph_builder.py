@@ -13,6 +13,7 @@ from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument
 from repograph.models.relationships import Contains, Describes, Documents, HasArgument, \
                                            HasFunction, HasMethod, ImportedBy, LicensedBy, \
                                            Returns, Requires
+from repograph.utils.exceptions import RepographBuildError
 from repograph.utils.json import JSONDict, parse_min_max_line_numbers, \
     marshall_json_to_string
 from repograph.utils.paths import strip_file_path_prefix, is_root_folder, get_path_name, \
@@ -881,12 +882,15 @@ class RepographBuilder:
 
         Returns:
             Repograph
+
+        Raises:
+            RepographBuildError
         """
         log.info("Building Repograph...")
 
         if not directory_info:
             log.error("Directory info is empty! Aborting!")
-            return
+            raise RepographBuildError("Directory info is empty")
 
         # Pop off non-directory entries from the JSON, for parsing later
         requirements = directory_info.pop("requirements", None)
