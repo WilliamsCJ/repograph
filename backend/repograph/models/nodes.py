@@ -125,6 +125,12 @@ class Repository(Node):
         Returns:
             Repository
         """
+        metadata.pop("owner", None)
+        metadata.pop("license", None)
+        metadata.pop("topics", None)
+        metadata.pop("organization", None)
+        metadata.pop("name", None)
+
         return Repository(
             name=name,
             is_root_package=is_root_package,

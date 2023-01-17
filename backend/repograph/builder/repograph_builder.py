@@ -107,10 +107,10 @@ class RepographBuilder:
         if directory_info:
             modules, is_package = self._parse_files_in_directory(directory_info)
 
-        if metadata:
-            repository = Repository.create_from_metadata(path, metadata, is_package)
-        else:
-            repository = Repository(name=path, is_root_package=is_package)
+        # if metadata:
+        #     repository = Repository.create_from_metadata(path, metadata, is_package)
+        # else:
+        repository = Repository(name=path, is_root_package=is_package)
 
         self.repograph.add(repository)
         self.directories[repository.name] = repository
@@ -905,12 +905,9 @@ class RepographBuilder:
             list(directory_info.keys()),
             key=lambda file: (os.path.dirname(file), os.path.basename(file)))
 
-        print(directories)
         # Parse repository root folder if it exists, otherwise manually create
         # the repository node.
         path = strip_file_path_prefix(directories[0])
-        print(path)
-        print(get_path_root(path))
         if is_root_folder(path):
             directory = directories.pop(0)
             repository = self._parse_repository(
