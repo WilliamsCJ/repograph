@@ -22,8 +22,10 @@ class Repository(Node):
     """
     class SoftwareType(Enum):
         """Enum for SoftwareType of Repository."""
-        SERVICE = "Service"
-        SCRIPT = "Script with main"
+        SERVICE = "service"
+        SCRIPT_WITH_MAIN = "script with main"
+        SCRIPT = "script"
+        PACKAGE = "package"
 
     # Core
     name: str
@@ -113,7 +115,8 @@ class Repository(Node):
             cls,
             name: str,
             metadata: JSONDict,
-            is_root_package: bool
+            is_root_package: bool,
+            software_type: Optional[SoftwareType]
     ) -> 'Repository':
         """Create from metadata JSON.
 
@@ -121,6 +124,7 @@ class Repository(Node):
             name (str): Fallback name for the repository.
             metadata (JSONDict): The metadata JSONDict.
             is_root_package (bool): Whether the repository root is a package.
+            software_type (SoftwareType): The extracted software type
 
         Returns:
             Repository
@@ -134,6 +138,7 @@ class Repository(Node):
         return Repository(
             name=name,
             is_root_package=is_root_package,
+            type=software_type,
             **metadata
         )
 

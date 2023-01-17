@@ -88,6 +88,7 @@ class RepographBuilder:
             self,
             path: str,
             metadata: JSONDict = None,
+            software_type: str = None,
             directory_info: List[JSONDict] = None
     ) -> Repository:
         """Parses information about the repository, i.e. the root,
@@ -108,10 +109,14 @@ class RepographBuilder:
         if directory_info:
             modules, is_package = self._parse_files_in_directory(directory_info)
 
-        # if metadata:
-        #     repository = Repository.create_from_metadata(path, metadata, is_package)
-        # else:
-        repository = Repository(name=path, is_root_package=is_package)
+        if metadata:
+            repository = Repository.create_from_metadata(path, metadata, is_package, software_type)
+        else:
+            repository = Repository(
+                name=path,
+                is_root_package=is_package,
+                type=software_type
+            )
 
         self.repograph.add(repository)
         self.directories[repository.name] = repository
@@ -899,7 +904,7 @@ class RepographBuilder:
         readmes = directory_info.pop("readme_files", None)
         metadata = directory_info.pop("metadata", None)
         _ = directory_info.pop("software_invocation", None)
-        _ = directory_info.pop("software_type", None)
+        software_type = directory_info.pop("software_type", None)
         _ = directory_info.pop("tests", None)
 
         # Create a sorted list of directory paths.py, as dictionaries are not
@@ -917,12 +922,14 @@ class RepographBuilder:
             repository = self._parse_repository(
                 path,
                 directory_info=directory_info[directory],
-                metadata=metadata
+                metadata=metadata,
+                software_type=software_type
             )
         else:
             repository = self._parse_repository(
                 get_path_root(path),
-                metadata=metadata
+                metadata=metadata,
+                software_type=software_type
             )
 
         # Parse requirements
