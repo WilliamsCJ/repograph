@@ -2,9 +2,11 @@
 **/*.log
 **/.neo4j
 **/.VSCodeCounter
+**/tmp
 **/.DS_Store
 
-# Demo
+
+# Demo repositories
 demo/*
 !demo/clone.sh
 !demo/README.md

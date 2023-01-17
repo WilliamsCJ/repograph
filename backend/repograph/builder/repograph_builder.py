@@ -614,11 +614,11 @@ class RepographBuilder:
         # Return immediately depending on whether Class/Function, if docstring info
         # provided, and whether summarization enabled.
         if isinstance(parent, Class):
-            if not docstring_info:
+            if not docstring_info or not bool(docstring_info):
                 log.debug(f"No docstring information for class {parent.name}")
                 return
         elif isinstance(parent, Function):
-            if not docstring_info and not self.summarize:
+            if (not docstring_info or not bool(docstring_info)) and not self.summarize:
                 log.debug(f"No docstring information for {parent.name}")
                 return
         else:
@@ -628,9 +628,14 @@ class RepographBuilder:
         nodes = []
         relationships = []
 
-        summary = self.function_summarizer.summarize_function(parent) if self.summarize else None
+        # If the summarize flag is set and parent is a Function (not a Class),
+        # call the function summarizer.
+        if self.summarize and isinstance(parent, Function):
+            summary = self.function_summarizer.summarize_function(parent)
+        else:
+            summary = None
 
-        # Parse docstring description
+        # Parse docstring
         docstring = Docstring(
             summarization=summary,
             short_description=docstring_info.get("short_description", None),

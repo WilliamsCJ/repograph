@@ -100,4 +100,4 @@ if __name__ == "__main__":
         log.error("Error building repograph - %s", str(e))
     finally:
         if not args.skip_inspect4py:
-            cleanup_inspect4py_output(temp_output)
+            cleanup_inspect4py_output()

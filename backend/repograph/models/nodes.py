@@ -398,7 +398,7 @@ class Docstring(Node):
         long_description (Optional[str]): The main body of the docstring.
         summarization (str): The generated text summary of whatever the docstring is documenting.
     """
-    short_description: str
+    short_description: Optional[str]
     long_description: Optional[str]
     summarization: Optional[str]
 

@@ -24,13 +24,6 @@ repos:
     additional_dependencies: [reindent]
     pass_filenames: false
     stages: [commit]
-  - id: freeze
-    name: freeze
-    entry: pip freeze > frontend/requirements.txt
-    language: python
-    'types': [ python ]
-    pass_filenames: false
-    stages: [ commit ]
   - id: pdoc
     name: pdoc
     entry: pdoc backend/repograph --html -f -o backend/docs
@@ -39,4 +32,3 @@ repos:
     pass_filenames: false
     stages: [ commit ]
     additional_dependencies: [ pdoc3, pydantic, fastapi, py2neo, click, neo4j, transformers, torch, configargparse, dependency-injector, uvicorn ]
-
