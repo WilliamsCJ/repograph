@@ -4,3 +4,4 @@ transformers
 torch
 py2neo
 inspect4py
+dependency-injector
