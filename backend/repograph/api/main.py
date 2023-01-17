@@ -2,38 +2,47 @@
 API Main
 """
 import logging
-import os
-
-from fastapi import FastAPI, status
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
-from repograph.repograph import Repograph
-from repograph.models.repograph import RepographSummary
+from repograph.api.routers import base_router
+from repograph.api.containers import ApplicationContainer
 
 log = logging.getLogger('repograph.api')
 
-app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+def create_app() -> FastAPI:
+    """Creates FastAPI application.
+    Returns:
+        FastAPI: Initialised FastAPI application object.
+    """
+    container = ApplicationContainer()
+    container.init_resources()
 
-repograph: Repograph = Repograph(
-    os.environ.get("NEO4J_URI"),
-    os.environ.get("NEO4J_USER"),
-    os.environ.get("NEO4J_PASSWORD"),
-    os.environ.get("NEO4J_DATABASE")
-)
+    application = FastAPI(
+        title="",
+        description="",
+        openapi_url="/v1/openapi.json",
+        docs_url="/v1/docs",
+        redoc_url="/v1/docs"
+    )
+
+    application.container = container
+
+    application.include_router(base_router)
+
+    application.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"]
+    )
+
+    return application
 
 
-@app.get(
-    "/graph/summary",
-    response_model=RepographSummary,
-    status_code=status.HTTP_200_OK
-)
-async def get_summary():
-    return repograph.get_summary()
+if __name__ == "__main__":
+    app = create_app()
+    uvicorn.run(app, host="0.0.0.0", port=3000)
