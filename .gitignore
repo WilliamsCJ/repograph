@@ -3,6 +3,8 @@
 **/.neo4j
 **/.VSCodeCounter
 **/tmp
+**/.DS_Store
+
 
 # Demo repositories
 demo/*
