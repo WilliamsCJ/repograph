@@ -24,10 +24,3 @@ repos:
     additional_dependencies: [reindent]
     pass_filenames: false
     stages: [commit]
-  - id: freeze
-    name: freeze
-    entry: pip freeze > frontend/requirements.txt
-    language: python
-    'types': [ python ]
-    pass_filenames: false
-    stages: [ commit ]
