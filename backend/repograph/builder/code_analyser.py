@@ -20,7 +20,7 @@ def call_inspect4py(input_path: str, output_path: str) -> str:
     """
     log.info("Extracting information from %s using inspect4py...", input_path)
 
-    subprocess.run([
+    subprocess.check_call([
         "inspect4py",
         "-i",
         input_path,

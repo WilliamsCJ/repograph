@@ -628,9 +628,15 @@ class RepographBuilder:
         nodes = []
         relationships = []
 
-        summary = self.function_summarizer.summarize_function(parent) if self.summarize else None
+        # If the summarize flag is set and parent is a Function (not a Class),
+        # call the function summarizer.
+        if self.summarize and isinstance(parent, Function):
+            summary = self.function_summarizer.summarize_function(parent)
+        else:
+            summary = None
 
         # Parse docstring description
+        print(docstring_info)
         docstring = Docstring(
             summarization=summary,
             short_description=docstring_info.get("short_description", None),
