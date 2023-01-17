@@ -21,8 +21,8 @@ def create_app() -> FastAPI:
     container.init_resources()
 
     application = FastAPI(
-        title="",
-        description="",
+        title="Repograph",
+        description="Backend API",
         openapi_url="/v1/openapi.json",
         docs_url="/v1/docs",
         redoc_url="/v1/docs"

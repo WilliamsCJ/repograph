@@ -33,7 +33,11 @@ Routers package. Provides API routing.
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
+from repograph.api.routers.graph import graphRouter
+
 base_router = APIRouter(prefix=&#34;/v1&#34;)
+
+base_router.include_router(graphRouter)
 
 
 @base_router.get(

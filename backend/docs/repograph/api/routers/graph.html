@@ -40,13 +40,14 @@ from repograph.models.repograph import RepographSummary
 repograph_service: Provide = Provide[ApplicationContainer.repograph]
 
 graphRouter = APIRouter(
+    prefix=&#34;/graph&#34;,
     tags=[&#34;Graph&#34;],
     responses={}
 )
 
 
 @graphRouter.get(
-    &#34;/graph/summary&#34;,
+    &#34;/summary&#34;,
     response_model=RepographSummary,
     status_code=status.HTTP_200_OK
 )
@@ -72,7 +73,7 @@ async def get_summary(repograph: Repograph = Depends(repograph_service)):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@graphRouter.get(
-    &#34;/graph/summary&#34;,
+    &#34;/summary&#34;,
     response_model=RepographSummary,
     status_code=status.HTTP_200_OK
 )

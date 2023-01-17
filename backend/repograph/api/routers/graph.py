@@ -11,13 +11,14 @@ from repograph.models.repograph import RepographSummary
 repograph_service: Provide = Provide[ApplicationContainer.repograph]
 
 graphRouter = APIRouter(
+    prefix="/graph",
     tags=["Graph"],
     responses={}
 )
 
 
 @graphRouter.get(
-    "/graph/summary",
+    "/summary",
     response_model=RepographSummary,
     status_code=status.HTTP_200_OK
 )
