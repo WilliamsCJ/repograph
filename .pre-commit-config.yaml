@@ -14,7 +14,7 @@ repos:
     language: python
     'types': [python]
     pass_filenames: false
-    additional_dependencies: [parameterized, py2neo, click, neo4j, pydantic, transformers, torch, nose]
+    additional_dependencies: [parameterized, py2neo, click, neo4j, pydantic, transformers, torch, nose, fastapi, dependency-injector]
     stages: [commit]
   - id: reindent
     name: reindent
@@ -31,3 +31,12 @@ repos:
     'types': [ python ]
     pass_filenames: false
     stages: [ commit ]
+  - id: pdoc
+    name: pdoc
+    entry: pdoc backend/repograph --html -f -o backend/docs
+    language: python
+    'types': [ python ]
+    pass_filenames: false
+    stages: [ commit ]
+    additional_dependencies: [ pdoc3, pydantic, fastapi, py2neo, click, neo4j, transformers, torch, configargparse, dependency-injector, uvicorn ]
+

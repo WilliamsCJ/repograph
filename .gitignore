@@ -2,6 +2,7 @@
 **/*.log
 **/.neo4j
 **/.VSCodeCounter
+**/.DS_Store
 
 # Demo
 demo/*

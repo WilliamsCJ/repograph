@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: 3.9.12
       - name: Install dependencies
-        run: pip3 install -r requirements.txt -r tests/requirements.txt
+        run: pip3 install -r requirements.txt
       - name: Lint with flake8
         run: |
           flake8 repograph --count --max-complexity=10 --max-line-length=100 --statistics
@@ -38,7 +38,7 @@ jobs:
         with:
           python-version: 3.9.12
       - name: Install dependencies
-        run: pip3 install -r requirements.txt -r tests/requirements.txt
+        run: pip3 install -r requirements.txt
       - name: Test with unittest
         run: |
           python3 -m unittest
