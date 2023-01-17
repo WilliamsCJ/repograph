@@ -184,7 +184,7 @@ class RepographBuilder:
             for detected in detected_types:
                 for detected_type, confidence in detected.items():
                     license_node = License(
-                        text=licenses.get("text", ""),
+                        text=licenses.get("extracted_text", None),
                         license_type=detected_type,
                         confidence=(float(confidence.strip('%')) / 100)
                     )
