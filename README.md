@@ -1,5 +1,8 @@
 # repograph
 
+![Workflow](https://github.com/WilliamsCJ/repograph/actions/workflows/python.yaml/badge.svg)
+
+
 Knowledge Graph extraction and semantic code search for Python repositories.
 
 ## Running
