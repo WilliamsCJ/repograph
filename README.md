@@ -57,9 +57,9 @@ available option for `--database` is `neo4j`. This is due to limitations in the
 
 The browser web app can be accessed at `http://localhost:8080`
 
-### Example Notebooks
+## Demonstration
 
-*TBC*
+See `demo/README.md`.
 
 ## Development
 
