@@ -5,3 +5,4 @@ torch
 py2neo
 inspect4py
 dependency-injector
+uvicorn
