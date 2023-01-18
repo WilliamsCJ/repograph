@@ -10,6 +10,7 @@ from logging import getLogger
 from transformers import RobertaTokenizerFast, T5ForConditionalGeneration
 
 from repograph.models.nodes import Function
+from repograph.utils.summarization import clean_source_code
 
 
 log = getLogger('repograph.builder.function_summarizer')
@@ -32,7 +33,7 @@ class FunctionSummarizer:
         log.info("Ready!")
 
     def summarize_function(self, function: Function) -> str:
-        """Summarize a function
+        """Summarize a function.
 
         Args:
             function (Function): The function node to summarize.
@@ -41,7 +42,8 @@ class FunctionSummarizer:
             str: The summarization
         """
         log.debug(f'Create Docstring node for function `{function.name}`...')
-        return self._summarize_code(function.source_code)
+        source_code = clean_source_code(function.source_code)
+        return self._summarize_code(source_code)
 
     def _summarize_code(self, source_code: str) -> str:
         """Summarize code.

@@ -43,6 +43,7 @@ from logging import getLogger
 from transformers import RobertaTokenizerFast, T5ForConditionalGeneration
 
 from repograph.models.nodes import Function
+from repograph.utils.summarization import clean_source_code
 
 
 log = getLogger(&#39;repograph.builder.function_summarizer&#39;)
@@ -65,7 +66,7 @@ class FunctionSummarizer:
         log.info(&#34;Ready!&#34;)
 
     def summarize_function(self, function: Function) -&gt; str:
-        &#34;&#34;&#34;Summarize a function
+        &#34;&#34;&#34;Summarize a function.
 
         Args:
             function (Function): The function node to summarize.
@@ -74,7 +75,8 @@ class FunctionSummarizer:
             str: The summarization
         &#34;&#34;&#34;
         log.debug(f&#39;Create Docstring node for function `{function.name}`...&#39;)
-        return self._summarize_code(function.source_code)
+        source_code = clean_source_code(function.source_code)
+        return self._summarize_code(source_code)
 
     def _summarize_code(self, source_code: str) -&gt; str:
         &#34;&#34;&#34;Summarize code.
@@ -136,7 +138,7 @@ class FunctionSummarizer:
         log.info(&#34;Ready!&#34;)
 
     def summarize_function(self, function: Function) -&gt; str:
-        &#34;&#34;&#34;Summarize a function
+        &#34;&#34;&#34;Summarize a function.
 
         Args:
             function (Function): The function node to summarize.
@@ -145,7 +147,8 @@ class FunctionSummarizer:
             str: The summarization
         &#34;&#34;&#34;
         log.debug(f&#39;Create Docstring node for function `{function.name}`...&#39;)
-        return self._summarize_code(function.source_code)
+        source_code = clean_source_code(function.source_code)
+        return self._summarize_code(source_code)
 
     def _summarize_code(self, source_code: str) -&gt; str:
         &#34;&#34;&#34;Summarize code.
@@ -181,7 +184,7 @@ class FunctionSummarizer:
 <span>def <span class="ident">summarize_function</span></span>(<span>self, function: <a title="repograph.models.nodes.Function" href="../models/nodes.html#repograph.models.nodes.Function">Function</a>) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Summarize a function</p>
+<div class="desc"><p>Summarize a function.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>function</code></strong> :&ensp;<code>Function</code></dt>
@@ -197,7 +200,7 @@ class FunctionSummarizer:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def summarize_function(self, function: Function) -&gt; str:
-    &#34;&#34;&#34;Summarize a function
+    &#34;&#34;&#34;Summarize a function.
 
     Args:
         function (Function): The function node to summarize.
@@ -206,7 +209,8 @@ class FunctionSummarizer:
         str: The summarization
     &#34;&#34;&#34;
     log.debug(f&#39;Create Docstring node for function `{function.name}`...&#39;)
-    return self._summarize_code(function.source_code)</code></pre>
+    source_code = clean_source_code(function.source_code)
+    return self._summarize_code(source_code)</code></pre>
 </details>
 </dd>
 </dl>
