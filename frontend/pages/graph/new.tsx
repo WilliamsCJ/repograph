@@ -97,7 +97,7 @@ const New: NextPage = () => {
               </div>
 
               <div tw="pt-6">
-                <Button text="Create"/>
+                <Button primary text="Create"/>
               </div>
 
             </div>
