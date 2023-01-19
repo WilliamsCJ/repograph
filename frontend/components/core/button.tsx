@@ -13,7 +13,7 @@ const Button = ({ icon, text }: ButtonProps) => {
     <button
       tw="flex h-10 flex-row justify-center items-center space-x-2 rounded-md border border-gray-300
         bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2
-        focus:ring-indigo-500 focus:ring-offset-2 w-28"
+        focus:ring-indigo-500 focus:ring-offset-2 w-28 mx-auto"
     >
       <div tw="h-5 w-5">{icon}</div>
       <span>{text}</span>
