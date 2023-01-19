@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { DefaultLayout } from "../components/core/layout";
+import { DefaultLayout } from "../../../components/core/layout";
 
 const Search: NextPage = () => {
   return (

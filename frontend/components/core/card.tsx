@@ -17,7 +17,7 @@ type CardProps = {
  * Props for the DefaultCard component.
  */
 type DefaultCardProps = CardProps & {
-  size: TwStyle
+  size?: TwStyle
 }
 
 
@@ -31,7 +31,7 @@ type DefaultCardProps = CardProps & {
 const Card: React.FC<DefaultCardProps> = ({children, ...props}) => (
   <div
     ref={props.ref}
-    css={[tw`bg-white rounded-lg border border-gray-300`, props.size]}
+    css={[tw`bg-white rounded-lg border border-gray-300 overflow-hidden`, props.size]}
   >
     {children}
   </div>
