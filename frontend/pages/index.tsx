@@ -6,13 +6,12 @@ import tw from "twin.macro";
 
 import { Button } from "../components/core/button";
 import { DefaultLayout } from "../components/core/layout";
-import Summary from "../components/graph/summary";
-import GraphCard from "../components/core/graph";
-
-import { HomePageProps } from "../types/pages/home";
-
-import GraphList from "../components/home";
+import GraphList, { GraphEntry } from "../components/home/list";
 import { EmptyState } from "../components/core/empty";
+
+export type HomePageProps = {
+  graphs: GraphEntry[]
+}
 
 const NewButton = () => (
   <Button icon={<FolderPlusIcon />} text="New"/>
@@ -23,7 +22,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       graphs: [
-        {hello: 1}
+        {id: 1, name: 'fastapi', createdAt: '05-09-2023'},
+        {id: 2, name: 'pyLODE', createdAt: '05-10-2023'}
       ]
     }
   }
@@ -44,7 +44,7 @@ const Home: NextPage<HomePageProps> = ({ graphs }) => {
           buttonIcon={<PlusIcon />}
         />
       :
-        <GraphList></GraphList>
+        <GraphList graphs={graphs} />
       }
     </DefaultLayout>
   )
