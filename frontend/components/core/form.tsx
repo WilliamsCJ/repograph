@@ -177,33 +177,63 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
 }
 
 
-
-// Styled components
-
+/**
+ * TextArea component.
+ */
 const TextArea = tw.textarea`
   block w-full min-w-0 rounded-md shadow-sm
   text-gray-700 placeholder-gray-300 border-gray-300
   focus:border-primary-500 focus:ring-primary-500
   resize-none
 `
+
+
+/**
+ * Error version of TextArea component.
+ */
 const ErrorTextArea = tw.textarea`
   block w-full min-w-0 rounded-md border border-gray-300
   text-red-900 placeholder-red-300 focus:border-red-500 
   focus:outline-none focus:ring-red-500
   resize-none
  `
+
+
+/**
+ * Input component
+ */
 const Input = tw.input`
   block w-full min-w-0 rounded-lg shadow-sm border p-2
   text-gray-700 placeholder-gray-300 border-gray-300
   focus:border-primary-500 focus:ring-primary-500
 `
+
+
+/**
+ * Error version of Input component
+ */
 const ErrorInput = tw.input`
   block w-full min-w-0 rounded-lg shadow-sm border p-2
   text-gray-700 placeholder-gray-300 border-gray-300
   focus:border-red-500 focus:ring-red-500
  `
+
+
+/**
+ * Form label.
+ */
 const Label = tw.label`block text-sm font-medium text-gray-700`;
+
+
+/**
+ * Form help/hint text.
+ */
 const HelpText = tw.p`text-sm text-gray-400 mt-2`;
+
+
+/**
+ * Form error text.
+ */
 const ErrorText = tw.p`text-sm text-red-700 mt-2`;
 
 
