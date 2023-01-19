@@ -62,3 +62,12 @@ repos:
     hooks:
       - id: prettier
         exclude: ^backend
+        args:
+          - "frontend"
+          - "--write"
+        "types": [ javascript ]
+        pass_filenames: false
+        stages: [ commit ]
+        additional_dependencies:
+          - prettier@2.8.3
+          - prettier-plugin-tailwindcss@0.2.1
