@@ -2,12 +2,11 @@
 
 ![Workflow](https://github.com/WilliamsCJ/repograph/actions/workflows/python.yaml/badge.svg)
 
-
 Knowledge Graph extraction and semantic code search for Python repositories.
 
 ## Running
 
-Running repograph consists of two components: the backend server and a user interface. 
+Running repograph consists of two components: the backend server and a user interface.
 Two user interfaces are provided: a Command-Line Interface (CLI) or a browser web app.
 
 The backend must be run before using the CLI or accessing the web app.
@@ -25,17 +24,17 @@ docker-compose build
 docker-compose up
 ```
 
-*Note: It can take up to a minute for the frontend and backend containers to start as they have to 
-wait for the Neo4J container.*
+_Note: It can take up to a minute for the frontend and backend containers to start as they have to
+wait for the Neo4J container._
 
 #### Accessing the Neo4J database
 
-The backend runs a Neo4J database in a container. The database itself can be accessed at 
+The backend runs a Neo4J database in a container. The database itself can be accessed at
 `neo4j://localhost:7687`. The Neo4J admin console can be accessed at `http://localhost:7474`.
 
 ### Running the CLI
 
-This requires that `inspect4py` has already been run on a repository, and its output 
+This requires that `inspect4py` has already been run on a repository, and its output
 directory accessible at `<PATH_TO_INSPECT4PY_OUTPUT_DIR>`
 
 From the project root, run:
@@ -52,9 +51,9 @@ and descriptions of their functionality, run:
 python3 -m repograph.cli --help
 ```
 
-*Note: If using the Neo4J instance created by running the backend (see above), the only 
+_Note: If using the Neo4J instance created by running the backend (see above), the only
 available option for `--database` is `neo4j`. This is due to limitations in the
-[Community Edition license](https://neo4j.com/licensing/).*
+[Community Edition license](https://neo4j.com/licensing/)._
 
 ### Accessing the browser web app
 
@@ -70,9 +69,10 @@ Tips for contributing to/developing repograph.
 
 ### Pre-commit Hooks
 
-Pre-commit hooks can be used to speed up development by running linting, tests, etc. when you commit. 
+Pre-commit hooks can be used to speed up development by running linting, tests, etc. when you commit.
 
 To install:
+
 ```bash
 pip3 install -r requirements-test.txt
 pre-commit install
