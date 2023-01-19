@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/PyCQA/flake8
-    rev: 5.0.4
+    rev: 6.0.0
     hooks:
       - id: flake8
         exclude: ^backend/repograph/tests/
@@ -58,7 +58,7 @@ repos:
             uvicorn,
           ]
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: ""
+    rev: "v3.0.0-alpha.4"
     hooks:
       - id: prettier
         exclude: ^backend
