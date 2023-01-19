@@ -1,6 +1,16 @@
 import tw from "twin.macro";
-import { ButtonProps, LinkButtonProps } from "../../types/components/core/button";
 import Link from "next/link";
+
+
+// Button
+
+/**
+ * Props type for Button component.
+ */
+export type ButtonProps = {
+  icon?: any;
+  text: string;
+};
 
 /**
  * Base Button
@@ -15,10 +25,20 @@ const Button = ({ icon, text }: ButtonProps) => {
         bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2
         focus:ring-indigo-500 focus:ring-offset-2 w-28 mx-auto"
     >
-      <div tw="h-5 w-5">{icon}</div>
+      {icon && <div tw="h-5 w-5">{icon}</div>}
       <span>{text}</span>
     </button>
   );
+};
+
+
+// Link Button
+
+/**
+ * Props type for LinkButton component.
+ */
+export type LinkButtonProps = ButtonProps & {
+  href: string;
 };
 
 /**
@@ -38,5 +58,6 @@ const LinkButton = ({ href, ...props }: LinkButtonProps) => (
  * ButtonGroup is a horizontal group of Buttons.
  */
 const ButtonGroup = tw.div`flex flex-row justify-center space-x-4`;
+
 
 export { Button, LinkButton, ButtonGroup };
