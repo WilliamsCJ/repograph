@@ -14,11 +14,12 @@ To create a graph with a single repository, run:
 cd ../backend
 python -m repograph.cli --config default_config.yaml --name pyLODE --input ../demo/pyLODE --prune
 ```
+
 You can then execute the Cypher Queries
 
 ## Multi-Repository Example
 
-*NOTE: This step relies on having previously run the above example* 
+_NOTE: This step relies on having previously run the above example_
 
 **WARNING: This may take some time!**
 
@@ -31,16 +32,14 @@ python -m repograph.cli --config default_config.yaml --name starlette --input ..
 python -m repograph.cli --config default_config.yaml --name flake8 --input ../demo/flake8
 ```
 
-
 ## Cypher Queries
 
 The following Cypher queries can be executed by copy and pasting them into the
 Neo4j Browser. The Browser can be accessed at `http://localhost:7474/browser`
 
-
 ### Select the requirements of a given repo
 
-***NOTE: Not currently working due to issues with inspect4py***
+**_NOTE: Not currently working due to issues with inspect4py_**
 
 `MATCH (r)-[r:Requires]->(p) RETURN p, r`
 
@@ -76,7 +75,7 @@ MATCH (n:Docstring)-[r:Documents]-(f:Function) WHERE n.short_description IS NOT 
 
 ```
 MATCH (m:Module) RETURN m.name + '.' + m.extension as `Filename`
-````
+```
 
 ### Select the function and class names of a given demo
 
@@ -84,7 +83,7 @@ MATCH (m:Module) RETURN m.name + '.' + m.extension as `Filename`
 MATCH (n) WHERE n:Class OR n:Function RETURN n.name as `Name`, labels(n) as `Type`
 ```
 
-### Select the  source code of a given demo
+### Select the source code of a given demo
 
 ```
 MATCH (f:Function) WHERE f.source_code IS NOT NULL RETURN f.name, f.source_code
