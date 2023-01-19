@@ -7,7 +7,7 @@ import tw from "twin.macro";
 import type { DefaultLayoutProps } from "../../types/components/core/layout";
 
 // Other components
-import { Heading } from "./text";
+import { Title } from "./text";
 import { ButtonGroup } from "./button";
 
 /**
@@ -35,7 +35,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
   return (
     <RowLayout>
       <HeadingRow>
-        <Heading>{heading}</Heading>
+        <Title>{heading}</Title>
         <ButtonGroup>
           {buttons.map((button, index) => (
             <React.Fragment key={index}>{button}</React.Fragment>

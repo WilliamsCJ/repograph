@@ -1,10 +1,9 @@
 import React from "react";
+
 import type { GetServerSideProps, NextPage } from "next";
 import { FolderPlusIcon, PlusIcon } from "@heroicons/react/24/outline";
 
-import tw from "twin.macro";
-
-import { Button } from "../components/core/button";
+import { LinkButton } from "../components/core/button";
 import { DefaultLayout } from "../components/core/layout";
 import GraphList, { GraphEntry } from "../components/home/list";
 import { EmptyState } from "../components/core/empty";
@@ -13,7 +12,14 @@ export type HomePageProps = {
   graphs: GraphEntry[];
 };
 
-const NewButton = () => <Button icon={<FolderPlusIcon />} text="New" />;
+const NewButton = () => (
+  <LinkButton
+    primary={false}
+    icon={<FolderPlusIcon />}
+    text="New"
+    href="/graph/new"
+  />
+);
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
