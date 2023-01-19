@@ -10,12 +10,22 @@ import { FileUploadSection, InputSection, TextAreaSection } from "../../componen
 import { Formik, Form, FormikProps } from "formik";
 
 interface NewGraphFormValues {
-  graphName: string
+  name: string
+  description: string
+  files: any[]
+}
+
+interface NewGraphFormErrors {
+  name?: string
+  description?: string
+  files?: string
 }
 
 const New: NextPage = () => {
   const initialValues: NewGraphFormValues = {
-    graphName: ''
+    name: '',
+    description: '',
+    files: []
   }
 
   return (
@@ -23,7 +33,29 @@ const New: NextPage = () => {
   buttons={[]}
   heading="Create Graph"
   >
-    <Formik initialValues={initialValues} onSubmit={() => alert("hi")}>
+    <Formik
+      initialValues={initialValues}
+      onSubmit={(values, actions) => {
+        alert(JSON.stringify(values))
+      }}
+      validate={(values) => {
+        const errors: NewGraphFormErrors = {};
+
+        if (!values.name) {
+          errors.name = 'Please give your graph a name';
+        }
+
+        if (!values.description) {
+          errors.description = 'Please provide a description';
+        }
+
+        if (!values.files || values.files.length === 0) {
+          errors.files = 'You must upload at least one repository';
+        }
+
+        return errors
+      }}
+    >
       <Form tw="max-h-full overflow-clip">
         <div tw="w-full bg-red-100 min-h-full grid grid-cols-2 grid-rows-2 gap-8">
           <Card size={tw`w-full max-h-full row-span-2 col-span-2 px-6 py-6 overflow-hidden`}>
@@ -33,21 +65,21 @@ const New: NextPage = () => {
                 <TextLight tw="mt-1">Describe the purpose of your graph.</TextLight>
 
                 <InputSection
-                id="graphName"
-                name="graphName"
-                label="Graph Name"
-                placeholder=""
-                helpMessage="Give your graph a unique name."
-                errorMessage="Please enter a unique name."
+                  id="name"
+                  name="name"
+                  label="Graph Name"
+                  placeholder=""
+                  helpMessage="Give your graph a unique name."
+                  errorMessage="Please enter a unique name."
                 />
 
                 <TextAreaSection
-                id="description"
-                name="description"
-                label="Description"
-                placeholder=""
-                helpMessage="Write a few sentences about your graph."
-                errorMessage="Please add a few sentences about your graph."
+                  id="description"
+                  name="description"
+                  label="Description"
+                  placeholder=""
+                  helpMessage="Write a few sentences about your graph."
+                  errorMessage="Please add a few sentences about your graph."
                 />
               </div>
 

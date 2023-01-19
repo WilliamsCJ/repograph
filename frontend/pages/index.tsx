@@ -4,7 +4,7 @@ import { FolderPlusIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 import tw from "twin.macro";
 
-import { Button } from "../components/core/button";
+import { Button, LinkButton } from "../components/core/button";
 import { DefaultLayout } from "../components/core/layout";
 import GraphList, { GraphEntry } from "../components/home/list";
 import { EmptyState } from "../components/core/empty";
@@ -14,7 +14,7 @@ export type HomePageProps = {
 }
 
 const NewButton = () => (
-  <Button icon={<FolderPlusIcon />} text="New"/>
+  <LinkButton icon={<FolderPlusIcon />} text="New" href="/graph/new"/>
 );
 
 

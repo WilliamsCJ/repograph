@@ -6,8 +6,9 @@ import { IconWrapper } from "./icon";
 import { ArrowUpTrayIcon, FolderPlusIcon } from "@heroicons/react/24/outline";
 
 
-// Input
-
+/**
+ * InputProps type for InputSection component.
+ */
 export type InputProps = {
   id: string
   name: string
@@ -17,6 +18,13 @@ export type InputProps = {
   errorMessage: string
 }
 
+
+/**
+ * InputSection component contains a Formik input field
+ * along with label, helper text and error handling.
+ * @param props
+ * @constructor
+ */
 const InputSection: React.FC<InputProps> = (props) => {
   return <Field
     id={props.id}
@@ -24,7 +32,6 @@ const InputSection: React.FC<InputProps> = (props) => {
   >
     {({
         field,
-        form,
         meta,
       }: FieldProps) => (
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
@@ -33,7 +40,7 @@ const InputSection: React.FC<InputProps> = (props) => {
           <Label>{props.label}</Label>
           <div tw="sm:col-span-2 sm:mt-0">
             <ErrorInput placeholder={props.placeholder} {...field} />
-            <ErrorText>{props.errorMessage}</ErrorText>
+            <ErrorText>{meta.error}</ErrorText>
           </div>
           </>
         :
@@ -52,8 +59,9 @@ const InputSection: React.FC<InputProps> = (props) => {
 }
 
 
-// Text Area
-
+/**
+ * TextAreaProps type for TextAreaSection component.
+ */
 export type TextAreaProps = {
   id: string
   name: string
@@ -63,8 +71,15 @@ export type TextAreaProps = {
   errorMessage: string
 }
 
+
+/**
+ * TextAreaSection component contains a Formik textarea field
+ * along with label, helper text and error handling.
+ * @param props
+ * @constructor
+ */
 const TextAreaSection: React.FC<TextAreaProps> = (props) => {
-  return <Field name="lastName">
+  return <Field name={props.name} id={props.id}>
     {({
         field,
         form,
@@ -80,7 +95,7 @@ const TextAreaSection: React.FC<TextAreaProps> = (props) => {
             placeholder={props.placeholder}
             {...field}
           />
-          <ErrorText>{props.errorMessage}</ErrorText>
+          <ErrorText>{meta.error}</ErrorText>
         </div>
       </>
       :
@@ -99,8 +114,9 @@ const TextAreaSection: React.FC<TextAreaProps> = (props) => {
 }
 
 
-//
-
+/**
+ * FileUploadProps type for FileUploadSection
+ */
 export type FileUploadProps = {
   id: string
   name: string
@@ -109,11 +125,18 @@ export type FileUploadProps = {
   errorMessage: string
 }
 
+
+/**
+ * FileUploadSection component contains a Formik-compatible file upload input
+ * along with label, helper text and error handling.
+ * @param props
+ * @constructor
+ */
 const FileUploadSection: React.FC<FileUploadProps> = (props) => {
-  return <Field name="lastName">
+  return <Field name={props.name} id={props.id}>
     {({
         field,
-        form,
+        form: { setFieldValue },
         meta,
       }: FieldProps) => (
     <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
@@ -126,11 +149,26 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
           <IconWrapper size="md" color="light" icon={<ArrowUpTrayIcon />} />
           <Label tw="cursor-pointer">
             <span tw="text-primary-700">Upload a file</span>
-            <input type="file" tw="sr-only" />
+            <input
+              type="file"
+              tw="sr-only"
+              onChange={(event) => {
+                // @ts-ignore
+                const updated = field.value.concat(Object.values(event.currentTarget.files));
+                setFieldValue(props.id, updated);
+              }}
+            />
             <span tw="text-sm text-gray-500"> or drag and drop</span>
           </Label>
           <HelpText>{props.helpMessage}</HelpText>
         </div>
+        {field.value.length === 0 ?
+          meta.touched && meta.error ? <ErrorText>{meta.error}</ErrorText>
+          :
+          <span>No files uploaded</span>
+        :
+          <Label tw="truncate max-w-lg">{field.value.map((file: File) => {return file.name}).join(", ")}</Label>
+        }
       </div>
     </div>
 
@@ -149,7 +187,7 @@ const TextArea = tw.textarea`
   resize-none
 `
 const ErrorTextArea = tw.textarea`
-  block w-full min-w-0 rounded-md 
+  block w-full min-w-0 rounded-md border border-gray-300
   text-red-900 placeholder-red-300 focus:border-red-500 
   focus:outline-none focus:ring-red-500
   resize-none
@@ -160,9 +198,9 @@ const Input = tw.input`
   focus:border-primary-500 focus:ring-primary-500
 `
 const ErrorInput = tw.input`
-  block w-full min-w-0 rounded-md 
-  text-red-900 placeholder-red-300 focus:border-red-500 
-  focus:outline-none focus:ring-red-500
+  block w-full min-w-0 rounded-lg shadow-sm border p-2
+  text-gray-700 placeholder-gray-300 border-gray-300
+  focus:border-red-500 focus:ring-red-500
  `
 const Label = tw.label`block text-sm font-medium text-gray-700`;
 const HelpText = tw.p`text-sm text-gray-400 mt-2`;
