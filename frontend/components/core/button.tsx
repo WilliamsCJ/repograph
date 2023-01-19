@@ -1,5 +1,8 @@
 import tw from "twin.macro";
-import { ButtonProps, LinkButtonProps } from "../../types/components/core/button";
+import {
+  ButtonProps,
+  LinkButtonProps,
+} from "../../types/components/core/button";
 import Link from "next/link";
 
 /**

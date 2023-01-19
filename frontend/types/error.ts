@@ -1,3 +1,3 @@
 export type Error = {
-  detail: string
-}
+  detail: string;
+};

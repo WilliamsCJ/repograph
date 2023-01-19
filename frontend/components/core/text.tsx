@@ -7,7 +7,7 @@ import React from "react";
  */
 const Heading = tw.h1`font-semibold text-3xl align-text-top`;
 const Text = tw.h3`text-sm font-medium`;
-const TextAccent = tw.h3`text-sm font-medium text-primary-600`
-const TextLight = tw.p`text-sm text-gray-500`
+const TextAccent = tw.h3`text-sm font-medium text-primary-600`;
+const TextLight = tw.p`text-sm text-gray-500`;
 
 export { Heading, Text, TextAccent, TextLight };

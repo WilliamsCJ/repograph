@@ -5,7 +5,7 @@ import Link from "next/link";
 export type NavIconProps = {
   href: string;
   icon: any;
-  active: boolean
+  active: boolean;
 };
 
 export type NavigationRoute = {
@@ -16,11 +16,10 @@ export type NavigationRoute = {
 
 export type NavigationBarProps = {
   routes: NavigationRoute[];
-  currentPath: string
+  currentPath: string;
 };
 
 const NavIcon = ({ icon, href, active }: NavIconProps) => {
-
   return (
     <Link href={href}>
       <div tw="flex h-10">
@@ -40,7 +39,12 @@ const NavIcon = ({ icon, href, active }: NavIconProps) => {
 const NavigationBar = ({ routes, currentPath }: NavigationBarProps) => (
   <SideBar>
     {routes.map((route, index) => (
-      <NavIcon key={index} href={route.href} icon={route.icon} active={route.href === currentPath} />
+      <NavIcon
+        key={index}
+        href={route.href}
+        icon={route.icon}
+        active={route.href === currentPath}
+      />
     ))}
   </SideBar>
 );
