@@ -2,6 +2,20 @@ import tw from "twin.macro";
 import { ButtonProps, LinkButtonProps } from "../../types/components/core/button";
 import Link from "next/link";
 
+<<<<<<< Updated upstream
+=======
+// Button
+
+/**
+ * Props type for Button component.
+ */
+export type ButtonProps = {
+  icon?: any;
+  text: string;
+  primary?: boolean;
+};
+
+>>>>>>> Stashed changes
 /**
  * Base Button
  * @param icon {any} Icon to display
