@@ -1,8 +1,8 @@
 // Empty state component.
 
-import React from 'react';
+import React from "react";
 
-import tw from 'twin.macro';
+import tw from "twin.macro";
 
 import { Text, TextLight } from "./text";
 import { EmptyStateProps } from "../../types/components/core/empty";
@@ -21,7 +21,7 @@ const EmptyState: React.FC<EmptyStateProps> = (props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export { EmptyState };

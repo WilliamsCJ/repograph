@@ -8,7 +8,7 @@ import "twin.macro";
 import useDimensions from "react-use-dimensions";
 const ForceGraph2D = dynamic(() => import("./force-graph"), {
   ssr: false,
-})
+});
 
 /* Components */
 import { FullWidthCard } from "./card";

@@ -1,6 +1,6 @@
 import tw from "twin.macro";
-import Link from "next/link";
 
+import Link from "next/link";
 
 // Button
 
@@ -8,9 +8,9 @@ import Link from "next/link";
  * Props type for Button component.
  */
 export type ButtonProps = {
-  icon?: any
-  text: string
-  primary: boolean
+  icon?: any;
+  text: string;
+  primary: boolean;
 };
 
 /**
@@ -21,7 +21,9 @@ export type ButtonProps = {
  * @constructor
  */
 const Button = ({ icon, text, primary }: ButtonProps) => {
-  const color = primary ? tw`bg-primary-500 text-white hover:bg-primary-600 border-transparent` : tw`bg-white hover:bg-gray-50 text-gray-700 border-gray-300`;
+  const color = primary
+    ? tw`bg-primary-500 text-white hover:bg-primary-600 border-transparent`
+    : tw`bg-white hover:bg-gray-50 text-gray-700 border-gray-300`;
 
   return (
     <button
@@ -29,7 +31,7 @@ const Button = ({ icon, text, primary }: ButtonProps) => {
         color,
         tw`h-10 w-28 mx-auto flex flex-row justify-center items-center space-x-2`,
         tw`rounded-md border text-sm font-semibold shadow-sm`,
-        tw`px-4 py-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`
+        tw`px-4 py-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`,
       ]}
     >
       {icon && <div tw="h-5 w-5">{icon}</div>}
@@ -37,7 +39,6 @@ const Button = ({ icon, text, primary }: ButtonProps) => {
     </button>
   );
 };
-
 
 // Link Button
 
@@ -65,6 +66,5 @@ const LinkButton = ({ href, ...props }: LinkButtonProps) => (
  * ButtonGroup is a horizontal group of Buttons.
  */
 const ButtonGroup = tw.div`flex flex-row justify-center space-x-4`;
-
 
 export { Button, LinkButton, ButtonGroup };

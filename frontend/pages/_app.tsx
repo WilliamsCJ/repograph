@@ -1,6 +1,10 @@
-import type { AppProps } from 'next/app';
+import type { AppProps } from "next/app";
 import NavigationBar, { NavigationRoute } from "../components/core/navigation";
-import { ExclamationTriangleIcon, HomeIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  ExclamationTriangleIcon,
+  HomeIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import { ApplicationShell, MainContainer } from "../components/core/layout";
 import GlobalStyles from "../styles/GlobalStyles";
 import { useRouter } from "next/router";
@@ -36,7 +40,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </MainContainer>
       </ApplicationShell>
     </>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

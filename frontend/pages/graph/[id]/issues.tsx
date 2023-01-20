@@ -7,6 +7,6 @@ const Issues: NextPage = () => {
       <p>Coming soon...</p>
     </DefaultLayout>
   );
-}
+};
 
 export default Issues;
