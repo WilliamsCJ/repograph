@@ -1,9 +1,7 @@
 import tw from "twin.macro";
-import { ButtonProps, LinkButtonProps } from "../../types/components/core/button";
+import { LinkButtonProps } from "../../types/components/core/button";
 import Link from "next/link";
 
-<<<<<<< Updated upstream
-=======
 // Button
 
 /**
@@ -15,7 +13,6 @@ export type ButtonProps = {
   primary?: boolean;
 };
 
->>>>>>> Stashed changes
 /**
  * Base Button
  * @param icon {any} Icon to display
