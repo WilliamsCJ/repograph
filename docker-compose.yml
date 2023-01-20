@@ -12,13 +12,14 @@ services:
     environment:
       - NEO4J_AUTH=neo4j/s3cr3t
       - NEO4J_dbms_security_auth__minimum__password__length=1
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.jar,algo.*
+      - NEO4J_dbms_security_procedures_allowlist=apoc.jar,algo.*
     networks:
       - repograph-network
-    volumes:
-      - ./.neo4j/data:/data
-      - ./.neo4j/import:/import
-      - ./.neo4j/logs:/logs
-      - ./.neo4j/plugins:/plugins
     healthcheck:
       test: "exit 0"
 
