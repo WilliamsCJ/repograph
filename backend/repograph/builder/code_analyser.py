@@ -32,7 +32,8 @@ def call_inspect4py(input_path: str, output_path: str) -> str:
         "-ld",
         "-sc",
         "-ast",
-        "-r"
+        "-r",
+        "-cl"
     ])
 
     log.info("Done!")
