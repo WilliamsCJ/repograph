@@ -359,10 +359,11 @@ class Function(Node):
     Attributes:
         name (str): The name of the function or method.
         type (FunctionType): Whether this is a function or a method.
-        source_code (str): The original source code string.
-        ast (ast.AST): Abstract Syntax Tree extracted from the source code.
-        min_line_number (int): The first line of the function definition.
-        max_line_number (int): The last line of the function definition.
+        builtin (bool): Whether the function is a Python interpreter built-in function.
+        source_code (Optional[str]): The original source code string.
+        ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
+        min_line_number (Optional[int]): The first line of the function definition.
+        max_line_number (Optional[int]): The last line of the function definition.
     &#34;&#34;&#34;
     class FunctionType(Enum):
         &#34;&#34;&#34;Enum for FunctionType.
@@ -374,6 +375,7 @@ class Function(Node):
 
     name: str
     type: FunctionType
+    builtin: bool = False
     source_code: Optional[str]
     ast: Optional[Any]
     min_line_number: Optional[int]
@@ -962,13 +964,15 @@ specifically with a Node object.</p>
 <dd>The name of the function or method.</dd>
 <dt><strong><code>type</code></strong> :&ensp;<code>FunctionType</code></dt>
 <dd>Whether this is a function or a method.</dd>
-<dt><strong><code>source_code</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>builtin</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the function is a Python interpreter built-in function.</dd>
+<dt><strong><code>source_code</code></strong> :&ensp;<code>Optional[str]</code></dt>
 <dd>The original source code string.</dd>
-<dt><strong><code>ast</code></strong> :&ensp;<code>ast.AST</code></dt>
+<dt><strong><code>ast</code></strong> :&ensp;<code>Optional[ast.AST]</code></dt>
 <dd>Abstract Syntax Tree extracted from the source code.</dd>
-<dt><strong><code>min_line_number</code></strong> :&ensp;<code>int</code></dt>
+<dt><strong><code>min_line_number</code></strong> :&ensp;<code>Optional[int]</code></dt>
 <dd>The first line of the function definition.</dd>
-<dt><strong><code>max_line_number</code></strong> :&ensp;<code>int</code></dt>
+<dt><strong><code>max_line_number</code></strong> :&ensp;<code>Optional[int]</code></dt>
 <dd>The last line of the function definition.</dd>
 </dl>
 <p>Constructor</p>
@@ -991,10 +995,11 @@ specifically with a Node object.</p>
     Attributes:
         name (str): The name of the function or method.
         type (FunctionType): Whether this is a function or a method.
-        source_code (str): The original source code string.
-        ast (ast.AST): Abstract Syntax Tree extracted from the source code.
-        min_line_number (int): The first line of the function definition.
-        max_line_number (int): The last line of the function definition.
+        builtin (bool): Whether the function is a Python interpreter built-in function.
+        source_code (Optional[str]): The original source code string.
+        ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
+        min_line_number (Optional[int]): The first line of the function definition.
+        max_line_number (Optional[int]): The last line of the function definition.
     &#34;&#34;&#34;
     class FunctionType(Enum):
         &#34;&#34;&#34;Enum for FunctionType.
@@ -1006,6 +1011,7 @@ specifically with a Node object.</p>
 
     name: str
     type: FunctionType
+    builtin: bool = False
     source_code: Optional[str]
     ast: Optional[Any]
     min_line_number: Optional[int]
@@ -1026,6 +1032,10 @@ specifically with a Node object.</p>
 <p>Either Method or Function.</p></div>
 </dd>
 <dt id="repograph.models.nodes.Function.ast"><code class="name">var <span class="ident">ast</span> : Optional[Any]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.models.nodes.Function.builtin"><code class="name">var <span class="ident">builtin</span> : bool</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -2313,6 +2323,7 @@ specifically with a Node object.</p>
 <ul class="two-column">
 <li><code><a title="repograph.models.nodes.Function.FunctionType" href="#repograph.models.nodes.Function.FunctionType">FunctionType</a></code></li>
 <li><code><a title="repograph.models.nodes.Function.ast" href="#repograph.models.nodes.Function.ast">ast</a></code></li>
+<li><code><a title="repograph.models.nodes.Function.builtin" href="#repograph.models.nodes.Function.builtin">builtin</a></code></li>
 <li><code><a title="repograph.models.nodes.Function.max_line_number" href="#repograph.models.nodes.Function.max_line_number">max_line_number</a></code></li>
 <li><code><a title="repograph.models.nodes.Function.min_line_number" href="#repograph.models.nodes.Function.min_line_number">min_line_number</a></code></li>
 <li><code><a title="repograph.models.nodes.Function.name" href="#repograph.models.nodes.Function.name">name</a></code></li>

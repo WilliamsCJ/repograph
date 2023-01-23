@@ -10,14 +10,16 @@ from repograph.repograph import Repograph
 from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
                                    DocstringRaises, DocstringReturnValue, Directory, Module, \
                                    Function, License, Package, README, Repository, ReturnValue
-from repograph.models.relationships import Contains, Describes, Documents, HasArgument, \
+from repograph.models.relationships import Calls, Contains, Describes, Documents, HasArgument, \
                                            HasFunction, HasMethod, ImportedBy, LicensedBy, \
                                            Returns, Requires
+from repograph.utils.builtin import PYTHON_BUILT_IN_FUNCTIONS
 from repograph.utils.exceptions import RepographBuildError
 from repograph.utils.json import JSONDict, parse_min_max_line_numbers, \
     marshall_json_to_string
 from repograph.utils.paths import strip_file_path_prefix, is_root_folder, get_path_name, \
-                                  get_path_root, get_path_parent, get_package_parent_and_name
+                                  get_path_root, get_path_parent, get_package_parent_and_name, \
+                                  get_module_and_object_from_canonical_object_name
 
 ADDITIONAL_KEYS = [
   "requirements",
@@ -62,6 +64,8 @@ class RepographBuilder:
 
     # TODO:
     calls: Set[Tuple[str, str]] = set()
+
+    called_builtin_functions: Dict[str, Function] = dict()
 
     def __init__(self, uri, user, password, database, prune=False, summarize=False) -> None:
         """Constructor
@@ -362,13 +366,14 @@ class RepographBuilder:
         modules = []
 
         for file_index, file_info in enumerate(directory_info):
-            module = self._parse_module(file_info, file_index, len(directory_info))
+            module = RepographBuilder._parse_module(file_info, file_index, len(directory_info))
             is_package = is_package or module.name == INIT
             modules.append((module, file_info))
 
         return modules, is_package
 
-    def _parse_module(self, file_info: JSONDict, index: int, total: int) -> Module:
+    @staticmethod
+    def _parse_module(file_info: JSONDict, index: int, total: int) -> Module:
         """Parses a Python module with a parent directory.
 
         Args:
@@ -830,6 +835,7 @@ class RepographBuilder:
         nodes = []
         relationships = []
 
+        # TODO: Is this backwards?
         max = len(missing) - 1
         for index, m in enumerate(missing):
             if index == max:
@@ -897,16 +903,64 @@ class RepographBuilder:
                 for function_name, function_calls in file_info.get("functions", {}).items():
                     self._parse_calls(None, function_calls)
 
+        # Add called builtin functions to the graph
+        self.repograph.add(*self.called_builtin_functions.values())
+
     def _parse_calls(self, caller: Union[Module, Function], call_info: Optional[JSONDict]) -> None:
         if not call_info:
             return
 
         for call in call_info.get("local", []):
-            # TODO: Find function
-            # TODO: Create if not
-            # TODO: Create relationship to parent
-            # # TODO: Push
-            pass
+            module, function = get_module_and_object_from_canonical_object_name(call)
+            module_node = self.modules.get(module, None)
+
+            # If there is no module, it is a built-in function
+            if not module and function in PYTHON_BUILT_IN_FUNCTIONS:
+                if function in self.called_builtin_functions:
+                    function_node = self.called_builtin_functions[function]
+                else:
+                    function_node = Function(
+                        name=function,
+                        type=str(Function.FunctionType.value),
+                        builtin=True
+                    )
+                    self.called_builtin_functions[function] = function_node
+
+                # Create the relationship between the caller and the new function_node
+                relationship = Calls(caller, function_node)
+            elif module_node:
+                # Filter the module's objects for ones with the same name as the call
+                matching_objects = [obj for obj in self.module_objects.get(module_node, None) if
+                                    obj.name == function]
+
+                # If there isn't exactly one match, throw an error.
+                if len(matching_objects) > 1 or len(matching_objects) < 1:
+                    log.error("0 or 2+ matching objects found! Skipping!")
+                    continue
+
+                # Check that the existing called object is a Function
+                if not isinstance(matching_objects[0], Function):
+                    log.error("Called object is not a Function - %s", type(matching_objects[0]))
+                    continue
+
+                # Create the relationship between the caller and the new function_node
+                relationship = Calls(caller, matching_objects[0])
+            else:
+                # Create the new function node
+                function_node = Function(
+                    name=function,
+                    type=str(Function.FunctionType.value),
+                    builtin=True
+                )
+
+                # Calculate missing nodes and then create them and add to the graph.
+                _, missing = self._calculate_missing_packages(module)
+                nodes, relationships = self._create_missing_nodes(missing, import_object=function_node)  # noqa: 501
+
+                # Create the relationship between the caller and the new function_node
+                relationship = Calls(caller, function_node)
+
+            self.repograph.add(relationship)
 
     def build(
             self,

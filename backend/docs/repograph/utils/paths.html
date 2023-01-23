@@ -152,7 +152,26 @@ def get_canonical_package_root_and_child(package: str) -&gt; Tuple[str, str]:
     if len(parts) == 1:
         return package, &#34;&#34;
 
-    return parts[0], &#34;.&#34;.join(parts[1:])</code></pre>
+    return parts[0], &#34;.&#34;.join(parts[1:])
+
+
+def get_module_and_object_from_canonical_object_name(canonical_name: str) -&gt; Tuple[str, str]:
+    &#34;&#34;&#34;Split out the canonical module name and object name from a
+    canonical object name.
+
+    Args:
+        canonical_name (str): The canonical name of the object.
+
+    Returns:
+        str: The module canonical name
+        str: The object name
+    &#34;&#34;&#34;
+    parts = canonical_name.split(&#34;.&#34;)
+
+    if len(parts) == 1:
+        return None, canonical_name
+
+    return &#34;.&#34;.join(parts[:-1]), parts[-1]</code></pre>
 </details>
 </section>
 <section>
@@ -201,6 +220,47 @@ canonical package name.</p>
         return package, &#34;&#34;
 
     return parts[0], &#34;.&#34;.join(parts[1:])</code></pre>
+</details>
+</dd>
+<dt id="repograph.utils.paths.get_module_and_object_from_canonical_object_name"><code class="name flex">
+<span>def <span class="ident">get_module_and_object_from_canonical_object_name</span></span>(<span>canonical_name: str) ‑> Tuple[str, str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Split out the canonical module name and object name from a
+canonical object name.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>canonical_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The canonical name of the object.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>The module canonical name</dd>
+<dt><code>str</code></dt>
+<dd>The object name</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_module_and_object_from_canonical_object_name(canonical_name: str) -&gt; Tuple[str, str]:
+    &#34;&#34;&#34;Split out the canonical module name and object name from a
+    canonical object name.
+
+    Args:
+        canonical_name (str): The canonical name of the object.
+
+    Returns:
+        str: The module canonical name
+        str: The object name
+    &#34;&#34;&#34;
+    parts = canonical_name.split(&#34;.&#34;)
+
+    if len(parts) == 1:
+        return None, canonical_name
+
+    return &#34;.&#34;.join(parts[:-1]), parts[-1]</code></pre>
 </details>
 </dd>
 <dt id="repograph.utils.paths.get_package_parent_and_name"><code class="name flex">
@@ -444,6 +504,7 @@ Returns:</p></div>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="repograph.utils.paths.get_canonical_package_root_and_child" href="#repograph.utils.paths.get_canonical_package_root_and_child">get_canonical_package_root_and_child</a></code></li>
+<li><code><a title="repograph.utils.paths.get_module_and_object_from_canonical_object_name" href="#repograph.utils.paths.get_module_and_object_from_canonical_object_name">get_module_and_object_from_canonical_object_name</a></code></li>
 <li><code><a title="repograph.utils.paths.get_package_parent_and_name" href="#repograph.utils.paths.get_package_parent_and_name">get_package_parent_and_name</a></code></li>
 <li><code><a title="repograph.utils.paths.get_path_name" href="#repograph.utils.paths.get_path_name">get_path_name</a></code></li>
 <li><code><a title="repograph.utils.paths.get_path_parent" href="#repograph.utils.paths.get_path_parent">get_path_parent</a></code></li>

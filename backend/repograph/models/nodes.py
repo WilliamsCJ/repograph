@@ -330,10 +330,11 @@ class Function(Node):
     Attributes:
         name (str): The name of the function or method.
         type (FunctionType): Whether this is a function or a method.
-        source_code (str): The original source code string.
-        ast (ast.AST): Abstract Syntax Tree extracted from the source code.
-        min_line_number (int): The first line of the function definition.
-        max_line_number (int): The last line of the function definition.
+        builtin (bool): Whether the function is a Python interpreter built-in function.
+        source_code (Optional[str]): The original source code string.
+        ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
+        min_line_number (Optional[int]): The first line of the function definition.
+        max_line_number (Optional[int]): The last line of the function definition.
     """
     class FunctionType(Enum):
         """Enum for FunctionType.
@@ -345,6 +346,7 @@ class Function(Node):
 
     name: str
     type: FunctionType
+    builtin: bool = False
     source_code: Optional[str]
     ast: Optional[Any]
     min_line_number: Optional[int]
