@@ -135,3 +135,15 @@ class Describes(Relationship):
     _allowed_types = {
         Docstring: {DocstringArgument, DocstringRaises, DocstringReturnValue}
     }
+
+
+class Calls(Relationship):
+    """Calls relationship.
+
+    Module -> Function
+    Function -> Function
+    """
+    _allowed_types = {
+        Module: {Function},
+        Function: {Function}
+    }
