@@ -913,11 +913,40 @@ class RepographBuilder:
         #     relationship = Extends(class_node, super_class)
         #     self.repograph.add(super_class, relationship)
 
-    def build(self, directory_info: Optional[JSONDict]) -&gt; Repograph:
+    def _parse_call_graph(self, call_graph: Optional[JSONDict]) -&gt; None:
+        if not call_graph:
+            log.error(&#34;No call graph provided!&#34;)
+            return
+
+        for directory, files in call_graph.items():
+            # TODO: Find the file using the difference in directory path and full file path name
+            for file_name, file_info in files.items():
+                # Parse body calls
+                self._parse_calls(None, file_info.get(&#34;body&#34;, {}))
+                for function_name, function_calls in file_info.get(&#34;functions&#34;, {}).items():
+                    self._parse_calls(None, function_calls)
+
+    def _parse_calls(self, caller: Union[Module, Function], call_info: Optional[JSONDict]) -&gt; None:
+        if not call_info:
+            return
+
+        for call in call_info.get(&#34;local&#34;, []):
+            # TODO: Find function
+            # TODO: Create if not
+            # TODO: Create relationship to parent
+            # # TODO: Push
+            pass
+
+    def build(
+            self,
+            directory_info: Optional[JSONDict],
+            call_graph: Optional[JSONDict]
+    ) -&gt; Repograph:
         &#34;&#34;&#34;Build a repograph from directory_info JSON.
 
         Args:
             directory_info (JSONDict): Directory info JSON.
+            call_graph (Optional[JSONDict]): The call graph JSON.
 
         Returns:
             Repograph
@@ -981,7 +1010,12 @@ class RepographBuilder:
         log.info(&#34;Parsing module dependencies...&#34;)
         self._parse_dependencies()
 
+        # Parse the call list, now that most Nodes should be added to the graph
+        log.info(&#34;Parsing call graph...&#34;)
+        # self._parse_call_graph(call_graph)
+
         # Parse READMEs
+        log.info(&#34;Parsing README files...&#34;)
         self._parse_readme(readmes)
 
         log.info(&#34;Successfully built a Repograph!&#34;)
@@ -1868,11 +1902,40 @@ summarize:</p></div>
         #     relationship = Extends(class_node, super_class)
         #     self.repograph.add(super_class, relationship)
 
-    def build(self, directory_info: Optional[JSONDict]) -&gt; Repograph:
+    def _parse_call_graph(self, call_graph: Optional[JSONDict]) -&gt; None:
+        if not call_graph:
+            log.error(&#34;No call graph provided!&#34;)
+            return
+
+        for directory, files in call_graph.items():
+            # TODO: Find the file using the difference in directory path and full file path name
+            for file_name, file_info in files.items():
+                # Parse body calls
+                self._parse_calls(None, file_info.get(&#34;body&#34;, {}))
+                for function_name, function_calls in file_info.get(&#34;functions&#34;, {}).items():
+                    self._parse_calls(None, function_calls)
+
+    def _parse_calls(self, caller: Union[Module, Function], call_info: Optional[JSONDict]) -&gt; None:
+        if not call_info:
+            return
+
+        for call in call_info.get(&#34;local&#34;, []):
+            # TODO: Find function
+            # TODO: Create if not
+            # TODO: Create relationship to parent
+            # # TODO: Push
+            pass
+
+    def build(
+            self,
+            directory_info: Optional[JSONDict],
+            call_graph: Optional[JSONDict]
+    ) -&gt; Repograph:
         &#34;&#34;&#34;Build a repograph from directory_info JSON.
 
         Args:
             directory_info (JSONDict): Directory info JSON.
+            call_graph (Optional[JSONDict]): The call graph JSON.
 
         Returns:
             Repograph
@@ -1936,7 +1999,12 @@ summarize:</p></div>
         log.info(&#34;Parsing module dependencies...&#34;)
         self._parse_dependencies()
 
+        # Parse the call list, now that most Nodes should be added to the graph
+        log.info(&#34;Parsing call graph...&#34;)
+        # self._parse_call_graph(call_graph)
+
         # Parse READMEs
+        log.info(&#34;Parsing README files...&#34;)
         self._parse_readme(readmes)
 
         log.info(&#34;Successfully built a Repograph!&#34;)
@@ -1984,7 +2052,7 @@ summarize:</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="repograph.builder.repograph_builder.RepographBuilder.build"><code class="name flex">
-<span>def <span class="ident">build</span></span>(<span>self, directory_info: Optional[Dict[str, Any]]) ‑> <a title="repograph.repograph.Repograph" href="../repograph.html#repograph.repograph.Repograph">Repograph</a></span>
+<span>def <span class="ident">build</span></span>(<span>self, directory_info: Optional[Dict[str, Any]], call_graph: Optional[Dict[str, Any]]) ‑> <a title="repograph.repograph.Repograph" href="../repograph.html#repograph.repograph.Repograph">Repograph</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Build a repograph from directory_info JSON.</p>
@@ -1992,6 +2060,8 @@ summarize:</p></div>
 <dl>
 <dt><strong><code>directory_info</code></strong> :&ensp;<code>JSONDict</code></dt>
 <dd>Directory info JSON.</dd>
+<dt><strong><code>call_graph</code></strong> :&ensp;<code>Optional[JSONDict]</code></dt>
+<dd>The call graph JSON.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>Repograph</p>
@@ -2001,11 +2071,16 @@ summarize:</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def build(self, directory_info: Optional[JSONDict]) -&gt; Repograph:
+<pre><code class="python">def build(
+        self,
+        directory_info: Optional[JSONDict],
+        call_graph: Optional[JSONDict]
+) -&gt; Repograph:
     &#34;&#34;&#34;Build a repograph from directory_info JSON.
 
     Args:
         directory_info (JSONDict): Directory info JSON.
+        call_graph (Optional[JSONDict]): The call graph JSON.
 
     Returns:
         Repograph
@@ -2069,7 +2144,12 @@ summarize:</p></div>
     log.info(&#34;Parsing module dependencies...&#34;)
     self._parse_dependencies()
 
+    # Parse the call list, now that most Nodes should be added to the graph
+    log.info(&#34;Parsing call graph...&#34;)
+    # self._parse_call_graph(call_graph)
+
     # Parse READMEs
+    log.info(&#34;Parsing README files...&#34;)
     self._parse_readme(readmes)
 
     log.info(&#34;Successfully built a Repograph!&#34;)

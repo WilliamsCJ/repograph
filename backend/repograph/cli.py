@@ -93,7 +93,7 @@ if __name__ == "__main__":
             call_inspect4py(args.input, temp_output)
             directory_info, call_graph = parse_inspect4py_output(temp_output)
 
-        repograph = builder.build(directory_info)  # noqa
+        repograph = builder.build(directory_info, call_graph)  # noqa
     except subprocess.CalledProcessError as e:
         log.error("Error invoking inspect4py - %s", str(e))
     except RepographBuildError as e:

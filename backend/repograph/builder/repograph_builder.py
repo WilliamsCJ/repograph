@@ -884,11 +884,40 @@ class RepographBuilder:
         #     relationship = Extends(class_node, super_class)
         #     self.repograph.add(super_class, relationship)
 
-    def build(self, directory_info: Optional[JSONDict]) -> Repograph:
+    def _parse_call_graph(self, call_graph: Optional[JSONDict]) -> None:
+        if not call_graph:
+            log.error("No call graph provided!")
+            return
+
+        for directory, files in call_graph.items():
+            # TODO: Find the file using the difference in directory path and full file path name
+            for file_name, file_info in files.items():
+                # Parse body calls
+                self._parse_calls(None, file_info.get("body", {}))
+                for function_name, function_calls in file_info.get("functions", {}).items():
+                    self._parse_calls(None, function_calls)
+
+    def _parse_calls(self, caller: Union[Module, Function], call_info: Optional[JSONDict]) -> None:
+        if not call_info:
+            return
+
+        for call in call_info.get("local", []):
+            # TODO: Find function
+            # TODO: Create if not
+            # TODO: Create relationship to parent
+            # # TODO: Push
+            pass
+
+    def build(
+            self,
+            directory_info: Optional[JSONDict],
+            call_graph: Optional[JSONDict]
+    ) -> Repograph:
         """Build a repograph from directory_info JSON.
 
         Args:
             directory_info (JSONDict): Directory info JSON.
+            call_graph (Optional[JSONDict]): The call graph JSON.
 
         Returns:
             Repograph
@@ -952,7 +981,12 @@ class RepographBuilder:
         log.info("Parsing module dependencies...")
         self._parse_dependencies()
 
+        # Parse the call list, now that most Nodes should be added to the graph
+        log.info("Parsing call graph...")
+        # self._parse_call_graph(call_graph)
+
         # Parse READMEs
+        log.info("Parsing README files...")
         self._parse_readme(readmes)
 
         log.info("Successfully built a Repograph!")
