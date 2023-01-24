@@ -32,6 +32,7 @@ class Neo4JDatabase:
         self.database = database
 
     def add(self, *args: BaseSubgraph):
+        args = list(filter(lambda item: item is not None, args))
         tx = self.graph.begin()
         for arg in args:
             tx.create(arg._subgraph)

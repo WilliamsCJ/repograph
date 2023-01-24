@@ -30,9 +30,9 @@ class TestRepographBuilderIntegration(unittest.TestCase):
             directory_info = read_json_from_file(
                 os.path.join(
                     THIS_DIR,
-                    "data/directory_info.json"
+                    "data/directory_info.json"  # TODO: Does this need to be updated?
                 )
             )
-            _ = builder.build(directory_info)
+            _ = builder.build(directory_info, None)  # TODO: Update this with call graph
         except Exception:
             self.fail("Test failed with exception")
