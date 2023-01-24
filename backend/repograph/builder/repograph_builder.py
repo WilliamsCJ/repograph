@@ -16,7 +16,8 @@ from repograph.models.relationships import Calls, Contains, Describes, Documents
 from repograph.utils.builtin import PYTHON_BUILT_IN_FUNCTIONS
 from repograph.utils.exceptions import RepographBuildError
 from repograph.utils.json import JSONDict, convert_dependencies_map_to_set, \
-    parse_min_max_line_numbers, marshall_json_to_string
+                                 parse_min_max_line_numbers, marshall_json_to_string
+from repograph.utils.nodes import find_node_object_by_name
 from repograph.utils.paths import strip_file_path_prefix, is_root_folder, get_path_name, \
                                   get_path_root, get_path_parent, get_package_parent_and_name, \
                                   get_module_and_object_from_canonical_object_name
@@ -918,6 +919,14 @@ class RepographBuilder:
         #     self.repograph.add(super_class, relationship)
 
     def _parse_call_graph(self, call_graph: Optional[JSONDict]) -> None:
+        """Parse the call graph extracted by inspect4py.
+
+        Args:
+            call_graph (Optional[JSONDict]): The call graph.
+
+        Returns:
+            None
+        """
         if not call_graph:
             log.error("No call graph provided!")
             return
@@ -929,41 +938,63 @@ class RepographBuilder:
                     log.error("Couldn't find existing Module node. Skipping!")
                     continue
 
+                module_objects = self.module_objects.get(module, [])
+                module_imports = self.module_imports.get(module, set())
+                module_dependencies = self.module_dependencies.get(module, [])
+
                 # Parse body calls
-                self._parse_calls(module, file_info.get("body", {}))
+                self._parse_calls(
+                    module,
+                    file_info.get("body", {}),
+                    module_objects,
+                    module_imports,
+                    module_dependencies
+                )
 
                 # For each function described in the call graph, parse these calls
                 for function_name, function_calls in file_info.get("functions", {}).items():
-                    self._parse_calls(module, function_calls)
-                    # TODO: Caller should be the function
+                    function = find_node_object_by_name(module_objects, function_name)
+                    self._parse_calls(
+                        module,
+                        function_calls,
+                        module_objects,
+                        module_imports,
+                        module_dependencies,
+                        caller=function
+                    )
 
         # Add called builtin functions to the graph
         self.repograph.add(*self.called_builtin_functions.values())
 
-    def _parse_calls(self, caller: Union[Module, Function], call_info: Optional[JSONDict]) -> None:
+    def _parse_calls(
+            self,
+            parent_module: Module,
+            call_info: Optional[JSONDict],
+            module_objects: List[any],
+            module_imports: Set[str],
+            module_dependencies: List[any],
+            caller: Optional[Function] = None
+    ) -> None:
+        """Parse the call graph for a particular module.
+
+        Args:
+            parent_module (Module): The parent module.
+            call_info (Optional[JSONDict]): The call info.
+            caller (Optional[Function): An optional specific function that the call info is for.
+        Returns:
+            None
+        """
         if not call_info:
             return
 
-        module_imports = self.module_imports.get(caller, set())
-
         for call in call_info.get("local", []):
             module, function = get_module_and_object_from_canonical_object_name(call)
-            matching_objects_in_module = [obj for obj in self.module_objects.get(caller, []) if
-                                          obj.name == function]
+            matching_objects_in_module = find_node_object_by_name(module_objects, function)
 
             # If the call is to an imported function...
             if call in module_imports:
-                matching_objects = [obj for obj in self.module_dependencies.get(caller, []) if
-                                    obj is not None and obj.canonical_name == call]
-
-                # If there isn't exactly one match, throw an error.
-                if len(matching_objects) > 1 or len(matching_objects) < 1:
-                    log.error("0 or 2+ matching objects found! Skipping!")
-                    continue
-
-                # Create the relationship between the caller and the new function_node
-                relationship = Calls(caller, matching_objects[0])
-
+                matching_imports = find_node_object_by_name(module_dependencies, call, canonical=True)  # noqa: 501
+                relationship = Calls(caller if caller else parent_module, matching_imports)
             # ...or if the call is to a built-in function...
             elif call in PYTHON_BUILT_IN_FUNCTIONS:
                 if function in self.called_builtin_functions:
@@ -977,16 +1008,14 @@ class RepographBuilder:
                     self.called_builtin_functions[function] = function_node
 
                 # Create the relationship between the caller and the new function_node
-                relationship = Calls(caller, function_node)
+                relationship = Calls(caller if caller else parent_module, function_node)
+
             # ...or if the call is to a function defined in the module
             elif matching_objects_in_module:
-                # If there isn't exactly one match, throw an error.
-                if len(matching_objects_in_module) > 1 or len(matching_objects_in_module) < 1:
-                    log.error("0 or 2+ matching objects found! Skipping!")
-                    continue
-
-                # Create the relationship between the caller and the new function_node
-                relationship = Calls(caller, matching_objects_in_module[0])
+                relationship = Calls(
+                    caller if caller else parent_module,
+                    matching_objects_in_module
+                )
             else:
                 log.debug("Call to some other variable (%s). Ignoring.", call)
                 relationship = None

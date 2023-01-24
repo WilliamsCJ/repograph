@@ -32,7 +32,7 @@ Utility functions for JSON parsing.
 &#34;&#34;&#34;
 import json
 import logging
-from typing import Dict, Any, Tuple, Optional
+from typing import Dict, Any, Set, Tuple, List, Optional
 
 JSONDict = Dict[str, Any]
 
@@ -91,7 +91,15 @@ def marshall_json_to_string(json_dict: JSONDict) -&gt; Optional[str]:
             return None
 
 
-def convert_dependencies_map_to_set(dependencies):
+def convert_dependencies_map_to_set(dependencies: List[JSONDict]) -&gt; Set[str]:
+    &#34;&#34;&#34;Convert dependencies to a set of names.
+
+    Args:
+        dependencies (JSONDict): The JSONDict containing dependency information.
+
+    Returns:
+        Set[str]
+    &#34;&#34;&#34;
     converted = set()
     for dependency in dependencies:
         if &#34;from_module&#34; in dependency:
@@ -110,15 +118,30 @@ def convert_dependencies_map_to_set(dependencies):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="repograph.utils.json.convert_dependencies_map_to_set"><code class="name flex">
-<span>def <span class="ident">convert_dependencies_map_to_set</span></span>(<span>dependencies)</span>
+<span>def <span class="ident">convert_dependencies_map_to_set</span></span>(<span>dependencies: List[Dict[str, Any]]) ‑> Set[str]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Convert dependencies to a set of names.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dependencies</code></strong> :&ensp;<code>JSONDict</code></dt>
+<dd>The JSONDict containing dependency information.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Set[str]</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def convert_dependencies_map_to_set(dependencies):
+<pre><code class="python">def convert_dependencies_map_to_set(dependencies: List[JSONDict]) -&gt; Set[str]:
+    &#34;&#34;&#34;Convert dependencies to a set of names.
+
+    Args:
+        dependencies (JSONDict): The JSONDict containing dependency information.
+
+    Returns:
+        Set[str]
+    &#34;&#34;&#34;
     converted = set()
     for dependency in dependencies:
         if &#34;from_module&#34; in dependency:

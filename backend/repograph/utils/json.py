@@ -3,7 +3,7 @@ Utility functions for JSON parsing.
 """
 import json
 import logging
-from typing import Dict, Any, Tuple, Optional
+from typing import Dict, Any, Set, Tuple, List, Optional
 
 JSONDict = Dict[str, Any]
 
@@ -62,7 +62,15 @@ def marshall_json_to_string(json_dict: JSONDict) -> Optional[str]:
             return None
 
 
-def convert_dependencies_map_to_set(dependencies):
+def convert_dependencies_map_to_set(dependencies: List[JSONDict]) -> Set[str]:
+    """Convert dependencies to a set of names.
+
+    Args:
+        dependencies (JSONDict): The JSONDict containing dependency information.
+
+    Returns:
+        Set[str]
+    """
     converted = set()
     for dependency in dependencies:
         if "from_module" in dependency:

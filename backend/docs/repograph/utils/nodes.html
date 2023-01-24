@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>repograph.utils API documentation</title>
-<meta name="description" content="" />
+<title>repograph.utils.nodes API documentation</title>
+<meta name="description" content="Utility functions for filtering" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,50 +19,115 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>repograph.utils</code></h1>
+<h1 class="title">Module <code>repograph.utils.nodes</code></h1>
 </header>
 <section id="section-intro">
+<p>Utility functions for filtering</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;Utility functions for filtering&#34;&#34;&#34;
+import logging
+from typing import List, Optional, Union
+
+from repograph.models.nodes import Module, Class, Function
+
+log = logging.getLogger(&#34;repograph.utils.nodes&#34;)
+
+
+def find_node_object_by_name(
+        nodes: List[Union[Class, Function, Module]],
+        name: str,
+        strict: bool = True,
+        canonical: bool = False
+) -&gt; Optional[Union[Class, Function, Module]]:
+    &#34;&#34;&#34;Find a Node in a list of Nodes by name.
+
+    Args:
+        nodes (List[Union[Class, Function, Module]]): The list of Nodes.
+        name (str): The name to filter by.
+        strict (bool): Whether to log a warning if more than one result is found.
+        canonical (bool): Whether to use canonical name.
+
+    Returns:
+        Optional[Union[Class, Function, Module]]
+    &#34;&#34;&#34;
+    if canonical:
+        filtered = [obj for obj in nodes if obj is not None and obj.canonical_name == name]
+    else:
+        filtered = [obj for obj in nodes if obj is not None and obj.name == name]
+
+    if len(filtered) == 0:
+        return None
+
+    if strict and len(filtered) &gt; 1:
+        log.warning(&#34;More than one result found! Returning first.&#34;)
+
+    return filtered[0]</code></pre>
+</details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="repograph.utils.builtin" href="builtin.html">repograph.utils.builtin</a></code></dt>
+<dt id="repograph.utils.nodes.find_node_object_by_name"><code class="name flex">
+<span>def <span class="ident">find_node_object_by_name</span></span>(<span>nodes: List[Union[<a title="repograph.models.nodes.Class" href="../models/nodes.html#repograph.models.nodes.Class">Class</a>, <a title="repograph.models.nodes.Function" href="../models/nodes.html#repograph.models.nodes.Function">Function</a>, <a title="repograph.models.nodes.Module" href="../models/nodes.html#repograph.models.nodes.Module">Module</a>]], name: str, strict: bool = True, canonical: bool = False) ‑> Union[<a title="repograph.models.nodes.Class" href="../models/nodes.html#repograph.models.nodes.Class">Class</a>, <a title="repograph.models.nodes.Function" href="../models/nodes.html#repograph.models.nodes.Function">Function</a>, <a title="repograph.models.nodes.Module" href="../models/nodes.html#repograph.models.nodes.Module">Module</a>, ForwardRef(None)]</span>
+</code></dt>
 <dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="repograph.utils.exceptions" href="exceptions.html">repograph.utils.exceptions</a></code></dt>
-<dd>
-<div class="desc"><p>Custom exceptions.</p></div>
-</dd>
-<dt><code class="name"><a title="repograph.utils.json" href="json.html">repograph.utils.json</a></code></dt>
-<dd>
-<div class="desc"><p>Utility functions for JSON parsing.</p></div>
-</dd>
-<dt><code class="name"><a title="repograph.utils.logging" href="logging.html">repograph.utils.logging</a></code></dt>
-<dd>
-<div class="desc"><p>Logging utilities</p></div>
-</dd>
-<dt><code class="name"><a title="repograph.utils.neo4j" href="neo4j.html">repograph.utils.neo4j</a></code></dt>
-<dd>
-<div class="desc"><p>Neo4J Graph Database related functionality.</p></div>
-</dd>
-<dt><code class="name"><a title="repograph.utils.nodes" href="nodes.html">repograph.utils.nodes</a></code></dt>
-<dd>
-<div class="desc"><p>Utility functions for filtering</p></div>
-</dd>
-<dt><code class="name"><a title="repograph.utils.paths" href="paths.html">repograph.utils.paths</a></code></dt>
-<dd>
-<div class="desc"><p>Utility functions for handling file paths.</p></div>
-</dd>
-<dt><code class="name"><a title="repograph.utils.summarization" href="summarization.html">repograph.utils.summarization</a></code></dt>
-<dd>
-<div class="desc"><p>Code summarization utilities.</p></div>
+<div class="desc"><p>Find a Node in a list of Nodes by name.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>nodes</code></strong> :&ensp;<code>List[Union[Class, Function, Module]]</code></dt>
+<dd>The list of Nodes.</dd>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The name to filter by.</dd>
+<dt><strong><code>strict</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to log a warning if more than one result is found.</dd>
+<dt><strong><code>canonical</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to use canonical name.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Optional[Union[Class, Function, Module]]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_node_object_by_name(
+        nodes: List[Union[Class, Function, Module]],
+        name: str,
+        strict: bool = True,
+        canonical: bool = False
+) -&gt; Optional[Union[Class, Function, Module]]:
+    &#34;&#34;&#34;Find a Node in a list of Nodes by name.
+
+    Args:
+        nodes (List[Union[Class, Function, Module]]): The list of Nodes.
+        name (str): The name to filter by.
+        strict (bool): Whether to log a warning if more than one result is found.
+        canonical (bool): Whether to use canonical name.
+
+    Returns:
+        Optional[Union[Class, Function, Module]]
+    &#34;&#34;&#34;
+    if canonical:
+        filtered = [obj for obj in nodes if obj is not None and obj.canonical_name == name]
+    else:
+        filtered = [obj for obj in nodes if obj is not None and obj.name == name]
+
+    if len(filtered) == 0:
+        return None
+
+    if strict and len(filtered) &gt; 1:
+        log.warning(&#34;More than one result found! Returning first.&#34;)
+
+    return filtered[0]</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -75,19 +140,12 @@
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="repograph" href="../index.html">repograph</a></code></li>
+<li><code><a title="repograph.utils" href="index.html">repograph.utils</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="repograph.utils.builtin" href="builtin.html">repograph.utils.builtin</a></code></li>
-<li><code><a title="repograph.utils.exceptions" href="exceptions.html">repograph.utils.exceptions</a></code></li>
-<li><code><a title="repograph.utils.json" href="json.html">repograph.utils.json</a></code></li>
-<li><code><a title="repograph.utils.logging" href="logging.html">repograph.utils.logging</a></code></li>
-<li><code><a title="repograph.utils.neo4j" href="neo4j.html">repograph.utils.neo4j</a></code></li>
-<li><code><a title="repograph.utils.nodes" href="nodes.html">repograph.utils.nodes</a></code></li>
-<li><code><a title="repograph.utils.paths" href="paths.html">repograph.utils.paths</a></code></li>
-<li><code><a title="repograph.utils.summarization" href="summarization.html">repograph.utils.summarization</a></code></li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="repograph.utils.nodes.find_node_object_by_name" href="#repograph.utils.nodes.find_node_object_by_name">find_node_object_by_name</a></code></li>
 </ul>
 </li>
 </ul>
