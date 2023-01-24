@@ -53,8 +53,8 @@ p.add_argument(&#39;--uri&#39;, required=True, help=&#39;The URI of the Neo4J se
 p.add_argument(&#39;--username&#39;, required=True, help=&#39;The username to supply to the Neo4J server.&#39;)
 p.add_argument(&#39;--password&#39;, required=True, help=&#39;The password to supply to the Neo4J server.&#39;)
 p.add_argument(&#39;--database&#39;, required=False, default=&#39;neo4j&#39;, help=&#34;The database name to use.&#34;)
-p.add_argument(&#39;--input&#39;, required=True, help=&#39;The directory_info.json file.&#39;)
-p.add_argument(&#39;--name&#39;, required=True, help=&#39;The name of the repository.&#39;)
+p.add_argument(&#39;--input&#39;, required=True, action=&#39;append&#39;, help=&#39;The directory_info.json file.&#39;)
+p.add_argument(&#39;--name&#39;, required=True, help=&#39;The name of the graph.&#39;)
 p.add_argument(
     &#39;--prune&#39;,
     required=False,
@@ -114,22 +114,35 @@ if __name__ == &#34;__main__&#34;:
     )
 
     temp_output = f&#34;./tmp/{args.name}&#34;
+    success = 0
+    failure = 0
 
-    try:
-        if args.skip_inspect4py:
-            directory_info, call_graph = parse_inspect4py_output(args.input)
-        else:
-            call_inspect4py(args.input, temp_output)
-            directory_info, call_graph = parse_inspect4py_output(temp_output)
+    for input_path in args.input:
+        try:
+            if args.skip_inspect4py:
+                directory_info, call_graph = parse_inspect4py_output(input_path)
+            else:
+                call_inspect4py(input_path, temp_output)
+                directory_info, call_graph = parse_inspect4py_output(temp_output)
 
-        repograph = builder.build(directory_info, call_graph)  # noqa
-    except subprocess.CalledProcessError as e:
-        log.error(&#34;Error invoking inspect4py - %s&#34;, str(e))
-    except RepographBuildError as e:
-        log.error(&#34;Error building repograph - %s&#34;, str(e))
-    finally:
-        if not args.skip_inspect4py:
-            cleanup_inspect4py_output()</code></pre>
+            repograph = builder.build(directory_info, call_graph)  # noqa
+            success += 1
+        except subprocess.CalledProcessError as e:
+            log.error(&#34;Error invoking inspect4py for %s - %s&#34;, input_path, str(e))
+            failure += 1
+        except RepographBuildError as e:
+            log.error(&#34;Error building repograph for %s - %s&#34;, input_path, str(e))
+            failure += 1
+        finally:
+            if not args.skip_inspect4py:
+                cleanup_inspect4py_output()
+
+    log.info(
+        &#34;Parsed %d repositories with %d successes and %d failures.&#34;,
+        len(args.input),
+        success,
+        failure
+    )</code></pre>
 </details>
 </section>
 <section>
