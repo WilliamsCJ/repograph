@@ -817,8 +817,6 @@ class RepographBuilder:
                                 import_object=imported_object
                             )
 
-                        # TODO: Check that child from create_missing_nodes
-                        #  is the same as imported_object
                         self.repograph.add(ImportedBy(imported_object, module))
                         self.module_dependencies[module].append(imported_object)
 
@@ -862,7 +860,6 @@ class RepographBuilder:
         relationships = []
         child = None
 
-        # TODO: Is this backwards?
         for index, m in enumerate(missing):
             if index == len(missing) - 1:
                 new = Module(name=m)
@@ -912,7 +909,6 @@ class RepographBuilder:
             log.debug("Class `%s` doesn't not extend any other classes", class_node.name)
             return
 
-        # TODO: Implement Extends properly
         # for extends in extends_info:
         #     super_class = Class(name=extends)
         #     relationship = Extends(class_node, super_class)
