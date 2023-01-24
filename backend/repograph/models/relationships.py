@@ -144,6 +144,6 @@ class Calls(Relationship):
     Function -> Function
     """
     _allowed_types = {
-        Module: {Function},
-        Function: {Function}
+        Module: {Function, Class},
+        Function: {Function, Class}
     }

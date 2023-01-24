@@ -349,6 +349,7 @@ class Class(Node):
         max_line_number (Optional[int): The last line of the class definition.
     &#34;&#34;&#34;
     name: str
+    canonical_name: Optional[str]
     min_line_number: Optional[int]
     max_line_number: Optional[int]
 
@@ -360,6 +361,7 @@ class Function(Node):
         name (str): The name of the function or method.
         type (FunctionType): Whether this is a function or a method.
         builtin (bool): Whether the function is a Python interpreter built-in function.
+        imported_as (str): The name by which the function is imported, if so.
         source_code (Optional[str]): The original source code string.
         ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
         min_line_number (Optional[int]): The first line of the function definition.
@@ -376,6 +378,7 @@ class Function(Node):
     name: str
     type: FunctionType
     builtin: bool = False
+    canonical_name: Optional[str]
     source_code: Optional[str]
     ast: Optional[Any]
     min_line_number: Optional[int]
@@ -600,6 +603,7 @@ specifically with a Node object.</p>
         max_line_number (Optional[int): The last line of the class definition.
     &#34;&#34;&#34;
     name: str
+    canonical_name: Optional[str]
     min_line_number: Optional[int]
     max_line_number: Optional[int]</code></pre>
 </details>
@@ -612,6 +616,10 @@ specifically with a Node object.</p>
 </ul>
 <h3>Class variables</h3>
 <dl>
+<dt id="repograph.models.nodes.Class.canonical_name"><code class="name">var <span class="ident">canonical_name</span> : Optional[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="repograph.models.nodes.Class.max_line_number"><code class="name">var <span class="ident">max_line_number</span> : Optional[int]</code></dt>
 <dd>
 <div class="desc"></div>
@@ -966,6 +974,8 @@ specifically with a Node object.</p>
 <dd>Whether this is a function or a method.</dd>
 <dt><strong><code>builtin</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Whether the function is a Python interpreter built-in function.</dd>
+<dt><strong><code>imported_as</code></strong> :&ensp;<code>str</code></dt>
+<dd>The name by which the function is imported, if so.</dd>
 <dt><strong><code>source_code</code></strong> :&ensp;<code>Optional[str]</code></dt>
 <dd>The original source code string.</dd>
 <dt><strong><code>ast</code></strong> :&ensp;<code>Optional[ast.AST]</code></dt>
@@ -996,6 +1006,7 @@ specifically with a Node object.</p>
         name (str): The name of the function or method.
         type (FunctionType): Whether this is a function or a method.
         builtin (bool): Whether the function is a Python interpreter built-in function.
+        imported_as (str): The name by which the function is imported, if so.
         source_code (Optional[str]): The original source code string.
         ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
         min_line_number (Optional[int]): The first line of the function definition.
@@ -1012,6 +1023,7 @@ specifically with a Node object.</p>
     name: str
     type: FunctionType
     builtin: bool = False
+    canonical_name: Optional[str]
     source_code: Optional[str]
     ast: Optional[Any]
     min_line_number: Optional[int]
@@ -1036,6 +1048,10 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 <dt id="repograph.models.nodes.Function.builtin"><code class="name">var <span class="ident">builtin</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.models.nodes.Function.canonical_name"><code class="name">var <span class="ident">canonical_name</span> : Optional[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -2275,6 +2291,7 @@ specifically with a Node object.</p>
 <li>
 <h4><code><a title="repograph.models.nodes.Class" href="#repograph.models.nodes.Class">Class</a></code></h4>
 <ul class="">
+<li><code><a title="repograph.models.nodes.Class.canonical_name" href="#repograph.models.nodes.Class.canonical_name">canonical_name</a></code></li>
 <li><code><a title="repograph.models.nodes.Class.max_line_number" href="#repograph.models.nodes.Class.max_line_number">max_line_number</a></code></li>
 <li><code><a title="repograph.models.nodes.Class.min_line_number" href="#repograph.models.nodes.Class.min_line_number">min_line_number</a></code></li>
 <li><code><a title="repograph.models.nodes.Class.name" href="#repograph.models.nodes.Class.name">name</a></code></li>
@@ -2324,6 +2341,7 @@ specifically with a Node object.</p>
 <li><code><a title="repograph.models.nodes.Function.FunctionType" href="#repograph.models.nodes.Function.FunctionType">FunctionType</a></code></li>
 <li><code><a title="repograph.models.nodes.Function.ast" href="#repograph.models.nodes.Function.ast">ast</a></code></li>
 <li><code><a title="repograph.models.nodes.Function.builtin" href="#repograph.models.nodes.Function.builtin">builtin</a></code></li>
+<li><code><a title="repograph.models.nodes.Function.canonical_name" href="#repograph.models.nodes.Function.canonical_name">canonical_name</a></code></li>
 <li><code><a title="repograph.models.nodes.Function.max_line_number" href="#repograph.models.nodes.Function.max_line_number">max_line_number</a></code></li>
 <li><code><a title="repograph.models.nodes.Function.min_line_number" href="#repograph.models.nodes.Function.min_line_number">min_line_number</a></code></li>
 <li><code><a title="repograph.models.nodes.Function.name" href="#repograph.models.nodes.Function.name">name</a></code></li>

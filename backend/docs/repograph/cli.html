@@ -109,8 +109,8 @@ if __name__ == &#34;__main__&#34;:
         args.username,
         args.password,
         args.database,
-        args.prune,
-        args.summarize
+        prune=args.prune,
+        summarize=args.summarize,
     )
 
     temp_output = f&#34;./tmp/{args.name}&#34;

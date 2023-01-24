@@ -320,6 +320,7 @@ class Class(Node):
         max_line_number (Optional[int): The last line of the class definition.
     """
     name: str
+    canonical_name: Optional[str]
     min_line_number: Optional[int]
     max_line_number: Optional[int]
 
@@ -331,6 +332,7 @@ class Function(Node):
         name (str): The name of the function or method.
         type (FunctionType): Whether this is a function or a method.
         builtin (bool): Whether the function is a Python interpreter built-in function.
+        imported_as (str): The name by which the function is imported, if so.
         source_code (Optional[str]): The original source code string.
         ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
         min_line_number (Optional[int]): The first line of the function definition.
@@ -347,6 +349,7 @@ class Function(Node):
     name: str
     type: FunctionType
     builtin: bool = False
+    canonical_name: Optional[str]
     source_code: Optional[str]
     ast: Optional[Any]
     min_line_number: Optional[int]

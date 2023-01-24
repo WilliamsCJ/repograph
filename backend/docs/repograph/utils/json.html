@@ -88,7 +88,18 @@ def marshall_json_to_string(json_dict: JSONDict) -&gt; Optional[str]:
             return json.dumps(json_dict)
         except TypeError:
             log.error(&#34;Couldn&#39;t serialise JSON to string.&#34;)
-            return None</code></pre>
+            return None
+
+
+def convert_dependencies_map_to_set(dependencies):
+    converted = set()
+    for dependency in dependencies:
+        if &#34;from_module&#34; in dependency:
+            converted.add(f&#34;{dependency[&#39;from_module&#39;]}.{dependency[&#39;import&#39;]}&#34;)
+        else:
+            converted.add(dependency[&#39;import&#39;])
+
+    return converted</code></pre>
 </details>
 </section>
 <section>
@@ -98,6 +109,26 @@ def marshall_json_to_string(json_dict: JSONDict) -&gt; Optional[str]:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="repograph.utils.json.convert_dependencies_map_to_set"><code class="name flex">
+<span>def <span class="ident">convert_dependencies_map_to_set</span></span>(<span>dependencies)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def convert_dependencies_map_to_set(dependencies):
+    converted = set()
+    for dependency in dependencies:
+        if &#34;from_module&#34; in dependency:
+            converted.add(f&#34;{dependency[&#39;from_module&#39;]}.{dependency[&#39;import&#39;]}&#34;)
+        else:
+            converted.add(dependency[&#39;import&#39;])
+
+    return converted</code></pre>
+</details>
+</dd>
 <dt id="repograph.utils.json.marshall_json_to_string"><code class="name flex">
 <span>def <span class="ident">marshall_json_to_string</span></span>(<span>json_dict: Dict[str, Any]) ‑> Optional[str]</span>
 </code></dt>
@@ -224,6 +255,7 @@ the "min_max_lineno" JSON entry.</p>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="repograph.utils.json.convert_dependencies_map_to_set" href="#repograph.utils.json.convert_dependencies_map_to_set">convert_dependencies_map_to_set</a></code></li>
 <li><code><a title="repograph.utils.json.marshall_json_to_string" href="#repograph.utils.json.marshall_json_to_string">marshall_json_to_string</a></code></li>
 <li><code><a title="repograph.utils.json.parse_min_max_line_numbers" href="#repograph.utils.json.parse_min_max_line_numbers">parse_min_max_line_numbers</a></code></li>
 <li><code><a title="repograph.utils.json.read_json_from_file" href="#repograph.utils.json.read_json_from_file">read_json_from_file</a></code></li>

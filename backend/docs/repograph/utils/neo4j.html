@@ -61,6 +61,7 @@ class Neo4JDatabase:
         self.database = database
 
     def add(self, *args: BaseSubgraph):
+        args = list(filter(lambda item: item is not None, args))
         tx = self.graph.begin()
         for arg in args:
             tx.create(arg._subgraph)
@@ -129,6 +130,7 @@ and provides functionality for interacting with it.</p>
         self.database = database
 
     def add(self, *args: BaseSubgraph):
+        args = list(filter(lambda item: item is not None, args))
         tx = self.graph.begin()
         for arg in args:
             tx.create(arg._subgraph)
@@ -168,6 +170,7 @@ and provides functionality for interacting with it.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def add(self, *args: BaseSubgraph):
+    args = list(filter(lambda item: item is not None, args))
     tx = self.graph.begin()
     for arg in args:
         tx.create(arg._subgraph)

@@ -60,3 +60,14 @@ def marshall_json_to_string(json_dict: JSONDict) -> Optional[str]:
         except TypeError:
             log.error("Couldn't serialise JSON to string.")
             return None
+
+
+def convert_dependencies_map_to_set(dependencies):
+    converted = set()
+    for dependency in dependencies:
+        if "from_module" in dependency:
+            converted.add(f"{dependency['from_module']}.{dependency['import']}")
+        else:
+            converted.add(dependency['import'])
+
+    return converted
