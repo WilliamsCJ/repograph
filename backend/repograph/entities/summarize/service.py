@@ -6,23 +6,24 @@ Typical usage:
 
     docstring_node = FunctionSummarizer.create_docstring_node(function_node)
 """
+# Base imports
 from logging import getLogger
+
+# pip imports
 from transformers import RobertaTokenizerFast, T5ForConditionalGeneration
 
+# Model imports
 from repograph.models.nodes import Function
-from repograph.utils.summarization import clean_source_code
+
+# Utils imports
+from repograph.entities.summarize.utils import clean_source_code
 
 
-log = getLogger('repograph.builder.function_summarizer')
+# Setup logging
+log = getLogger('repograph.entities.summarization.service')
 
 
-class FunctionSummarizer:
-    """Summarise functions using CodeT5.
-
-    Attributes:
-        tokenizer: The function tokenizer.
-        model: The specific CodeT5 that summarises tokenized functions.
-    """
+class SummarizationService:
     tokenizer: any
     model: any
 
