@@ -16,7 +16,7 @@ from transformers import RobertaTokenizerFast, T5ForConditionalGeneration
 from repograph.models.nodes import Function
 
 # Utils imports
-from repograph.entities.summarize.utils import clean_source_code
+from repograph.entities.summarization.utils import clean_source_code
 
 
 # Setup logging
@@ -37,7 +37,7 @@ class SummarizationService:
         """Summarize a function.
 
         Args:
-            function (Function): The function node to summarize.
+            function (Function): The function node to summarization.
 
         Returns:
             str: The summarization
@@ -50,7 +50,7 @@ class SummarizationService:
         """Summarize code.
 
         Args:
-            source_code (str): The source code to summarize.
+            source_code (str): The source code to summarization.
 
         Returns:
             str: The summarization.

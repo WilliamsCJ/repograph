@@ -4,7 +4,7 @@ Graph-related routers.
 from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends, status
 
-from repograph.api.containers import ApplicationContainer
+from repograph.container import ApplicationContainer
 from repograph.repograph import Repograph
 from repograph.models.repograph import RepographSummary
 

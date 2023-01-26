@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from repograph.api.routers import base_router
-from repograph.api.containers import ApplicationContainer
+from repograph.container import ApplicationContainer
 
 log = logging.getLogger('repograph.api')
 

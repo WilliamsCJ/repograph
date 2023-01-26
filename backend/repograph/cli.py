@@ -7,7 +7,7 @@ import os
 import subprocess
 from typing import Any, Tuple
 
-from repograph.builder.repograph_builder import RepographBuilder
+from repograph.entities.build.builder import RepographBuilder
 from repograph.builder.code_analyser import call_inspect4py, cleanup_inspect4py_output
 from repograph.utils.exceptions import RepographBuildError
 from repograph.utils.json import read_json_from_file
@@ -33,7 +33,7 @@ p.add_argument(
     help='Prune any existing nodes and relationships from the database.'
 )
 p.add_argument(
-    '--summarize',
+    '--summarization',
     required=False,
     action="store_true",
     help='"Whether to generate function summarization docstrings'
@@ -45,32 +45,6 @@ p.add_argument(
     help='Whether to skip running inspect4py. Use when the input directory '
          'is already an inspect4py output directory.'
 )
-
-
-def parse_inspect4py_output(path) -> Tuple[dict[str, Any], dict[str, Any]]:
-    """Parse the output directory of inspect4py.
-
-    Args:
-        path (str): Path to the output directory.
-
-    Returns:
-        dict[str, Any]: directory_info.json
-        dict[str, Any]: call_graph.json
-    """
-    di = None
-    cg = None
-
-    try:
-        di = read_json_from_file(os.path.join(path, "directory_info.json"))
-    except FileNotFoundError:
-        log.error("Couldn't find directory_info.json in input directory!")
-
-    try:
-        cg = read_json_from_file(os.path.join(path, "call_graph.json"))
-    except FileNotFoundError:
-        log.error("Couldn't find call_graph.json in input directory!")
-
-    return di, cg
 
 
 if __name__ == "__main__":

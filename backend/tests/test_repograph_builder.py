@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest.mock import MagicMock
 
-from repograph.builder.repograph_builder import RepographBuilder
+from repograph.entities.build.builder import RepographBuilder
 from repograph.utils.json import read_json_from_file
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
