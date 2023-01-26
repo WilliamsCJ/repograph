@@ -2,7 +2,7 @@
 
 """
 from dependency_injector.containers import DeclarativeContainer, WiringConfiguration
-from dependency_injector.providers import Container
+from dependency_injector.providers import Container, Configuration
 
 
 # Containers
@@ -16,23 +16,32 @@ class ApplicationContainer(DeclarativeContainer):
     """Top-level container
     This container wires together all other containers to bring together the application.
     """
+    # Configuration object
+    config = Configuration()
+
+    # Wiring for dependency injection
     wiring_config: WiringConfiguration = WiringConfiguration(
         modules=[
             "repograph.cli"
         ]
     )
 
-    # Containers
+    # Container for Graph entity
     graph: Container[GraphContainer] = Container(
-        GraphContainer
+        GraphContainer,
+        config=config
     )
 
+    # Container for Summarization entity
     summarization: Container[SummarizationContainer] = Container(
-        SummarizationContainer
+        SummarizationContainer,
+        config=config
     )
 
+    # Container for Build entity
     build: Container[BuildContainer] = Container(
         BuildContainer,
         graph=graph.container.service,
-        summarization=summarization.container.service
+        summarization=summarization.container.service,
+        config=config
     )

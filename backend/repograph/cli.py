@@ -77,11 +77,9 @@ def main(
 if __name__ == "__main__":
     args, _ = p.parse_known_args()
 
-    print(type(args))
-    print(args)
-
     # TODO: Pass Neo4j config information
     container = ApplicationContainer()
+    container.config.from_dict(vars(args.config))
     container.init_resources()
 
     main(args.input)
