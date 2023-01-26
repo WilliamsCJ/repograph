@@ -15,7 +15,7 @@ class GraphContainer(DeclarativeContainer):
 
     )
 
-    graph_service: Singleton[GraphService] = Singleton(
+    service: Singleton[GraphService] = Singleton(
         GraphService,
         repository=repository
     )

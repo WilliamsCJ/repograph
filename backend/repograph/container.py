@@ -2,7 +2,7 @@
 
 """
 from dependency_injector.containers import DeclarativeContainer, WiringConfiguration
-from dependency_injector.providers import Container, Resource
+from dependency_injector.providers import Container
 
 
 # Containers
@@ -17,9 +17,6 @@ class ApplicationContainer(DeclarativeContainer):
     This container wires together all other containers to bring together the application.
     """
     wiring_config: WiringConfiguration = WiringConfiguration(
-        packages=[
-            ".routers",
-        ],
         modules=[
             "repograph.cli"
         ]
