@@ -16,11 +16,14 @@ class ApplicationContainer(DeclarativeContainer):
     """Top-level container
     This container wires together all other containers to bring together the application.
     """
-    # wiring_config: WiringConfiguration = WiringConfiguration(
-    #     packages=[
-    #         ".routers",
-    #     ],
-    # )
+    wiring_config: WiringConfiguration = WiringConfiguration(
+        packages=[
+            ".routers",
+        ],
+        modules=[
+            "repograph.cli"
+        ]
+    )
 
     # Containers
     graph: Container[GraphContainer] = Container(
