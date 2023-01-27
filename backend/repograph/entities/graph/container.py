@@ -2,7 +2,8 @@
 """
 # pip imports
 from dependency_injector.containers import DeclarativeContainer
-from dependency_injector.providers import Configuration, Singleton
+from dependency_injector.providers import Dependency, Singleton
+from py2neo import Graph
 
 # Graph entity imports
 from repograph.entities.graph.repository import GraphRepository
@@ -10,14 +11,11 @@ from repograph.entities.graph.service import GraphService
 
 
 class GraphContainer(DeclarativeContainer):
-    config: Configuration = Configuration()
+    neo4j: Dependency[Graph] = Dependency()
 
     repository: Singleton[GraphRepository] = Singleton(
         GraphRepository,
-        uri=config.uri,
-        user=config.user,
-        password=config.user,
-        database=config.database
+        graph=neo4j
     )
 
     service: Singleton[GraphService] = Singleton(

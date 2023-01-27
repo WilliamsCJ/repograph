@@ -24,14 +24,25 @@ log = getLogger('repograph.entities.summarization.service')
 
 
 class SummarizationService:
-    tokenizer: any
-    model: any
+    tokenizer: any = None
+    model: any = None
+    active: bool
 
-    def __init__(self):
-        log.info("Initialising CodeT5 model...")
-        self.tokenizer = RobertaTokenizerFast.from_pretrained("Salesforce/codet5-base")
-        self.model = T5ForConditionalGeneration.from_pretrained("Salesforce/codet5-base-multi-sum")
-        log.info("Ready!")
+    def __init__(self, summarize: bool = False):
+        """Constructor
+
+        Args:
+            summarize (bool): Whether to initialise model and tokenizer.
+        """
+        self.active = summarize
+
+        if summarize:
+            log.info("Initialising CodeT5 model...")
+            self.tokenizer = RobertaTokenizerFast.from_pretrained("Salesforce/codet5-base")
+            self.model = T5ForConditionalGeneration.from_pretrained("Salesforce/codet5-base-multi-sum")
+            log.info("Ready!")
+        else:
+            log.info("Summarization flag not set. Skipping setup.")
 
     def summarize_function(self, function: Function) -> str:
         """Summarize a function.
@@ -42,6 +53,10 @@ class SummarizationService:
         Returns:
             str: The summarization
         """
+        if not self.model or not self.tokenizer:
+            log.warning("No model or tokenizer initialised!")
+            return ""
+
         log.debug(f'Create Docstring node for function `{function.name}`...')
         source_code = clean_source_code(function.source_code)
         return self._summarize_code(source_code)

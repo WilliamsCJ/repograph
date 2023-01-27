@@ -13,17 +13,14 @@ from repograph.models.base import BaseSubgraph
 class GraphRepository:
     _graph: Graph
 
-    def __init__(self, uri: str, user: str, password: str, database: str = "neo4j") -> None:
+    def __init__(self, graph: Graph) -> None:
         """Neo4JDatabase constructor.
 
         Args:
-            uri (_type_): _description_
-            user (_type_): _description_
-            password (_type_): _description_
-            database (_type_): _description_
+            graph (Graph): Neo4j database connection.
         """
-        self._graph = Graph(uri, auth=(user, password), name=database)
-        self.database = database
+        print(graph)
+        self._graph = graph
 
     def create_transaction(self) -> Transaction:
         return self._graph.begin()
