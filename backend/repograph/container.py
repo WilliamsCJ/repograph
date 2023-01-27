@@ -19,13 +19,6 @@ class ApplicationContainer(DeclarativeContainer):
     # Configuration object
     config = Configuration()
 
-    # Wiring for dependency injection
-    wiring_config: WiringConfiguration = WiringConfiguration(
-        modules=[
-            "repograph.cli"
-        ]
-    )
-
     # Container for Graph entity
     graph: Container[GraphContainer] = Container(
         GraphContainer,

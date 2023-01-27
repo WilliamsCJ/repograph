@@ -79,9 +79,7 @@ if __name__ == "__main__":
 
     # TODO: Pass Neo4j config information
     container = ApplicationContainer()
-    container.config.from_dict(vars(args.config))
-    container.init_resources()
+    container.config.from_dict(vars(args))
+    container.wire(modules=[__name__])
 
     main(args.input)
-
-
