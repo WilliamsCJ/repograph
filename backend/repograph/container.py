@@ -4,13 +4,13 @@
 # pip imports
 from dependency_injector.containers import DeclarativeContainer
 from dependency_injector.providers import Container, Configuration, Resource
+from fastapi import FastAPI
 from py2neo import Graph
 
 
 # Containers
 from repograph.entities.build.container import BuildContainer
 from repograph.entities.graph.container import GraphContainer
-# from repograph.entities.management.container import ManagementContainer
 from repograph.entities.summarization.container import SummarizationContainer
 
 
@@ -48,3 +48,8 @@ class ApplicationContainer(DeclarativeContainer):
         summarization=summarization.container.service,
         config=config
     )
+
+    # Router
+    router: FastAPI = FastAPI()
+    router.include_router(build.container.router)
+    router.include_router(graph.container.router)

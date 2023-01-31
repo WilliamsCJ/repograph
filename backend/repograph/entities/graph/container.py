@@ -7,6 +7,7 @@ from py2neo import Graph
 
 # Graph entity imports
 from repograph.entities.graph.repository import GraphRepository
+from repograph.entities.graph.router import GraphRouter
 from repograph.entities.graph.service import GraphService
 
 
@@ -21,4 +22,9 @@ class GraphContainer(DeclarativeContainer):
     service: Singleton[GraphService] = Singleton(
         GraphService,
         repository=repository
+    )
+
+    router: Singleton[GraphRouter] = Singleton(
+        GraphRouter,
+        service=service
     )

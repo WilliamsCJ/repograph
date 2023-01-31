@@ -1,17 +1,21 @@
 """
-API Main
+API entrypoint.
 """
+# Base imports
 import logging
+
+# pip imports
+from dependency_injector.wiring import inject, Provide
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from repograph.api.routers import base_router
 from repograph.container import ApplicationContainer
 
 log = logging.getLogger('repograph.api')
 
 
+@inject
 def create_app() -> FastAPI:
     """Creates FastAPI application.
     Returns:
@@ -28,9 +32,7 @@ def create_app() -> FastAPI:
         redoc_url="/v1/docs"
     )
 
-    application.container = container
-
-    application.include_router(base_router)
+    application.include_router(container.graph.container.router)
 
     application.add_middleware(
         CORSMiddleware,
@@ -44,5 +46,8 @@ def create_app() -> FastAPI:
 
 
 if __name__ == "__main__":
+    container = ApplicationContainer()
+    container.wire(modules=[__name__])
+
     app = create_app()
     uvicorn.run(app, host="0.0.0.0", port=3000)
