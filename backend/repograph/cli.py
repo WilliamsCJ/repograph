@@ -30,7 +30,6 @@ p.add_argument('--username', required=True, help='The username to supply to the 
 p.add_argument('--password', required=True, help='The password to supply to the Neo4J server.')
 p.add_argument('--database', required=False, default='neo4j', help="The database name to use.")
 p.add_argument('--input', required=True, action='append', help='The directory_info.json file.')
-p.add_argument('--name', required=True, help='The name of the repository.')
 p.add_argument(
     '--prune',
     required=False,
