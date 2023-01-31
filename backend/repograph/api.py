@@ -3,6 +3,7 @@ API entrypoint.
 """
 # Base imports
 import logging
+import sys
 
 # pip imports
 from dependency_injector.wiring import inject, Provide
@@ -10,20 +11,28 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
+# Application Container
 from repograph.container import ApplicationContainer
 
+# Entity imports
+from repograph.entities.graph.router import GraphRouter
+
+# Utilities
+from repograph.utils.logging import configure_logging
+
+# Configure logging format
+configure_logging()
 log = logging.getLogger('repograph.api')
 
 
 @inject
-def create_app() -> FastAPI:
+def create_app(
+    graph_router: GraphRouter = Provide[ApplicationContainer.graph.container.router]
+) -> FastAPI:
     """Creates FastAPI application.
     Returns:
         FastAPI: Initialised FastAPI application object.
     """
-    container = ApplicationContainer()
-    container.init_resources()
-
     application = FastAPI(
         title="Repograph",
         description="Backend API",
@@ -32,7 +41,7 @@ def create_app() -> FastAPI:
         redoc_url="/v1/docs"
     )
 
-    application.include_router(container.graph.container.router)
+    application.include_router(graph_router.router)
 
     application.add_middleware(
         CORSMiddleware,
@@ -47,7 +56,14 @@ def create_app() -> FastAPI:
 
 if __name__ == "__main__":
     container = ApplicationContainer()
+    container.config.from_yaml(sys.argv[1])
+    container.init_resources()
     container.wire(modules=[__name__])
+
+    print(container.config.get("database"))
+    print(container.config.get("uri"))
+    print(container.config.get("username"))
+    print(container.config.get("password"))
 
     app = create_app()
     uvicorn.run(app, host="0.0.0.0", port=3000)

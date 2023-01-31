@@ -33,15 +33,15 @@ class GraphService:
         summary = RepographSummary(is_empty=False)
 
         # Modules
-        _, count = self.get_all("Module")
+        _, count = self.repository.get_all("Module")
         summary.modules = count
 
         # Classes
-        _, count = self.get_all("Class")
+        _, count = self.repository.get_all("Class")
         summary.classes = count
 
         # Functions
-        _, count = self.get_all("Function")
+        _, count = self.repository.get_all("Function")
         summary.functions = count
 
         return summary

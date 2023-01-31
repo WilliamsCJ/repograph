@@ -4,7 +4,6 @@
 # pip imports
 from dependency_injector.containers import DeclarativeContainer
 from dependency_injector.providers import Container, Configuration, Resource
-from fastapi import FastAPI
 from py2neo import Graph
 
 
@@ -25,7 +24,7 @@ class ApplicationContainer(DeclarativeContainer):
     neo4j: Resource[Graph] = Resource(
         Graph,
         config.uri,
-        auth=("neo4j", "s3cr3t_password"),
+        auth=("neo4j", "s3cr3t"),
         name=config.database
     )
 
@@ -48,8 +47,3 @@ class ApplicationContainer(DeclarativeContainer):
         summarization=summarization.container.service,
         config=config
     )
-
-    # Router
-    router: FastAPI = FastAPI()
-    router.include_router(build.container.router)
-    router.include_router(graph.container.router)
