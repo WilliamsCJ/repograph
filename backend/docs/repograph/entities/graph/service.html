@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>repograph.cli API documentation</title>
-<meta name="description" content="Command-Line Interface for manual invocation." />
+<title>repograph.entities.graph.service API documentation</title>
+<meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,98 +19,60 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>repograph.cli</code></h1>
+<h1 class="title">Module <code>repograph.entities.graph.service</code></h1>
 </header>
 <section id="section-intro">
-<p>Command-Line Interface for manual invocation.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-Command-Line Interface for manual invocation.
+
 &#34;&#34;&#34;
 # Base imports
-import logging
+from logging import getLogger
 from typing import List
 
-# pip imports
-import configargparse
-from dependency_injector.wiring import inject, Provide
+# Model imports
+from repograph.models.base import Node, Relationship
+from repograph.models.repograph import RepographSummary
 
-# Application Container
-from repograph.container import ApplicationContainer
+# Graph entity imports
+from repograph.entities.graph.repository import GraphRepository
 
-# Build service
-from repograph.entities.build.service import BuildService
-
-# Utilities
-from repograph.utils.logging import configure_logging
-
-# Configure logging format
-configure_logging()
-log = logging.getLogger(&#34;repograph.cli&#34;)
-
-# Command-line / config-file argument parsing
-p = configargparse.ArgParser()
-p.add_argument(&#39;-c&#39;, &#39;--config&#39;, is_config_file=True, help=&#39;Config file path.&#39;)
-p.add_argument(&#39;--uri&#39;, required=True, help=&#39;The URI of the Neo4J server.&#39;)
-p.add_argument(&#39;--username&#39;, required=True, help=&#39;The username to supply to the Neo4J server.&#39;)
-p.add_argument(&#39;--password&#39;, required=True, help=&#39;The password to supply to the Neo4J server.&#39;)
-p.add_argument(&#39;--database&#39;, required=False, default=&#39;neo4j&#39;, help=&#34;The database name to use.&#34;)
-p.add_argument(&#39;--input&#39;, required=True, action=&#39;append&#39;, help=&#39;The directory_info.json file.&#39;)
-p.add_argument(&#39;--name&#39;, required=True, help=&#39;The name of the repository.&#39;)
-p.add_argument(
-    &#39;--prune&#39;,
-    required=False,
-    action=&#34;store_true&#34;,
-    help=&#39;Prune any existing nodes and relationships from the database.&#39;
-)
-p.add_argument(
-    &#39;--summarization&#39;,
-    required=False,
-    action=&#34;store_true&#34;,
-    help=&#39;&#34;Whether to generate function summarization docstrings&#39;
-)
-p.add_argument(
-    &#39;--skip_inspect4py&#39;,
-    required=False,
-    action=&#34;store_true&#34;,
-    help=&#39;Whether to skip running inspect4py. Use when the input directory &#39;
-         &#39;is already an inspect4py output directory.&#39;
-)
+# Configure logging
+log = getLogger(&#39;repograph.entities.graph.service&#39;)
 
 
-@inject
-def main(
-    input_list: List[str],
-    build: BuildService = Provide[ApplicationContainer.build.container.service]
-) -&gt; None:
-    &#34;&#34;&#34;Main function of CLI script.
+class GraphService:
+    repository: GraphRepository
 
-    This functionality is broken out into a separate function to provide dependency injection at
-    runtime.
+    def __init__(self, repository: GraphRepository):
+        self.repository = repository
 
-    See: https://python-dependency-injector.ets-labs.org/
+    def bulk_add(self, nodes: List[Node], relationships: List[Relationship]):
+        self.repository.add(*nodes, *relationships)
 
-    Args:
-        input_list (List[str]): The list of input paths for the build service.
-        build (BuildService): The injected Build Service.
+    def get_summary(self) -&gt; RepographSummary:
+        if not self.repository.has_nodes():
+            log.warning(&#34;Graph has no nodes&#34;)
+            return RepographSummary()
 
-    Returns:
-        None
-    &#34;&#34;&#34;
-    build.build(input_list)
+        summary = RepographSummary(is_empty=False)
 
+        # Modules
+        _, count = self.repository.get_all(&#34;Module&#34;)
+        summary.modules = count
 
-if __name__ == &#34;__main__&#34;:
-    args, _ = p.parse_known_args()
+        # Classes
+        _, count = self.repository.get_all(&#34;Class&#34;)
+        summary.classes = count
 
-    container = ApplicationContainer()
-    container.config.from_dict(vars(args))
-    container.wire(modules=[__name__])
+        # Functions
+        _, count = self.repository.get_all(&#34;Function&#34;)
+        summary.functions = count
 
-    main(args.input)</code></pre>
+        return summary</code></pre>
 </details>
 </section>
 <section>
@@ -118,54 +80,106 @@ if __name__ == &#34;__main__&#34;:
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-functions">Functions</h2>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="repograph.cli.main"><code class="name flex">
-<span>def <span class="ident">main</span></span>(<span>input_list: List[str], build: <a title="repograph.entities.build.service.BuildService" href="entities/build/service.html#repograph.entities.build.service.BuildService">BuildService</a> = &lt;dependency_injector.wiring.Provide object&gt;) ‑> None</span>
+<dt id="repograph.entities.graph.service.GraphService"><code class="flex name class">
+<span>class <span class="ident">GraphService</span></span>
+<span>(</span><span>repository: <a title="repograph.entities.graph.repository.GraphRepository" href="repository.html#repograph.entities.graph.repository.GraphRepository">GraphRepository</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Main function of CLI script.</p>
-<p>This functionality is broken out into a separate function to provide dependency injection at
-runtime.</p>
-<p>See: <a href="https://python-dependency-injector.ets-labs.org/">https://python-dependency-injector.ets-labs.org/</a></p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>input_list</code></strong> :&ensp;<code>List[str]</code></dt>
-<dd>The list of input paths for the build service.</dd>
-<dt><strong><code>build</code></strong> :&ensp;<code>BuildService</code></dt>
-<dd>The injected Build Service.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">@inject
-def main(
-    input_list: List[str],
-    build: BuildService = Provide[ApplicationContainer.build.container.service]
-) -&gt; None:
-    &#34;&#34;&#34;Main function of CLI script.
+<pre><code class="python">class GraphService:
+    repository: GraphRepository
 
-    This functionality is broken out into a separate function to provide dependency injection at
-    runtime.
+    def __init__(self, repository: GraphRepository):
+        self.repository = repository
 
-    See: https://python-dependency-injector.ets-labs.org/
+    def bulk_add(self, nodes: List[Node], relationships: List[Relationship]):
+        self.repository.add(*nodes, *relationships)
 
-    Args:
-        input_list (List[str]): The list of input paths for the build service.
-        build (BuildService): The injected Build Service.
+    def get_summary(self) -&gt; RepographSummary:
+        if not self.repository.has_nodes():
+            log.warning(&#34;Graph has no nodes&#34;)
+            return RepographSummary()
 
-    Returns:
-        None
-    &#34;&#34;&#34;
-    build.build(input_list)</code></pre>
+        summary = RepographSummary(is_empty=False)
+
+        # Modules
+        _, count = self.repository.get_all(&#34;Module&#34;)
+        summary.modules = count
+
+        # Classes
+        _, count = self.repository.get_all(&#34;Class&#34;)
+        summary.classes = count
+
+        # Functions
+        _, count = self.repository.get_all(&#34;Function&#34;)
+        summary.functions = count
+
+        return summary</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="repograph.entities.graph.service.GraphService.repository"><code class="name">var <span class="ident">repository</span> : <a title="repograph.entities.graph.repository.GraphRepository" href="repository.html#repograph.entities.graph.repository.GraphRepository">GraphRepository</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="repograph.entities.graph.service.GraphService.bulk_add"><code class="name flex">
+<span>def <span class="ident">bulk_add</span></span>(<span>self, nodes: List[<a title="repograph.models.base.Node" href="../../models/base.html#repograph.models.base.Node">Node</a>], relationships: List[<a title="repograph.models.base.Relationship" href="../../models/base.html#repograph.models.base.Relationship">Relationship</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bulk_add(self, nodes: List[Node], relationships: List[Relationship]):
+    self.repository.add(*nodes, *relationships)</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.graph.service.GraphService.get_summary"><code class="name flex">
+<span>def <span class="ident">get_summary</span></span>(<span>self) ‑> <a title="repograph.models.repograph.RepographSummary" href="../../models/repograph.html#repograph.models.repograph.RepographSummary">RepographSummary</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_summary(self) -&gt; RepographSummary:
+    if not self.repository.has_nodes():
+        log.warning(&#34;Graph has no nodes&#34;)
+        return RepographSummary()
+
+    summary = RepographSummary(is_empty=False)
+
+    # Modules
+    _, count = self.repository.get_all(&#34;Module&#34;)
+    summary.modules = count
+
+    # Classes
+    _, count = self.repository.get_all(&#34;Class&#34;)
+    summary.classes = count
+
+    # Functions
+    _, count = self.repository.get_all(&#34;Function&#34;)
+    summary.functions = count
+
+    return summary</code></pre>
 </details>
 </dd>
 </dl>
-</section>
-<section>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -176,12 +190,19 @@ def main(
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="repograph" href="index.html">repograph</a></code></li>
+<li><code><a title="repograph.entities.graph" href="index.html">repograph.entities.graph</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-functions">Functions</a></h3>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="repograph.entities.graph.service.GraphService" href="#repograph.entities.graph.service.GraphService">GraphService</a></code></h4>
 <ul class="">
-<li><code><a title="repograph.cli.main" href="#repograph.cli.main">main</a></code></li>
+<li><code><a title="repograph.entities.graph.service.GraphService.bulk_add" href="#repograph.entities.graph.service.GraphService.bulk_add">bulk_add</a></code></li>
+<li><code><a title="repograph.entities.graph.service.GraphService.get_summary" href="#repograph.entities.graph.service.GraphService.get_summary">get_summary</a></code></li>
+<li><code><a title="repograph.entities.graph.service.GraphService.repository" href="#repograph.entities.graph.service.GraphService.repository">repository</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
