@@ -33,6 +33,7 @@ The backend runs a Neo4J database in a container. The database itself can be acc
 `neo4j://localhost:7687`. The Neo4J admin console can be accessed at `http://localhost:7474`.
 
 The required credentials are:
+
 - Username: `neo4j`
 - Password: `s3cr3t`
 - Database: `neo4j` (see below about Community Edition)
