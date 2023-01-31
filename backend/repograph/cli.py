@@ -13,7 +13,7 @@ from dependency_injector.wiring import inject, Provide
 from repograph.container import ApplicationContainer
 
 # Build service
-from repograph.entities.build import BuildService
+from repograph.entities.build.service import BuildService
 
 # Utilities
 from repograph.utils.logging import configure_logging
