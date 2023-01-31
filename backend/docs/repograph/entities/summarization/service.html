@@ -72,7 +72,7 @@ class SummarizationService:
         if summarize:
             log.info(&#34;Initialising CodeT5 model...&#34;)
             self.tokenizer = RobertaTokenizerFast.from_pretrained(&#34;Salesforce/codet5-base&#34;)
-            self.model = T5ForConditionalGeneration.from_pretrained(&#34;Salesforce/codet5-base-multi-sum&#34;)
+            self.model = T5ForConditionalGeneration.from_pretrained(&#34;Salesforce/codet5-base-multi-sum&#34;)  # noqa: 501
             log.info(&#34;Ready!&#34;)
         else:
             log.info(&#34;Summarization flag not set. Skipping setup.&#34;)
@@ -152,7 +152,7 @@ class SummarizationService:
         if summarize:
             log.info(&#34;Initialising CodeT5 model...&#34;)
             self.tokenizer = RobertaTokenizerFast.from_pretrained(&#34;Salesforce/codet5-base&#34;)
-            self.model = T5ForConditionalGeneration.from_pretrained(&#34;Salesforce/codet5-base-multi-sum&#34;)
+            self.model = T5ForConditionalGeneration.from_pretrained(&#34;Salesforce/codet5-base-multi-sum&#34;)  # noqa: 501
             log.info(&#34;Ready!&#34;)
         else:
             log.info(&#34;Summarization flag not set. Skipping setup.&#34;)
