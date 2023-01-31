@@ -8,6 +8,8 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY logging.yaml /code/logging.yaml
 
+COPY api_config.yaml /code/config.yaml
+
 COPY repograph /code/repograph
 
-CMD ["python3", "-m", "repograph.api.main"]
+CMD ["python3", "-m", "repograph.api", "config.yaml"]

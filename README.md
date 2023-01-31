@@ -32,6 +32,12 @@ wait for the Neo4J container._
 The backend runs a Neo4J database in a container. The database itself can be accessed at
 `neo4j://localhost:7687`. The Neo4J admin console can be accessed at `http://localhost:7474`.
 
+The required credentials are:
+
+- Username: `neo4j`
+- Password: `s3cr3t`
+- Database: `neo4j` (see below about Community Edition)
+
 ### Running the CLI
 
 This requires that `inspect4py` has already been run on a repository, and its output

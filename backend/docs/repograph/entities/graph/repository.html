@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>repograph.utils.json API documentation</title>
-<meta name="description" content="Utility functions for JSON parsing." />
+<title>repograph.entities.graph.repository API documentation</title>
+<meta name="description" content="&#34;" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,81 +19,61 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>repograph.utils.json</code></h1>
+<h1 class="title">Module <code>repograph.entities.graph.repository</code></h1>
 </header>
 <section id="section-intro">
-<p>Utility functions for JSON parsing.</p>
+<p>"</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;
-Utility functions for JSON parsing.
+<pre><code class="python">&#34;&#34;&#34;&#34;
 &#34;&#34;&#34;
-import json
-import logging
-from typing import Dict, Any, Set, Tuple, List, Optional
+# Base imports
+from typing import Tuple
 
-JSONDict = Dict[str, Any]
+# pip imports
+from py2neo import Graph, NodeMatch, Transaction
 
-log = logging.getLogger(&#34;repograph.utils.json&#34;)
-
-
-def parse_min_max_line_numbers(json: JSONDict) -&gt; Tuple[Optional[int], Optional[int]]:
-    &#34;&#34;&#34;Retrieve a tuple of minimum and maximum line numbers from
-    the &#34;min_max_lineno&#34; JSON entry.
-
-    Uses .get() to avoid KeyErrors.
-
-    Args:
-        json (JSONDict): The JSON dictionary.
-
-    Returns:
-        Tuple[Optional[int], Optional[int]]: _description_
-    &#34;&#34;&#34;
-    min_max = json.get(&#34;min_max_lineno&#34;, None)
-    if not min_max:
-        return None, None
-
-    return min_max.get(&#34;min_lineno&#34;, None), min_max.get(&#34;max_lineno&#34;, None)
+# Models
+from repograph.models.base import BaseSubgraph
 
 
-def marshall_json_to_string(json_dict: JSONDict) -&gt; Optional[str]:
-    &#34;&#34;&#34;Serialises a JSONDict to a str.
+class GraphRepository:
+    _graph: Graph
 
-    Args:
-        json_dict (JSONDict): The JSON to serialise.
+    def __init__(self, graph: Graph) -&gt; None:
+        &#34;&#34;&#34;Neo4JDatabase constructor.
 
-    Returns:
-        str, if serialisable. Otherwise None.
-    &#34;&#34;&#34;
-    if not json_dict:
-        return None
-    else:
-        try:
-            return json.dumps(json_dict)
-        except TypeError:
-            log.error(&#34;Couldn&#39;t serialise JSON to string.&#34;)
-            return None
+        Args:
+            graph (Graph): Neo4j database connection.
+        &#34;&#34;&#34;
+        print(graph)
+        self._graph = graph
 
+    def create_transaction(self) -&gt; Transaction:
+        return self._graph.begin()
 
-def convert_dependencies_map_to_set(dependencies: List[JSONDict]) -&gt; Set[str]:
-    &#34;&#34;&#34;Convert dependencies to a set of names.
+    def add(self, *args: BaseSubgraph, tx: Transaction = None):
+        args = list(filter(lambda item: item is not None, args))
 
-    Args:
-        dependencies (JSONDict): The JSONDict containing dependency information.
-
-    Returns:
-        Set[str]
-    &#34;&#34;&#34;
-    converted = set()
-    for dependency in dependencies:
-        if &#34;from_module&#34; in dependency:
-            converted.add(f&#34;{dependency[&#39;from_module&#39;]}.{dependency[&#39;import&#39;]}&#34;)
+        if not tx:
+            transaction = self._graph.begin()
         else:
-            converted.add(dependency[&#39;import&#39;])
+            transaction = tx
 
-    return converted</code></pre>
+        for arg in args:
+            transaction.create(arg._subgraph)
+
+        if not tx:
+            transaction.commit()
+
+    def has_nodes(self) -&gt; bool:
+        return self._graph.nodes.match().count() != 0
+
+    def get_all(self, label: str) -&gt; Tuple[NodeMatch, int]:
+        match: NodeMatch = self._graph.nodes.match(label)
+        return match.all(), match.count()</code></pre>
 </details>
 </section>
 <section>
@@ -101,121 +81,130 @@ def convert_dependencies_map_to_set(dependencies: List[JSONDict]) -&gt; Set[str]
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-functions">Functions</h2>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="repograph.utils.json.convert_dependencies_map_to_set"><code class="name flex">
-<span>def <span class="ident">convert_dependencies_map_to_set</span></span>(<span>dependencies: List[Dict[str, Any]]) ‑> Set[str]</span>
+<dt id="repograph.entities.graph.repository.GraphRepository"><code class="flex name class">
+<span>class <span class="ident">GraphRepository</span></span>
+<span>(</span><span>graph: py2neo.database.Graph)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Convert dependencies to a set of names.</p>
+<div class="desc"><p>Neo4JDatabase constructor.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>dependencies</code></strong> :&ensp;<code>JSONDict</code></dt>
-<dd>The JSONDict containing dependency information.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>Set[str]</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def convert_dependencies_map_to_set(dependencies: List[JSONDict]) -&gt; Set[str]:
-    &#34;&#34;&#34;Convert dependencies to a set of names.
-
-    Args:
-        dependencies (JSONDict): The JSONDict containing dependency information.
-
-    Returns:
-        Set[str]
-    &#34;&#34;&#34;
-    converted = set()
-    for dependency in dependencies:
-        if &#34;from_module&#34; in dependency:
-            converted.add(f&#34;{dependency[&#39;from_module&#39;]}.{dependency[&#39;import&#39;]}&#34;)
-        else:
-            converted.add(dependency[&#39;import&#39;])
-
-    return converted</code></pre>
-</details>
-</dd>
-<dt id="repograph.utils.json.marshall_json_to_string"><code class="name flex">
-<span>def <span class="ident">marshall_json_to_string</span></span>(<span>json_dict: Dict[str, Any]) ‑> Optional[str]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Serialises a JSONDict to a str.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>json_dict</code></strong> :&ensp;<code>JSONDict</code></dt>
-<dd>The JSON to serialise.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>str, if serialisable. Otherwise None.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def marshall_json_to_string(json_dict: JSONDict) -&gt; Optional[str]:
-    &#34;&#34;&#34;Serialises a JSONDict to a str.
-
-    Args:
-        json_dict (JSONDict): The JSON to serialise.
-
-    Returns:
-        str, if serialisable. Otherwise None.
-    &#34;&#34;&#34;
-    if not json_dict:
-        return None
-    else:
-        try:
-            return json.dumps(json_dict)
-        except TypeError:
-            log.error(&#34;Couldn&#39;t serialise JSON to string.&#34;)
-            return None</code></pre>
-</details>
-</dd>
-<dt id="repograph.utils.json.parse_min_max_line_numbers"><code class="name flex">
-<span>def <span class="ident">parse_min_max_line_numbers</span></span>(<span>json: Dict[str, Any]) ‑> Tuple[Optional[int], Optional[int]]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Retrieve a tuple of minimum and maximum line numbers from
-the "min_max_lineno" JSON entry.</p>
-<p>Uses .get() to avoid KeyErrors.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>json</code></strong> :&ensp;<code>JSONDict</code></dt>
-<dd>The JSON dictionary.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>Tuple[Optional[int], Optional[int]]</code></dt>
-<dd><em>description</em></dd>
+<dt><strong><code>graph</code></strong> :&ensp;<code>Graph</code></dt>
+<dd>Neo4j database connection.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def parse_min_max_line_numbers(json: JSONDict) -&gt; Tuple[Optional[int], Optional[int]]:
-    &#34;&#34;&#34;Retrieve a tuple of minimum and maximum line numbers from
-    the &#34;min_max_lineno&#34; JSON entry.
+<pre><code class="python">class GraphRepository:
+    _graph: Graph
 
-    Uses .get() to avoid KeyErrors.
+    def __init__(self, graph: Graph) -&gt; None:
+        &#34;&#34;&#34;Neo4JDatabase constructor.
 
-    Args:
-        json (JSONDict): The JSON dictionary.
+        Args:
+            graph (Graph): Neo4j database connection.
+        &#34;&#34;&#34;
+        print(graph)
+        self._graph = graph
 
-    Returns:
-        Tuple[Optional[int], Optional[int]]: _description_
-    &#34;&#34;&#34;
-    min_max = json.get(&#34;min_max_lineno&#34;, None)
-    if not min_max:
-        return None, None
+    def create_transaction(self) -&gt; Transaction:
+        return self._graph.begin()
 
-    return min_max.get(&#34;min_lineno&#34;, None), min_max.get(&#34;max_lineno&#34;, None)</code></pre>
+    def add(self, *args: BaseSubgraph, tx: Transaction = None):
+        args = list(filter(lambda item: item is not None, args))
+
+        if not tx:
+            transaction = self._graph.begin()
+        else:
+            transaction = tx
+
+        for arg in args:
+            transaction.create(arg._subgraph)
+
+        if not tx:
+            transaction.commit()
+
+    def has_nodes(self) -&gt; bool:
+        return self._graph.nodes.match().count() != 0
+
+    def get_all(self, label: str) -&gt; Tuple[NodeMatch, int]:
+        match: NodeMatch = self._graph.nodes.match(label)
+        return match.all(), match.count()</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="repograph.entities.graph.repository.GraphRepository.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>self, *args: <a title="repograph.models.base.BaseSubgraph" href="../../models/base.html#repograph.models.base.BaseSubgraph">BaseSubgraph</a>, tx: py2neo.database.Transaction = None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add(self, *args: BaseSubgraph, tx: Transaction = None):
+    args = list(filter(lambda item: item is not None, args))
+
+    if not tx:
+        transaction = self._graph.begin()
+    else:
+        transaction = tx
+
+    for arg in args:
+        transaction.create(arg._subgraph)
+
+    if not tx:
+        transaction.commit()</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.graph.repository.GraphRepository.create_transaction"><code class="name flex">
+<span>def <span class="ident">create_transaction</span></span>(<span>self) ‑> py2neo.database.Transaction</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_transaction(self) -&gt; Transaction:
+    return self._graph.begin()</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.graph.repository.GraphRepository.get_all"><code class="name flex">
+<span>def <span class="ident">get_all</span></span>(<span>self, label: str) ‑> Tuple[py2neo.matching.NodeMatch, int]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_all(self, label: str) -&gt; Tuple[NodeMatch, int]:
+    match: NodeMatch = self._graph.nodes.match(label)
+    return match.all(), match.count()</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.graph.repository.GraphRepository.has_nodes"><code class="name flex">
+<span>def <span class="ident">has_nodes</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def has_nodes(self) -&gt; bool:
+    return self._graph.nodes.match().count() != 0</code></pre>
 </details>
 </dd>
 </dl>
-</section>
-<section>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -226,14 +215,20 @@ the "min_max_lineno" JSON entry.</p>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="repograph.utils" href="index.html">repograph.utils</a></code></li>
+<li><code><a title="repograph.entities.graph" href="index.html">repograph.entities.graph</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-functions">Functions</a></h3>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="repograph.entities.graph.repository.GraphRepository" href="#repograph.entities.graph.repository.GraphRepository">GraphRepository</a></code></h4>
 <ul class="">
-<li><code><a title="repograph.utils.json.convert_dependencies_map_to_set" href="#repograph.utils.json.convert_dependencies_map_to_set">convert_dependencies_map_to_set</a></code></li>
-<li><code><a title="repograph.utils.json.marshall_json_to_string" href="#repograph.utils.json.marshall_json_to_string">marshall_json_to_string</a></code></li>
-<li><code><a title="repograph.utils.json.parse_min_max_line_numbers" href="#repograph.utils.json.parse_min_max_line_numbers">parse_min_max_line_numbers</a></code></li>
+<li><code><a title="repograph.entities.graph.repository.GraphRepository.add" href="#repograph.entities.graph.repository.GraphRepository.add">add</a></code></li>
+<li><code><a title="repograph.entities.graph.repository.GraphRepository.create_transaction" href="#repograph.entities.graph.repository.GraphRepository.create_transaction">create_transaction</a></code></li>
+<li><code><a title="repograph.entities.graph.repository.GraphRepository.get_all" href="#repograph.entities.graph.repository.GraphRepository.get_all">get_all</a></code></li>
+<li><code><a title="repograph.entities.graph.repository.GraphRepository.has_nodes" href="#repograph.entities.graph.repository.GraphRepository.has_nodes">has_nodes</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

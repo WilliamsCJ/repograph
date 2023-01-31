@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>repograph API documentation</title>
-<meta name="description" content="" />
+<title>repograph.entities.summarization.container API documentation</title>
+<meta name="description" content="&#34;" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,44 +19,106 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Package <code>repograph</code></h1>
+<h1 class="title">Module <code>repograph.entities.summarization.container</code></h1>
 </header>
 <section id="section-intro">
+<p>"</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;&#34;
+&#34;&#34;&#34;
+# pip imports
+from dependency_injector.containers import DeclarativeContainer
+from dependency_injector.providers import Configuration, Singleton
+
+# Summarize entity imports
+from repograph.entities.summarization.service import SummarizationService
+
+
+class SummarizationContainer(DeclarativeContainer):
+    config: Configuration = Configuration()
+
+    service: Singleton[SummarizationService] = Singleton(
+        SummarizationService,
+        summarize=config.summarize
+    )</code></pre>
+</details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt><code class="name"><a title="repograph.api" href="api.html">repograph.api</a></code></dt>
+<dt id="repograph.entities.summarization.container.SummarizationContainer"><code class="flex name class">
+<span>class <span class="ident">SummarizationContainer</span></span>
+<span>(</span><span>**overriding_providers)</span>
+</code></dt>
 <dd>
-<div class="desc"><p>API entrypoint.</p></div>
-</dd>
-<dt><code class="name"><a title="repograph.cli" href="cli.html">repograph.cli</a></code></dt>
-<dd>
-<div class="desc"><p>Command-Line Interface for manual invocation.</p></div>
-</dd>
-<dt><code class="name"><a title="repograph.container" href="container.html">repograph.container</a></code></dt>
+<div class="desc"><p>Declarative inversion of control container.</p>
+<p>.. code-block:: python</p>
+<pre><code>class Services(DeclarativeContainer):
+    auth = providers.Factory(AuthService)
+    users = providers.Factory(UsersService,
+                              auth_service=auth)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SummarizationContainer(DeclarativeContainer):
+    config: Configuration = Configuration()
+
+    service: Singleton[SummarizationService] = Singleton(
+        SummarizationService,
+        summarize=config.summarize
+    )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>dependency_injector.containers.DeclarativeContainer</li>
+<li>dependency_injector.containers.Container</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="repograph.entities.summarization.container.SummarizationContainer.cls_providers"><code class="name">var <span class="ident">cls_providers</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="repograph.entities" href="entities/index.html">repograph.entities</a></code></dt>
+<dt id="repograph.entities.summarization.container.SummarizationContainer.config"><code class="name">var <span class="ident">config</span> : dependency_injector.providers.Configuration</code></dt>
+<dd>
+<div class="desc"><p>Child configuration option provider.</p>
+<p>This provider should not be used directly. It is a part of the
+:py:class:<code>Configuration</code> provider.</p></div>
+</dd>
+<dt id="repograph.entities.summarization.container.SummarizationContainer.containers"><code class="name">var <span class="ident">containers</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="repograph.models" href="models/index.html">repograph.models</a></code></dt>
+<dt id="repograph.entities.summarization.container.SummarizationContainer.inherited_providers"><code class="name">var <span class="ident">inherited_providers</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="repograph.utils" href="utils/index.html">repograph.utils</a></code></dt>
+<dt id="repograph.entities.summarization.container.SummarizationContainer.providers"><code class="name">var <span class="ident">providers</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.summarization.container.SummarizationContainer.service"><code class="name">var <span class="ident">service</span> : dependency_injector.providers.Singleton</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.summarization.container.SummarizationContainer.wiring_config"><code class="name">var <span class="ident">wiring_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
-</section>
-<section>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -65,14 +127,25 @@
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="repograph.api" href="api.html">repograph.api</a></code></li>
-<li><code><a title="repograph.cli" href="cli.html">repograph.cli</a></code></li>
-<li><code><a title="repograph.container" href="container.html">repograph.container</a></code></li>
-<li><code><a title="repograph.entities" href="entities/index.html">repograph.entities</a></code></li>
-<li><code><a title="repograph.models" href="models/index.html">repograph.models</a></code></li>
-<li><code><a title="repograph.utils" href="utils/index.html">repograph.utils</a></code></li>
+<li><code><a title="repograph.entities.summarization" href="index.html">repograph.entities.summarization</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="repograph.entities.summarization.container.SummarizationContainer" href="#repograph.entities.summarization.container.SummarizationContainer">SummarizationContainer</a></code></h4>
+<ul class="two-column">
+<li><code><a title="repograph.entities.summarization.container.SummarizationContainer.cls_providers" href="#repograph.entities.summarization.container.SummarizationContainer.cls_providers">cls_providers</a></code></li>
+<li><code><a title="repograph.entities.summarization.container.SummarizationContainer.config" href="#repograph.entities.summarization.container.SummarizationContainer.config">config</a></code></li>
+<li><code><a title="repograph.entities.summarization.container.SummarizationContainer.containers" href="#repograph.entities.summarization.container.SummarizationContainer.containers">containers</a></code></li>
+<li><code><a title="repograph.entities.summarization.container.SummarizationContainer.inherited_providers" href="#repograph.entities.summarization.container.SummarizationContainer.inherited_providers">inherited_providers</a></code></li>
+<li><code><a title="repograph.entities.summarization.container.SummarizationContainer.providers" href="#repograph.entities.summarization.container.SummarizationContainer.providers">providers</a></code></li>
+<li><code><a title="repograph.entities.summarization.container.SummarizationContainer.service" href="#repograph.entities.summarization.container.SummarizationContainer.service">service</a></code></li>
+<li><code><a title="repograph.entities.summarization.container.SummarizationContainer.wiring_config" href="#repograph.entities.summarization.container.SummarizationContainer.wiring_config">wiring_config</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

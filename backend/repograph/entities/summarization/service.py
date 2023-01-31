@@ -6,41 +6,57 @@ Typical usage:
 
     docstring_node = FunctionSummarizer.create_docstring_node(function_node)
 """
+# Base imports
 from logging import getLogger
+
+# pip imports
 from transformers import RobertaTokenizerFast, T5ForConditionalGeneration
 
+# Model imports
 from repograph.models.nodes import Function
-from repograph.utils.summarization import clean_source_code
+
+# Utils imports
+from repograph.entities.summarization.utils import clean_source_code
 
 
-log = getLogger('repograph.builder.function_summarizer')
+# Setup logging
+log = getLogger('repograph.entities.summarization.service')
 
 
-class FunctionSummarizer:
-    """Summarise functions using CodeT5.
+class SummarizationService:
+    tokenizer: any = None
+    model: any = None
+    active: bool
 
-    Attributes:
-        tokenizer: The function tokenizer.
-        model: The specific CodeT5 that summarises tokenized functions.
-    """
-    tokenizer: any
-    model: any
+    def __init__(self, summarize: bool = False):
+        """Constructor
 
-    def __init__(self):
-        log.info("Initialising CodeT5 model...")
-        self.tokenizer = RobertaTokenizerFast.from_pretrained("Salesforce/codet5-base")
-        self.model = T5ForConditionalGeneration.from_pretrained("Salesforce/codet5-base-multi-sum")
-        log.info("Ready!")
+        Args:
+            summarize (bool): Whether to initialise model and tokenizer.
+        """
+        self.active = summarize
+
+        if summarize:
+            log.info("Initialising CodeT5 model...")
+            self.tokenizer = RobertaTokenizerFast.from_pretrained("Salesforce/codet5-base")
+            self.model = T5ForConditionalGeneration.from_pretrained("Salesforce/codet5-base-multi-sum")  # noqa: 501
+            log.info("Ready!")
+        else:
+            log.info("Summarization flag not set. Skipping setup.")
 
     def summarize_function(self, function: Function) -> str:
         """Summarize a function.
 
         Args:
-            function (Function): The function node to summarize.
+            function (Function): The function node to summarization.
 
         Returns:
             str: The summarization
         """
+        if not self.model or not self.tokenizer:
+            log.warning("No model or tokenizer initialised!")
+            return ""
+
         log.debug(f'Create Docstring node for function `{function.name}`...')
         source_code = clean_source_code(function.source_code)
         return self._summarize_code(source_code)
@@ -49,7 +65,7 @@ class FunctionSummarizer:
         """Summarize code.
 
         Args:
-            source_code (str): The source code to summarize.
+            source_code (str): The source code to summarization.
 
         Returns:
             str: The summarization.

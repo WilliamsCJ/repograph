@@ -1,4 +1,4 @@
-uri: neo4j://localhost:7687
+uri: neo4j://repograph-database:7687
 username: neo4j
 password: s3cr3t
 database: neo4j

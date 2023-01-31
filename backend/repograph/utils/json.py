@@ -10,20 +10,6 @@ JSONDict = Dict[str, Any]
 log = logging.getLogger("repograph.utils.json")
 
 
-def read_json_from_file(file_path: str) -> Dict[str, Any]:
-    """Reads a JSON object from a file.
-
-    Args:
-        file_path (str): The path of the file to read.
-
-    Returns:
-        Dict[str, Any]: The JSON object as a dictiontary.
-    """
-    with open(file_path, "r") as file:
-        json_obj = json.load(file)
-        return json_obj
-
-
 def parse_min_max_line_numbers(json: JSONDict) -> Tuple[Optional[int], Optional[int]]:
     """Retrieve a tuple of minimum and maximum line numbers from
     the "min_max_lineno" JSON entry.

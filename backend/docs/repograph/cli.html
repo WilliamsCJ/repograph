@@ -30,16 +30,21 @@
 <pre><code class="python">&#34;&#34;&#34;
 Command-Line Interface for manual invocation.
 &#34;&#34;&#34;
-import configargparse
+# Base imports
 import logging
-import os
-import subprocess
-from typing import Any, Tuple
+from typing import List
 
-from repograph.builder.repograph_builder import RepographBuilder
-from repograph.builder.code_analyser import call_inspect4py, cleanup_inspect4py_output
-from repograph.utils.exceptions import RepographBuildError
-from repograph.utils.json import read_json_from_file
+# pip imports
+import configargparse
+from dependency_injector.wiring import inject, Provide
+
+# Application Container
+from repograph.container import ApplicationContainer
+
+# Build service
+from repograph.entities.build.service import BuildService
+
+# Utilities
 from repograph.utils.logging import configure_logging
 
 # Configure logging format
@@ -54,7 +59,6 @@ p.add_argument(&#39;--username&#39;, required=True, help=&#39;The username to su
 p.add_argument(&#39;--password&#39;, required=True, help=&#39;The password to supply to the Neo4J server.&#39;)
 p.add_argument(&#39;--database&#39;, required=False, default=&#39;neo4j&#39;, help=&#34;The database name to use.&#34;)
 p.add_argument(&#39;--input&#39;, required=True, action=&#39;append&#39;, help=&#39;The directory_info.json file.&#39;)
-p.add_argument(&#39;--name&#39;, required=True, help=&#39;The name of the graph.&#39;)
 p.add_argument(
     &#39;--prune&#39;,
     required=False,
@@ -62,7 +66,7 @@ p.add_argument(
     help=&#39;Prune any existing nodes and relationships from the database.&#39;
 )
 p.add_argument(
-    &#39;--summarize&#39;,
+    &#39;--summarization&#39;,
     required=False,
     action=&#34;store_true&#34;,
     help=&#39;&#34;Whether to generate function summarization docstrings&#39;
@@ -76,73 +80,36 @@ p.add_argument(
 )
 
 
-def parse_inspect4py_output(path) -&gt; Tuple[dict[str, Any], dict[str, Any]]:
-    &#34;&#34;&#34;Parse the output directory of inspect4py.
+@inject
+def main(
+    input_list: List[str],
+    build: BuildService = Provide[ApplicationContainer.build.container.service]
+) -&gt; None:
+    &#34;&#34;&#34;Main function of CLI script.
+
+    This functionality is broken out into a separate function to provide dependency injection at
+    runtime.
+
+    See: https://python-dependency-injector.ets-labs.org/
 
     Args:
-        path (str): Path to the output directory.
+        input_list (List[str]): The list of input paths for the build service.
+        build (BuildService): The injected Build Service.
 
     Returns:
-        dict[str, Any]: directory_info.json
-        dict[str, Any]: call_graph.json
+        None
     &#34;&#34;&#34;
-    di = None
-    cg = None
-
-    try:
-        di = read_json_from_file(os.path.join(path, &#34;directory_info.json&#34;))
-    except FileNotFoundError:
-        log.error(&#34;Couldn&#39;t find directory_info.json in input directory!&#34;)
-
-    try:
-        cg = read_json_from_file(os.path.join(path, &#34;call_graph.json&#34;))
-    except FileNotFoundError:
-        log.error(&#34;Couldn&#39;t find call_graph.json in input directory!&#34;)
-
-    return di, cg
+    build.build(input_list)
 
 
 if __name__ == &#34;__main__&#34;:
     args, _ = p.parse_known_args()
-    builder = RepographBuilder(
-        args.uri,
-        args.username,
-        args.password,
-        args.database,
-        prune=args.prune,
-        summarize=args.summarize,
-    )
 
-    temp_output = f&#34;./tmp/{args.name}&#34;
-    success = 0
-    failure = 0
+    container = ApplicationContainer()
+    container.config.from_dict(vars(args))
+    container.wire(modules=[__name__])
 
-    for input_path in args.input:
-        try:
-            if args.skip_inspect4py:
-                directory_info, call_graph = parse_inspect4py_output(input_path)
-            else:
-                call_inspect4py(input_path, temp_output)
-                directory_info, call_graph = parse_inspect4py_output(temp_output)
-
-            repograph = builder.build(directory_info, call_graph)  # noqa
-            success += 1
-        except subprocess.CalledProcessError as e:
-            log.error(&#34;Error invoking inspect4py for %s - %s&#34;, input_path, str(e))
-            failure += 1
-        except RepographBuildError as e:
-            log.error(&#34;Error building repograph for %s - %s&#34;, input_path, str(e))
-            failure += 1
-        finally:
-            if not args.skip_inspect4py:
-                cleanup_inspect4py_output()
-
-    log.info(
-        &#34;Parsed %d repositories with %d successes and %d failures.&#34;,
-        len(args.input),
-        success,
-        failure
-    )</code></pre>
+    main(args.input)</code></pre>
 </details>
 </section>
 <section>
@@ -152,51 +119,47 @@ if __name__ == &#34;__main__&#34;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="repograph.cli.parse_inspect4py_output"><code class="name flex">
-<span>def <span class="ident">parse_inspect4py_output</span></span>(<span>path) ‑> Tuple[dict[str, Any], dict[str, Any]]</span>
+<dt id="repograph.cli.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>input_list: List[str], build: <a title="repograph.entities.build.service.BuildService" href="entities/build/service.html#repograph.entities.build.service.BuildService">BuildService</a> = &lt;dependency_injector.wiring.Provide object&gt;) ‑> None</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Parse the output directory of inspect4py.</p>
+<div class="desc"><p>Main function of CLI script.</p>
+<p>This functionality is broken out into a separate function to provide dependency injection at
+runtime.</p>
+<p>See: <a href="https://python-dependency-injector.ets-labs.org/">https://python-dependency-injector.ets-labs.org/</a></p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
-<dd>Path to the output directory.</dd>
+<dt><strong><code>input_list</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>The list of input paths for the build service.</dd>
+<dt><strong><code>build</code></strong> :&ensp;<code>BuildService</code></dt>
+<dd>The injected Build Service.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><code>dict[str, Any]</code></dt>
-<dd>directory_info.json</dd>
-<dt><code>dict[str, Any]</code></dt>
-<dd>call_graph.json</dd>
-</dl></div>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def parse_inspect4py_output(path) -&gt; Tuple[dict[str, Any], dict[str, Any]]:
-    &#34;&#34;&#34;Parse the output directory of inspect4py.
+<pre><code class="python">@inject
+def main(
+    input_list: List[str],
+    build: BuildService = Provide[ApplicationContainer.build.container.service]
+) -&gt; None:
+    &#34;&#34;&#34;Main function of CLI script.
+
+    This functionality is broken out into a separate function to provide dependency injection at
+    runtime.
+
+    See: https://python-dependency-injector.ets-labs.org/
 
     Args:
-        path (str): Path to the output directory.
+        input_list (List[str]): The list of input paths for the build service.
+        build (BuildService): The injected Build Service.
 
     Returns:
-        dict[str, Any]: directory_info.json
-        dict[str, Any]: call_graph.json
+        None
     &#34;&#34;&#34;
-    di = None
-    cg = None
-
-    try:
-        di = read_json_from_file(os.path.join(path, &#34;directory_info.json&#34;))
-    except FileNotFoundError:
-        log.error(&#34;Couldn&#39;t find directory_info.json in input directory!&#34;)
-
-    try:
-        cg = read_json_from_file(os.path.join(path, &#34;call_graph.json&#34;))
-    except FileNotFoundError:
-        log.error(&#34;Couldn&#39;t find call_graph.json in input directory!&#34;)
-
-    return di, cg</code></pre>
+    build.build(input_list)</code></pre>
 </details>
 </dd>
 </dl>
@@ -217,7 +180,7 @@ if __name__ == &#34;__main__&#34;:
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="repograph.cli.parse_inspect4py_output" href="#repograph.cli.parse_inspect4py_output">parse_inspect4py_output</a></code></li>
+<li><code><a title="repograph.cli.main" href="#repograph.cli.main">main</a></code></li>
 </ul>
 </li>
 </ul>
