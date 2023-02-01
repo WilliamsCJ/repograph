@@ -45,3 +45,6 @@ class GraphService:
         summary.functions = count
 
         return summary
+
+    def prune(self):
+        self.repository.delete_all()

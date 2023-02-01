@@ -62,18 +62,21 @@ p.add_argument(&#39;--input&#39;, required=True, action=&#39;append&#39;, help=&
 p.add_argument(
     &#39;--prune&#39;,
     required=False,
+    dest=&#39;prune&#39;,
     action=&#34;store_true&#34;,
     help=&#39;Prune any existing nodes and relationships from the database.&#39;
 )
 p.add_argument(
     &#39;--summarization&#39;,
     required=False,
+    dest=&#39;summarization&#39;,
     action=&#34;store_true&#34;,
     help=&#39;&#34;Whether to generate function summarization docstrings&#39;
 )
 p.add_argument(
     &#39;--skip_inspect4py&#39;,
     required=False,
+    dest=&#39;skip_inspect4py&#39;,
     action=&#34;store_true&#34;,
     help=&#39;Whether to skip running inspect4py. Use when the input directory &#39;
          &#39;is already an inspect4py output directory.&#39;
@@ -83,7 +86,8 @@ p.add_argument(
 @inject
 def main(
     input_list: List[str],
-    build: BuildService = Provide[ApplicationContainer.build.container.service]
+    build: BuildService = Provide[ApplicationContainer.build.container.service],
+    prune: bool = False
 ) -&gt; None:
     &#34;&#34;&#34;Main function of CLI script.
 
@@ -95,11 +99,12 @@ def main(
     Args:
         input_list (List[str]): The list of input paths for the build service.
         build (BuildService): The injected Build Service.
+        prune (bool): Whether to call build.build with the prune flag.
 
     Returns:
         None
     &#34;&#34;&#34;
-    build.build(input_list)
+    build.build(input_list, prune=prune)
 
 
 if __name__ == &#34;__main__&#34;:
@@ -109,7 +114,7 @@ if __name__ == &#34;__main__&#34;:
     container.config.from_dict(vars(args))
     container.wire(modules=[__name__])
 
-    main(args.input)</code></pre>
+    main(args.input, prune=args.prune)</code></pre>
 </details>
 </section>
 <section>
@@ -120,7 +125,7 @@ if __name__ == &#34;__main__&#34;:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="repograph.cli.main"><code class="name flex">
-<span>def <span class="ident">main</span></span>(<span>input_list: List[str], build: <a title="repograph.entities.build.service.BuildService" href="entities/build/service.html#repograph.entities.build.service.BuildService">BuildService</a> = &lt;dependency_injector.wiring.Provide object&gt;) ‑> None</span>
+<span>def <span class="ident">main</span></span>(<span>input_list: List[str], build: <a title="repograph.entities.build.service.BuildService" href="entities/build/service.html#repograph.entities.build.service.BuildService">BuildService</a> = &lt;dependency_injector.wiring.Provide object&gt;, prune: bool = False) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Main function of CLI script.</p>
@@ -133,6 +138,8 @@ runtime.</p>
 <dd>The list of input paths for the build service.</dd>
 <dt><strong><code>build</code></strong> :&ensp;<code>BuildService</code></dt>
 <dd>The injected Build Service.</dd>
+<dt><strong><code>prune</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to call build.build with the prune flag.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>None</p></div>
@@ -143,7 +150,8 @@ runtime.</p>
 <pre><code class="python">@inject
 def main(
     input_list: List[str],
-    build: BuildService = Provide[ApplicationContainer.build.container.service]
+    build: BuildService = Provide[ApplicationContainer.build.container.service],
+    prune: bool = False
 ) -&gt; None:
     &#34;&#34;&#34;Main function of CLI script.
 
@@ -155,11 +163,12 @@ def main(
     Args:
         input_list (List[str]): The list of input paths for the build service.
         build (BuildService): The injected Build Service.
+        prune (bool): Whether to call build.build with the prune flag.
 
     Returns:
         None
     &#34;&#34;&#34;
-    build.build(input_list)</code></pre>
+    build.build(input_list, prune=prune)</code></pre>
 </details>
 </dd>
 </dl>

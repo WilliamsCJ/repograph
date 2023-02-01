@@ -45,3 +45,6 @@ class GraphRepository:
     def get_all(self, label: str) -> Tuple[NodeMatch, int]:
         match: NodeMatch = self._graph.nodes.match(label)
         return match.all(), match.count()
+
+    def delete_all(self):
+        self._graph.delete_all()

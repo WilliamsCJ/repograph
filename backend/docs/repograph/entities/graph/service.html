@@ -72,7 +72,10 @@ class GraphService:
         _, count = self.repository.get_all(&#34;Function&#34;)
         summary.functions = count
 
-        return summary</code></pre>
+        return summary
+
+    def prune(self):
+        self.repository.delete_all()</code></pre>
 </details>
 </section>
 <section>
@@ -122,7 +125,10 @@ class GraphService:
         _, count = self.repository.get_all(&#34;Function&#34;)
         summary.functions = count
 
-        return summary</code></pre>
+        return summary
+
+    def prune(self):
+        self.repository.delete_all()</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -177,6 +183,19 @@ class GraphService:
     return summary</code></pre>
 </details>
 </dd>
+<dt id="repograph.entities.graph.service.GraphService.prune"><code class="name flex">
+<span>def <span class="ident">prune</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prune(self):
+    self.repository.delete_all()</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -200,6 +219,7 @@ class GraphService:
 <ul class="">
 <li><code><a title="repograph.entities.graph.service.GraphService.bulk_add" href="#repograph.entities.graph.service.GraphService.bulk_add">bulk_add</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.get_summary" href="#repograph.entities.graph.service.GraphService.get_summary">get_summary</a></code></li>
+<li><code><a title="repograph.entities.graph.service.GraphService.prune" href="#repograph.entities.graph.service.GraphService.prune">prune</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.repository" href="#repograph.entities.graph.service.GraphService.repository">repository</a></code></li>
 </ul>
 </li>
