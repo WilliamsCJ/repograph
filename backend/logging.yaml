@@ -17,6 +17,6 @@ loggers:
       propagate: true
 
 root:
-  level: INFO
+  level: ERROR
   handlers: [console]
   propagate: no

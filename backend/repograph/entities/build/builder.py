@@ -315,7 +315,7 @@ class RepographBuilder:
             total (int): The total number of directories within the repository.
         """
         directory_path = strip_file_path_prefix(directory_name)
-        log.info("Parsing directory '%s' (%d/%d)", directory_path, index + 1, total)
+        log.debug("Parsing directory '%s' (%d/%d)", directory_path, index + 1, total)
 
         # Parse each file within the directory, update is_package
         # with result (whether file is __init__.py), and add to list
@@ -391,7 +391,7 @@ class RepographBuilder:
         Returns:
             bool: Whether Module is an __init__.py.
         """
-        log.info(
+        log.debug(
             "--> Parsing file `%s` (%d/%d)",
             file_info["file"]["fileNameBase"],
             index + 1,
@@ -705,6 +705,7 @@ class RepographBuilder:
             None
         """
         log.info("Parsing dependencies...")
+        unresolved_dependencies = []
 
         # Iterate through dependencies for each required module
         for dependency_info, module in self.dependencies:
@@ -764,10 +765,8 @@ class RepographBuilder:
                     if imported_module:
                         module_objects = self.module_objects.get(imported_module, None)
                         if not module_objects:
-                            log.warning(
-                                "Module `%s` provides no objects. Skipping dependency:\n\t|-> %s",
-                                imported_module.canonical_name,
-                                dependency
+                            unresolved_dependencies.append(
+                                (module, imported_module, imported_object, dependency)
                             )
                             continue
 
@@ -776,7 +775,9 @@ class RepographBuilder:
 
                         # If no matches, log an error and move onto the next dependency
                         if len(matching_objects) == 0:
-                            log.error("No matching objects")
+                            unresolved_dependencies.append(
+                                (module, imported_module, imported_object, dependency)
+                            )
                             continue
 
                         # If more than one match we log this inconsistency,
@@ -820,6 +821,27 @@ class RepographBuilder:
 
                         self.relationships.append(ImportedBy(imported_object, module))
                         self.module_dependencies[module].append(imported_object)
+
+        # Second pass on unresolved dependencies that are likely to be imports of other modules.
+        remaining = []
+        for module, imported_module, imported_object, dependency in unresolved_dependencies:
+            module_imports = self.module_dependencies.get(imported_module)
+            if not module_imports:
+                remaining.append(dependency)
+                continue
+
+            matching_objects = [obj for obj in module_imports if
+                                obj.name == imported_object]
+
+            if len(matching_objects) == 0:
+                remaining.append(dependency)
+
+            for match in matching_objects:
+                self.relationships.append(ImportedBy(match, module))
+                self.module_dependencies[module].append(match)
+
+        if len(remaining) > 0:
+            log.warning("Unable to resolve %d dependencies...", len(remaining))
 
     def _calculate_missing_packages(self, source_module: str) -> Tuple[str, List[str]]:
         """Calculates missing packages for a given import source Module.

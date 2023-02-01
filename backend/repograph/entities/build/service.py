@@ -143,7 +143,10 @@ class BuildService:
                 )
                 nodes, relationships = builder.build(directory_info, call_graph)
 
+                log.info("Writing nodes and relationships to graph...")
                 self.graph.bulk_add(nodes, relationships)
+                log.info("Done!")
+
                 success += 1
             except subprocess.CalledProcessError as e:
                 log.error("Error invoking inspect4py - %s", str(e))
@@ -152,7 +155,7 @@ class BuildService:
                 log.error("Error building repograph - %s", str(e))
                 failure += 1
             finally:
-                # self.cleanup_inspect4py_output()
+                self.cleanup_inspect4py_output()
                 pass
 
         log.info(

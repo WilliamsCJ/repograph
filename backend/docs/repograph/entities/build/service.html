@@ -171,7 +171,10 @@ class BuildService:
                 )
                 nodes, relationships = builder.build(directory_info, call_graph)
 
+                log.info(&#34;Writing nodes and relationships to graph...&#34;)
                 self.graph.bulk_add(nodes, relationships)
+                log.info(&#34;Done!&#34;)
+
                 success += 1
             except subprocess.CalledProcessError as e:
                 log.error(&#34;Error invoking inspect4py - %s&#34;, str(e))
@@ -180,7 +183,7 @@ class BuildService:
                 log.error(&#34;Error building repograph - %s&#34;, str(e))
                 failure += 1
             finally:
-                # self.cleanup_inspect4py_output()
+                self.cleanup_inspect4py_output()
                 pass
 
         log.info(
@@ -338,7 +341,10 @@ class BuildService:
                 )
                 nodes, relationships = builder.build(directory_info, call_graph)
 
+                log.info(&#34;Writing nodes and relationships to graph...&#34;)
                 self.graph.bulk_add(nodes, relationships)
+                log.info(&#34;Done!&#34;)
+
                 success += 1
             except subprocess.CalledProcessError as e:
                 log.error(&#34;Error invoking inspect4py - %s&#34;, str(e))
@@ -347,7 +353,7 @@ class BuildService:
                 log.error(&#34;Error building repograph - %s&#34;, str(e))
                 failure += 1
             finally:
-                # self.cleanup_inspect4py_output()
+                self.cleanup_inspect4py_output()
                 pass
 
         log.info(
@@ -550,7 +556,10 @@ graph using the input repositories.</p>
             )
             nodes, relationships = builder.build(directory_info, call_graph)
 
+            log.info(&#34;Writing nodes and relationships to graph...&#34;)
             self.graph.bulk_add(nodes, relationships)
+            log.info(&#34;Done!&#34;)
+
             success += 1
         except subprocess.CalledProcessError as e:
             log.error(&#34;Error invoking inspect4py - %s&#34;, str(e))
@@ -559,7 +568,7 @@ graph using the input repositories.</p>
             log.error(&#34;Error building repograph - %s&#34;, str(e))
             failure += 1
         finally:
-            # self.cleanup_inspect4py_output()
+            self.cleanup_inspect4py_output()
             pass
 
     log.info(
