@@ -17,71 +17,7 @@ python -m repograph.cli --config default_config.yaml --name pyLODE --input ../de
 
 You can then execute the Cypher Queries
 
-### Cypher Queries
-
-The following Cypher queries can be executed by copy and pasting them into the
-Neo4j Browser. The Browser can be accessed at `http://localhost:7474/browser`
-
-### Select the requirements of a given repo
-
-**_NOTE: Not currently working due to issues with inspect4py_**
-
-`MATCH (r)-[r:Requires]->(p) RETURN p, r`
-
-### Select the readmes of a given repo
-
-```
-MATCH (n:README) RETURN n.path as `README File`, n.content as `Contents`
-```
-
-### Select the metadata of a given repo
-
-```
-MATCH (r:Repository) RETURN properties(r) as `Repository Metadata`
-```
-
-### Select the license of a given repo
-
-```
-MATCH (n:License) RETURN n.license_type as `License`, n.confidence as `Confidence`, n.text as `Content`
-```
-
-### Select the docstring (long and short) of a given repo
-
-```
-MATCH (n:Docstring)-[r:Documents]-(f:Function) WHERE n.short_description IS NOT NULL RETURN f.name as `Function Name`, n.short_description as `Docstring Summary`, n.long_description as `Doctring Body`
-```
-
-### Select the summarizations of functions of a given repo
-
-`MATCH (n:Docstring)-[r:Documents]-(f) WHERE n.summarization IS NOT NULL RETURN n, f, r LIMIT 5`
-
-### Select the filenames of a given demo
-
-```
-MATCH (m:Module) RETURN m.name + '.' + m.extension as `Filename`
-```
-
-### Select the function and class names of a given demo
-
-```
-MATCH (n) WHERE n:Class OR n:Function RETURN n.name as `Name`, labels(n) as `Type`
-```
-
-### Select the source code of a given demo
-
-```
-MATCH (f:Function) WHERE f.source_code IS NOT NULL RETURN f.name, f.source_code
-```
-
-### Select the call graph of a given demo
-
-```
-```
-
 ## Multi-Repository Example
-
-_NOTE: This step relies on having previously run the above example_
 
 **WARNING: This may take some time!**
 
@@ -91,7 +27,7 @@ To create a graph with multiple repositories, run:
 python -m repograph.cli --config default_config.yaml  --prune --input ../demo/fastapi --input ../demo/pygorithm --input ../demo/starlette --input ../demo/flake8 --input ../demo/pyLODE --prune
 ```
 
-### Cypher Queries
+## Cypher Queries
 
 The following Cypher queries can be executed by copy and pasting them into the
 Neo4j Browser. The Browser can be accessed at `http://localhost:7474/browser`
@@ -100,43 +36,66 @@ They allow for filtering by the particular repository.
 
 ### Select the requirements of a given repo
 
-TODO:
+Return all requirements defined by a given repository.
 
 ```
 MATCH (r:Repository)-[s:Requires]->(d) WHERE r.name = 'REPO NAME' RETURN r.name as `Repository`, d.name as `Dependency`, s.version as `Version`
 ```
 
+Query options for repository (`<REPO>`):
+- Repository name, e.g. `pyLODE`
+- Wildcard, e.g. `.*`
+
 ### Select the readmes of a given repo
 
-TODO
+Return the text of all README files contained within a repository.
 
 ```
-MATCH (n:README)-[:Contains*1..]-(r:Repository) WHERE r.name = 'REPO NAME' RETURN n.path as `README File`, n.content as `Contents`
+MATCH (n:README)-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' RETURN n.path as `README File`, n.content as `Contents`
 ```
+
+Query options for repository (`<REPO>`):
+- Repository name, e.g. `pyLODE`
+- Wildcard, e.g. `.*`
 
 ### Select the metadata of a given repo
 
-TODO
+Select the metadata of a particular repository, or all.
 
 ```
-MATCH (r:Repository) WHERE r.name = 'REPO NAME' RETURN r.name as `Repository`, properties(r) as `Repository Metadata`
+MATCH (r:Repository) WHERE r.name =~ '<REPO>' RETURN r.name as `Repository`, properties(r) as `Repository Metadata`
 ```
+
+Query options for repository (`<REPO>`):
+- Repository name, e.g. `pyLODE`
+- Wildcard, e.g. `.*`
 
 ### Select the license of a given repo
 
-TODO
+Selects the possible licenses of a given repository.
 
 ```
-MATCH (n:License)-[]-(r:Repository {name: 'REPO NAME'}) RETURN r.name as `Repository`, n.license_type as `License`, n.confidence as `Confidence`, n.text as `Content`
+MATCH (n:License)-[]-(r:Repository) WHERE r.name =~ '<REPO>' RETURN r.name as `Repository`, n.license_type as `License`, 
+n.confidence as `Confidence`, n.text as `Content`
 ```
+
+Query options for repository (`<REPO>`):
+- Repository name, e.g. `pyLODE`
+- Wildcard, e.g. `.*`
 
 ### Select the docstring (long and short) of a given repo
 
-TODO
+Selects the docstrings contained with a given repository
 
 ```
-MATCH (n:Docstring)-[Documents]-(f:Function)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository {name: 'REPO NAME'}) WHERE n.short_description IS NOT NULL RETURN r.name as `Repository`, f.name as `Function Name`, n.short_description as `Docstring Summary`, n.long_description as `Doctring Body`
+MATCH (n:Docstring)-[Documents]-(f:Function)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository) WHERE 
+n.short_description IS NOT NULL AND r.name =~ '<REPO>' RETURN r.name as `Repository`, f.name as `Function Name`, 
+n.short_description as `Docstring Summary`, n.long_description as `Doctring Body`
 ```
+
+Query options for repository (`<REPO>`):
+- Repository name, e.g. `pyLODE`
+- Wildcard, e.g. `.*`
 
 ### Select the summarizations of functions of a given repo
 
