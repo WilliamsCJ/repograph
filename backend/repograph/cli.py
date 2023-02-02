@@ -38,9 +38,9 @@ p.add_argument(
     help='Prune any existing nodes and relationships from the database.'
 )
 p.add_argument(
-    '--summarization',
+    '--summarize',
     required=False,
-    dest='summarization',
+    dest='summarize',
     action="store_true",
     help='"Whether to generate function summarization docstrings'
 )
