@@ -185,7 +185,7 @@ Query options for repository (`<REPO>`):
 Return the function source code within a given repo.
 
 ```
-MATCH (f:Function)-[:HasFunction|HasMethod*0..]-()-[:Contains*1..]-(r:Repository) WHERE r.name =~ 'pyLODE' AND 
+MATCH (f:Function)-[:HasFunction|HasMethod*0..]-()-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' AND 
 f.source_code IS NOT NULL RETURN r.name as `Repository`, f.name as `Function`, f.source_code as `Source Code
 ````
 
@@ -195,5 +195,17 @@ Query options for repository (`<REPO>`):
 
 ### Select the call graph of a given demo
 
+Select the call graph for a given function, possibly within a given repository.
+
 ```
+MATCH (c:Function)-[:Calls]-(f:Function)-[:HasFunction|HasMethod*0..]-()-[:Contains*1..]-(r:Repository) 
+WHERE r.name =~ '<REPO>' AND f.canonical_name =~ '<FUNCTION>'  RETURN c, f
 ```
+
+Query options for repository (`<REPO>`):
+- Repository name, e.g. `pyLODE`
+- Wildcard, e.g. `.*`
+
+Query options for function (`<FUNCTION>`):
+- Exact canonical name, e.g. `pylode.utils.rdf_obj_html`
+- Wildcard query to match only the function name, e.g. `.*rdf_obj_html`

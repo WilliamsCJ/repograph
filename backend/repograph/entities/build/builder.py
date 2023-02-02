@@ -1123,7 +1123,7 @@ class RepographBuilder:
 
         # Parse the call list, now that most Nodes should be added to the graph
         log.info("Parsing call graph...")
-        # self._parse_call_graph(call_graph)
+        self._parse_call_graph(call_graph)
 
         # Parse READMEs
         self._parse_readme(readmes)
