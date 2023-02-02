@@ -47,7 +47,14 @@ From the project root, run:
 
 ```shell
 cd backend
-python3 -m repograph.cli --uri neo4j://localhost:7687 --username neo4j --password s3cr3t --database neo4j --input <PATH_TO_INSPECT4PY_OUTPUT_DIR>
+python3 -m repograph.cli --uri neo4j://localhost:7687 --username neo4j --password s3cr3t --database neo4j --input <PATH_TO_REPOSITORY>
+```
+
+Multiple repositories can be passed into the CLI at the same time, as such:
+
+```shell
+cd backend
+python3 -m repograph.cli --uri neo4j://localhost:7687 --username neo4j --password s3cr3t --database neo4j --input <PATH_TO_REPOSITORY> --input <PATH_TO_ANOTHER_REPOSITORY>
 ```
 
 Several other command line options, such as `--prune`, are also available. To see these options,
