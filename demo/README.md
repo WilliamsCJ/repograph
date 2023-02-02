@@ -43,6 +43,7 @@ MATCH (r:Repository)-[s:Requires]->(d) WHERE r.name = 'REPO NAME' RETURN r.name 
 ```
 
 Query options for repository (`<REPO>`):
+
 - Repository name, e.g. `pyLODE`
 - Wildcard, e.g. `.*`
 - Multiple repositories, e.g. `pyLODE|fastapi`
@@ -56,6 +57,7 @@ MATCH (n:README)-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' RETURN 
 ```
 
 Query options for repository (`<REPO>`):
+
 - Repository name, e.g. `pyLODE`
 - Wildcard, e.g. `.*`
 - Multiple repositories, e.g. `pyLODE|fastapi`
@@ -69,6 +71,7 @@ MATCH (r:Repository) WHERE r.name =~ '<REPO>' RETURN r.name as `Repository`, pro
 ```
 
 Query options for repository (`<REPO>`):
+
 - Repository name, e.g. `pyLODE`
 - Wildcard, e.g. `.*`
 - Multiple repositories, e.g. `pyLODE|fastapi`
@@ -78,11 +81,12 @@ Query options for repository (`<REPO>`):
 Selects the possible licenses of a given repository.
 
 ```
-MATCH (n:License)-[]-(r:Repository) WHERE r.name =~ '<REPO>' RETURN r.name as `Repository`, n.license_type as `License`, 
+MATCH (n:License)-[]-(r:Repository) WHERE r.name =~ '<REPO>' RETURN r.name as `Repository`, n.license_type as `License`,
 n.confidence as `Confidence`, n.text as `Content`
 ```
 
 Query options for repository (`<REPO>`):
+
 - Repository name, e.g. `pyLODE`
 - Wildcard, e.g. `.*`
 - Multiple repositories, e.g. `pyLODE|fastapi`
@@ -92,12 +96,13 @@ Query options for repository (`<REPO>`):
 Selects the docstrings contained with a given repository
 
 ```
-MATCH (n:Docstring)-[Documents]-(f:Function)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository) WHERE 
-n.short_description IS NOT NULL AND r.name =~ '<REPO>' RETURN r.name as `Repository`, f.name as `Function Name`, 
+MATCH (n:Docstring)-[Documents]-(f:Function)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository) WHERE
+n.short_description IS NOT NULL AND r.name =~ '<REPO>' RETURN r.name as `Repository`, f.name as `Function Name`,
 n.short_description as `Docstring Summary`, n.long_description as `Doctring Body`
 ```
 
 Query options for repository (`<REPO>`):
+
 - Repository name, e.g. `pyLODE`
 - Wildcard, e.g. `.*`
 - Multiple repositories, e.g. `pyLODE|fastapi`
@@ -107,12 +112,13 @@ Query options for repository (`<REPO>`):
 Selects the function summarizations that belong to a particular repository.
 
 ```
-MATCH (n:Docstring)-[:Documents]-(f)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository) WHERE n.summarization 
-IS NOT NULL AND r.name =~ '<REPO>' RETURN r.name as `Repository`, f.name as `Function`, 
+MATCH (n:Docstring)-[:Documents]-(f)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository) WHERE n.summarization
+IS NOT NULL AND r.name =~ '<REPO>' RETURN r.name as `Repository`, f.name as `Function`,
 n.summarization as `Summarization`, f.source_code as `Source Code`
 ```
 
 Query options for repository (`<REPO>`):
+
 - Repository name, e.g. `pyLODE`
 - Wildcard, e.g. `.*`
 - Multiple repositories, e.g. `pyLODE|fastapi`
@@ -122,11 +128,12 @@ Query options for repository (`<REPO>`):
 Returns all the filenames for the given repository.
 
 ```
-MATCH (m:Module)-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' 
+MATCH (m:Module)-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>'
 RETURN m.name + '.' + m.extension as `Filename`, r.name as `Repository`
 ```
 
 Query options for repository (`<REPO>`):
+
 - Repository name, e.g. `pyLODE`
 - Wildcard, e.g. `.*`
 - Multiple repositories, e.g. `pyLODE|fastapi`
@@ -136,11 +143,12 @@ Query options for repository (`<REPO>`):
 Return the function and class names contained within a given repo.
 
 ```
-MATCH (n:Class|Function)-[:HasFunction|HasMethod*0..]-()-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' 
+MATCH (n:Class|Function)-[:HasFunction|HasMethod*0..]-()-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>'
 RETURN r.name as `Repository`, n.name as `Name`, labels(n) as `Type`
 ```
 
 Query options for repository (`<REPO>`):
+
 - Repository name, e.g. `pyLODE`
 - Wildcard, e.g. `.*`
 - Multiple repositories, e.g. `pyLODE|fastapi`
@@ -150,11 +158,12 @@ Query options for repository (`<REPO>`):
 Return the function source code within a given repo.
 
 ```
-MATCH (f:Function)-[:HasFunction|HasMethod*0..]-()-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' AND 
+MATCH (f:Function)-[:HasFunction|HasMethod*0..]-()-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' AND
 f.source_code IS NOT NULL RETURN r.name as `Repository`, f.name as `Function`, f.source_code as `Source Code
-````
+```
 
 Query options for repository (`<REPO>`):
+
 - Repository name, e.g. `pyLODE`
 - Wildcard, e.g. `.*`
 - Multiple repositories, e.g. `pyLODE|fastapi`
@@ -164,16 +173,18 @@ Query options for repository (`<REPO>`):
 Select the call graph for a given function, possibly within a given repository.
 
 ```
-MATCH (c:Function)-[:Calls]-(f:Function)-[:HasFunction|HasMethod*0..]-()-[:Contains*1..]-(r:Repository) 
+MATCH (c:Function)-[:Calls]-(f:Function)-[:HasFunction|HasMethod*0..]-()-[:Contains*1..]-(r:Repository)
 WHERE r.name =~ '<REPO>' AND f.canonical_name =~ '<FUNCTION>'  RETURN c, f
 ```
 
 Query options for repository (`<REPO>`):
+
 - Repository name, e.g. `pyLODE`
 - Wildcard, e.g. `.*`
 - Multiple repositories, e.g. `pyLODE|fastapi`
 
 Query options for function (`<FUNCTION>`):
+
 - Exact canonical name, e.g. `pylode.utils.rdf_obj_html`
 - Wildcard query to match only the function name, e.g. `.*rdf_obj_html`
 
@@ -182,15 +193,17 @@ Query options for function (`<FUNCTION>`):
 Select the nodes imported by/dependencies of a given file in a given repository.
 
 ```
-MATCH (i)-[:ImportedBy]-(m:Module)-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' AND m.name =~ '<MODULE>'  
+MATCH (i)-[:ImportedBy]-(m:Module)-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' AND m.name =~ '<MODULE>'
 RETURN i, m
 ```
 
 Query options for repository (`<REPO>`):
+
 - Repository name, e.g. `pyLODE`
 - Wildcard, e.g. `.*`
 - Multiple repositories, e.g. `pyLODE|fastapi`
 
 Query options for function (`<MODULE>`):
+
 - Exact canonical name, e.g. `test_errors`
 - Wildcard query to match only the function name, e.g. `.*`
