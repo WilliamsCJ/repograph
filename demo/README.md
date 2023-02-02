@@ -26,10 +26,7 @@ _NOTE: This step relies on having previously run the above example_
 To create a graph with multiple repositories, run:
 
 ```shell
-python -m repograph.cli --config default_config.yaml --name fastapi --input ../demo/fastapi
-python -m repograph.cli --config default_config.yaml --name pygorithm --input ../demo/pygorithm
-python -m repograph.cli --config default_config.yaml --name starlette --input ../demo/starlette
-python -m repograph.cli --config default_config.yaml --name flake8 --input ../demo/flake8
+python -m repograph.cli --config default_config.yaml  --prune --input ../demo/fastapi --input ../demo/pygorithm --input ../demo/starlette --input ../demo/flake8 --input ../demo/pyLODE --prune
 ```
 
 ## Cypher Queries
