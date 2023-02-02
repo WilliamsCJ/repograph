@@ -33,18 +33,21 @@ p.add_argument('--input', required=True, action='append', help='The directory_in
 p.add_argument(
     '--prune',
     required=False,
+    dest='prune',
     action="store_true",
     help='Prune any existing nodes and relationships from the database.'
 )
 p.add_argument(
     '--summarization',
     required=False,
+    dest='summarization',
     action="store_true",
     help='"Whether to generate function summarization docstrings'
 )
 p.add_argument(
     '--skip_inspect4py',
     required=False,
+    dest='skip_inspect4py',
     action="store_true",
     help='Whether to skip running inspect4py. Use when the input directory '
          'is already an inspect4py output directory.'
@@ -54,7 +57,8 @@ p.add_argument(
 @inject
 def main(
     input_list: List[str],
-    build: BuildService = Provide[ApplicationContainer.build.container.service]
+    build: BuildService = Provide[ApplicationContainer.build.container.service],
+    prune: bool = False
 ) -> None:
     """Main function of CLI script.
 
@@ -66,11 +70,12 @@ def main(
     Args:
         input_list (List[str]): The list of input paths for the build service.
         build (BuildService): The injected Build Service.
+        prune (bool): Whether to call build.build with the prune flag.
 
     Returns:
         None
     """
-    build.build(input_list)
+    build.build(input_list, prune=prune)
 
 
 if __name__ == "__main__":
@@ -80,4 +85,4 @@ if __name__ == "__main__":
     container.config.from_dict(vars(args))
     container.wire(modules=[__name__])
 
-    main(args.input)
+    main(args.input, prune=args.prune)

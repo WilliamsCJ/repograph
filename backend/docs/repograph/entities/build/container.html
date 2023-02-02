@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>repograph.entities.graph.service API documentation</title>
-<meta name="description" content="" />
+<title>repograph.entities.build.container API documentation</title>
+<meta name="description" content="&#34;" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,63 +19,46 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>repograph.entities.graph.service</code></h1>
+<h1 class="title">Module <code>repograph.entities.build.container</code></h1>
 </header>
 <section id="section-intro">
+<p>"</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;
-
+<pre><code class="python">&#34;&#34;&#34;&#34;
 &#34;&#34;&#34;
-# Base imports
-from logging import getLogger
-from typing import List
+# pip imports
+from dependency_injector.containers import DeclarativeContainer
+from dependency_injector.providers import Configuration, Dependency, Singleton
 
-# Model imports
-from repograph.models.base import Node, Relationship
-from repograph.models.repograph import RepographSummary
+# Build entity imports
+from repograph.entities.build.service import BuildService
+from repograph.entities.build.router import BuildRouter
 
-# Graph entity imports
-from repograph.entities.graph.repository import GraphRepository
-
-# Configure logging
-log = getLogger(&#39;repograph.entities.graph.service&#39;)
+# Other entity imports
+from repograph.entities.graph.service import GraphService
+from repograph.entities.summarization.service import SummarizationService
 
 
-class GraphService:
-    repository: GraphRepository
+class BuildContainer(DeclarativeContainer):
+    config: Configuration = Configuration()
 
-    def __init__(self, repository: GraphRepository):
-        self.repository = repository
+    graph: Dependency[GraphService] = Dependency()
 
-    def bulk_add(self, nodes: List[Node], relationships: List[Relationship]):
-        self.repository.add(*nodes, *relationships)
+    summarization: Dependency[SummarizationService] = Dependency()
 
-    def get_summary(self) -&gt; RepographSummary:
-        if not self.repository.has_nodes():
-            log.warning(&#34;Graph has no nodes&#34;)
-            return RepographSummary()
+    service: Singleton[BuildService] = Singleton(
+        BuildService,
+        graph=graph,
+        summarization=summarization
+    )
 
-        summary = RepographSummary(is_empty=False)
-
-        # Modules
-        _, count = self.repository.get_all(&#34;Module&#34;)
-        summary.modules = count
-
-        # Classes
-        _, count = self.repository.get_all(&#34;Class&#34;)
-        summary.classes = count
-
-        # Functions
-        _, count = self.repository.get_all(&#34;Function&#34;)
-        summary.functions = count
-
-        return summary
-
-    def prune(self):
-        self.repository.delete_all()</code></pre>
+    router: Singleton[BuildRouter] = Singleton(
+        BuildRouter,
+        service=service
+    )</code></pre>
 </details>
 </section>
 <section>
@@ -87,114 +70,88 @@ class GraphService:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="repograph.entities.graph.service.GraphService"><code class="flex name class">
-<span>class <span class="ident">GraphService</span></span>
-<span>(</span><span>repository: <a title="repograph.entities.graph.repository.GraphRepository" href="repository.html#repograph.entities.graph.repository.GraphRepository">GraphRepository</a>)</span>
+<dt id="repograph.entities.build.container.BuildContainer"><code class="flex name class">
+<span>class <span class="ident">BuildContainer</span></span>
+<span>(</span><span>**overriding_providers)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Declarative inversion of control container.</p>
+<p>.. code-block:: python</p>
+<pre><code>class Services(DeclarativeContainer):
+    auth = providers.Factory(AuthService)
+    users = providers.Factory(UsersService,
+                              auth_service=auth)
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class GraphService:
-    repository: GraphRepository
+<pre><code class="python">class BuildContainer(DeclarativeContainer):
+    config: Configuration = Configuration()
 
-    def __init__(self, repository: GraphRepository):
-        self.repository = repository
+    graph: Dependency[GraphService] = Dependency()
 
-    def bulk_add(self, nodes: List[Node], relationships: List[Relationship]):
-        self.repository.add(*nodes, *relationships)
+    summarization: Dependency[SummarizationService] = Dependency()
 
-    def get_summary(self) -&gt; RepographSummary:
-        if not self.repository.has_nodes():
-            log.warning(&#34;Graph has no nodes&#34;)
-            return RepographSummary()
+    service: Singleton[BuildService] = Singleton(
+        BuildService,
+        graph=graph,
+        summarization=summarization
+    )
 
-        summary = RepographSummary(is_empty=False)
-
-        # Modules
-        _, count = self.repository.get_all(&#34;Module&#34;)
-        summary.modules = count
-
-        # Classes
-        _, count = self.repository.get_all(&#34;Class&#34;)
-        summary.classes = count
-
-        # Functions
-        _, count = self.repository.get_all(&#34;Function&#34;)
-        summary.functions = count
-
-        return summary
-
-    def prune(self):
-        self.repository.delete_all()</code></pre>
+    router: Singleton[BuildRouter] = Singleton(
+        BuildRouter,
+        service=service
+    )</code></pre>
 </details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>dependency_injector.containers.DeclarativeContainer</li>
+<li>dependency_injector.containers.Container</li>
+</ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="repograph.entities.graph.service.GraphService.repository"><code class="name">var <span class="ident">repository</span> : <a title="repograph.entities.graph.repository.GraphRepository" href="repository.html#repograph.entities.graph.repository.GraphRepository">GraphRepository</a></code></dt>
+<dt id="repograph.entities.build.container.BuildContainer.cls_providers"><code class="name">var <span class="ident">cls_providers</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-</dl>
-<h3>Methods</h3>
-<dl>
-<dt id="repograph.entities.graph.service.GraphService.bulk_add"><code class="name flex">
-<span>def <span class="ident">bulk_add</span></span>(<span>self, nodes: List[<a title="repograph.models.base.Node" href="../../models/base.html#repograph.models.base.Node">Node</a>], relationships: List[<a title="repograph.models.base.Relationship" href="../../models/base.html#repograph.models.base.Relationship">Relationship</a>])</span>
-</code></dt>
+<dt id="repograph.entities.build.container.BuildContainer.config"><code class="name">var <span class="ident">config</span> : dependency_injector.providers.Configuration</code></dt>
 <dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def bulk_add(self, nodes: List[Node], relationships: List[Relationship]):
-    self.repository.add(*nodes, *relationships)</code></pre>
-</details>
+<div class="desc"><p>Child configuration option provider.</p>
+<p>This provider should not be used directly. It is a part of the
+:py:class:<code>Configuration</code> provider.</p></div>
 </dd>
-<dt id="repograph.entities.graph.service.GraphService.get_summary"><code class="name flex">
-<span>def <span class="ident">get_summary</span></span>(<span>self) ‑> <a title="repograph.models.repograph.RepographSummary" href="../../models/repograph.html#repograph.models.repograph.RepographSummary">RepographSummary</a></span>
-</code></dt>
+<dt id="repograph.entities.build.container.BuildContainer.containers"><code class="name">var <span class="ident">containers</span></code></dt>
 <dd>
 <div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_summary(self) -&gt; RepographSummary:
-    if not self.repository.has_nodes():
-        log.warning(&#34;Graph has no nodes&#34;)
-        return RepographSummary()
-
-    summary = RepographSummary(is_empty=False)
-
-    # Modules
-    _, count = self.repository.get_all(&#34;Module&#34;)
-    summary.modules = count
-
-    # Classes
-    _, count = self.repository.get_all(&#34;Class&#34;)
-    summary.classes = count
-
-    # Functions
-    _, count = self.repository.get_all(&#34;Function&#34;)
-    summary.functions = count
-
-    return summary</code></pre>
-</details>
 </dd>
-<dt id="repograph.entities.graph.service.GraphService.prune"><code class="name flex">
-<span>def <span class="ident">prune</span></span>(<span>self)</span>
-</code></dt>
+<dt id="repograph.entities.build.container.BuildContainer.graph"><code class="name">var <span class="ident">graph</span> : dependency_injector.providers.Dependency</code></dt>
 <dd>
 <div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def prune(self):
-    self.repository.delete_all()</code></pre>
-</details>
+</dd>
+<dt id="repograph.entities.build.container.BuildContainer.inherited_providers"><code class="name">var <span class="ident">inherited_providers</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.container.BuildContainer.providers"><code class="name">var <span class="ident">providers</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.container.BuildContainer.router"><code class="name">var <span class="ident">router</span> : dependency_injector.providers.Singleton</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.container.BuildContainer.service"><code class="name">var <span class="ident">service</span> : dependency_injector.providers.Singleton</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.container.BuildContainer.summarization"><code class="name">var <span class="ident">summarization</span> : dependency_injector.providers.Dependency</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.container.BuildContainer.wiring_config"><code class="name">var <span class="ident">wiring_config</span></code></dt>
+<dd>
+<div class="desc"></div>
 </dd>
 </dl>
 </dd>
@@ -209,18 +166,24 @@ class GraphService:
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="repograph.entities.graph" href="index.html">repograph.entities.graph</a></code></li>
+<li><code><a title="repograph.entities.build" href="index.html">repograph.entities.build</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="repograph.entities.graph.service.GraphService" href="#repograph.entities.graph.service.GraphService">GraphService</a></code></h4>
-<ul class="">
-<li><code><a title="repograph.entities.graph.service.GraphService.bulk_add" href="#repograph.entities.graph.service.GraphService.bulk_add">bulk_add</a></code></li>
-<li><code><a title="repograph.entities.graph.service.GraphService.get_summary" href="#repograph.entities.graph.service.GraphService.get_summary">get_summary</a></code></li>
-<li><code><a title="repograph.entities.graph.service.GraphService.prune" href="#repograph.entities.graph.service.GraphService.prune">prune</a></code></li>
-<li><code><a title="repograph.entities.graph.service.GraphService.repository" href="#repograph.entities.graph.service.GraphService.repository">repository</a></code></li>
+<h4><code><a title="repograph.entities.build.container.BuildContainer" href="#repograph.entities.build.container.BuildContainer">BuildContainer</a></code></h4>
+<ul class="two-column">
+<li><code><a title="repograph.entities.build.container.BuildContainer.cls_providers" href="#repograph.entities.build.container.BuildContainer.cls_providers">cls_providers</a></code></li>
+<li><code><a title="repograph.entities.build.container.BuildContainer.config" href="#repograph.entities.build.container.BuildContainer.config">config</a></code></li>
+<li><code><a title="repograph.entities.build.container.BuildContainer.containers" href="#repograph.entities.build.container.BuildContainer.containers">containers</a></code></li>
+<li><code><a title="repograph.entities.build.container.BuildContainer.graph" href="#repograph.entities.build.container.BuildContainer.graph">graph</a></code></li>
+<li><code><a title="repograph.entities.build.container.BuildContainer.inherited_providers" href="#repograph.entities.build.container.BuildContainer.inherited_providers">inherited_providers</a></code></li>
+<li><code><a title="repograph.entities.build.container.BuildContainer.providers" href="#repograph.entities.build.container.BuildContainer.providers">providers</a></code></li>
+<li><code><a title="repograph.entities.build.container.BuildContainer.router" href="#repograph.entities.build.container.BuildContainer.router">router</a></code></li>
+<li><code><a title="repograph.entities.build.container.BuildContainer.service" href="#repograph.entities.build.container.BuildContainer.service">service</a></code></li>
+<li><code><a title="repograph.entities.build.container.BuildContainer.summarization" href="#repograph.entities.build.container.BuildContainer.summarization">summarization</a></code></li>
+<li><code><a title="repograph.entities.build.container.BuildContainer.wiring_config" href="#repograph.entities.build.container.BuildContainer.wiring_config">wiring_config</a></code></li>
 </ul>
 </li>
 </ul>

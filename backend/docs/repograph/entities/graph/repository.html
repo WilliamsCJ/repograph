@@ -73,7 +73,10 @@ class GraphRepository:
 
     def get_all(self, label: str) -&gt; Tuple[NodeMatch, int]:
         match: NodeMatch = self._graph.nodes.match(label)
-        return match.all(), match.count()</code></pre>
+        return match.all(), match.count()
+
+    def delete_all(self):
+        self._graph.delete_all()</code></pre>
 </details>
 </section>
 <section>
@@ -134,7 +137,10 @@ class GraphRepository:
 
     def get_all(self, label: str) -&gt; Tuple[NodeMatch, int]:
         match: NodeMatch = self._graph.nodes.match(label)
-        return match.all(), match.count()</code></pre>
+        return match.all(), match.count()
+
+    def delete_all(self):
+        self._graph.delete_all()</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -173,6 +179,19 @@ class GraphRepository:
 </summary>
 <pre><code class="python">def create_transaction(self) -&gt; Transaction:
     return self._graph.begin()</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.graph.repository.GraphRepository.delete_all"><code class="name flex">
+<span>def <span class="ident">delete_all</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete_all(self):
+    self._graph.delete_all()</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.graph.repository.GraphRepository.get_all"><code class="name flex">
@@ -225,6 +244,7 @@ class GraphRepository:
 <ul class="">
 <li><code><a title="repograph.entities.graph.repository.GraphRepository.add" href="#repograph.entities.graph.repository.GraphRepository.add">add</a></code></li>
 <li><code><a title="repograph.entities.graph.repository.GraphRepository.create_transaction" href="#repograph.entities.graph.repository.GraphRepository.create_transaction">create_transaction</a></code></li>
+<li><code><a title="repograph.entities.graph.repository.GraphRepository.delete_all" href="#repograph.entities.graph.repository.GraphRepository.delete_all">delete_all</a></code></li>
 <li><code><a title="repograph.entities.graph.repository.GraphRepository.get_all" href="#repograph.entities.graph.repository.GraphRepository.get_all">get_all</a></code></li>
 <li><code><a title="repograph.entities.graph.repository.GraphRepository.has_nodes" href="#repograph.entities.graph.repository.GraphRepository.has_nodes">has_nodes</a></code></li>
 </ul>

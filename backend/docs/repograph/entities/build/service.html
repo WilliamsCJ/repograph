@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>repograph.entities.build.service API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>repograph.entities.build.service</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+
+&#34;&#34;&#34;
+# Base imports
+import shutil
+import subprocess
+from logging import getLogger
+import os
+from typing import Any, List, Tuple
+
+# Build entity imports
+from repograph.entities.build.builder import RepographBuilder
+from repograph.entities.build.exceptions import RepographBuildError
+from repograph.entities.build.utils import read_json_from_file
+
+# Other service imports
+from repograph.entities.graph.service import GraphService
+from repograph.entities.summarization.service import SummarizationService
+
+
+# Configure logging
+log = getLogger(&#39;repograph.entities.build.service&#39;)
+
+
+class BuildService:
+    graph: GraphService
+    summarization: SummarizationService
+
+    temp_output = &#34;./tmp&#34;
+
+    def __init__(
+        self,
+        graph: GraphService,
+        summarization: SummarizationService
+    ):
+        &#34;&#34;&#34;Constructor
+
+        Args:
+            graph (GraphService): The Graph Service.
+            summarization (SummarizationService): The Summarization Service
+        &#34;&#34;&#34;
+        self.graph = graph
+        self.summarization = summarization
+
+    @staticmethod
+    def call_inspect4py(input_path: str, output_path: str) -&gt; str:
+        &#34;&#34;&#34;Call inspect4py for code analysis and extraction.
+
+        Args:
+            input_path (str): The path of the repository
+            output_path (str): The path to output inspect4py to.
+
+        Returns:
+            output_path (str)
+        &#34;&#34;&#34;
+        log.info(&#34;Extracting information from %s using inspect4py...&#34;, input_path)
+
+        subprocess.check_call([
+            &#34;inspect4py&#34;,
+            &#34;-i&#34;,
+            input_path,
+            &#34;-o&#34;,
+            output_path,
+            &#34;-md&#34;,
+            &#34;-rm&#34;,
+            &#34;-si&#34;,
+            &#34;-ld&#34;,
+            &#34;-sc&#34;,
+            &#34;-ast&#34;,
+            # &#34;-r&#34;,
+            &#34;-cl&#34;
+        ])
+
+        log.info(&#34;Done!&#34;)
+        return output_path
+
+    @staticmethod
+    def parse_inspect4py_output(path) -&gt; Tuple[dict[str, Any], dict[str, Any]]:
+        &#34;&#34;&#34;Parse the output directory of inspect4py.
+
+        Args:
+            path (str): Path to the output directory.
+
+        Returns:
+            dict[str, Any]: directory_info.json
+            dict[str, Any]: call_graph.json
+        &#34;&#34;&#34;
+        di = None
+        cg = None
+
+        try:
+            di = read_json_from_file(os.path.join(path, &#34;directory_info.json&#34;))
+        except FileNotFoundError:
+            log.error(&#34;Couldn&#39;t find directory_info.json in input directory!&#34;)
+
+        try:
+            cg = read_json_from_file(os.path.join(path, &#34;call_graph.json&#34;))
+        except FileNotFoundError:
+            log.error(&#34;Couldn&#39;t find call_graph.json in input directory!&#34;)
+
+        return di, cg
+
+    @staticmethod
+    def cleanup_inspect4py_output() -&gt; None:
+        &#34;&#34;&#34;Remove the temporary inspect4py output folder
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        log.info(&#34;Cleaning up temporary directory...&#34;)
+        shutil.rmtree(&#34;./tmp&#34;)
+        log.info(&#34;Done!&#34;)
+
+    def build(
+        self,
+        input_list: List[str],
+        prune: bool = False
+    ) -&gt; None:
+        &#34;&#34;&#34;Build a  graph using the input repositories.
+
+        Args:
+            input_list (List[str]): The list of paths to repositories to add the graph.
+            prune (bool): Whether to prune existing nodes from the graph.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        failure = 0
+        success = 0
+
+        if prune:
+            log.info(&#34;Pruning existing nodes...&#34;)
+            self.graph.prune()
+
+        for i in input_list:
+            try:
+                self.call_inspect4py(i, self.temp_output)
+                directory_info, call_graph = self.parse_inspect4py_output(self.temp_output)
+
+                builder = RepographBuilder(
+                    summarize=self.summarization.summarize_function if self.summarization.active else None,  # noqa: 501
+                    base_path=self.temp_output
+                )
+                nodes, relationships = builder.build(directory_info, call_graph)
+
+                log.info(&#34;Writing nodes and relationships to graph...&#34;)
+                self.graph.bulk_add(nodes, relationships)
+                log.info(&#34;Done!&#34;)
+
+                success += 1
+            except subprocess.CalledProcessError as e:
+                log.error(&#34;Error invoking inspect4py - %s&#34;, str(e))
+                failure += 1
+            except RepographBuildError as e:
+                log.error(&#34;Error building repograph - %s&#34;, str(e))
+                failure += 1
+            finally:
+                self.cleanup_inspect4py_output()
+                pass
+
+        log.info(
+            &#34;Parsed %d repositories successfully with %d failures (%d total)&#34;,
+            success,
+            failure,
+            len(input_list)
+        )</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="repograph.entities.build.service.BuildService"><code class="flex name class">
+<span>class <span class="ident">BuildService</span></span>
+<span>(</span><span>graph: <a title="repograph.entities.graph.service.GraphService" href="../graph/service.html#repograph.entities.graph.service.GraphService">GraphService</a>, summarization: <a title="repograph.entities.summarization.service.SummarizationService" href="../summarization/service.html#repograph.entities.summarization.service.SummarizationService">SummarizationService</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Constructor</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>graph</code></strong> :&ensp;<code>GraphService</code></dt>
+<dd>The Graph Service.</dd>
+<dt><strong><code>summarization</code></strong> :&ensp;<code>SummarizationService</code></dt>
+<dd>The Summarization Service</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BuildService:
+    graph: GraphService
+    summarization: SummarizationService
+
+    temp_output = &#34;./tmp&#34;
+
+    def __init__(
+        self,
+        graph: GraphService,
+        summarization: SummarizationService
+    ):
+        &#34;&#34;&#34;Constructor
+
+        Args:
+            graph (GraphService): The Graph Service.
+            summarization (SummarizationService): The Summarization Service
+        &#34;&#34;&#34;
+        self.graph = graph
+        self.summarization = summarization
+
+    @staticmethod
+    def call_inspect4py(input_path: str, output_path: str) -&gt; str:
+        &#34;&#34;&#34;Call inspect4py for code analysis and extraction.
+
+        Args:
+            input_path (str): The path of the repository
+            output_path (str): The path to output inspect4py to.
+
+        Returns:
+            output_path (str)
+        &#34;&#34;&#34;
+        log.info(&#34;Extracting information from %s using inspect4py...&#34;, input_path)
+
+        subprocess.check_call([
+            &#34;inspect4py&#34;,
+            &#34;-i&#34;,
+            input_path,
+            &#34;-o&#34;,
+            output_path,
+            &#34;-md&#34;,
+            &#34;-rm&#34;,
+            &#34;-si&#34;,
+            &#34;-ld&#34;,
+            &#34;-sc&#34;,
+            &#34;-ast&#34;,
+            # &#34;-r&#34;,
+            &#34;-cl&#34;
+        ])
+
+        log.info(&#34;Done!&#34;)
+        return output_path
+
+    @staticmethod
+    def parse_inspect4py_output(path) -&gt; Tuple[dict[str, Any], dict[str, Any]]:
+        &#34;&#34;&#34;Parse the output directory of inspect4py.
+
+        Args:
+            path (str): Path to the output directory.
+
+        Returns:
+            dict[str, Any]: directory_info.json
+            dict[str, Any]: call_graph.json
+        &#34;&#34;&#34;
+        di = None
+        cg = None
+
+        try:
+            di = read_json_from_file(os.path.join(path, &#34;directory_info.json&#34;))
+        except FileNotFoundError:
+            log.error(&#34;Couldn&#39;t find directory_info.json in input directory!&#34;)
+
+        try:
+            cg = read_json_from_file(os.path.join(path, &#34;call_graph.json&#34;))
+        except FileNotFoundError:
+            log.error(&#34;Couldn&#39;t find call_graph.json in input directory!&#34;)
+
+        return di, cg
+
+    @staticmethod
+    def cleanup_inspect4py_output() -&gt; None:
+        &#34;&#34;&#34;Remove the temporary inspect4py output folder
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        log.info(&#34;Cleaning up temporary directory...&#34;)
+        shutil.rmtree(&#34;./tmp&#34;)
+        log.info(&#34;Done!&#34;)
+
+    def build(
+        self,
+        input_list: List[str],
+        prune: bool = False
+    ) -&gt; None:
+        &#34;&#34;&#34;Build a  graph using the input repositories.
+
+        Args:
+            input_list (List[str]): The list of paths to repositories to add the graph.
+            prune (bool): Whether to prune existing nodes from the graph.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        failure = 0
+        success = 0
+
+        if prune:
+            log.info(&#34;Pruning existing nodes...&#34;)
+            self.graph.prune()
+
+        for i in input_list:
+            try:
+                self.call_inspect4py(i, self.temp_output)
+                directory_info, call_graph = self.parse_inspect4py_output(self.temp_output)
+
+                builder = RepographBuilder(
+                    summarize=self.summarization.summarize_function if self.summarization.active else None,  # noqa: 501
+                    base_path=self.temp_output
+                )
+                nodes, relationships = builder.build(directory_info, call_graph)
+
+                log.info(&#34;Writing nodes and relationships to graph...&#34;)
+                self.graph.bulk_add(nodes, relationships)
+                log.info(&#34;Done!&#34;)
+
+                success += 1
+            except subprocess.CalledProcessError as e:
+                log.error(&#34;Error invoking inspect4py - %s&#34;, str(e))
+                failure += 1
+            except RepographBuildError as e:
+                log.error(&#34;Error building repograph - %s&#34;, str(e))
+                failure += 1
+            finally:
+                self.cleanup_inspect4py_output()
+                pass
+
+        log.info(
+            &#34;Parsed %d repositories successfully with %d failures (%d total)&#34;,
+            success,
+            failure,
+            len(input_list)
+        )</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="repograph.entities.build.service.BuildService.graph"><code class="name">var <span class="ident">graph</span> : <a title="repograph.entities.graph.service.GraphService" href="../graph/service.html#repograph.entities.graph.service.GraphService">GraphService</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.service.BuildService.summarization"><code class="name">var <span class="ident">summarization</span> : <a title="repograph.entities.summarization.service.SummarizationService" href="../summarization/service.html#repograph.entities.summarization.service.SummarizationService">SummarizationService</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.service.BuildService.temp_output"><code class="name">var <span class="ident">temp_output</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="repograph.entities.build.service.BuildService.call_inspect4py"><code class="name flex">
+<span>def <span class="ident">call_inspect4py</span></span>(<span>input_path: str, output_path: str) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Call inspect4py for code analysis and extraction.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>input_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>The path of the repository</dd>
+<dt><strong><code>output_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>The path to output inspect4py to.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>output_path (str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def call_inspect4py(input_path: str, output_path: str) -&gt; str:
+    &#34;&#34;&#34;Call inspect4py for code analysis and extraction.
+
+    Args:
+        input_path (str): The path of the repository
+        output_path (str): The path to output inspect4py to.
+
+    Returns:
+        output_path (str)
+    &#34;&#34;&#34;
+    log.info(&#34;Extracting information from %s using inspect4py...&#34;, input_path)
+
+    subprocess.check_call([
+        &#34;inspect4py&#34;,
+        &#34;-i&#34;,
+        input_path,
+        &#34;-o&#34;,
+        output_path,
+        &#34;-md&#34;,
+        &#34;-rm&#34;,
+        &#34;-si&#34;,
+        &#34;-ld&#34;,
+        &#34;-sc&#34;,
+        &#34;-ast&#34;,
+        # &#34;-r&#34;,
+        &#34;-cl&#34;
+    ])
+
+    log.info(&#34;Done!&#34;)
+    return output_path</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.build.service.BuildService.cleanup_inspect4py_output"><code class="name flex">
+<span>def <span class="ident">cleanup_inspect4py_output</span></span>(<span>) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Remove the temporary inspect4py output folder</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def cleanup_inspect4py_output() -&gt; None:
+    &#34;&#34;&#34;Remove the temporary inspect4py output folder
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    log.info(&#34;Cleaning up temporary directory...&#34;)
+    shutil.rmtree(&#34;./tmp&#34;)
+    log.info(&#34;Done!&#34;)</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.build.service.BuildService.parse_inspect4py_output"><code class="name flex">
+<span>def <span class="ident">parse_inspect4py_output</span></span>(<span>path) ‑> Tuple[dict[str, Any], dict[str, Any]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Parse the output directory of inspect4py.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to the output directory.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict[str, Any]</code></dt>
+<dd>directory_info.json</dd>
+<dt><code>dict[str, Any]</code></dt>
+<dd>call_graph.json</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def parse_inspect4py_output(path) -&gt; Tuple[dict[str, Any], dict[str, Any]]:
+    &#34;&#34;&#34;Parse the output directory of inspect4py.
+
+    Args:
+        path (str): Path to the output directory.
+
+    Returns:
+        dict[str, Any]: directory_info.json
+        dict[str, Any]: call_graph.json
+    &#34;&#34;&#34;
+    di = None
+    cg = None
+
+    try:
+        di = read_json_from_file(os.path.join(path, &#34;directory_info.json&#34;))
+    except FileNotFoundError:
+        log.error(&#34;Couldn&#39;t find directory_info.json in input directory!&#34;)
+
+    try:
+        cg = read_json_from_file(os.path.join(path, &#34;call_graph.json&#34;))
+    except FileNotFoundError:
+        log.error(&#34;Couldn&#39;t find call_graph.json in input directory!&#34;)
+
+    return di, cg</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="repograph.entities.build.service.BuildService.build"><code class="name flex">
+<span>def <span class="ident">build</span></span>(<span>self, input_list: List[str], prune: bool = False) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Build a
+graph using the input repositories.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>input_list</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>The list of paths to repositories to add the graph.</dd>
+<dt><strong><code>prune</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to prune existing nodes from the graph.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build(
+    self,
+    input_list: List[str],
+    prune: bool = False
+) -&gt; None:
+    &#34;&#34;&#34;Build a  graph using the input repositories.
+
+    Args:
+        input_list (List[str]): The list of paths to repositories to add the graph.
+        prune (bool): Whether to prune existing nodes from the graph.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    failure = 0
+    success = 0
+
+    if prune:
+        log.info(&#34;Pruning existing nodes...&#34;)
+        self.graph.prune()
+
+    for i in input_list:
+        try:
+            self.call_inspect4py(i, self.temp_output)
+            directory_info, call_graph = self.parse_inspect4py_output(self.temp_output)
+
+            builder = RepographBuilder(
+                summarize=self.summarization.summarize_function if self.summarization.active else None,  # noqa: 501
+                base_path=self.temp_output
+            )
+            nodes, relationships = builder.build(directory_info, call_graph)
+
+            log.info(&#34;Writing nodes and relationships to graph...&#34;)
+            self.graph.bulk_add(nodes, relationships)
+            log.info(&#34;Done!&#34;)
+
+            success += 1
+        except subprocess.CalledProcessError as e:
+            log.error(&#34;Error invoking inspect4py - %s&#34;, str(e))
+            failure += 1
+        except RepographBuildError as e:
+            log.error(&#34;Error building repograph - %s&#34;, str(e))
+            failure += 1
+        finally:
+            self.cleanup_inspect4py_output()
+            pass
+
+    log.info(
+        &#34;Parsed %d repositories successfully with %d failures (%d total)&#34;,
+        success,
+        failure,
+        len(input_list)
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="repograph.entities.build" href="index.html">repograph.entities.build</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="repograph.entities.build.service.BuildService" href="#repograph.entities.build.service.BuildService">BuildService</a></code></h4>
+<ul class="">
+<li><code><a title="repograph.entities.build.service.BuildService.build" href="#repograph.entities.build.service.BuildService.build">build</a></code></li>
+<li><code><a title="repograph.entities.build.service.BuildService.call_inspect4py" href="#repograph.entities.build.service.BuildService.call_inspect4py">call_inspect4py</a></code></li>
+<li><code><a title="repograph.entities.build.service.BuildService.cleanup_inspect4py_output" href="#repograph.entities.build.service.BuildService.cleanup_inspect4py_output">cleanup_inspect4py_output</a></code></li>
+<li><code><a title="repograph.entities.build.service.BuildService.graph" href="#repograph.entities.build.service.BuildService.graph">graph</a></code></li>
+<li><code><a title="repograph.entities.build.service.BuildService.parse_inspect4py_output" href="#repograph.entities.build.service.BuildService.parse_inspect4py_output">parse_inspect4py_output</a></code></li>
+<li><code><a title="repograph.entities.build.service.BuildService.summarization" href="#repograph.entities.build.service.BuildService.summarization">summarization</a></code></li>
+<li><code><a title="repograph.entities.build.service.BuildService.temp_output" href="#repograph.entities.build.service.BuildService.temp_output">temp_output</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

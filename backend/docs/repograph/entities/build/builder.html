@@ -1,0 +1,2478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>repograph.entities.build.builder API documentation</title>
+<meta name="description" content="RepographBuilder generates a populated Repograph from inspect4py JSON output." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>repograph.entities.build.builder</code></h1>
+</header>
+<section id="section-intro">
+<p>RepographBuilder generates a populated Repograph from inspect4py JSON output.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+RepographBuilder generates a populated Repograph from inspect4py JSON output.
+&#34;&#34;&#34;
+# Base imports
+import logging
+import os
+from typing import Callable, Dict, Set, List, Optional, Tuple, Union
+
+# Build entity imports
+from repograph.entities.build.exceptions import RepographBuildError
+
+# Models imports
+from repograph.models.base import Node, Relationship
+from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
+                                   DocstringRaises, DocstringReturnValue, Directory, Module, \
+                                   Function, License, Package, README, Repository, ReturnValue
+from repograph.models.relationships import Calls, Contains, Describes, Documents, HasArgument, \
+                                           HasFunction, HasMethod, ImportedBy, LicensedBy, \
+                                           Returns, Requires
+
+# Utility imports
+from repograph.utils.builtin import PYTHON_BUILT_IN_FUNCTIONS
+from repograph.utils.json import JSONDict, convert_dependencies_map_to_set, \
+                                 parse_min_max_line_numbers, marshall_json_to_string
+from repograph.utils.nodes import find_node_object_by_name
+from repograph.utils.paths import strip_file_path_prefix, is_root_folder, get_path_name, \
+                                  get_path_root, get_path_parent, get_package_parent_and_name, \
+                                  get_module_and_object_from_canonical_object_name
+
+ADDITIONAL_KEYS = [
+  &#34;requirements&#34;,
+  &#34;directory_tree&#34;,
+  &#34;license&#34;,
+  &#34;readme_files&#34;
+]
+
+INIT = &#34;__init__&#34;
+
+log = logging.getLogger(&#39;repograph.repograph_builder&#39;)
+
+
+class RepographBuilder:
+    &#34;&#34;&#34;
+    Generates a Repograph from inspect4py output.
+    &#34;&#34;&#34;
+    # Nodes
+    nodes: List[Node] = []
+
+    # Relationships
+    relationships: List[Relationship] = []
+
+    # The optional summarization function
+    summarize: Optional[Callable[[Function], str]]
+
+    # Mapping of paths to Directory (or the Repository) object
+    directories: Dict[str, Union[Repository, Directory]] = dict()
+
+    # Mapping of paths/pacakge names to modules
+    modules: Dict[str, Module] = dict()
+
+    # Mapping of Module objects to Classes/Function objects
+    module_objects: Dict[Module, List[Union[Class, Function]]] = dict()
+
+    # Mapping Module dependencies for retrospective parsing
+    dependencies: List[Tuple[List[JSONDict], Module]] = []
+
+    # The objects a given Module depends on/imports
+    module_dependencies: Dict[Module, List[Union[Module, Function]]] = dict()
+
+    # Module imports
+    module_imports: Dict[Module, Set[str]] = dict()
+
+    # Packages from requirements file
+    requirements: Dict[str, Package] = dict()
+
+    # Mapping of built-in functions that have been called in the repository
+    called_builtin_functions: Dict[str, Function] = dict()
+
+    def __init__(
+        self,
+        summarize: Optional[Callable[[Function], str]],
+        base_path: str
+    ) -&gt; None:
+        &#34;&#34;&#34;Constructor
+
+        Args:
+            summarize (Optional[Callable[[Function], str]]): The optional summarization method.
+        &#34;&#34;&#34;
+        self.summarize = summarize
+        self.base_path = base_path
+
+    def _parse_repository(
+            self,
+            path: str,
+            metadata: JSONDict = None,
+            software_type: str = None,
+            directory_info: List[JSONDict] = None
+    ) -&gt; Repository:
+        &#34;&#34;&#34;Parses information about the repository, i.e. the root,
+        itself.
+
+        Args:
+            path (str): The path of the repository.
+            metadata (Optional[JSONDict]): Optional metadata describing the repository.
+            directory_info (Optional[List[JSONDict]]): Optional list of directories to parse
+
+        Returns:
+            Repository: The created Repository node
+        &#34;&#34;&#34;
+        is_package = False
+        modules = []
+
+        # Parse files within this folder, as Python files may be contained in the repository root
+        if directory_info:
+            modules, is_package = self._parse_files_in_directory(directory_info)
+
+        if metadata:
+            repository = Repository.create_from_metadata(path, metadata, is_package, software_type)
+        else:
+            repository = Repository(
+                name=path,
+                is_root_package=is_package,
+                type=software_type
+            )
+
+        self.nodes.append(repository)
+        self.directories[repository.name] = repository
+
+        # Parse each extracted module
+        for module, file_info in modules:
+            # If repository root is a package, add the full canonical name as such
+            if repository.is_root_package:
+                module = module.update_canonical_name(f&#34;{repository.name}.{module.name}&#34;)
+
+            # Now parse the contents of the  module
+            self._parse_module_contents(module, file_info)
+
+            # Create a relationship between the Repository and the Module
+            relationship = Contains(repository, module)
+            self.nodes.append(module)
+            self.relationships.append(relationship)
+
+            # Finally add the module to the list of stored modules
+            self.modules[module.canonical_name] = module
+            self.modules[module.path] = module
+
+        return repository
+
+    def _parse_requirements(self, requirements: Optional[JSONDict], repository: Repository) -&gt; None:
+        &#34;&#34;&#34;Parses information extracted from the requirements.txt file.
+
+        Args:
+            requirements (Optional[JSONDict]): The JSON describing the requirements.
+                                               May be None if not found.
+            repository (Repository): The parent Repository node for any created
+                                     Package nodes.
+        &#34;&#34;&#34;
+        if not requirements:
+            log.warning(&#34;No requirements information found.&#34;)
+        else:
+            log.info(&#34;Parsing requirements information...&#34;)
+            for requirement, version in requirements.items():
+                package = Package.create_from_external_dependency(requirement)
+                relationship = Requires(repository, package, version=version)
+                self.nodes.append(package)
+                self.relationships.append(relationship)
+                self.requirements[requirement] = package
+
+    def _parse_license(self, licenses: Optional[JSONDict], repository: Repository) -&gt; None:
+        &#34;&#34;&#34;Parses extracted license information.
+
+        Args:
+            licenses (Optional[JSONDict]): The JSON describing the extracted licenses.
+            repository (Repository): The parent Repository node for any created License nodes.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if not licenses:
+            log.warning(&#34;No license information found.&#34;)
+        else:
+            log.info(&#34;Parsing repository license information.&#34;)
+            detected_types = licenses.get(&#34;detected_type&#34;, [])
+            if len(detected_types) == 0:
+                log.warning(&#34;No license types detected&#34;)
+
+            for detected in detected_types:
+                for detected_type, confidence in detected.items():
+                    license_node = License(
+                        text=licenses.get(&#34;extracted_text&#34;, None),
+                        license_type=detected_type,
+                        confidence=(float(confidence.strip(&#39;%&#39;)) / 100)
+                    )
+                    relationship = LicensedBy(repository, license_node)
+                    self.nodes.append(license_node)
+                    self.relationships.append(relationship)
+
+    def _parse_readme(self, info: JSONDict):
+        &#34;&#34;&#34;Parse README files in the repository
+
+        Args:
+            info (JSONDict): README files information.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        log.info(&#34;Parsing README files...&#34;)
+
+        readmes = []
+        relationships = []
+        from pathlib import Path
+
+        for path, content in info.items():
+            path = str(Path(path).relative_to(self.base_path))
+            readme = README(path=path, content=content)
+            readmes.append(readme)
+
+            parent_path = get_path_parent(path)
+            parent = self.directories.get(parent_path, None)
+
+            if parent:
+                relationship = Contains(parent, readme)
+                relationships.append(relationship)
+            else:
+                log.error(&#34;Couldn&#39;t find parent for README at path: %s&#34;, path)
+
+        self.nodes.extend(readmes)
+        self.relationships.extend(relationships)
+
+    def _get_parent_directory(self, parent_path: str) -&gt; Directory:
+        &#34;&#34;&#34;Retrieves the parent directory for supplied path.
+
+        Recursively creates missing parent directories and adds relationship.
+
+        Args:
+            parent_path (str): The path the parent directory to retrieve
+
+        Returns:
+            Type[Directory]: The parent Directory.
+        &#34;&#34;&#34;
+        def add_parents_recursively(child: Directory) -&gt; None:
+            &#34;&#34;&#34;Recursively adds further missing parent directories
+
+            Args:
+                child (Directory): The immediate parent directory to the true child directory.
+                                   i.e. the Directory with the path of parent_path.
+
+            Returns:
+                None
+            &#34;&#34;&#34;
+            parent = self.directories.get(child.parent_path, None)
+
+            if not parent:
+                parent = Directory(child.parent_path)
+                relationship = Contains(parent, child)
+                self.nodes.append(parent)
+                self.relationships.append(relationship)
+                self.directories[parent.path] = parent
+                return add_parents_recursively(parent)
+            else:
+                parent_relationship = Contains(parent, child)
+                self.nodes.append(child)
+                self.relationships.append(parent_relationship)
+                return
+
+        # Attempt to get the parent directory from the list of created directories.
+        existing_parent = self.directories.get(parent_path, None)
+        if existing_parent:
+            return existing_parent
+
+        # If it doesn&#39;t exist create a new Directory and then call the recursive function.
+        new_parent = Directory(parent_path)
+        self.nodes.append(new_parent)
+        self.directories[new_parent.path] = new_parent
+        add_parents_recursively(new_parent)
+
+        return new_parent
+
+    def _create_canonical_package_name(self, directory_path: str) -&gt; str:
+        &#34;&#34;&#34;Create canonical package name for a directory path
+
+        Args:
+            directory_path (str): The starting directory.
+
+        Returns:
+            str: The canonical package name.
+        &#34;&#34;&#34;
+        parts = [get_path_name(directory_path)]
+        parent = get_path_parent(directory_path)
+
+        while parent != &#34;&#34;:
+            parent_node = self.directories.get(parent, None)
+
+            if isinstance(parent_node, Package) or (isinstance(parent_node, Repository) and parent_node.is_root_package):  # noqa: 501
+                parts = [get_path_name(parent)] + parts
+                parent = get_path_parent(parent)
+            else:
+                return &#34;.&#34;.join(parts)
+
+        return &#34;.&#34;.join(parts)
+
+    def _parse_directory(
+        self,
+        directory_name: str,
+        directory_info: List[JSONDict],
+        index: int,
+        total: int
+    ) -&gt; None:
+        &#34;&#34;&#34;Parse a directory
+
+        Args:
+            directory_name (str): The name of the directory.
+            directory_info (JSONDict): The directory information.
+            index (int): The index of the directory within the repository.
+            total (int): The total number of directories within the repository.
+        &#34;&#34;&#34;
+        directory_path = strip_file_path_prefix(directory_name)
+        log.debug(&#34;Parsing directory &#39;%s&#39; (%d/%d)&#34;, directory_path, index + 1, total)
+
+        # Parse each file within the directory, update is_package
+        # with result (whether file is __init__.py), and add to list
+        # of Files.
+        modules, is_package = self._parse_files_in_directory(directory_info)
+
+        # Get the parent directory
+        parent = self._get_parent_directory(get_path_parent(directory_path))
+
+        # If an __init__.py was found, create a Package node,
+        # otherwise create a Directory node.
+        if is_package:
+            canonical_name = self._create_canonical_package_name(directory_path)
+            directory = Package.create_from_directory(directory_path, canonical_name)
+        else:
+            directory = Directory(directory_path)
+
+        # Add the list of created directories, the directory node,
+        # and the relationship to its parent, to the Repograph.
+        self.directories[directory.path] = directory
+        relationship = Contains(parent, directory)
+        self.nodes.append(parent)
+        self.relationships.append(relationship)
+
+        # Parse each extracted module
+        for module, file_info in modules:
+            # If parent is a package, add the full canonical path name and add to modules.
+            if isinstance(directory, Package):
+                module = module.update_canonical_name(f&#34;{directory.canonical_name}.{module.name}&#34;)
+                self.modules[module.canonical_name] = module
+
+            # Now parse the contents of the module.
+            self._parse_module_contents(module, file_info)
+
+            # Create a relationship between the Directory and the Module.
+            relationship = Contains(directory, module)
+            self.nodes.append(module)
+            self.relationships.append(relationship)
+
+            # Finally add the module to the list of stored modules.
+            self.modules[module.path] = module
+            self.modules[module.canonical_name] = module
+
+    def _parse_files_in_directory(self, directory_info: List[JSONDict]) -&gt; Tuple[List[Tuple[Module, JSONDict]], bool]:  # noqa: 501
+        &#34;&#34;&#34;Parses files within a directory into Python Module nodes.
+
+        Args:
+            directory_info (List[JSONDict]): The list of JSONDict objects to parse.
+
+        Returns:
+            Tuple[List[Tuple[Module, JSONDict]], bool]: The list of parsed Module nodes and whether
+                                                        the enclosing directory is a package.
+        &#34;&#34;&#34;
+        is_package = False
+        modules = []
+
+        for file_index, file_info in enumerate(directory_info):
+            module = RepographBuilder._parse_module(file_info, file_index, len(directory_info))
+            is_package = is_package or module.name == INIT
+            modules.append((module, file_info))
+
+        return modules, is_package
+
+    @staticmethod
+    def _parse_module(file_info: JSONDict, index: int, total: int) -&gt; Module:
+        &#34;&#34;&#34;Parses a Python module with a parent directory.
+
+        Args:
+            file_info (JSONDict): The information about the file to parse.
+            index (int): The index of the Module within the parent Folder.
+            total (int): The total number of Modules within the parent Folder.
+
+        Returns:
+            bool: Whether Module is an __init__.py.
+        &#34;&#34;&#34;
+        log.debug(
+            &#34;--&gt; Parsing file `%s` (%d/%d)&#34;,
+            file_info[&#34;file&#34;][&#34;fileNameBase&#34;],
+            index + 1,
+            total
+        )
+
+        module = Module(
+            name=file_info[&#34;file&#34;][&#34;fileNameBase&#34;],
+            canonical_name=file_info[&#34;file&#34;][&#34;fileNameBase&#34;],
+            path=file_info[&#34;file&#34;][&#34;path&#34;],
+            parent_path=get_path_parent(file_info[&#34;file&#34;][&#34;path&#34;]),
+            extension=file_info[&#34;file&#34;][&#34;extension&#34;],
+            is_test=file_info.get(&#34;is_test&#34;, False)
+        )
+
+        return module
+
+    def _parse_module_contents(self, module: Module, file_info: JSONDict) -&gt; None:
+        &#34;&#34;&#34;Parse the contents of the module.
+
+        This includes functions/methods and classes.
+
+        Args:
+            module (Module): Module object to link extracted functions/classes to.
+            file_info (JSONDict): The JSONDict of information containing information about
+                                  the module.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        self._parse_functions_and_methods(file_info.get(&#34;functions&#34;, {}), module)
+        self._parse_classes(file_info.get(&#34;classes&#34;, {}), module)
+
+        if &#34;dependencies&#34; in file_info:
+            self.dependencies.append((file_info[&#34;dependencies&#34;], module))
+            self.module_imports[module] = convert_dependencies_map_to_set(file_info[&#34;dependencies&#34;])
+
+    def _parse_functions_and_methods(
+            self,
+            functions_info: JSONDict,
+            parent: Union[Module, Class],
+            methods: bool = False
+    ) -&gt; None:
+        &#34;&#34;&#34;Parses function/method information into Function/Method nodes and adds links
+        to the parent File/Class node.
+
+        Args:
+            functions_info (JSONDict): JSON dictionary containing the function information.
+            parent (Union[Module, Class]): Parent File or Class node.
+            methods (bool): Whether to create Method nodes rather than Function nodes.
+        &#34;&#34;&#34;
+        for name, info in functions_info.items():
+            # Get min-max line numbers
+            min_lineno, max_lineno = parse_min_max_line_numbers(info)
+            if not min_lineno or not max_lineno:
+                log.warning(&#34;Missing line number information for function &#39;%s&#39;&#34;, name)
+
+            # Serialise the AST
+            ast = info.get(&#34;ast&#34;)
+            if ast:
+                ast_string = marshall_json_to_string(ast)
+                if not ast:
+                    log.error(&#34;Couldn&#39;t serialise AST for function %s&#34;, name)
+            else:
+                log.warning(&#34;AST missing for function %s&#34;, name)
+                ast_string = None
+
+            # Check source_code is available
+            source_code = info.get(&#34;source_code&#34;, None)
+            if not source_code:
+                log.warning(&#34;Source code missing for function %s&#34;, name)
+
+            # Create Function Node
+            if methods:
+                function_type = str(Function.FunctionType.METHOD.value)
+            else:
+                function_type = str(Function.FunctionType.FUNCTION.value)
+
+            function = Function(
+                name=name,
+                type=function_type,
+                canonical_name=f&#34;{parent.canonical_name}.{name}&#34;,
+                source_code=source_code,
+                ast=ast_string,
+                min_line_number=min_lineno,
+                max_line_number=max_lineno
+            )
+
+            # Add to graph
+            self.nodes.append(function)
+
+            # Parse the docstring for the function
+            self._parse_docstring(info.get(&#34;doc&#34;, {}), function)
+
+            # Create HasFunction Relationship
+            if methods:
+                relationship = HasMethod(parent, function)
+            else:
+                relationship = HasFunction(parent, function)
+            self.relationships.append(relationship)
+
+            # If parent is a module, add to the module_objects set
+            if isinstance(parent, Module):
+                self.module_objects[parent] = self.module_objects.get(parent, []) + [function]
+
+            # Parse arguments and create Argument nodes
+            self._parse_arguments(
+                info.get(&#34;args&#34;, []),
+                info.get(&#34;annotated_arg_types&#34;, {}),
+                function
+            )
+
+            # Parse return values and create ReturnValue nodes
+            self._parse_return_values(
+                info.get(&#34;returns&#34;, []),
+                info.get(&#34;annotated_return_type&#34;, &#34;Any&#34;),
+                function
+            )
+
+    def _parse_classes(self, class_info: Dict, parent: Module) -&gt; None:
+        &#34;&#34;&#34;Parses class information into Class nodes and
+        adds links to parent File node.
+
+        Args:
+            class_info (Dict): Dictionary containing class information.
+            parent (Module): Parent File node.
+        &#34;&#34;&#34;
+        for name, info in class_info.items():
+            min_lineno, max_lineno = parse_min_max_line_numbers(info)
+            class_node = Class(
+                name=name,
+                canonical_name=f&#34;{parent.canonical_name}.{name}&#34;,
+                min_line_number=min_lineno,
+                max_line_number=max_lineno,
+            )
+            relationship = Contains(parent, class_node)
+            self.nodes.append(class_node)
+            self.relationships.append(relationship)
+
+            # Add to module objects set
+            self.module_objects[parent] = self.module_objects.get(parent, []) + [class_node]
+
+            # Parse extends
+            self._parse_extends(info.get(&#34;extend&#34;, []), class_node)
+
+            # Parse docstring
+            self._parse_docstring(info.get(&#34;doc&#34;, {}), class_node)
+
+            # Parse method info inside class if available
+            methods_info = info.get(&#34;methods&#34;, None)
+            if methods_info:
+                self._parse_functions_and_methods(methods_info, class_node, methods=True)
+
+    def _parse_arguments(
+        self,
+        args_list: List[str],
+        annotated_arg_types: Dict[str, str],
+        parent: Function
+    ) -&gt; None:
+        &#34;&#34;&#34;Parse arguments from method information.
+
+        Args:
+            args_list (List[str]): The list of argument names.
+            annotated_arg_types (Dict[str, str]): The annotated argument types.
+            parent (Function): The parent function the arguments belong to.
+        &#34;&#34;&#34;
+        arg_types = annotated_arg_types
+        for arg in args_list:
+            if arg_types:
+                arg_type = arg_types.get(arg, &#34;Any&#34;)
+            else:
+                arg_type = &#34;Any&#34;
+
+            argument = Argument(name=arg, type=arg_type)
+            relationship = HasArgument(parent, argument)
+            self.nodes.append(argument)
+            self.relationships.append(relationship)
+
+    def _parse_return_values(
+        self,
+        return_values: List[List[str]],
+        annotated_type: str,
+        parent: Function
+    ) -&gt; None:
+        &#34;&#34;&#34;Parse return values from function/method information.
+
+        Args:
+            return_values (List[str]): The list of return value names.
+            annotated_type (Dict[str, str]): The annotated return value types.
+            parent (Function): The parent function the return values belong to.
+        &#34;&#34;&#34;
+        if len(return_values) &gt; 1:
+            return_type = &#34;Any&#34;
+            # TODO: SH-16 Regex extraction?
+        elif len(return_values) == 1:
+            return_type = annotated_type
+        else:
+            return
+
+        def parse(values):
+            for value in values:
+                if isinstance(value, list):
+                    parse(value)
+                elif isinstance(value, str):
+                    return_value = ReturnValue(name=value, type=return_type)
+                    relationship = Returns(parent, return_value)
+                    self.nodes.append(return_value)
+                    self.relationships.append(relationship)
+                else:
+                    log.error(
+                        &#34;Unexpected return value type `%s` for function `%s`&#34;,
+                        type(value),
+                        parent.name
+                    )
+
+        parse(return_values)
+
+    def _parse_docstring(
+        self,
+        docstring_info: Optional[JSONDict],
+        parent: Union[Function, Class]
+    ) -&gt; None:
+        &#34;&#34;&#34;Parse docstring information for function or class
+
+        Args:
+            docstring_info (JSONDict): The JSONDict containing docstring information.
+            parent (Union[Function, Class): The parent node the docstring describes.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        # Return immediately depending on whether Class/Function, if docstring info
+        # provided, and whether summarization enabled.
+        if isinstance(parent, Class):
+            if not docstring_info or not bool(docstring_info):
+                log.debug(f&#34;No docstring information for class {parent.name}&#34;)
+                return
+        elif isinstance(parent, Function):
+            if (not docstring_info or not bool(docstring_info)) and not self.summarize:
+                log.debug(f&#34;No docstring information for {parent.name}&#34;)
+                return
+        else:
+            return
+
+        # Initialise empty arrays for storing created nodes/relationships
+        nodes = []
+        relationships = []
+
+        # If the summarization flag is set and parent is a Function (not a Class),
+        # call the function summarizer.
+        if self.summarize and isinstance(parent, Function):
+            summary = self.summarize(parent)
+        else:
+            summary = None
+
+        # Parse docstring
+        docstring = Docstring(
+            summarization=summary,
+            short_description=docstring_info.get(&#34;short_description&#34;, None),
+            long_description=docstring_info.get(&#34;long_description&#34;, None)
+        )
+        relationship = Documents(docstring, parent)
+        nodes.append(docstring)
+        relationships.append(relationship)
+
+        if isinstance(parent, Class):
+            # Parse docstring arguments
+            for arg, arg_info in docstring_info.get(&#34;args&#34;, {}).items():
+                docstring_arg = DocstringArgument(
+                    name=arg,
+                    type=arg_info.get(&#34;type_name&#34;, None),
+                    description=arg_info.get(&#34;description&#34;, None),
+                    is_optional=arg_info.get(&#34;is_optional&#34;, False),
+                    default=arg_info.get(&#34;default&#34;, None)
+                )
+                relationship = Describes(docstring, docstring_arg)
+                nodes.append(docstring_arg)
+                relationships.append(relationship)
+
+            if &#34;returns&#34; in docstring_info:
+                # Parse docstring return values
+                returns_info = docstring_info.get(&#34;returns&#34;, {})
+                docstring_return_value = DocstringReturnValue(
+                    name=returns_info.get(&#34;return_name&#34;, None),
+                    description=returns_info.get(&#34;description&#34;, None),
+                    type=returns_info.get(&#34;type_name&#34;, None),
+                    is_generator=returns_info.get(&#34;is_generator&#34;, False)
+                )
+                relationship = Describes(docstring, docstring_return_value)
+                nodes.append(docstring_return_value)
+                relationships.append(relationship)
+
+            # Parse docstring raises
+            for raises in docstring_info.get(&#34;raises&#34;, []):
+                docstring_raises = DocstringRaises(
+                    description=raises.get(&#34;description&#34;, None),
+                    type=raises.get(&#34;type_name&#34;, None)
+                )
+                relationship = Describes(docstring, docstring_raises)
+                nodes.append(docstring_raises)
+                relationships.append(relationship)
+
+        # Add nodes and relationships to graph
+        self.nodes.extend(nodes)
+        self.relationships.extend(relationships)
+
+    def _parse_dependencies(self) -&gt; None:  # noqa: C901
+        &#34;&#34;&#34;Parse the dependencies between Modules.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        log.info(&#34;Parsing dependencies...&#34;)
+        unresolved_dependencies = []
+
+        # Iterate through dependencies for each required module
+        for dependency_info, module in self.dependencies:
+            # Create an entry in the module_dependencies dict,
+            # so we can keep track of found objects.
+            self.module_dependencies[module] = []
+
+            # Iterate through each dependency in the module
+            for dependency in dependency_info:
+                # Check whether a module object or module itself is being imported
+                if &#34;from_module&#34; in dependency:
+                    imports_module = False
+                else:
+                    imports_module = True
+
+                # Get the imported object (either module or object)
+                imported_object = dependency[&#34;import&#34;]
+                source_module = dependency.get(&#34;from_module&#34;, imported_object)
+
+                # Find the module
+                if dependency[&#34;type&#34;] == &#34;internal&#34;:
+                    imported_module = self.modules.get(
+                        f&#34;{module.parent_path}/{source_module}.py&#34;,
+                        None
+                    )
+                else:
+                    imported_module = self.modules.get(source_module, None)
+
+                # If importing a module directly....
+                if imports_module:
+                    # ...and it already exists create the relationship
+                    if imported_module:
+                        self.relationships.append(ImportedBy(imported_module, module))
+                        self.module_dependencies[module].append(imported_module)
+                    # ...and if it doesn&#39;t recursively create it
+                    else:
+                        source_module, missing = self._calculate_missing_packages(source_module)
+
+                        if source_module == &#34;&#34;:
+                            child = self._create_missing_nodes(missing)
+                        elif source_module in self.requirements:
+                            child = self._create_missing_nodes(
+                                missing,
+                                parent=self.requirements[source_module]
+                            )
+                        else:
+                            child = self._create_missing_nodes(
+                                missing,
+                                parent=self.modules[source_module]
+                            )
+
+                        self.module_dependencies[module].append(child)
+
+                # If importing a class, function, etc...
+                else:
+                    # ...and it already exists create the relationship
+                    if imported_module:
+                        module_objects = self.module_objects.get(imported_module, None)
+                        if not module_objects:
+                            unresolved_dependencies.append(
+                                (module, imported_module, imported_object, dependency)
+                            )
+                            continue
+
+                        # Filter the module objects for only those with the imported name
+                        matching_objects = [obj for obj in module_objects if obj.name == imported_object]  # noqa: 501
+
+                        # If no matches, log an error and move onto the next dependency
+                        if len(matching_objects) == 0:
+                            unresolved_dependencies.append(
+                                (module, imported_module, imported_object, dependency)
+                            )
+                            continue
+
+                        # If more than one match we log this inconsistency,
+                        # but add all import relationships
+                        if len(matching_objects) &gt; 1:
+                            log.warning(&#34;More than 1 matching object found in import.&#34;)
+
+                        for match in matching_objects:
+                            self.relationships.append(ImportedBy(match, module))
+                            self.module_dependencies[module].append(match)
+                    # ...and if it doesn&#39;t recursively create it
+                    else:
+                        if imported_object[0].isupper():
+                            imported_object = Class(
+                                name=imported_object,
+                                canonical_name=f&#34;{dependency[&#39;from_module&#39;]}.{dependency[&#39;import&#39;]}&#34;
+                            )
+                        else:
+                            imported_object = Function(
+                                name=imported_object,
+                                canonical_name=f&#34;{dependency[&#39;from_module&#39;]}.{dependency[&#39;import&#39;]}&#34;,  # noqa: 501
+                                type=str(Function.FunctionType.FUNCTION.value)
+                            )
+
+                        source_module, missing = self._calculate_missing_packages(source_module)
+
+                        if source_module == &#34;&#34;:
+                            self._create_missing_nodes(missing)
+                        elif source_module in self.requirements:
+                            self._create_missing_nodes(
+                                missing,
+                                parent=self.requirements[source_module],
+                                import_object=imported_object
+                            )
+                        else:
+                            self._create_missing_nodes(
+                                missing,
+                                parent=self.modules[source_module],
+                                import_object=imported_object
+                            )
+
+                        self.relationships.append(ImportedBy(imported_object, module))
+                        self.module_dependencies[module].append(imported_object)
+
+        # Second pass on unresolved dependencies that are likely to be imports of other modules.
+        remaining = []
+        for module, imported_module, imported_object, dependency in unresolved_dependencies:
+            module_imports = self.module_dependencies.get(imported_module)
+            if not module_imports:
+                remaining.append(dependency)
+                continue
+
+            matching_objects = [obj for obj in module_imports if
+                                obj.name == imported_object]
+
+            if len(matching_objects) == 0:
+                remaining.append(dependency)
+
+            for match in matching_objects:
+                self.relationships.append(ImportedBy(match, module))
+                self.module_dependencies[module].append(match)
+
+        if len(remaining) &gt; 0:
+            log.warning(&#34;Unable to resolve %d dependencies...&#34;, len(remaining))
+
+    def _calculate_missing_packages(self, source_module: str) -&gt; Tuple[str, List[str]]:
+        &#34;&#34;&#34;Calculates missing packages for a given import source Module.
+
+        Checks both parsed Modules and Repository level requirements.
+
+        Args:
+            source_module (str): The canonical name of the source module.
+
+        Returns:
+            str: Any pre-existing source package.
+            List[str]: Missing packages/modules.
+        &#34;&#34;&#34;
+        missing = []
+        while source_module not in self.modules and source_module not in self.requirements and source_module != &#34;&#34;:  # noqa: 501
+            parent, child = get_package_parent_and_name(source_module)
+            missing.append(child)
+            source_module = parent
+
+        return source_module, missing
+
+    def _create_missing_nodes(
+            self,
+            missing: List[str],
+            parent: Package = None,
+            import_object: Union[Class, Function] = None
+    ) -&gt; Union[Module, Function]:
+        &#34;&#34;&#34;Create missing nodes.
+
+        Args:
+            missing (List[str]):
+            parent (Package): The parent Package. Optional.
+            import_object (Union[Class, Function]): The Class or Function being imported from the
+
+        Returns:
+            Union[Module, Function]: The child Node.
+        &#34;&#34;&#34;
+        nodes = []
+        relationships = []
+        child = None
+
+        for index, m in enumerate(missing):
+            if index == len(missing) - 1:
+                new = Module(name=m)
+                child = new
+            else:
+                new = Package(
+                    name=m,
+                    canonical_name=f&#34;{parent.canonical_name}.{m}&#34; if parent else m,
+                    parent_package=parent.canonical_name if parent else &#34;&#34;,
+                    external=True
+                )
+
+            if parent:
+                relationships.append(Contains(parent, new))
+
+            parent = new
+            nodes.append(new)
+
+        # If we have an import_object, but the parent is a Package, create an __init__ Module
+        # as this is actually where the import_object is being imported from.
+        if import_object and parent and isinstance(parent, Package):
+            new = Module.create_init_module(parent.canonical_name)
+            relationships.append(Contains(parent, new))
+            parent = new
+
+        # If we have an import object, create a Contains relationship with the parent module.
+        if import_object:
+            relationships.append(Contains(parent, import_object))
+            child = import_object
+
+        # Add the created nodes and relationships to the Repograph.
+        self.nodes.extend(nodes)
+        self.relationships.extend(relationships)
+
+        return child
+
+    def _parse_extends(self, extends_info: List[str], class_node: Class) -&gt; None:
+        &#34;&#34;&#34;Parse extends/super class information for a Class node.
+
+        Args:
+            extends_info (List[str]): The names of Classes that the Class node extends.
+            class_node (Class): The Class node itself.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if len(extends_info) == 0:
+            log.debug(&#34;Class `%s` doesn&#39;t not extend any other classes&#34;, class_node.name)
+            return
+
+        # for extends in extends_info:
+        #     super_class = Class(name=extends)
+        #     relationship = Extends(class_node, super_class)
+        #     self.repograph.add(super_class, relationship)
+
+    def _parse_call_graph(self, call_graph: Optional[JSONDict]) -&gt; None:
+        &#34;&#34;&#34;Parse the call graph extracted by inspect4py.
+
+        Args:
+            call_graph (Optional[JSONDict]): The call graph.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if not call_graph:
+            log.error(&#34;No call graph provided!&#34;)
+            return
+
+        for directory, files in call_graph.items():
+            for file_name, file_info in files.items():
+                module = self.modules.get(file_name)
+                if not module:
+                    log.error(&#34;Couldn&#39;t find existing Module node. Skipping!&#34;)
+                    continue
+
+                module_objects = self.module_objects.get(module, [])
+                module_imports = self.module_imports.get(module, set())
+                module_dependencies = self.module_dependencies.get(module, [])
+
+                # Parse body calls
+                self._parse_calls(
+                    module,
+                    file_info.get(&#34;body&#34;, {}),
+                    module_objects,
+                    module_imports,
+                    module_dependencies
+                )
+
+                # For each function described in the call graph, parse these calls
+                for function_name, function_calls in file_info.get(&#34;functions&#34;, {}).items():
+                    function = find_node_object_by_name(module_objects, function_name)
+                    self._parse_calls(
+                        module,
+                        function_calls,
+                        module_objects,
+                        module_imports,
+                        module_dependencies,
+                        caller=function
+                    )
+
+        # Add called builtin functions to the graph
+        self.nodes.extend(self.called_builtin_functions.values())
+
+    def _parse_calls(
+            self,
+            parent_module: Module,
+            call_info: Optional[JSONDict],
+            module_objects: List[any],
+            module_imports: Set[str],
+            module_dependencies: List[any],
+            caller: Optional[Function] = None
+    ) -&gt; None:
+        &#34;&#34;&#34;Parse the call graph for a particular module.
+
+        Args:
+            parent_module (Module): The parent module.
+            call_info (Optional[JSONDict]): The call info.
+            caller (Optional[Function): An optional specific function that the call info is for.
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if not call_info:
+            return
+
+        for call in call_info.get(&#34;local&#34;, []):
+            module, function = get_module_and_object_from_canonical_object_name(call)
+            matching_objects_in_module = find_node_object_by_name(module_objects, function)
+
+            # If the call is to an imported function...
+            if call in module_imports:
+                matching_imports = find_node_object_by_name(module_dependencies, call, canonical=True)  # noqa: 501
+                print(&#34;HI&#34;)
+                print(caller)
+                print(&#34; &#34;)
+                print(parent_module)
+                print(&#34; &#34;)
+                print(matching_imports)
+                relationship = Calls(caller if caller else parent_module, matching_imports)
+            # ...or if the call is to a built-in function...
+            elif call in PYTHON_BUILT_IN_FUNCTIONS:
+                if function in self.called_builtin_functions:
+                    function_node = self.called_builtin_functions[function]
+                else:
+                    function_node = Function(
+                        name=function,
+                        type=str(Function.FunctionType.FUNCTION.value),
+                        builtin=True
+                    )
+                    self.called_builtin_functions[function] = function_node
+
+                # Create the relationship between the caller and the new function_node
+                relationship = Calls(caller if caller else parent_module, function_node)
+
+            # ...or if the call is to a function defined in the module
+            elif matching_objects_in_module:
+                relationship = Calls(
+                    caller if caller else parent_module,
+                    matching_objects_in_module
+                )
+            else:
+                log.debug(&#34;Call to some other variable (%s). Ignoring.&#34;, call)
+                relationship = None
+
+            self.relationships.append(relationship)
+
+    def build(
+            self,
+            directory_info: Optional[JSONDict],
+            call_graph: Optional[JSONDict],
+    ) -&gt; Tuple[List[Node], List[Relationship]]:
+        &#34;&#34;&#34;Build a repograph from directory_info JSON.
+
+        Args:
+            directory_info (JSONDict): Directory info JSON.
+            call_graph (Optional[JSONDict]): The call graph JSON.
+
+        Returns:
+            Repograph
+
+        Raises:
+            RepographBuildError
+        &#34;&#34;&#34;
+        log.info(&#34;Building Repograph...&#34;)
+
+        if not directory_info:
+            log.error(&#34;Directory info is empty! Aborting!&#34;)
+            raise RepographBuildError(&#34;Directory info is empty&#34;)
+
+        # Pop off non-directory entries from the JSON, for parsing later
+        requirements = directory_info.pop(&#34;requirements&#34;, None)
+        _ = directory_info.pop(&#34;directory_tree&#34;, None)
+        licenses = directory_info.pop(&#34;license&#34;, None)
+        readmes = directory_info.pop(&#34;readme_files&#34;, None)
+        metadata = directory_info.pop(&#34;metadata&#34;, None)
+        _ = directory_info.pop(&#34;software_invocation&#34;, None)
+        software_type = directory_info.pop(&#34;software_type&#34;, None)
+        _ = directory_info.pop(&#34;tests&#34;, None)
+
+        # Create a sorted list of directory paths.py, as dictionaries are not
+        # always sortable in Python.
+        log.info(&#34;Sorting directories with hierarchical ordering...&#34;)
+        directories = sorted(
+            list(directory_info.keys()),
+            key=lambda file: (os.path.dirname(file), os.path.basename(file)))
+
+        # Parse repository root folder if it exists, otherwise manually create
+        # the repository node.
+        path = strip_file_path_prefix(directories[0])
+        if is_root_folder(path):
+            directory = directories.pop(0)
+            repository = self._parse_repository(
+                path,
+                directory_info=directory_info[directory],
+                metadata=metadata,
+                software_type=software_type
+            )
+        else:
+            repository = self._parse_repository(
+                get_path_root(path),
+                metadata=metadata,
+                software_type=software_type
+            )
+
+        # Parse requirements
+        self._parse_requirements(requirements, repository)
+
+        # Parse license
+        self._parse_license(licenses, repository)
+
+        # Parse each directory
+        log.info(&#34;Extracting information from directories...&#34;)
+        for index, directory in enumerate(directories):
+            self._parse_directory(directory, directory_info[directory], index, len(directories))
+
+        # Retrospectively parse module dependencies
+        log.info(&#34;Parsing module dependencies...&#34;)
+        self._parse_dependencies()
+
+        # Parse the call list, now that most Nodes should be added to the graph
+        log.info(&#34;Parsing call graph...&#34;)
+        # self._parse_call_graph(call_graph)
+
+        # Parse READMEs
+        self._parse_readme(readmes)
+
+        log.info(&#34;Successfully built a Repograph!&#34;)
+        return self.nodes, self.relationships</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="repograph.entities.build.builder.RepographBuilder"><code class="flex name class">
+<span>class <span class="ident">RepographBuilder</span></span>
+<span>(</span><span>summarize: Optional[Callable[[<a title="repograph.models.nodes.Function" href="../../models/nodes.html#repograph.models.nodes.Function">Function</a>], str]], base_path: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates a Repograph from inspect4py output.</p>
+<p>Constructor</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>summarize</code></strong> :&ensp;<code>Optional[Callable[[Function], str]]</code></dt>
+<dd>The optional summarization method.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RepographBuilder:
+    &#34;&#34;&#34;
+    Generates a Repograph from inspect4py output.
+    &#34;&#34;&#34;
+    # Nodes
+    nodes: List[Node] = []
+
+    # Relationships
+    relationships: List[Relationship] = []
+
+    # The optional summarization function
+    summarize: Optional[Callable[[Function], str]]
+
+    # Mapping of paths to Directory (or the Repository) object
+    directories: Dict[str, Union[Repository, Directory]] = dict()
+
+    # Mapping of paths/pacakge names to modules
+    modules: Dict[str, Module] = dict()
+
+    # Mapping of Module objects to Classes/Function objects
+    module_objects: Dict[Module, List[Union[Class, Function]]] = dict()
+
+    # Mapping Module dependencies for retrospective parsing
+    dependencies: List[Tuple[List[JSONDict], Module]] = []
+
+    # The objects a given Module depends on/imports
+    module_dependencies: Dict[Module, List[Union[Module, Function]]] = dict()
+
+    # Module imports
+    module_imports: Dict[Module, Set[str]] = dict()
+
+    # Packages from requirements file
+    requirements: Dict[str, Package] = dict()
+
+    # Mapping of built-in functions that have been called in the repository
+    called_builtin_functions: Dict[str, Function] = dict()
+
+    def __init__(
+        self,
+        summarize: Optional[Callable[[Function], str]],
+        base_path: str
+    ) -&gt; None:
+        &#34;&#34;&#34;Constructor
+
+        Args:
+            summarize (Optional[Callable[[Function], str]]): The optional summarization method.
+        &#34;&#34;&#34;
+        self.summarize = summarize
+        self.base_path = base_path
+
+    def _parse_repository(
+            self,
+            path: str,
+            metadata: JSONDict = None,
+            software_type: str = None,
+            directory_info: List[JSONDict] = None
+    ) -&gt; Repository:
+        &#34;&#34;&#34;Parses information about the repository, i.e. the root,
+        itself.
+
+        Args:
+            path (str): The path of the repository.
+            metadata (Optional[JSONDict]): Optional metadata describing the repository.
+            directory_info (Optional[List[JSONDict]]): Optional list of directories to parse
+
+        Returns:
+            Repository: The created Repository node
+        &#34;&#34;&#34;
+        is_package = False
+        modules = []
+
+        # Parse files within this folder, as Python files may be contained in the repository root
+        if directory_info:
+            modules, is_package = self._parse_files_in_directory(directory_info)
+
+        if metadata:
+            repository = Repository.create_from_metadata(path, metadata, is_package, software_type)
+        else:
+            repository = Repository(
+                name=path,
+                is_root_package=is_package,
+                type=software_type
+            )
+
+        self.nodes.append(repository)
+        self.directories[repository.name] = repository
+
+        # Parse each extracted module
+        for module, file_info in modules:
+            # If repository root is a package, add the full canonical name as such
+            if repository.is_root_package:
+                module = module.update_canonical_name(f&#34;{repository.name}.{module.name}&#34;)
+
+            # Now parse the contents of the  module
+            self._parse_module_contents(module, file_info)
+
+            # Create a relationship between the Repository and the Module
+            relationship = Contains(repository, module)
+            self.nodes.append(module)
+            self.relationships.append(relationship)
+
+            # Finally add the module to the list of stored modules
+            self.modules[module.canonical_name] = module
+            self.modules[module.path] = module
+
+        return repository
+
+    def _parse_requirements(self, requirements: Optional[JSONDict], repository: Repository) -&gt; None:
+        &#34;&#34;&#34;Parses information extracted from the requirements.txt file.
+
+        Args:
+            requirements (Optional[JSONDict]): The JSON describing the requirements.
+                                               May be None if not found.
+            repository (Repository): The parent Repository node for any created
+                                     Package nodes.
+        &#34;&#34;&#34;
+        if not requirements:
+            log.warning(&#34;No requirements information found.&#34;)
+        else:
+            log.info(&#34;Parsing requirements information...&#34;)
+            for requirement, version in requirements.items():
+                package = Package.create_from_external_dependency(requirement)
+                relationship = Requires(repository, package, version=version)
+                self.nodes.append(package)
+                self.relationships.append(relationship)
+                self.requirements[requirement] = package
+
+    def _parse_license(self, licenses: Optional[JSONDict], repository: Repository) -&gt; None:
+        &#34;&#34;&#34;Parses extracted license information.
+
+        Args:
+            licenses (Optional[JSONDict]): The JSON describing the extracted licenses.
+            repository (Repository): The parent Repository node for any created License nodes.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if not licenses:
+            log.warning(&#34;No license information found.&#34;)
+        else:
+            log.info(&#34;Parsing repository license information.&#34;)
+            detected_types = licenses.get(&#34;detected_type&#34;, [])
+            if len(detected_types) == 0:
+                log.warning(&#34;No license types detected&#34;)
+
+            for detected in detected_types:
+                for detected_type, confidence in detected.items():
+                    license_node = License(
+                        text=licenses.get(&#34;extracted_text&#34;, None),
+                        license_type=detected_type,
+                        confidence=(float(confidence.strip(&#39;%&#39;)) / 100)
+                    )
+                    relationship = LicensedBy(repository, license_node)
+                    self.nodes.append(license_node)
+                    self.relationships.append(relationship)
+
+    def _parse_readme(self, info: JSONDict):
+        &#34;&#34;&#34;Parse README files in the repository
+
+        Args:
+            info (JSONDict): README files information.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        log.info(&#34;Parsing README files...&#34;)
+
+        readmes = []
+        relationships = []
+        from pathlib import Path
+
+        for path, content in info.items():
+            path = str(Path(path).relative_to(self.base_path))
+            readme = README(path=path, content=content)
+            readmes.append(readme)
+
+            parent_path = get_path_parent(path)
+            parent = self.directories.get(parent_path, None)
+
+            if parent:
+                relationship = Contains(parent, readme)
+                relationships.append(relationship)
+            else:
+                log.error(&#34;Couldn&#39;t find parent for README at path: %s&#34;, path)
+
+        self.nodes.extend(readmes)
+        self.relationships.extend(relationships)
+
+    def _get_parent_directory(self, parent_path: str) -&gt; Directory:
+        &#34;&#34;&#34;Retrieves the parent directory for supplied path.
+
+        Recursively creates missing parent directories and adds relationship.
+
+        Args:
+            parent_path (str): The path the parent directory to retrieve
+
+        Returns:
+            Type[Directory]: The parent Directory.
+        &#34;&#34;&#34;
+        def add_parents_recursively(child: Directory) -&gt; None:
+            &#34;&#34;&#34;Recursively adds further missing parent directories
+
+            Args:
+                child (Directory): The immediate parent directory to the true child directory.
+                                   i.e. the Directory with the path of parent_path.
+
+            Returns:
+                None
+            &#34;&#34;&#34;
+            parent = self.directories.get(child.parent_path, None)
+
+            if not parent:
+                parent = Directory(child.parent_path)
+                relationship = Contains(parent, child)
+                self.nodes.append(parent)
+                self.relationships.append(relationship)
+                self.directories[parent.path] = parent
+                return add_parents_recursively(parent)
+            else:
+                parent_relationship = Contains(parent, child)
+                self.nodes.append(child)
+                self.relationships.append(parent_relationship)
+                return
+
+        # Attempt to get the parent directory from the list of created directories.
+        existing_parent = self.directories.get(parent_path, None)
+        if existing_parent:
+            return existing_parent
+
+        # If it doesn&#39;t exist create a new Directory and then call the recursive function.
+        new_parent = Directory(parent_path)
+        self.nodes.append(new_parent)
+        self.directories[new_parent.path] = new_parent
+        add_parents_recursively(new_parent)
+
+        return new_parent
+
+    def _create_canonical_package_name(self, directory_path: str) -&gt; str:
+        &#34;&#34;&#34;Create canonical package name for a directory path
+
+        Args:
+            directory_path (str): The starting directory.
+
+        Returns:
+            str: The canonical package name.
+        &#34;&#34;&#34;
+        parts = [get_path_name(directory_path)]
+        parent = get_path_parent(directory_path)
+
+        while parent != &#34;&#34;:
+            parent_node = self.directories.get(parent, None)
+
+            if isinstance(parent_node, Package) or (isinstance(parent_node, Repository) and parent_node.is_root_package):  # noqa: 501
+                parts = [get_path_name(parent)] + parts
+                parent = get_path_parent(parent)
+            else:
+                return &#34;.&#34;.join(parts)
+
+        return &#34;.&#34;.join(parts)
+
+    def _parse_directory(
+        self,
+        directory_name: str,
+        directory_info: List[JSONDict],
+        index: int,
+        total: int
+    ) -&gt; None:
+        &#34;&#34;&#34;Parse a directory
+
+        Args:
+            directory_name (str): The name of the directory.
+            directory_info (JSONDict): The directory information.
+            index (int): The index of the directory within the repository.
+            total (int): The total number of directories within the repository.
+        &#34;&#34;&#34;
+        directory_path = strip_file_path_prefix(directory_name)
+        log.debug(&#34;Parsing directory &#39;%s&#39; (%d/%d)&#34;, directory_path, index + 1, total)
+
+        # Parse each file within the directory, update is_package
+        # with result (whether file is __init__.py), and add to list
+        # of Files.
+        modules, is_package = self._parse_files_in_directory(directory_info)
+
+        # Get the parent directory
+        parent = self._get_parent_directory(get_path_parent(directory_path))
+
+        # If an __init__.py was found, create a Package node,
+        # otherwise create a Directory node.
+        if is_package:
+            canonical_name = self._create_canonical_package_name(directory_path)
+            directory = Package.create_from_directory(directory_path, canonical_name)
+        else:
+            directory = Directory(directory_path)
+
+        # Add the list of created directories, the directory node,
+        # and the relationship to its parent, to the Repograph.
+        self.directories[directory.path] = directory
+        relationship = Contains(parent, directory)
+        self.nodes.append(parent)
+        self.relationships.append(relationship)
+
+        # Parse each extracted module
+        for module, file_info in modules:
+            # If parent is a package, add the full canonical path name and add to modules.
+            if isinstance(directory, Package):
+                module = module.update_canonical_name(f&#34;{directory.canonical_name}.{module.name}&#34;)
+                self.modules[module.canonical_name] = module
+
+            # Now parse the contents of the module.
+            self._parse_module_contents(module, file_info)
+
+            # Create a relationship between the Directory and the Module.
+            relationship = Contains(directory, module)
+            self.nodes.append(module)
+            self.relationships.append(relationship)
+
+            # Finally add the module to the list of stored modules.
+            self.modules[module.path] = module
+            self.modules[module.canonical_name] = module
+
+    def _parse_files_in_directory(self, directory_info: List[JSONDict]) -&gt; Tuple[List[Tuple[Module, JSONDict]], bool]:  # noqa: 501
+        &#34;&#34;&#34;Parses files within a directory into Python Module nodes.
+
+        Args:
+            directory_info (List[JSONDict]): The list of JSONDict objects to parse.
+
+        Returns:
+            Tuple[List[Tuple[Module, JSONDict]], bool]: The list of parsed Module nodes and whether
+                                                        the enclosing directory is a package.
+        &#34;&#34;&#34;
+        is_package = False
+        modules = []
+
+        for file_index, file_info in enumerate(directory_info):
+            module = RepographBuilder._parse_module(file_info, file_index, len(directory_info))
+            is_package = is_package or module.name == INIT
+            modules.append((module, file_info))
+
+        return modules, is_package
+
+    @staticmethod
+    def _parse_module(file_info: JSONDict, index: int, total: int) -&gt; Module:
+        &#34;&#34;&#34;Parses a Python module with a parent directory.
+
+        Args:
+            file_info (JSONDict): The information about the file to parse.
+            index (int): The index of the Module within the parent Folder.
+            total (int): The total number of Modules within the parent Folder.
+
+        Returns:
+            bool: Whether Module is an __init__.py.
+        &#34;&#34;&#34;
+        log.debug(
+            &#34;--&gt; Parsing file `%s` (%d/%d)&#34;,
+            file_info[&#34;file&#34;][&#34;fileNameBase&#34;],
+            index + 1,
+            total
+        )
+
+        module = Module(
+            name=file_info[&#34;file&#34;][&#34;fileNameBase&#34;],
+            canonical_name=file_info[&#34;file&#34;][&#34;fileNameBase&#34;],
+            path=file_info[&#34;file&#34;][&#34;path&#34;],
+            parent_path=get_path_parent(file_info[&#34;file&#34;][&#34;path&#34;]),
+            extension=file_info[&#34;file&#34;][&#34;extension&#34;],
+            is_test=file_info.get(&#34;is_test&#34;, False)
+        )
+
+        return module
+
+    def _parse_module_contents(self, module: Module, file_info: JSONDict) -&gt; None:
+        &#34;&#34;&#34;Parse the contents of the module.
+
+        This includes functions/methods and classes.
+
+        Args:
+            module (Module): Module object to link extracted functions/classes to.
+            file_info (JSONDict): The JSONDict of information containing information about
+                                  the module.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        self._parse_functions_and_methods(file_info.get(&#34;functions&#34;, {}), module)
+        self._parse_classes(file_info.get(&#34;classes&#34;, {}), module)
+
+        if &#34;dependencies&#34; in file_info:
+            self.dependencies.append((file_info[&#34;dependencies&#34;], module))
+            self.module_imports[module] = convert_dependencies_map_to_set(file_info[&#34;dependencies&#34;])
+
+    def _parse_functions_and_methods(
+            self,
+            functions_info: JSONDict,
+            parent: Union[Module, Class],
+            methods: bool = False
+    ) -&gt; None:
+        &#34;&#34;&#34;Parses function/method information into Function/Method nodes and adds links
+        to the parent File/Class node.
+
+        Args:
+            functions_info (JSONDict): JSON dictionary containing the function information.
+            parent (Union[Module, Class]): Parent File or Class node.
+            methods (bool): Whether to create Method nodes rather than Function nodes.
+        &#34;&#34;&#34;
+        for name, info in functions_info.items():
+            # Get min-max line numbers
+            min_lineno, max_lineno = parse_min_max_line_numbers(info)
+            if not min_lineno or not max_lineno:
+                log.warning(&#34;Missing line number information for function &#39;%s&#39;&#34;, name)
+
+            # Serialise the AST
+            ast = info.get(&#34;ast&#34;)
+            if ast:
+                ast_string = marshall_json_to_string(ast)
+                if not ast:
+                    log.error(&#34;Couldn&#39;t serialise AST for function %s&#34;, name)
+            else:
+                log.warning(&#34;AST missing for function %s&#34;, name)
+                ast_string = None
+
+            # Check source_code is available
+            source_code = info.get(&#34;source_code&#34;, None)
+            if not source_code:
+                log.warning(&#34;Source code missing for function %s&#34;, name)
+
+            # Create Function Node
+            if methods:
+                function_type = str(Function.FunctionType.METHOD.value)
+            else:
+                function_type = str(Function.FunctionType.FUNCTION.value)
+
+            function = Function(
+                name=name,
+                type=function_type,
+                canonical_name=f&#34;{parent.canonical_name}.{name}&#34;,
+                source_code=source_code,
+                ast=ast_string,
+                min_line_number=min_lineno,
+                max_line_number=max_lineno
+            )
+
+            # Add to graph
+            self.nodes.append(function)
+
+            # Parse the docstring for the function
+            self._parse_docstring(info.get(&#34;doc&#34;, {}), function)
+
+            # Create HasFunction Relationship
+            if methods:
+                relationship = HasMethod(parent, function)
+            else:
+                relationship = HasFunction(parent, function)
+            self.relationships.append(relationship)
+
+            # If parent is a module, add to the module_objects set
+            if isinstance(parent, Module):
+                self.module_objects[parent] = self.module_objects.get(parent, []) + [function]
+
+            # Parse arguments and create Argument nodes
+            self._parse_arguments(
+                info.get(&#34;args&#34;, []),
+                info.get(&#34;annotated_arg_types&#34;, {}),
+                function
+            )
+
+            # Parse return values and create ReturnValue nodes
+            self._parse_return_values(
+                info.get(&#34;returns&#34;, []),
+                info.get(&#34;annotated_return_type&#34;, &#34;Any&#34;),
+                function
+            )
+
+    def _parse_classes(self, class_info: Dict, parent: Module) -&gt; None:
+        &#34;&#34;&#34;Parses class information into Class nodes and
+        adds links to parent File node.
+
+        Args:
+            class_info (Dict): Dictionary containing class information.
+            parent (Module): Parent File node.
+        &#34;&#34;&#34;
+        for name, info in class_info.items():
+            min_lineno, max_lineno = parse_min_max_line_numbers(info)
+            class_node = Class(
+                name=name,
+                canonical_name=f&#34;{parent.canonical_name}.{name}&#34;,
+                min_line_number=min_lineno,
+                max_line_number=max_lineno,
+            )
+            relationship = Contains(parent, class_node)
+            self.nodes.append(class_node)
+            self.relationships.append(relationship)
+
+            # Add to module objects set
+            self.module_objects[parent] = self.module_objects.get(parent, []) + [class_node]
+
+            # Parse extends
+            self._parse_extends(info.get(&#34;extend&#34;, []), class_node)
+
+            # Parse docstring
+            self._parse_docstring(info.get(&#34;doc&#34;, {}), class_node)
+
+            # Parse method info inside class if available
+            methods_info = info.get(&#34;methods&#34;, None)
+            if methods_info:
+                self._parse_functions_and_methods(methods_info, class_node, methods=True)
+
+    def _parse_arguments(
+        self,
+        args_list: List[str],
+        annotated_arg_types: Dict[str, str],
+        parent: Function
+    ) -&gt; None:
+        &#34;&#34;&#34;Parse arguments from method information.
+
+        Args:
+            args_list (List[str]): The list of argument names.
+            annotated_arg_types (Dict[str, str]): The annotated argument types.
+            parent (Function): The parent function the arguments belong to.
+        &#34;&#34;&#34;
+        arg_types = annotated_arg_types
+        for arg in args_list:
+            if arg_types:
+                arg_type = arg_types.get(arg, &#34;Any&#34;)
+            else:
+                arg_type = &#34;Any&#34;
+
+            argument = Argument(name=arg, type=arg_type)
+            relationship = HasArgument(parent, argument)
+            self.nodes.append(argument)
+            self.relationships.append(relationship)
+
+    def _parse_return_values(
+        self,
+        return_values: List[List[str]],
+        annotated_type: str,
+        parent: Function
+    ) -&gt; None:
+        &#34;&#34;&#34;Parse return values from function/method information.
+
+        Args:
+            return_values (List[str]): The list of return value names.
+            annotated_type (Dict[str, str]): The annotated return value types.
+            parent (Function): The parent function the return values belong to.
+        &#34;&#34;&#34;
+        if len(return_values) &gt; 1:
+            return_type = &#34;Any&#34;
+            # TODO: SH-16 Regex extraction?
+        elif len(return_values) == 1:
+            return_type = annotated_type
+        else:
+            return
+
+        def parse(values):
+            for value in values:
+                if isinstance(value, list):
+                    parse(value)
+                elif isinstance(value, str):
+                    return_value = ReturnValue(name=value, type=return_type)
+                    relationship = Returns(parent, return_value)
+                    self.nodes.append(return_value)
+                    self.relationships.append(relationship)
+                else:
+                    log.error(
+                        &#34;Unexpected return value type `%s` for function `%s`&#34;,
+                        type(value),
+                        parent.name
+                    )
+
+        parse(return_values)
+
+    def _parse_docstring(
+        self,
+        docstring_info: Optional[JSONDict],
+        parent: Union[Function, Class]
+    ) -&gt; None:
+        &#34;&#34;&#34;Parse docstring information for function or class
+
+        Args:
+            docstring_info (JSONDict): The JSONDict containing docstring information.
+            parent (Union[Function, Class): The parent node the docstring describes.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        # Return immediately depending on whether Class/Function, if docstring info
+        # provided, and whether summarization enabled.
+        if isinstance(parent, Class):
+            if not docstring_info or not bool(docstring_info):
+                log.debug(f&#34;No docstring information for class {parent.name}&#34;)
+                return
+        elif isinstance(parent, Function):
+            if (not docstring_info or not bool(docstring_info)) and not self.summarize:
+                log.debug(f&#34;No docstring information for {parent.name}&#34;)
+                return
+        else:
+            return
+
+        # Initialise empty arrays for storing created nodes/relationships
+        nodes = []
+        relationships = []
+
+        # If the summarization flag is set and parent is a Function (not a Class),
+        # call the function summarizer.
+        if self.summarize and isinstance(parent, Function):
+            summary = self.summarize(parent)
+        else:
+            summary = None
+
+        # Parse docstring
+        docstring = Docstring(
+            summarization=summary,
+            short_description=docstring_info.get(&#34;short_description&#34;, None),
+            long_description=docstring_info.get(&#34;long_description&#34;, None)
+        )
+        relationship = Documents(docstring, parent)
+        nodes.append(docstring)
+        relationships.append(relationship)
+
+        if isinstance(parent, Class):
+            # Parse docstring arguments
+            for arg, arg_info in docstring_info.get(&#34;args&#34;, {}).items():
+                docstring_arg = DocstringArgument(
+                    name=arg,
+                    type=arg_info.get(&#34;type_name&#34;, None),
+                    description=arg_info.get(&#34;description&#34;, None),
+                    is_optional=arg_info.get(&#34;is_optional&#34;, False),
+                    default=arg_info.get(&#34;default&#34;, None)
+                )
+                relationship = Describes(docstring, docstring_arg)
+                nodes.append(docstring_arg)
+                relationships.append(relationship)
+
+            if &#34;returns&#34; in docstring_info:
+                # Parse docstring return values
+                returns_info = docstring_info.get(&#34;returns&#34;, {})
+                docstring_return_value = DocstringReturnValue(
+                    name=returns_info.get(&#34;return_name&#34;, None),
+                    description=returns_info.get(&#34;description&#34;, None),
+                    type=returns_info.get(&#34;type_name&#34;, None),
+                    is_generator=returns_info.get(&#34;is_generator&#34;, False)
+                )
+                relationship = Describes(docstring, docstring_return_value)
+                nodes.append(docstring_return_value)
+                relationships.append(relationship)
+
+            # Parse docstring raises
+            for raises in docstring_info.get(&#34;raises&#34;, []):
+                docstring_raises = DocstringRaises(
+                    description=raises.get(&#34;description&#34;, None),
+                    type=raises.get(&#34;type_name&#34;, None)
+                )
+                relationship = Describes(docstring, docstring_raises)
+                nodes.append(docstring_raises)
+                relationships.append(relationship)
+
+        # Add nodes and relationships to graph
+        self.nodes.extend(nodes)
+        self.relationships.extend(relationships)
+
+    def _parse_dependencies(self) -&gt; None:  # noqa: C901
+        &#34;&#34;&#34;Parse the dependencies between Modules.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        log.info(&#34;Parsing dependencies...&#34;)
+        unresolved_dependencies = []
+
+        # Iterate through dependencies for each required module
+        for dependency_info, module in self.dependencies:
+            # Create an entry in the module_dependencies dict,
+            # so we can keep track of found objects.
+            self.module_dependencies[module] = []
+
+            # Iterate through each dependency in the module
+            for dependency in dependency_info:
+                # Check whether a module object or module itself is being imported
+                if &#34;from_module&#34; in dependency:
+                    imports_module = False
+                else:
+                    imports_module = True
+
+                # Get the imported object (either module or object)
+                imported_object = dependency[&#34;import&#34;]
+                source_module = dependency.get(&#34;from_module&#34;, imported_object)
+
+                # Find the module
+                if dependency[&#34;type&#34;] == &#34;internal&#34;:
+                    imported_module = self.modules.get(
+                        f&#34;{module.parent_path}/{source_module}.py&#34;,
+                        None
+                    )
+                else:
+                    imported_module = self.modules.get(source_module, None)
+
+                # If importing a module directly....
+                if imports_module:
+                    # ...and it already exists create the relationship
+                    if imported_module:
+                        self.relationships.append(ImportedBy(imported_module, module))
+                        self.module_dependencies[module].append(imported_module)
+                    # ...and if it doesn&#39;t recursively create it
+                    else:
+                        source_module, missing = self._calculate_missing_packages(source_module)
+
+                        if source_module == &#34;&#34;:
+                            child = self._create_missing_nodes(missing)
+                        elif source_module in self.requirements:
+                            child = self._create_missing_nodes(
+                                missing,
+                                parent=self.requirements[source_module]
+                            )
+                        else:
+                            child = self._create_missing_nodes(
+                                missing,
+                                parent=self.modules[source_module]
+                            )
+
+                        self.module_dependencies[module].append(child)
+
+                # If importing a class, function, etc...
+                else:
+                    # ...and it already exists create the relationship
+                    if imported_module:
+                        module_objects = self.module_objects.get(imported_module, None)
+                        if not module_objects:
+                            unresolved_dependencies.append(
+                                (module, imported_module, imported_object, dependency)
+                            )
+                            continue
+
+                        # Filter the module objects for only those with the imported name
+                        matching_objects = [obj for obj in module_objects if obj.name == imported_object]  # noqa: 501
+
+                        # If no matches, log an error and move onto the next dependency
+                        if len(matching_objects) == 0:
+                            unresolved_dependencies.append(
+                                (module, imported_module, imported_object, dependency)
+                            )
+                            continue
+
+                        # If more than one match we log this inconsistency,
+                        # but add all import relationships
+                        if len(matching_objects) &gt; 1:
+                            log.warning(&#34;More than 1 matching object found in import.&#34;)
+
+                        for match in matching_objects:
+                            self.relationships.append(ImportedBy(match, module))
+                            self.module_dependencies[module].append(match)
+                    # ...and if it doesn&#39;t recursively create it
+                    else:
+                        if imported_object[0].isupper():
+                            imported_object = Class(
+                                name=imported_object,
+                                canonical_name=f&#34;{dependency[&#39;from_module&#39;]}.{dependency[&#39;import&#39;]}&#34;
+                            )
+                        else:
+                            imported_object = Function(
+                                name=imported_object,
+                                canonical_name=f&#34;{dependency[&#39;from_module&#39;]}.{dependency[&#39;import&#39;]}&#34;,  # noqa: 501
+                                type=str(Function.FunctionType.FUNCTION.value)
+                            )
+
+                        source_module, missing = self._calculate_missing_packages(source_module)
+
+                        if source_module == &#34;&#34;:
+                            self._create_missing_nodes(missing)
+                        elif source_module in self.requirements:
+                            self._create_missing_nodes(
+                                missing,
+                                parent=self.requirements[source_module],
+                                import_object=imported_object
+                            )
+                        else:
+                            self._create_missing_nodes(
+                                missing,
+                                parent=self.modules[source_module],
+                                import_object=imported_object
+                            )
+
+                        self.relationships.append(ImportedBy(imported_object, module))
+                        self.module_dependencies[module].append(imported_object)
+
+        # Second pass on unresolved dependencies that are likely to be imports of other modules.
+        remaining = []
+        for module, imported_module, imported_object, dependency in unresolved_dependencies:
+            module_imports = self.module_dependencies.get(imported_module)
+            if not module_imports:
+                remaining.append(dependency)
+                continue
+
+            matching_objects = [obj for obj in module_imports if
+                                obj.name == imported_object]
+
+            if len(matching_objects) == 0:
+                remaining.append(dependency)
+
+            for match in matching_objects:
+                self.relationships.append(ImportedBy(match, module))
+                self.module_dependencies[module].append(match)
+
+        if len(remaining) &gt; 0:
+            log.warning(&#34;Unable to resolve %d dependencies...&#34;, len(remaining))
+
+    def _calculate_missing_packages(self, source_module: str) -&gt; Tuple[str, List[str]]:
+        &#34;&#34;&#34;Calculates missing packages for a given import source Module.
+
+        Checks both parsed Modules and Repository level requirements.
+
+        Args:
+            source_module (str): The canonical name of the source module.
+
+        Returns:
+            str: Any pre-existing source package.
+            List[str]: Missing packages/modules.
+        &#34;&#34;&#34;
+        missing = []
+        while source_module not in self.modules and source_module not in self.requirements and source_module != &#34;&#34;:  # noqa: 501
+            parent, child = get_package_parent_and_name(source_module)
+            missing.append(child)
+            source_module = parent
+
+        return source_module, missing
+
+    def _create_missing_nodes(
+            self,
+            missing: List[str],
+            parent: Package = None,
+            import_object: Union[Class, Function] = None
+    ) -&gt; Union[Module, Function]:
+        &#34;&#34;&#34;Create missing nodes.
+
+        Args:
+            missing (List[str]):
+            parent (Package): The parent Package. Optional.
+            import_object (Union[Class, Function]): The Class or Function being imported from the
+
+        Returns:
+            Union[Module, Function]: The child Node.
+        &#34;&#34;&#34;
+        nodes = []
+        relationships = []
+        child = None
+
+        for index, m in enumerate(missing):
+            if index == len(missing) - 1:
+                new = Module(name=m)
+                child = new
+            else:
+                new = Package(
+                    name=m,
+                    canonical_name=f&#34;{parent.canonical_name}.{m}&#34; if parent else m,
+                    parent_package=parent.canonical_name if parent else &#34;&#34;,
+                    external=True
+                )
+
+            if parent:
+                relationships.append(Contains(parent, new))
+
+            parent = new
+            nodes.append(new)
+
+        # If we have an import_object, but the parent is a Package, create an __init__ Module
+        # as this is actually where the import_object is being imported from.
+        if import_object and parent and isinstance(parent, Package):
+            new = Module.create_init_module(parent.canonical_name)
+            relationships.append(Contains(parent, new))
+            parent = new
+
+        # If we have an import object, create a Contains relationship with the parent module.
+        if import_object:
+            relationships.append(Contains(parent, import_object))
+            child = import_object
+
+        # Add the created nodes and relationships to the Repograph.
+        self.nodes.extend(nodes)
+        self.relationships.extend(relationships)
+
+        return child
+
+    def _parse_extends(self, extends_info: List[str], class_node: Class) -&gt; None:
+        &#34;&#34;&#34;Parse extends/super class information for a Class node.
+
+        Args:
+            extends_info (List[str]): The names of Classes that the Class node extends.
+            class_node (Class): The Class node itself.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if len(extends_info) == 0:
+            log.debug(&#34;Class `%s` doesn&#39;t not extend any other classes&#34;, class_node.name)
+            return
+
+        # for extends in extends_info:
+        #     super_class = Class(name=extends)
+        #     relationship = Extends(class_node, super_class)
+        #     self.repograph.add(super_class, relationship)
+
+    def _parse_call_graph(self, call_graph: Optional[JSONDict]) -&gt; None:
+        &#34;&#34;&#34;Parse the call graph extracted by inspect4py.
+
+        Args:
+            call_graph (Optional[JSONDict]): The call graph.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if not call_graph:
+            log.error(&#34;No call graph provided!&#34;)
+            return
+
+        for directory, files in call_graph.items():
+            for file_name, file_info in files.items():
+                module = self.modules.get(file_name)
+                if not module:
+                    log.error(&#34;Couldn&#39;t find existing Module node. Skipping!&#34;)
+                    continue
+
+                module_objects = self.module_objects.get(module, [])
+                module_imports = self.module_imports.get(module, set())
+                module_dependencies = self.module_dependencies.get(module, [])
+
+                # Parse body calls
+                self._parse_calls(
+                    module,
+                    file_info.get(&#34;body&#34;, {}),
+                    module_objects,
+                    module_imports,
+                    module_dependencies
+                )
+
+                # For each function described in the call graph, parse these calls
+                for function_name, function_calls in file_info.get(&#34;functions&#34;, {}).items():
+                    function = find_node_object_by_name(module_objects, function_name)
+                    self._parse_calls(
+                        module,
+                        function_calls,
+                        module_objects,
+                        module_imports,
+                        module_dependencies,
+                        caller=function
+                    )
+
+        # Add called builtin functions to the graph
+        self.nodes.extend(self.called_builtin_functions.values())
+
+    def _parse_calls(
+            self,
+            parent_module: Module,
+            call_info: Optional[JSONDict],
+            module_objects: List[any],
+            module_imports: Set[str],
+            module_dependencies: List[any],
+            caller: Optional[Function] = None
+    ) -&gt; None:
+        &#34;&#34;&#34;Parse the call graph for a particular module.
+
+        Args:
+            parent_module (Module): The parent module.
+            call_info (Optional[JSONDict]): The call info.
+            caller (Optional[Function): An optional specific function that the call info is for.
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if not call_info:
+            return
+
+        for call in call_info.get(&#34;local&#34;, []):
+            module, function = get_module_and_object_from_canonical_object_name(call)
+            matching_objects_in_module = find_node_object_by_name(module_objects, function)
+
+            # If the call is to an imported function...
+            if call in module_imports:
+                matching_imports = find_node_object_by_name(module_dependencies, call, canonical=True)  # noqa: 501
+                print(&#34;HI&#34;)
+                print(caller)
+                print(&#34; &#34;)
+                print(parent_module)
+                print(&#34; &#34;)
+                print(matching_imports)
+                relationship = Calls(caller if caller else parent_module, matching_imports)
+            # ...or if the call is to a built-in function...
+            elif call in PYTHON_BUILT_IN_FUNCTIONS:
+                if function in self.called_builtin_functions:
+                    function_node = self.called_builtin_functions[function]
+                else:
+                    function_node = Function(
+                        name=function,
+                        type=str(Function.FunctionType.FUNCTION.value),
+                        builtin=True
+                    )
+                    self.called_builtin_functions[function] = function_node
+
+                # Create the relationship between the caller and the new function_node
+                relationship = Calls(caller if caller else parent_module, function_node)
+
+            # ...or if the call is to a function defined in the module
+            elif matching_objects_in_module:
+                relationship = Calls(
+                    caller if caller else parent_module,
+                    matching_objects_in_module
+                )
+            else:
+                log.debug(&#34;Call to some other variable (%s). Ignoring.&#34;, call)
+                relationship = None
+
+            self.relationships.append(relationship)
+
+    def build(
+            self,
+            directory_info: Optional[JSONDict],
+            call_graph: Optional[JSONDict],
+    ) -&gt; Tuple[List[Node], List[Relationship]]:
+        &#34;&#34;&#34;Build a repograph from directory_info JSON.
+
+        Args:
+            directory_info (JSONDict): Directory info JSON.
+            call_graph (Optional[JSONDict]): The call graph JSON.
+
+        Returns:
+            Repograph
+
+        Raises:
+            RepographBuildError
+        &#34;&#34;&#34;
+        log.info(&#34;Building Repograph...&#34;)
+
+        if not directory_info:
+            log.error(&#34;Directory info is empty! Aborting!&#34;)
+            raise RepographBuildError(&#34;Directory info is empty&#34;)
+
+        # Pop off non-directory entries from the JSON, for parsing later
+        requirements = directory_info.pop(&#34;requirements&#34;, None)
+        _ = directory_info.pop(&#34;directory_tree&#34;, None)
+        licenses = directory_info.pop(&#34;license&#34;, None)
+        readmes = directory_info.pop(&#34;readme_files&#34;, None)
+        metadata = directory_info.pop(&#34;metadata&#34;, None)
+        _ = directory_info.pop(&#34;software_invocation&#34;, None)
+        software_type = directory_info.pop(&#34;software_type&#34;, None)
+        _ = directory_info.pop(&#34;tests&#34;, None)
+
+        # Create a sorted list of directory paths.py, as dictionaries are not
+        # always sortable in Python.
+        log.info(&#34;Sorting directories with hierarchical ordering...&#34;)
+        directories = sorted(
+            list(directory_info.keys()),
+            key=lambda file: (os.path.dirname(file), os.path.basename(file)))
+
+        # Parse repository root folder if it exists, otherwise manually create
+        # the repository node.
+        path = strip_file_path_prefix(directories[0])
+        if is_root_folder(path):
+            directory = directories.pop(0)
+            repository = self._parse_repository(
+                path,
+                directory_info=directory_info[directory],
+                metadata=metadata,
+                software_type=software_type
+            )
+        else:
+            repository = self._parse_repository(
+                get_path_root(path),
+                metadata=metadata,
+                software_type=software_type
+            )
+
+        # Parse requirements
+        self._parse_requirements(requirements, repository)
+
+        # Parse license
+        self._parse_license(licenses, repository)
+
+        # Parse each directory
+        log.info(&#34;Extracting information from directories...&#34;)
+        for index, directory in enumerate(directories):
+            self._parse_directory(directory, directory_info[directory], index, len(directories))
+
+        # Retrospectively parse module dependencies
+        log.info(&#34;Parsing module dependencies...&#34;)
+        self._parse_dependencies()
+
+        # Parse the call list, now that most Nodes should be added to the graph
+        log.info(&#34;Parsing call graph...&#34;)
+        # self._parse_call_graph(call_graph)
+
+        # Parse READMEs
+        self._parse_readme(readmes)
+
+        log.info(&#34;Successfully built a Repograph!&#34;)
+        return self.nodes, self.relationships</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="repograph.entities.build.builder.RepographBuilder.called_builtin_functions"><code class="name">var <span class="ident">called_builtin_functions</span> : Dict[str, <a title="repograph.models.nodes.Function" href="../../models/nodes.html#repograph.models.nodes.Function">Function</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.builder.RepographBuilder.dependencies"><code class="name">var <span class="ident">dependencies</span> : List[Tuple[List[Dict[str, Any]], <a title="repograph.models.nodes.Module" href="../../models/nodes.html#repograph.models.nodes.Module">Module</a>]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.builder.RepographBuilder.directories"><code class="name">var <span class="ident">directories</span> : Dict[str, Union[<a title="repograph.models.nodes.Repository" href="../../models/nodes.html#repograph.models.nodes.Repository">Repository</a>, <a title="repograph.models.nodes.Directory" href="../../models/nodes.html#repograph.models.nodes.Directory">Directory</a>]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.builder.RepographBuilder.module_dependencies"><code class="name">var <span class="ident">module_dependencies</span> : Dict[<a title="repograph.models.nodes.Module" href="../../models/nodes.html#repograph.models.nodes.Module">Module</a>, List[Union[<a title="repograph.models.nodes.Module" href="../../models/nodes.html#repograph.models.nodes.Module">Module</a>, <a title="repograph.models.nodes.Function" href="../../models/nodes.html#repograph.models.nodes.Function">Function</a>]]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.builder.RepographBuilder.module_imports"><code class="name">var <span class="ident">module_imports</span> : Dict[<a title="repograph.models.nodes.Module" href="../../models/nodes.html#repograph.models.nodes.Module">Module</a>, Set[str]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.builder.RepographBuilder.module_objects"><code class="name">var <span class="ident">module_objects</span> : Dict[<a title="repograph.models.nodes.Module" href="../../models/nodes.html#repograph.models.nodes.Module">Module</a>, List[Union[<a title="repograph.models.nodes.Class" href="../../models/nodes.html#repograph.models.nodes.Class">Class</a>, <a title="repograph.models.nodes.Function" href="../../models/nodes.html#repograph.models.nodes.Function">Function</a>]]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.builder.RepographBuilder.modules"><code class="name">var <span class="ident">modules</span> : Dict[str, <a title="repograph.models.nodes.Module" href="../../models/nodes.html#repograph.models.nodes.Module">Module</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.builder.RepographBuilder.nodes"><code class="name">var <span class="ident">nodes</span> : List[<a title="repograph.models.base.Node" href="../../models/base.html#repograph.models.base.Node">Node</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.builder.RepographBuilder.relationships"><code class="name">var <span class="ident">relationships</span> : List[<a title="repograph.models.base.Relationship" href="../../models/base.html#repograph.models.base.Relationship">Relationship</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.builder.RepographBuilder.requirements"><code class="name">var <span class="ident">requirements</span> : Dict[str, <a title="repograph.models.nodes.Package" href="../../models/nodes.html#repograph.models.nodes.Package">Package</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.build.builder.RepographBuilder.summarize"><code class="name">var <span class="ident">summarize</span> : Optional[Callable[[<a title="repograph.models.nodes.Function" href="../../models/nodes.html#repograph.models.nodes.Function">Function</a>], str]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="repograph.entities.build.builder.RepographBuilder.build"><code class="name flex">
+<span>def <span class="ident">build</span></span>(<span>self, directory_info: Optional[Dict[str, Any]], call_graph: Optional[Dict[str, Any]]) ‑> Tuple[List[<a title="repograph.models.base.Node" href="../../models/base.html#repograph.models.base.Node">Node</a>], List[<a title="repograph.models.base.Relationship" href="../../models/base.html#repograph.models.base.Relationship">Relationship</a>]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Build a repograph from directory_info JSON.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>directory_info</code></strong> :&ensp;<code>JSONDict</code></dt>
+<dd>Directory info JSON.</dd>
+<dt><strong><code>call_graph</code></strong> :&ensp;<code>Optional[JSONDict]</code></dt>
+<dd>The call graph JSON.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Repograph</p>
+<h2 id="raises">Raises</h2>
+<p>RepographBuildError</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build(
+        self,
+        directory_info: Optional[JSONDict],
+        call_graph: Optional[JSONDict],
+) -&gt; Tuple[List[Node], List[Relationship]]:
+    &#34;&#34;&#34;Build a repograph from directory_info JSON.
+
+    Args:
+        directory_info (JSONDict): Directory info JSON.
+        call_graph (Optional[JSONDict]): The call graph JSON.
+
+    Returns:
+        Repograph
+
+    Raises:
+        RepographBuildError
+    &#34;&#34;&#34;
+    log.info(&#34;Building Repograph...&#34;)
+
+    if not directory_info:
+        log.error(&#34;Directory info is empty! Aborting!&#34;)
+        raise RepographBuildError(&#34;Directory info is empty&#34;)
+
+    # Pop off non-directory entries from the JSON, for parsing later
+    requirements = directory_info.pop(&#34;requirements&#34;, None)
+    _ = directory_info.pop(&#34;directory_tree&#34;, None)
+    licenses = directory_info.pop(&#34;license&#34;, None)
+    readmes = directory_info.pop(&#34;readme_files&#34;, None)
+    metadata = directory_info.pop(&#34;metadata&#34;, None)
+    _ = directory_info.pop(&#34;software_invocation&#34;, None)
+    software_type = directory_info.pop(&#34;software_type&#34;, None)
+    _ = directory_info.pop(&#34;tests&#34;, None)
+
+    # Create a sorted list of directory paths.py, as dictionaries are not
+    # always sortable in Python.
+    log.info(&#34;Sorting directories with hierarchical ordering...&#34;)
+    directories = sorted(
+        list(directory_info.keys()),
+        key=lambda file: (os.path.dirname(file), os.path.basename(file)))
+
+    # Parse repository root folder if it exists, otherwise manually create
+    # the repository node.
+    path = strip_file_path_prefix(directories[0])
+    if is_root_folder(path):
+        directory = directories.pop(0)
+        repository = self._parse_repository(
+            path,
+            directory_info=directory_info[directory],
+            metadata=metadata,
+            software_type=software_type
+        )
+    else:
+        repository = self._parse_repository(
+            get_path_root(path),
+            metadata=metadata,
+            software_type=software_type
+        )
+
+    # Parse requirements
+    self._parse_requirements(requirements, repository)
+
+    # Parse license
+    self._parse_license(licenses, repository)
+
+    # Parse each directory
+    log.info(&#34;Extracting information from directories...&#34;)
+    for index, directory in enumerate(directories):
+        self._parse_directory(directory, directory_info[directory], index, len(directories))
+
+    # Retrospectively parse module dependencies
+    log.info(&#34;Parsing module dependencies...&#34;)
+    self._parse_dependencies()
+
+    # Parse the call list, now that most Nodes should be added to the graph
+    log.info(&#34;Parsing call graph...&#34;)
+    # self._parse_call_graph(call_graph)
+
+    # Parse READMEs
+    self._parse_readme(readmes)
+
+    log.info(&#34;Successfully built a Repograph!&#34;)
+    return self.nodes, self.relationships</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="repograph.entities.build" href="index.html">repograph.entities.build</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="repograph.entities.build.builder.RepographBuilder" href="#repograph.entities.build.builder.RepographBuilder">RepographBuilder</a></code></h4>
+<ul class="">
+<li><code><a title="repograph.entities.build.builder.RepographBuilder.build" href="#repograph.entities.build.builder.RepographBuilder.build">build</a></code></li>
+<li><code><a title="repograph.entities.build.builder.RepographBuilder.called_builtin_functions" href="#repograph.entities.build.builder.RepographBuilder.called_builtin_functions">called_builtin_functions</a></code></li>
+<li><code><a title="repograph.entities.build.builder.RepographBuilder.dependencies" href="#repograph.entities.build.builder.RepographBuilder.dependencies">dependencies</a></code></li>
+<li><code><a title="repograph.entities.build.builder.RepographBuilder.directories" href="#repograph.entities.build.builder.RepographBuilder.directories">directories</a></code></li>
+<li><code><a title="repograph.entities.build.builder.RepographBuilder.module_dependencies" href="#repograph.entities.build.builder.RepographBuilder.module_dependencies">module_dependencies</a></code></li>
+<li><code><a title="repograph.entities.build.builder.RepographBuilder.module_imports" href="#repograph.entities.build.builder.RepographBuilder.module_imports">module_imports</a></code></li>
+<li><code><a title="repograph.entities.build.builder.RepographBuilder.module_objects" href="#repograph.entities.build.builder.RepographBuilder.module_objects">module_objects</a></code></li>
+<li><code><a title="repograph.entities.build.builder.RepographBuilder.modules" href="#repograph.entities.build.builder.RepographBuilder.modules">modules</a></code></li>
+<li><code><a title="repograph.entities.build.builder.RepographBuilder.nodes" href="#repograph.entities.build.builder.RepographBuilder.nodes">nodes</a></code></li>
+<li><code><a title="repograph.entities.build.builder.RepographBuilder.relationships" href="#repograph.entities.build.builder.RepographBuilder.relationships">relationships</a></code></li>
+<li><code><a title="repograph.entities.build.builder.RepographBuilder.requirements" href="#repograph.entities.build.builder.RepographBuilder.requirements">requirements</a></code></li>
+<li><code><a title="repograph.entities.build.builder.RepographBuilder.summarize" href="#repograph.entities.build.builder.RepographBuilder.summarize">summarize</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
