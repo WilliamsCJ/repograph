@@ -139,7 +139,7 @@ Query options for repository (`<REPO>`):
 - Wildcard, e.g. `.*`
 
 
-### Select the source code of a given demo
+### Select the source code of a given repo
 
 Return the function source code within a given repo.
 
@@ -152,7 +152,7 @@ Query options for repository (`<REPO>`):
 - Repository name, e.g. `pyLODE`
 - Wildcard, e.g. `.*`
 
-### Select the call graph of a given demo
+### Select the call graph of a given repo
 
 Select the call graph for a given function, possibly within a given repository.
 
@@ -168,3 +168,20 @@ Query options for repository (`<REPO>`):
 Query options for function (`<FUNCTION>`):
 - Exact canonical name, e.g. `pylode.utils.rdf_obj_html`
 - Wildcard query to match only the function name, e.g. `.*rdf_obj_html`
+
+### Select the dependencies of a given file in a given repo
+
+Select the nodes imported by/dependencies of a given file in a given repository.
+
+```
+MATCH (i)-[:ImportedBy]-(m:Module)-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' AND m.name =~ '<MODULE>'  
+RETURN i, m
+```
+
+Query options for repository (`<REPO>`):
+- Repository name, e.g. `pyLODE`
+- Wildcard, e.g. `.*`
+
+Query options for function (`<MODULE>`):
+- Exact canonical name, e.g. `test_errors`
+- Wildcard query to match only the function name, e.g. `.*`
