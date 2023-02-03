@@ -17,13 +17,10 @@ class SearchContainer(DeclarativeContainer):
 
     graph: Dependency[GraphService] = Dependency()
 
-    print("Config")
-    print(config.get("search"))
-
     service: Singleton[SearchService] = Singleton(
         SearchService,
         graph=graph,
-        active=config.get("search")
+        active=config.search
     )
 
     router: Singleton[SearchRouter] = Singleton(

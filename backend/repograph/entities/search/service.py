@@ -8,10 +8,10 @@ Typical usage:
 """
 # Base imports
 from logging import getLogger
-from typing import Optional
+from typing import List, Optional
 
 # pip imports
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer, util
 
 # Model imports
 from repograph.models.nodes import Function
@@ -30,19 +30,26 @@ class SearchService:
     graph: GraphService
     model: Optional[SentenceTransformer] = None
 
-    def __init__(self, graph: GraphService, active: bool = False):
+    def __init__(self, graph: GraphService, active: bool = True):
         """Constructor
 
         Args:
         """
         self.graph = graph
+        log.info("Initialising model...")
+        self.model = SentenceTransformer('sentence-transformers/multi-qa-distilbert-cos-v1')
 
-        if active:
-            log.info("Initialising model...")
-            self.model = SentenceTransformer('sentence-transformers/multi-qa-distilbert-cos-v1')
+    # def prepare_embeddings(self, graph_name: str, ):
 
-    def find_similar_functions_by_query(self, query: str) -> any:
-        self.model.encode(query)
+    def find_similar_functions_by_query(self, query: str) -> List[Function]:
+        query_embedding = self.model.encode(query)
+        summarizations_map = self.graph.get_function_summarizations()
+        summarizations = list(summarizations_map.keys())
+        summarization_embeddings = self.model.encode(summarizations)
 
-    def test(self):
-        self.graph.repository.get_all_nodes(label='Function', type=Function)
+        scores = util.dot_score(query_embedding, summarization_embeddings)[0].cpu().tolist()
+        score_pairs = list(zip(summarizations, scores))
+        score_pairs = sorted(score_pairs, key=lambda x: x[1], reverse=True)
+
+        top_5 = list(map(lambda x: summarizations_map[x[0]], score_pairs))
+        return top_5

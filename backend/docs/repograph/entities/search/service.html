@@ -41,10 +41,10 @@ Typical usage:
 &#34;&#34;&#34;
 # Base imports
 from logging import getLogger
-from typing import Optional
+from typing import List, Optional
 
 # pip imports
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer, util
 
 # Model imports
 from repograph.models.nodes import Function
@@ -63,22 +63,29 @@ class SearchService:
     graph: GraphService
     model: Optional[SentenceTransformer] = None
 
-    def __init__(self, graph: GraphService, active: bool = False):
+    def __init__(self, graph: GraphService, active: bool = True):
         &#34;&#34;&#34;Constructor
 
         Args:
         &#34;&#34;&#34;
         self.graph = graph
+        log.info(&#34;Initialising model...&#34;)
+        self.model = SentenceTransformer(&#39;sentence-transformers/multi-qa-distilbert-cos-v1&#39;)
 
-        if active:
-            log.info(&#34;Initialising model...&#34;)
-            self.model = SentenceTransformer(&#39;sentence-transformers/multi-qa-distilbert-cos-v1&#39;)
+    # def prepare_embeddings(self, graph_name: str, ):
 
-    def find_similar_functions_by_query(self, query: str) -&gt; any:
-        self.model.encode(query)
+    def find_similar_functions_by_query(self, query: str) -&gt; List[Function]:
+        query_embedding = self.model.encode(query)
+        summarizations_map = self.graph.get_function_summarizations()
+        summarizations = list(summarizations_map.keys())
+        summarization_embeddings = self.model.encode(summarizations)
 
-    def test(self):
-        self.graph.repository.get_all_nodes(label=&#39;Function&#39;, type=Function)</code></pre>
+        scores = util.dot_score(query_embedding, summarization_embeddings)[0].cpu().tolist()
+        score_pairs = list(zip(summarizations, scores))
+        score_pairs = sorted(score_pairs, key=lambda x: x[1], reverse=True)
+
+        top_5 = list(map(lambda x: summarizations_map[x[0]], score_pairs))
+        return top_5</code></pre>
 </details>
 </section>
 <section>
@@ -92,7 +99,7 @@ class SearchService:
 <dl>
 <dt id="repograph.entities.search.service.SearchService"><code class="flex name class">
 <span>class <span class="ident">SearchService</span></span>
-<span>(</span><span>graph: <a title="repograph.entities.graph.service.GraphService" href="../graph/service.html#repograph.entities.graph.service.GraphService">GraphService</a>, active: bool = False)</span>
+<span>(</span><span>graph: <a title="repograph.entities.graph.service.GraphService" href="../graph/service.html#repograph.entities.graph.service.GraphService">GraphService</a>, active: bool = True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Constructor</p>
@@ -105,22 +112,29 @@ class SearchService:
     graph: GraphService
     model: Optional[SentenceTransformer] = None
 
-    def __init__(self, graph: GraphService, active: bool = False):
+    def __init__(self, graph: GraphService, active: bool = True):
         &#34;&#34;&#34;Constructor
 
         Args:
         &#34;&#34;&#34;
         self.graph = graph
+        log.info(&#34;Initialising model...&#34;)
+        self.model = SentenceTransformer(&#39;sentence-transformers/multi-qa-distilbert-cos-v1&#39;)
 
-        if active:
-            log.info(&#34;Initialising model...&#34;)
-            self.model = SentenceTransformer(&#39;sentence-transformers/multi-qa-distilbert-cos-v1&#39;)
+    # def prepare_embeddings(self, graph_name: str, ):
 
-    def find_similar_functions_by_query(self, query: str) -&gt; any:
-        self.model.encode(query)
+    def find_similar_functions_by_query(self, query: str) -&gt; List[Function]:
+        query_embedding = self.model.encode(query)
+        summarizations_map = self.graph.get_function_summarizations()
+        summarizations = list(summarizations_map.keys())
+        summarization_embeddings = self.model.encode(summarizations)
 
-    def test(self):
-        self.graph.repository.get_all_nodes(label=&#39;Function&#39;, type=Function)</code></pre>
+        scores = util.dot_score(query_embedding, summarization_embeddings)[0].cpu().tolist()
+        score_pairs = list(zip(summarizations, scores))
+        score_pairs = sorted(score_pairs, key=lambda x: x[1], reverse=True)
+
+        top_5 = list(map(lambda x: summarizations_map[x[0]], score_pairs))
+        return top_5</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -136,7 +150,7 @@ class SearchService:
 <h3>Methods</h3>
 <dl>
 <dt id="repograph.entities.search.service.SearchService.find_similar_functions_by_query"><code class="name flex">
-<span>def <span class="ident">find_similar_functions_by_query</span></span>(<span>self, query: str) ‑> <built-in function any></span>
+<span>def <span class="ident">find_similar_functions_by_query</span></span>(<span>self, query: str) ‑> List[<a title="repograph.models.nodes.Function" href="../../models/nodes.html#repograph.models.nodes.Function">Function</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -144,21 +158,18 @@ class SearchService:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def find_similar_functions_by_query(self, query: str) -&gt; any:
-    self.model.encode(query)</code></pre>
-</details>
-</dd>
-<dt id="repograph.entities.search.service.SearchService.test"><code class="name flex">
-<span>def <span class="ident">test</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def test(self):
-    self.graph.repository.get_all_nodes(label=&#39;Function&#39;, type=Function)</code></pre>
+<pre><code class="python">def find_similar_functions_by_query(self, query: str) -&gt; List[Function]:
+    query_embedding = self.model.encode(query)
+    summarizations_map = self.graph.get_function_summarizations()
+    summarizations = list(summarizations_map.keys())
+    summarization_embeddings = self.model.encode(summarizations)
+
+    scores = util.dot_score(query_embedding, summarization_embeddings)[0].cpu().tolist()
+    score_pairs = list(zip(summarizations, scores))
+    score_pairs = sorted(score_pairs, key=lambda x: x[1], reverse=True)
+
+    top_5 = list(map(lambda x: summarizations_map[x[0]], score_pairs))
+    return top_5</code></pre>
 </details>
 </dd>
 </dl>
@@ -185,7 +196,6 @@ class SearchService:
 <li><code><a title="repograph.entities.search.service.SearchService.find_similar_functions_by_query" href="#repograph.entities.search.service.SearchService.find_similar_functions_by_query">find_similar_functions_by_query</a></code></li>
 <li><code><a title="repograph.entities.search.service.SearchService.graph" href="#repograph.entities.search.service.SearchService.graph">graph</a></code></li>
 <li><code><a title="repograph.entities.search.service.SearchService.model" href="#repograph.entities.search.service.SearchService.model">model</a></code></li>
-<li><code><a title="repograph.entities.search.service.SearchService.test" href="#repograph.entities.search.service.SearchService.test">test</a></code></li>
 </ul>
 </li>
 </ul>

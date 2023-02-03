@@ -31,10 +31,11 @@
 &#34;&#34;&#34;
 # Base imports
 from logging import getLogger
-from typing import List
+from typing import Dict, List
 
 # Model imports
 from repograph.models.base import Node, Relationship
+from repograph.models.nodes import Function
 from repograph.models.repograph import RepographSummary
 
 # Graph entity imports
@@ -76,6 +77,18 @@ class GraphService:
         summary.functions = count
 
         return summary
+
+    def get_function_summarizations(self) -&gt; Dict[str, Function]:
+        &#34;&#34;&#34;Converts all Function nodes into a list of tuples.
+
+        Tuple: (summarization, node)
+
+        Returns:
+            List[Tuple[str, Function]
+        &#34;&#34;&#34;
+        nodes = self.repository.get_all_nodes_by_label(Function)
+        print(len(nodes))
+        return dict(map(lambda x: (x.summarization, x), nodes))
 
     def prune(self):
         self.repository.delete_all()</code></pre>
@@ -133,6 +146,18 @@ class GraphService:
 
         return summary
 
+    def get_function_summarizations(self) -&gt; Dict[str, Function]:
+        &#34;&#34;&#34;Converts all Function nodes into a list of tuples.
+
+        Tuple: (summarization, node)
+
+        Returns:
+            List[Tuple[str, Function]
+        &#34;&#34;&#34;
+        nodes = self.repository.get_all_nodes_by_label(Function)
+        print(len(nodes))
+        return dict(map(lambda x: (x.summarization, x), nodes))
+
     def prune(self):
         self.repository.delete_all()</code></pre>
 </details>
@@ -169,6 +194,31 @@ class GraphService:
 </summary>
 <pre><code class="python">def get_all_function_nodes(self) -&gt; None:
     self.repository.get_all()</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.graph.service.GraphService.get_function_summarizations"><code class="name flex">
+<span>def <span class="ident">get_function_summarizations</span></span>(<span>self) ‑> Dict[str, <a title="repograph.models.nodes.Function" href="../../models/nodes.html#repograph.models.nodes.Function">Function</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts all Function nodes into a list of tuples.</p>
+<p>Tuple: (summarization, node)</p>
+<h2 id="returns">Returns</h2>
+<p>List[Tuple[str, Function]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_function_summarizations(self) -&gt; Dict[str, Function]:
+    &#34;&#34;&#34;Converts all Function nodes into a list of tuples.
+
+    Tuple: (summarization, node)
+
+    Returns:
+        List[Tuple[str, Function]
+    &#34;&#34;&#34;
+    nodes = self.repository.get_all_nodes_by_label(Function)
+    print(len(nodes))
+    return dict(map(lambda x: (x.summarization, x), nodes))</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_summary"><code class="name flex">
@@ -238,6 +288,7 @@ class GraphService:
 <ul class="">
 <li><code><a title="repograph.entities.graph.service.GraphService.bulk_add" href="#repograph.entities.graph.service.GraphService.bulk_add">bulk_add</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.get_all_function_nodes" href="#repograph.entities.graph.service.GraphService.get_all_function_nodes">get_all_function_nodes</a></code></li>
+<li><code><a title="repograph.entities.graph.service.GraphService.get_function_summarizations" href="#repograph.entities.graph.service.GraphService.get_function_summarizations">get_function_summarizations</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.get_summary" href="#repograph.entities.graph.service.GraphService.get_summary">get_summary</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.prune" href="#repograph.entities.graph.service.GraphService.prune">prune</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.repository" href="#repograph.entities.graph.service.GraphService.repository">repository</a></code></li>

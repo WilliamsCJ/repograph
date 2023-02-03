@@ -14,8 +14,8 @@ class SearchRouter:
     def __init__(self, service: SearchService):
         self.service = service
         self.router = APIRouter(prefix="/search")
-        self.router.add_api_route("/test", self.test, methods=["GET"])
+        self.router.add_api_route("/semantic", self.semantic_search, methods=["GET"])
 
-    def test(self):
-        self.service.test()
-        return {"Hello": "world"}
+    def semantic_search(self, query: str = None):
+        results = self.service.find_similar_functions_by_query(query)
+        return results

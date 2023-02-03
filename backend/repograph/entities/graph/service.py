@@ -3,10 +3,11 @@
 """
 # Base imports
 from logging import getLogger
-from typing import List
+from typing import Dict, List
 
 # Model imports
 from repograph.models.base import Node, Relationship
+from repograph.models.nodes import Function
 from repograph.models.repograph import RepographSummary
 
 # Graph entity imports
@@ -48,6 +49,18 @@ class GraphService:
         summary.functions = count
 
         return summary
+
+    def get_function_summarizations(self) -> Dict[str, Function]:
+        """Converts all Function nodes into a list of tuples.
+
+        Tuple: (summarization, node)
+
+        Returns:
+            List[Tuple[str, Function]
+        """
+        nodes = self.repository.get_all_nodes_by_label(Function)
+        print(len(nodes))
+        return dict(map(lambda x: (x.summarization, x), nodes))
 
     def prune(self):
         self.repository.delete_all()
