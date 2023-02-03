@@ -137,8 +137,8 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
                   type="file"
                   tw="sr-only"
                   onChange={(event) => {
-                    // @ts-ignore
                     const updated = field.value.concat(
+                      // @ts-ignore
                       Object.values(event.currentTarget.files)
                     );
                     setFieldValue(props.id, updated);
