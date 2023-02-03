@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>repograph.api API documentation</title>
-<meta name="description" content="API entrypoint." />
+<title>repograph.models.search API documentation</title>
+<meta name="description" content="Search entity-related models." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,84 +19,39 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>repograph.api</code></h1>
+<h1 class="title">Module <code>repograph.models.search</code></h1>
 </header>
 <section id="section-intro">
-<p>API entrypoint.</p>
+<p>Search entity-related models.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-API entrypoint.
+Search entity-related models.
 &#34;&#34;&#34;
-# Base imports
-import logging
-
 # pip imports
-from dependency_injector.wiring import inject, Provide
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field, validator
 
-# Application Container
-from repograph.container import ApplicationContainer
-
-# Entity imports
-from repograph.entities.graph.router import GraphRouter
-from repograph.entities.search.router import SearchRouter
-
-# Utilities
-from repograph.utils.logging import configure_logging
-
-# Configure logging format
-configure_logging()
-log = logging.getLogger(&#39;repograph.api&#39;)
+# Model imports
+from repograph.models.nodes import Function
 
 
-@inject
-def create_app(
-    graph_router: GraphRouter = Provide[ApplicationContainer.graph.container.router],
-    search_router: SearchRouter = Provide[ApplicationContainer.search.container.router]
-) -&gt; FastAPI:
-    &#34;&#34;&#34;Creates FastAPI application.
+class SemanticSearchResult(BaseModel):
+    &#34;&#34;&#34;Result for semantic search query.
 
     Args:
-        graph_router (GraphRouter): The graph entity router.
-        search_router (SearchRouter): The search entity router.
-
-    Returns:
-        FastAPI: Initialised FastAPI application object.
+        function (Function): The function node in the match.
+        summarization (str): The summarization of the function&#39;s source code.
+        score (float): The cosine distance score.
     &#34;&#34;&#34;
-    # Configure FastAPI application and metadata
-    application = FastAPI(
-        title=&#34;Repograph&#34;,
-        description=&#34;Backend API&#34;,
-    )
+    function: Function = Field(..., exclude={&#39;ast&#39;})
+    summarization: str
+    score: float
 
-    # Add sub-routers to base router
-    application.include_router(graph_router.router)
-    application.include_router(search_router.router)
-
-    # Configure CORS, https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-    application.add_middleware(
-        CORSMiddleware,
-        allow_origins=[&#34;*&#34;],
-        allow_credentials=True,
-        allow_methods=[&#34;*&#34;],
-        allow_headers=[&#34;*&#34;]
-    )
-
-    return application
-
-
-# if __name__ == &#34;__main__&#34;:
-container = ApplicationContainer()
-container.config.from_yaml(&#34;../config.yaml&#34;)
-container.init_resources()
-container.wire(modules=[__name__])
-
-app = create_app()
-# uvicorn.run(&#34;repograph.api:app&#34;, host=&#34;0.0.0.0&#34;, port=3000, reload=True)</code></pre>
+    @validator(&#39;score&#39;)
+    def result_check(cls, v):
+        return round(v, 3)</code></pre>
 </details>
 </section>
 <section>
@@ -104,68 +59,86 @@ app = create_app()
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-functions">Functions</h2>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="repograph.api.create_app"><code class="name flex">
-<span>def <span class="ident">create_app</span></span>(<span>graph_router: <a title="repograph.entities.graph.router.GraphRouter" href="entities/graph/router.html#repograph.entities.graph.router.GraphRouter">GraphRouter</a> = &lt;dependency_injector.wiring.Provide object&gt;, search_router: <a title="repograph.entities.search.router.SearchRouter" href="entities/search/router.html#repograph.entities.search.router.SearchRouter">SearchRouter</a> = &lt;dependency_injector.wiring.Provide object&gt;) ‑> fastapi.applications.FastAPI</span>
+<dt id="repograph.models.search.SemanticSearchResult"><code class="flex name class">
+<span>class <span class="ident">SemanticSearchResult</span></span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Creates FastAPI application.</p>
+<div class="desc"><p>Result for semantic search query.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>graph_router</code></strong> :&ensp;<code>GraphRouter</code></dt>
-<dd>The graph entity router.</dd>
-<dt><strong><code>search_router</code></strong> :&ensp;<code>SearchRouter</code></dt>
-<dd>The search entity router.</dd>
+<dt><strong><code>function</code></strong> :&ensp;<code>Function</code></dt>
+<dd>The function node in the match.</dd>
+<dt><strong><code>summarization</code></strong> :&ensp;<code>str</code></dt>
+<dd>The summarization of the function's source code.</dd>
+<dt><strong><code>score</code></strong> :&ensp;<code>float</code></dt>
+<dd>The cosine distance score.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>FastAPI</code></dt>
-<dd>Initialised FastAPI application object.</dd>
-</dl></div>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">@inject
-def create_app(
-    graph_router: GraphRouter = Provide[ApplicationContainer.graph.container.router],
-    search_router: SearchRouter = Provide[ApplicationContainer.search.container.router]
-) -&gt; FastAPI:
-    &#34;&#34;&#34;Creates FastAPI application.
+<pre><code class="python">class SemanticSearchResult(BaseModel):
+    &#34;&#34;&#34;Result for semantic search query.
 
     Args:
-        graph_router (GraphRouter): The graph entity router.
-        search_router (SearchRouter): The search entity router.
-
-    Returns:
-        FastAPI: Initialised FastAPI application object.
+        function (Function): The function node in the match.
+        summarization (str): The summarization of the function&#39;s source code.
+        score (float): The cosine distance score.
     &#34;&#34;&#34;
-    # Configure FastAPI application and metadata
-    application = FastAPI(
-        title=&#34;Repograph&#34;,
-        description=&#34;Backend API&#34;,
-    )
+    function: Function = Field(..., exclude={&#39;ast&#39;})
+    summarization: str
+    score: float
 
-    # Add sub-routers to base router
-    application.include_router(graph_router.router)
-    application.include_router(search_router.router)
-
-    # Configure CORS, https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-    application.add_middleware(
-        CORSMiddleware,
-        allow_origins=[&#34;*&#34;],
-        allow_credentials=True,
-        allow_methods=[&#34;*&#34;],
-        allow_headers=[&#34;*&#34;]
-    )
-
-    return application</code></pre>
+    @validator(&#39;score&#39;)
+    def result_check(cls, v):
+        return round(v, 3)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pydantic.main.BaseModel</li>
+<li>pydantic.utils.Representation</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="repograph.models.search.SemanticSearchResult.function"><code class="name">var <span class="ident">function</span> : <a title="repograph.models.nodes.Function" href="nodes.html#repograph.models.nodes.Function">Function</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.models.search.SemanticSearchResult.score"><code class="name">var <span class="ident">score</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.models.search.SemanticSearchResult.summarization"><code class="name">var <span class="ident">summarization</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="repograph.models.search.SemanticSearchResult.result_check"><code class="name flex">
+<span>def <span class="ident">result_check</span></span>(<span>v)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@validator(&#39;score&#39;)
+def result_check(cls, v):
+    return round(v, 3)</code></pre>
 </details>
 </dd>
 </dl>
-</section>
-<section>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -176,12 +149,20 @@ def create_app(
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="repograph" href="index.html">repograph</a></code></li>
+<li><code><a title="repograph.models" href="index.html">repograph.models</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-functions">Functions</a></h3>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="repograph.models.search.SemanticSearchResult" href="#repograph.models.search.SemanticSearchResult">SemanticSearchResult</a></code></h4>
 <ul class="">
-<li><code><a title="repograph.api.create_app" href="#repograph.api.create_app">create_app</a></code></li>
+<li><code><a title="repograph.models.search.SemanticSearchResult.function" href="#repograph.models.search.SemanticSearchResult.function">function</a></code></li>
+<li><code><a title="repograph.models.search.SemanticSearchResult.result_check" href="#repograph.models.search.SemanticSearchResult.result_check">result_check</a></code></li>
+<li><code><a title="repograph.models.search.SemanticSearchResult.score" href="#repograph.models.search.SemanticSearchResult.score">score</a></code></li>
+<li><code><a title="repograph.models.search.SemanticSearchResult.summarization" href="#repograph.models.search.SemanticSearchResult.summarization">summarization</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>repograph.repograph API documentation</title>
-<meta name="description" content="This module defines the Repograph class and the operations/queries that can be performed on it" />
+<title>repograph.models.graph API documentation</title>
+<meta name="description" content="Models representing elements of the Repograph" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,56 +19,44 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>repograph.repograph</code></h1>
+<h1 class="title">Module <code>repograph.models.graph</code></h1>
 </header>
 <section id="section-intro">
-<p>This module defines the Repograph class and the operations/queries that can be performed on it</p>
+<p>Models representing elements of the Repograph</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-This module defines the Repograph class and the operations/queries that can be performed on it
+Models representing elements of the Repograph
 &#34;&#34;&#34;
-import logging
-from typing import List
-
-from repograph.models.repograph import GraphSummary
-from repograph.utils.neo4j import Neo4JDatabase
-
-log = logging.getLogger(&#39;repograph.repograph&#39;)
+# pip imports
+from pydantic import BaseModel
 
 
-class Repograph(Neo4JDatabase):
-    database: str
-    node_types: List[str] = [
-        &#34;Class&#34;,
-        &#34;Function&#34;
-    ]
+class GraphSummary(BaseModel):
+    &#34;&#34;&#34;
+    GraphSummary represents a summary about a Repograph.
 
-    def __init__(self, uri, user, password, database) -&gt; None:
-        super().__init__(uri, user, password, database)
+    Args:
+        is_empty (bool): Whether the graph is empty.
+        nodes_total (int): Total number of nodes in the graph.
+        relationships_total (int): Total number of relationships in the graph.
+        repositories (int): Number of repositories contained in the graph.
+        classes (int): Number of classes contained in the graph.
+        functions (int): Number of functions contained in the graph.
+        modules (int): Number of modules contained in the graph.
+        packages (int): Number of packages contained in the graph.
 
-    def get_summary(self) -&gt; GraphSummary:
-        if not self.has_nodes():
-            log.warning(&#34;Graph has no nodes&#34;)
-            return GraphSummary()
-
-        summary = GraphSummary(is_empty=False)
-
-        # Modules
-        _, count = self.get_all(&#34;Module&#34;)
-        summary.modules = count
-
-        # Classes
-        _, count = self.get_all(&#34;Class&#34;)
-        summary.classes = count
-
-        # Functions
-        _, count = self.get_all(&#34;Function&#34;)
-        summary.functions = count
-
-        return summary</code></pre>
+    &#34;&#34;&#34;
+    is_empty: bool = True
+    nodes_total: int = True
+    relationships_total: int = True
+    repositories: int = 0
+    classes: int = 0
+    functions: int = 0
+    modules: int = 0
+    packages: int = 0</code></pre>
 </details>
 </section>
 <section>
@@ -80,108 +68,99 @@ class Repograph(Neo4JDatabase):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="repograph.repograph.Repograph"><code class="flex name class">
-<span>class <span class="ident">Repograph</span></span>
-<span>(</span><span>uri, user, password, database)</span>
+<dt id="repograph.models.graph.GraphSummary"><code class="flex name class">
+<span>class <span class="ident">GraphSummary</span></span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A connected Neo4J database.</p>
-<p>Represents a connection to a Neo4J graph database,
-and provides functionality for interacting with it.</p>
-<p>Neo4JDatabase constructor.</p>
+<div class="desc"><p>GraphSummary represents a summary about a Repograph.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>uri</code></strong> :&ensp;<code>_type_</code></dt>
-<dd><em>description</em></dd>
-<dt><strong><code>user</code></strong> :&ensp;<code>_type_</code></dt>
-<dd><em>description</em></dd>
-<dt><strong><code>password</code></strong> :&ensp;<code>_type_</code></dt>
-<dd><em>description</em></dd>
-<dt><strong><code>database</code></strong> :&ensp;<code>_type_</code></dt>
-<dd><em>description</em></dd>
-</dl></div>
+<dt><strong><code>is_empty</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the graph is empty.</dd>
+<dt><strong><code>nodes_total</code></strong> :&ensp;<code>int</code></dt>
+<dd>Total number of nodes in the graph.</dd>
+<dt><strong><code>relationships_total</code></strong> :&ensp;<code>int</code></dt>
+<dd>Total number of relationships in the graph.</dd>
+<dt><strong><code>repositories</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of repositories contained in the graph.</dd>
+<dt><strong><code>classes</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of classes contained in the graph.</dd>
+<dt><strong><code>functions</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of functions contained in the graph.</dd>
+<dt><strong><code>modules</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of modules contained in the graph.</dd>
+<dt><strong><code>packages</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of packages contained in the graph.</dd>
+</dl>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Repograph(Neo4JDatabase):
-    database: str
-    node_types: List[str] = [
-        &#34;Class&#34;,
-        &#34;Function&#34;
-    ]
+<pre><code class="python">class GraphSummary(BaseModel):
+    &#34;&#34;&#34;
+    GraphSummary represents a summary about a Repograph.
 
-    def __init__(self, uri, user, password, database) -&gt; None:
-        super().__init__(uri, user, password, database)
+    Args:
+        is_empty (bool): Whether the graph is empty.
+        nodes_total (int): Total number of nodes in the graph.
+        relationships_total (int): Total number of relationships in the graph.
+        repositories (int): Number of repositories contained in the graph.
+        classes (int): Number of classes contained in the graph.
+        functions (int): Number of functions contained in the graph.
+        modules (int): Number of modules contained in the graph.
+        packages (int): Number of packages contained in the graph.
 
-    def get_summary(self) -&gt; GraphSummary:
-        if not self.has_nodes():
-            log.warning(&#34;Graph has no nodes&#34;)
-            return GraphSummary()
-
-        summary = GraphSummary(is_empty=False)
-
-        # Modules
-        _, count = self.get_all(&#34;Module&#34;)
-        summary.modules = count
-
-        # Classes
-        _, count = self.get_all(&#34;Class&#34;)
-        summary.classes = count
-
-        # Functions
-        _, count = self.get_all(&#34;Function&#34;)
-        summary.functions = count
-
-        return summary</code></pre>
+    &#34;&#34;&#34;
+    is_empty: bool = True
+    nodes_total: int = True
+    relationships_total: int = True
+    repositories: int = 0
+    classes: int = 0
+    functions: int = 0
+    modules: int = 0
+    packages: int = 0</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="repograph.utils.neo4j.Neo4JDatabase" href="utils/neo4j.html#repograph.utils.neo4j.Neo4JDatabase">Neo4JDatabase</a></li>
+<li>pydantic.main.BaseModel</li>
+<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="repograph.repograph.Repograph.database"><code class="name">var <span class="ident">database</span> : str</code></dt>
+<dt id="repograph.models.graph.GraphSummary.classes"><code class="name">var <span class="ident">classes</span> : int</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="repograph.repograph.Repograph.node_types"><code class="name">var <span class="ident">node_types</span> : List[str]</code></dt>
+<dt id="repograph.models.graph.GraphSummary.functions"><code class="name">var <span class="ident">functions</span> : int</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-</dl>
-<h3>Methods</h3>
-<dl>
-<dt id="repograph.repograph.Repograph.get_summary"><code class="name flex">
-<span>def <span class="ident">get_summary</span></span>(<span>self) ‑> <a title="repograph.models.repograph.GraphSummary" href="models/repograph.html#repograph.models.repograph.RepographSummary">GraphSummary</a></span>
-</code></dt>
+<dt id="repograph.models.graph.GraphSummary.is_empty"><code class="name">var <span class="ident">is_empty</span> : bool</code></dt>
 <dd>
 <div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_summary(self) -&gt; GraphSummary:
-    if not self.has_nodes():
-        log.warning(&#34;Graph has no nodes&#34;)
-        return GraphSummary()
-
-    summary = GraphSummary(is_empty=False)
-
-    # Modules
-    _, count = self.get_all(&#34;Module&#34;)
-    summary.modules = count
-
-    # Classes
-    _, count = self.get_all(&#34;Class&#34;)
-    summary.classes = count
-
-    # Functions
-    _, count = self.get_all(&#34;Function&#34;)
-    summary.functions = count
-
-    return summary</code></pre>
-</details>
+</dd>
+<dt id="repograph.models.graph.GraphSummary.modules"><code class="name">var <span class="ident">modules</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.models.graph.GraphSummary.nodes_total"><code class="name">var <span class="ident">nodes_total</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.models.graph.GraphSummary.packages"><code class="name">var <span class="ident">packages</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.models.graph.GraphSummary.relationships_total"><code class="name">var <span class="ident">relationships_total</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.models.graph.GraphSummary.repositories"><code class="name">var <span class="ident">repositories</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
 </dd>
 </dl>
 </dd>
@@ -196,17 +175,22 @@ and provides functionality for interacting with it.</p>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="repograph" href="index.html">repograph</a></code></li>
+<li><code><a title="repograph.models" href="index.html">repograph.models</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="repograph.repograph.Repograph" href="#repograph.repograph.Repograph">Repograph</a></code></h4>
-<ul class="">
-<li><code><a title="repograph.repograph.Repograph.database" href="#repograph.repograph.Repograph.database">database</a></code></li>
-<li><code><a title="repograph.repograph.Repograph.get_summary" href="#repograph.repograph.Repograph.get_summary">get_summary</a></code></li>
-<li><code><a title="repograph.repograph.Repograph.node_types" href="#repograph.repograph.Repograph.node_types">node_types</a></code></li>
+<h4><code><a title="repograph.models.graph.GraphSummary" href="#repograph.models.graph.GraphSummary">GraphSummary</a></code></h4>
+<ul class="two-column">
+<li><code><a title="repograph.models.graph.GraphSummary.classes" href="#repograph.models.graph.GraphSummary.classes">classes</a></code></li>
+<li><code><a title="repograph.models.graph.GraphSummary.functions" href="#repograph.models.graph.GraphSummary.functions">functions</a></code></li>
+<li><code><a title="repograph.models.graph.GraphSummary.is_empty" href="#repograph.models.graph.GraphSummary.is_empty">is_empty</a></code></li>
+<li><code><a title="repograph.models.graph.GraphSummary.modules" href="#repograph.models.graph.GraphSummary.modules">modules</a></code></li>
+<li><code><a title="repograph.models.graph.GraphSummary.nodes_total" href="#repograph.models.graph.GraphSummary.nodes_total">nodes_total</a></code></li>
+<li><code><a title="repograph.models.graph.GraphSummary.packages" href="#repograph.models.graph.GraphSummary.packages">packages</a></code></li>
+<li><code><a title="repograph.models.graph.GraphSummary.relationships_total" href="#repograph.models.graph.GraphSummary.relationships_total">relationships_total</a></code></li>
+<li><code><a title="repograph.models.graph.GraphSummary.repositories" href="#repograph.models.graph.GraphSummary.repositories">repositories</a></code></li>
 </ul>
 </li>
 </ul>

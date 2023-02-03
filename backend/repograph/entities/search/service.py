@@ -15,6 +15,7 @@ from sentence_transformers import SentenceTransformer, util
 
 # Model imports
 from repograph.models.nodes import Function
+from repograph.models.search import SemanticSearchResult
 
 # Graph entity imports
 from repograph.entities.graph.service import GraphService
@@ -39,8 +40,6 @@ class SearchService:
         log.info("Initialising model...")
         self.model = SentenceTransformer('sentence-transformers/multi-qa-distilbert-cos-v1')
 
-    # def prepare_embeddings(self, graph_name: str, ):
-
     def find_similar_functions_by_query(self, query: str) -> List[Function]:
         query_embedding = self.model.encode(query)
         summarizations_map = self.graph.get_function_summarizations()
@@ -51,5 +50,10 @@ class SearchService:
         score_pairs = list(zip(summarizations, scores))
         score_pairs = sorted(score_pairs, key=lambda x: x[1], reverse=True)
 
-        top_5 = list(map(lambda x: summarizations_map[x[0]], score_pairs))
+        top_5 = list(map(lambda x: SemanticSearchResult(
+            function=summarizations_map[x[0]],
+            summarization=x[0],
+            score=x[1]
+        ), score_pairs))[:5]
+
         return top_5

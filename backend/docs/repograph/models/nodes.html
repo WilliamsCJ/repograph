@@ -363,7 +363,7 @@ class Function(Node):
         builtin (bool): Whether the function is a Python interpreter built-in function.
         imported_as (str): The name by which the function is imported, if so.
         source_code (Optional[str]): The original source code string.
-        ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
+        _ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
         min_line_number (Optional[int]): The first line of the function definition.
         max_line_number (Optional[int]): The last line of the function definition.
     &#34;&#34;&#34;
@@ -978,7 +978,7 @@ specifically with a Node object.</p>
 <dd>The name by which the function is imported, if so.</dd>
 <dt><strong><code>source_code</code></strong> :&ensp;<code>Optional[str]</code></dt>
 <dd>The original source code string.</dd>
-<dt><strong><code>ast</code></strong> :&ensp;<code>Optional[ast.AST]</code></dt>
+<dt><strong><code>_ast</code></strong> :&ensp;<code>Optional[ast.AST]</code></dt>
 <dd>Abstract Syntax Tree extracted from the source code.</dd>
 <dt><strong><code>min_line_number</code></strong> :&ensp;<code>Optional[int]</code></dt>
 <dd>The first line of the function definition.</dd>
@@ -1008,7 +1008,7 @@ specifically with a Node object.</p>
         builtin (bool): Whether the function is a Python interpreter built-in function.
         imported_as (str): The name by which the function is imported, if so.
         source_code (Optional[str]): The original source code string.
-        ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
+        _ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
         min_line_number (Optional[int]): The first line of the function definition.
         max_line_number (Optional[int]): The last line of the function definition.
     &#34;&#34;&#34;

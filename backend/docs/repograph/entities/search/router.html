@@ -43,7 +43,12 @@ class SearchRouter:
     def __init__(self, service: SearchService):
         self.service = service
         self.router = APIRouter(prefix=&#34;/search&#34;)
-        self.router.add_api_route(&#34;/semantic&#34;, self.semantic_search, methods=[&#34;GET&#34;])
+        self.router.add_api_route(
+            &#34;/semantic&#34;,
+            self.semantic_search,
+            methods=[&#34;GET&#34;],
+            response_model_exclude={&#34;ast&#34;}
+        )
 
     def semantic_search(self, query: str = None):
         results = self.service.find_similar_functions_by_query(query)
@@ -75,7 +80,12 @@ class SearchRouter:
     def __init__(self, service: SearchService):
         self.service = service
         self.router = APIRouter(prefix=&#34;/search&#34;)
-        self.router.add_api_route(&#34;/semantic&#34;, self.semantic_search, methods=[&#34;GET&#34;])
+        self.router.add_api_route(
+            &#34;/semantic&#34;,
+            self.semantic_search,
+            methods=[&#34;GET&#34;],
+            response_model_exclude={&#34;ast&#34;}
+        )
 
     def semantic_search(self, query: str = None):
         results = self.service.find_similar_functions_by_query(query)

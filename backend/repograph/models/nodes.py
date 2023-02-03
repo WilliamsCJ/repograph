@@ -334,7 +334,7 @@ class Function(Node):
         builtin (bool): Whether the function is a Python interpreter built-in function.
         imported_as (str): The name by which the function is imported, if so.
         source_code (Optional[str]): The original source code string.
-        ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
+        _ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
         min_line_number (Optional[int]): The first line of the function definition.
         max_line_number (Optional[int]): The last line of the function definition.
     """

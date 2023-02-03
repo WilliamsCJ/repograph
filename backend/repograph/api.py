@@ -42,9 +42,6 @@ def create_app(
     application = FastAPI(
         title="Repograph",
         description="Backend API",
-        openapi_url="/v1/openapi.json",
-        docs_url="/v1/docs",
-        redoc_url="/v1/docs"
     )
 
     # Add sub-routers to base router
