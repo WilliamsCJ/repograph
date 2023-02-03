@@ -15,11 +15,13 @@ class GraphRouter:
 
     def __init__(self, service: GraphService):
         self.service = service
+
         self.router = APIRouter(
             prefix="/graph",
             tags=["Graph"],
             responses={}
         )
+
         self.router.add_api_route(
             "/summary",
             self.summary,

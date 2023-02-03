@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>repograph.utils.logging API documentation</title>
-<meta name="description" content="Logging utilities" />
+<title>repograph.entities.search.service API documentation</title>
+<meta name="description" content="Function search …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,43 +19,66 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>repograph.utils.logging</code></h1>
+<h1 class="title">Module <code>repograph.entities.search.service</code></h1>
 </header>
 <section id="section-intro">
-<p>Logging utilities</p>
+<p>Function search.</p>
+<p>The FunctionSummarizer class implements the CodeT5 model for function search.</p>
+<p>Typical usage:</p>
+<pre><code>docstring_node = FunctionSummarizer.create_docstring_node(function_node)
+</code></pre>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;
-Logging utilities
+<pre><code class="python">&#34;&#34;&#34;Function search.
+
+The FunctionSummarizer class implements the CodeT5 model for function search.
+
+Typical usage:
+
+    docstring_node = FunctionSummarizer.create_docstring_node(function_node)
 &#34;&#34;&#34;
-import logging
-import sys
+# Base imports
+from logging import getLogger
+from typing import Optional
+
+# pip imports
+from sentence_transformers import SentenceTransformer
+
+# Model imports
+from repograph.models.nodes import Function
+
+# Graph entity imports
+from repograph.entities.graph.service import GraphService
+
+# Utils imports
 
 
-def configure_logging():
-    &#34;&#34;&#34;Configures logging for repograph.
+# Setup logging
+log = getLogger(&#39;repograph.entities.search.service&#39;)
 
-    Modified code from: https://docs.python.org/3/howto/logging-cookbook.html
 
-    Returns:
-        None
-    &#34;&#34;&#34;
-    # Configure root logger
-    logger = logging.getLogger(&#34;repograph&#34;)
-    logger.setLevel(logging.DEBUG)
+class SearchService:
+    graph: GraphService
+    model: Optional[SentenceTransformer] = None
 
-    # Create stream handler to display logs to stdout
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-    ch.setStream(stream=sys.stdout)
+    def __init__(self, graph: GraphService, active: bool = False):
+        &#34;&#34;&#34;Constructor
 
-    # Format logs
-    formatter = logging.Formatter(&#39;%(levelname)s:%(name)s | %(message)s&#39;)
-    ch.setFormatter(formatter)
+        Args:
+        &#34;&#34;&#34;
+        self.graph = graph
 
-    logger.addHandler(ch)</code></pre>
+        if active:
+            log.info(&#34;Initialising model...&#34;)
+            self.model = SentenceTransformer(&#39;sentence-transformers/multi-qa-distilbert-cos-v1&#39;)
+
+    def find_similar_functions_by_query(self, query: str) -&gt; any:
+        self.model.encode(query)
+
+    def test(self):
+        self.graph.repository.get_all_nodes(label=&#39;Function&#39;, type=Function)</code></pre>
 </details>
 </section>
 <section>
@@ -63,47 +86,84 @@ def configure_logging():
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-functions">Functions</h2>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="repograph.utils.logging.configure_logging"><code class="name flex">
-<span>def <span class="ident">configure_logging</span></span>(<span>)</span>
+<dt id="repograph.entities.search.service.SearchService"><code class="flex name class">
+<span>class <span class="ident">SearchService</span></span>
+<span>(</span><span>graph: <a title="repograph.entities.graph.service.GraphService" href="../graph/service.html#repograph.entities.graph.service.GraphService">GraphService</a>, active: bool = False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Configures logging for repograph.</p>
-<p>Modified code from: <a href="https://docs.python.org/3/howto/logging-cookbook.html">https://docs.python.org/3/howto/logging-cookbook.html</a></p>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<div class="desc"><p>Constructor</p>
+<p>Args:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def configure_logging():
-    &#34;&#34;&#34;Configures logging for repograph.
+<pre><code class="python">class SearchService:
+    graph: GraphService
+    model: Optional[SentenceTransformer] = None
 
-    Modified code from: https://docs.python.org/3/howto/logging-cookbook.html
+    def __init__(self, graph: GraphService, active: bool = False):
+        &#34;&#34;&#34;Constructor
 
-    Returns:
-        None
-    &#34;&#34;&#34;
-    # Configure root logger
-    logger = logging.getLogger(&#34;repograph&#34;)
-    logger.setLevel(logging.DEBUG)
+        Args:
+        &#34;&#34;&#34;
+        self.graph = graph
 
-    # Create stream handler to display logs to stdout
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-    ch.setStream(stream=sys.stdout)
+        if active:
+            log.info(&#34;Initialising model...&#34;)
+            self.model = SentenceTransformer(&#39;sentence-transformers/multi-qa-distilbert-cos-v1&#39;)
 
-    # Format logs
-    formatter = logging.Formatter(&#39;%(levelname)s:%(name)s | %(message)s&#39;)
-    ch.setFormatter(formatter)
+    def find_similar_functions_by_query(self, query: str) -&gt; any:
+        self.model.encode(query)
 
-    logger.addHandler(ch)</code></pre>
+    def test(self):
+        self.graph.repository.get_all_nodes(label=&#39;Function&#39;, type=Function)</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="repograph.entities.search.service.SearchService.graph"><code class="name">var <span class="ident">graph</span> : <a title="repograph.entities.graph.service.GraphService" href="../graph/service.html#repograph.entities.graph.service.GraphService">GraphService</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.search.service.SearchService.model"><code class="name">var <span class="ident">model</span> : Optional[sentence_transformers.SentenceTransformer.SentenceTransformer]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="repograph.entities.search.service.SearchService.find_similar_functions_by_query"><code class="name flex">
+<span>def <span class="ident">find_similar_functions_by_query</span></span>(<span>self, query: str) ‑> <built-in function any></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_similar_functions_by_query(self, query: str) -&gt; any:
+    self.model.encode(query)</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.search.service.SearchService.test"><code class="name flex">
+<span>def <span class="ident">test</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test(self):
+    self.graph.repository.get_all_nodes(label=&#39;Function&#39;, type=Function)</code></pre>
 </details>
 </dd>
 </dl>
-</section>
-<section>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -114,12 +174,20 @@ def configure_logging():
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="repograph.utils" href="index.html">repograph.utils</a></code></li>
+<li><code><a title="repograph.entities.search" href="index.html">repograph.entities.search</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-functions">Functions</a></h3>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="repograph.entities.search.service.SearchService" href="#repograph.entities.search.service.SearchService">SearchService</a></code></h4>
 <ul class="">
-<li><code><a title="repograph.utils.logging.configure_logging" href="#repograph.utils.logging.configure_logging">configure_logging</a></code></li>
+<li><code><a title="repograph.entities.search.service.SearchService.find_similar_functions_by_query" href="#repograph.entities.search.service.SearchService.find_similar_functions_by_query">find_similar_functions_by_query</a></code></li>
+<li><code><a title="repograph.entities.search.service.SearchService.graph" href="#repograph.entities.search.service.SearchService.graph">graph</a></code></li>
+<li><code><a title="repograph.entities.search.service.SearchService.model" href="#repograph.entities.search.service.SearchService.model">model</a></code></li>
+<li><code><a title="repograph.entities.search.service.SearchService.test" href="#repograph.entities.search.service.SearchService.test">test</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

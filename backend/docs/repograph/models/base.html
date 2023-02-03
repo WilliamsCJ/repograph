@@ -69,7 +69,7 @@ class Node(BaseSubgraph):
 
     All Node types inherit from this class.
     &#34;&#34;&#34;
-    def __init__(self, **data: Any) -&gt; None:
+    def __init__(self, identity: Optional[int] = None, **data: Any) -&gt; None:
         &#34;&#34;&#34;Constructor
 
         Args:
@@ -275,7 +275,7 @@ based on the parent and child types.</p>
 </dd>
 <dt id="repograph.models.base.Node"><code class="flex name class">
 <span>class <span class="ident">Node</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Node represents a generic Node in Repograph.</p>
@@ -299,7 +299,7 @@ specifically with a Node object.</p>
 
     All Node types inherit from this class.
     &#34;&#34;&#34;
-    def __init__(self, **data: Any) -&gt; None:
+    def __init__(self, identity: Optional[int] = None, **data: Any) -&gt; None:
         &#34;&#34;&#34;Constructor
 
         Args:

@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>repograph.container API documentation</title>
-<meta name="description" content="" />
+<title>repograph.entities.search.container API documentation</title>
+<meta name="description" content="&#34;" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,69 +19,45 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>repograph.container</code></h1>
+<h1 class="title">Module <code>repograph.entities.search.container</code></h1>
 </header>
 <section id="section-intro">
+<p>"</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;
-
+<pre><code class="python">&#34;&#34;&#34;&#34;
 &#34;&#34;&#34;
 # pip imports
 from dependency_injector.containers import DeclarativeContainer
-from dependency_injector.providers import Container, Configuration, Resource
-from py2neo import Graph
+from dependency_injector.providers import Configuration, Dependency, Singleton
+
+# Summarize entity imports
+from repograph.entities.search.service import SearchService
+from repograph.entities.search.router import SearchRouter
+
+# Graph entity imports
+from repograph.entities.graph.service import GraphService
 
 
-# Containers
-from repograph.entities.build.container import BuildContainer
-from repograph.entities.graph.container import GraphContainer
-from repograph.entities.search.container import SearchContainer
-from repograph.entities.summarization.container import SummarizationContainer
+class SearchContainer(DeclarativeContainer):
+    config: Configuration = Configuration()
 
+    graph: Dependency[GraphService] = Dependency()
 
-class ApplicationContainer(DeclarativeContainer):
-    &#34;&#34;&#34;Top-level container
-    This container wires together all other containers to bring together the application.
-    &#34;&#34;&#34;
-    # Configuration object
-    config = Configuration()
+    print(&#34;Config&#34;)
+    print(config.get(&#34;search&#34;))
 
-    # Neo4j resource
-    neo4j: Resource[Graph] = Resource(
-        Graph,
-        config.uri,
-        auth=(&#34;neo4j&#34;, &#34;s3cr3t&#34;),
-        name=config.database
+    service: Singleton[SearchService] = Singleton(
+        SearchService,
+        graph=graph,
+        active=config.get(&#34;search&#34;)
     )
 
-    # Container for Graph entity
-    graph: Container[GraphContainer] = Container(
-        GraphContainer,
-        neo4j=neo4j.provided,
-    )
-
-    # Container for Summarization entity
-    summarization: Container[SummarizationContainer] = Container(
-        SummarizationContainer,
-        config=config
-    )
-
-    # Container for Build entity
-    build: Container[BuildContainer] = Container(
-        BuildContainer,
-        graph=graph.container.service,
-        summarization=summarization.container.service,
-        config=config
-    )
-
-    # Container for Search entity
-    search: Container[SearchContainer] = Container(
-        SearchContainer,
-        config=config,
-        graph=graph.container.service
+    router: Singleton[SearchRouter] = Singleton(
+        SearchRouter,
+        service=service,
     )</code></pre>
 </details>
 </section>
@@ -94,57 +70,39 @@ class ApplicationContainer(DeclarativeContainer):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="repograph.container.ApplicationContainer"><code class="flex name class">
-<span>class <span class="ident">ApplicationContainer</span></span>
+<dt id="repograph.entities.search.container.SearchContainer"><code class="flex name class">
+<span>class <span class="ident">SearchContainer</span></span>
 <span>(</span><span>**overriding_providers)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Top-level container
-This container wires together all other containers to bring together the application.</p></div>
+<div class="desc"><p>Declarative inversion of control container.</p>
+<p>.. code-block:: python</p>
+<pre><code>class Services(DeclarativeContainer):
+    auth = providers.Factory(AuthService)
+    users = providers.Factory(UsersService,
+                              auth_service=auth)
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class ApplicationContainer(DeclarativeContainer):
-    &#34;&#34;&#34;Top-level container
-    This container wires together all other containers to bring together the application.
-    &#34;&#34;&#34;
-    # Configuration object
-    config = Configuration()
+<pre><code class="python">class SearchContainer(DeclarativeContainer):
+    config: Configuration = Configuration()
 
-    # Neo4j resource
-    neo4j: Resource[Graph] = Resource(
-        Graph,
-        config.uri,
-        auth=(&#34;neo4j&#34;, &#34;s3cr3t&#34;),
-        name=config.database
+    graph: Dependency[GraphService] = Dependency()
+
+    print(&#34;Config&#34;)
+    print(config.get(&#34;search&#34;))
+
+    service: Singleton[SearchService] = Singleton(
+        SearchService,
+        graph=graph,
+        active=config.get(&#34;search&#34;)
     )
 
-    # Container for Graph entity
-    graph: Container[GraphContainer] = Container(
-        GraphContainer,
-        neo4j=neo4j.provided,
-    )
-
-    # Container for Summarization entity
-    summarization: Container[SummarizationContainer] = Container(
-        SummarizationContainer,
-        config=config
-    )
-
-    # Container for Build entity
-    build: Container[BuildContainer] = Container(
-        BuildContainer,
-        graph=graph.container.service,
-        summarization=summarization.container.service,
-        config=config
-    )
-
-    # Container for Search entity
-    search: Container[SearchContainer] = Container(
-        SearchContainer,
-        config=config,
-        graph=graph.container.service
+    router: Singleton[SearchRouter] = Singleton(
+        SearchRouter,
+        service=service,
     )</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -154,49 +112,41 @@ This container wires together all other containers to bring together the applica
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="repograph.container.ApplicationContainer.build"><code class="name">var <span class="ident">build</span> : dependency_injector.providers.Container</code></dt>
+<dt id="repograph.entities.search.container.SearchContainer.cls_providers"><code class="name">var <span class="ident">cls_providers</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="repograph.container.ApplicationContainer.cls_providers"><code class="name">var <span class="ident">cls_providers</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="repograph.container.ApplicationContainer.config"><code class="name">var <span class="ident">config</span></code></dt>
+<dt id="repograph.entities.search.container.SearchContainer.config"><code class="name">var <span class="ident">config</span> : dependency_injector.providers.Configuration</code></dt>
 <dd>
 <div class="desc"><p>Child configuration option provider.</p>
 <p>This provider should not be used directly. It is a part of the
 :py:class:<code>Configuration</code> provider.</p></div>
 </dd>
-<dt id="repograph.container.ApplicationContainer.containers"><code class="name">var <span class="ident">containers</span></code></dt>
+<dt id="repograph.entities.search.container.SearchContainer.containers"><code class="name">var <span class="ident">containers</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="repograph.container.ApplicationContainer.graph"><code class="name">var <span class="ident">graph</span> : dependency_injector.providers.Container</code></dt>
+<dt id="repograph.entities.search.container.SearchContainer.graph"><code class="name">var <span class="ident">graph</span> : dependency_injector.providers.Dependency</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="repograph.container.ApplicationContainer.inherited_providers"><code class="name">var <span class="ident">inherited_providers</span></code></dt>
+<dt id="repograph.entities.search.container.SearchContainer.inherited_providers"><code class="name">var <span class="ident">inherited_providers</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="repograph.container.ApplicationContainer.neo4j"><code class="name">var <span class="ident">neo4j</span> : dependency_injector.providers.Resource</code></dt>
+<dt id="repograph.entities.search.container.SearchContainer.providers"><code class="name">var <span class="ident">providers</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="repograph.container.ApplicationContainer.providers"><code class="name">var <span class="ident">providers</span></code></dt>
+<dt id="repograph.entities.search.container.SearchContainer.router"><code class="name">var <span class="ident">router</span> : dependency_injector.providers.Singleton</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="repograph.container.ApplicationContainer.search"><code class="name">var <span class="ident">search</span> : dependency_injector.providers.Container</code></dt>
+<dt id="repograph.entities.search.container.SearchContainer.service"><code class="name">var <span class="ident">service</span> : dependency_injector.providers.Singleton</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="repograph.container.ApplicationContainer.summarization"><code class="name">var <span class="ident">summarization</span> : dependency_injector.providers.Container</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="repograph.container.ApplicationContainer.wiring_config"><code class="name">var <span class="ident">wiring_config</span></code></dt>
+<dt id="repograph.entities.search.container.SearchContainer.wiring_config"><code class="name">var <span class="ident">wiring_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -213,25 +163,23 @@ This container wires together all other containers to bring together the applica
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="repograph" href="index.html">repograph</a></code></li>
+<li><code><a title="repograph.entities.search" href="index.html">repograph.entities.search</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="repograph.container.ApplicationContainer" href="#repograph.container.ApplicationContainer">ApplicationContainer</a></code></h4>
+<h4><code><a title="repograph.entities.search.container.SearchContainer" href="#repograph.entities.search.container.SearchContainer">SearchContainer</a></code></h4>
 <ul class="two-column">
-<li><code><a title="repograph.container.ApplicationContainer.build" href="#repograph.container.ApplicationContainer.build">build</a></code></li>
-<li><code><a title="repograph.container.ApplicationContainer.cls_providers" href="#repograph.container.ApplicationContainer.cls_providers">cls_providers</a></code></li>
-<li><code><a title="repograph.container.ApplicationContainer.config" href="#repograph.container.ApplicationContainer.config">config</a></code></li>
-<li><code><a title="repograph.container.ApplicationContainer.containers" href="#repograph.container.ApplicationContainer.containers">containers</a></code></li>
-<li><code><a title="repograph.container.ApplicationContainer.graph" href="#repograph.container.ApplicationContainer.graph">graph</a></code></li>
-<li><code><a title="repograph.container.ApplicationContainer.inherited_providers" href="#repograph.container.ApplicationContainer.inherited_providers">inherited_providers</a></code></li>
-<li><code><a title="repograph.container.ApplicationContainer.neo4j" href="#repograph.container.ApplicationContainer.neo4j">neo4j</a></code></li>
-<li><code><a title="repograph.container.ApplicationContainer.providers" href="#repograph.container.ApplicationContainer.providers">providers</a></code></li>
-<li><code><a title="repograph.container.ApplicationContainer.search" href="#repograph.container.ApplicationContainer.search">search</a></code></li>
-<li><code><a title="repograph.container.ApplicationContainer.summarization" href="#repograph.container.ApplicationContainer.summarization">summarization</a></code></li>
-<li><code><a title="repograph.container.ApplicationContainer.wiring_config" href="#repograph.container.ApplicationContainer.wiring_config">wiring_config</a></code></li>
+<li><code><a title="repograph.entities.search.container.SearchContainer.cls_providers" href="#repograph.entities.search.container.SearchContainer.cls_providers">cls_providers</a></code></li>
+<li><code><a title="repograph.entities.search.container.SearchContainer.config" href="#repograph.entities.search.container.SearchContainer.config">config</a></code></li>
+<li><code><a title="repograph.entities.search.container.SearchContainer.containers" href="#repograph.entities.search.container.SearchContainer.containers">containers</a></code></li>
+<li><code><a title="repograph.entities.search.container.SearchContainer.graph" href="#repograph.entities.search.container.SearchContainer.graph">graph</a></code></li>
+<li><code><a title="repograph.entities.search.container.SearchContainer.inherited_providers" href="#repograph.entities.search.container.SearchContainer.inherited_providers">inherited_providers</a></code></li>
+<li><code><a title="repograph.entities.search.container.SearchContainer.providers" href="#repograph.entities.search.container.SearchContainer.providers">providers</a></code></li>
+<li><code><a title="repograph.entities.search.container.SearchContainer.router" href="#repograph.entities.search.container.SearchContainer.router">router</a></code></li>
+<li><code><a title="repograph.entities.search.container.SearchContainer.service" href="#repograph.entities.search.container.SearchContainer.service">service</a></code></li>
+<li><code><a title="repograph.entities.search.container.SearchContainer.wiring_config" href="#repograph.entities.search.container.SearchContainer.wiring_config">wiring_config</a></code></li>
 </ul>
 </li>
 </ul>

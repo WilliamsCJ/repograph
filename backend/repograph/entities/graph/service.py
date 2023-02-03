@@ -25,6 +25,9 @@ class GraphService:
     def bulk_add(self, nodes: List[Node], relationships: List[Relationship]):
         self.repository.add(*nodes, *relationships)
 
+    def get_all_function_nodes(self) -> None:
+        self.repository.get_all()
+
     def get_summary(self) -> RepographSummary:
         if not self.repository.has_nodes():
             log.warning("Graph has no nodes")

@@ -41,7 +41,7 @@ class Node(BaseSubgraph):
 
     All Node types inherit from this class.
     """
-    def __init__(self, **data: Any) -> None:
+    def __init__(self, identity: Optional[int] = None, **data: Any) -> None:
         """Constructor
 
         Args:

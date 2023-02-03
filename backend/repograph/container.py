@@ -10,6 +10,7 @@ from py2neo import Graph
 # Containers
 from repograph.entities.build.container import BuildContainer
 from repograph.entities.graph.container import GraphContainer
+from repograph.entities.search.container import SearchContainer
 from repograph.entities.summarization.container import SummarizationContainer
 
 
@@ -46,4 +47,11 @@ class ApplicationContainer(DeclarativeContainer):
         graph=graph.container.service,
         summarization=summarization.container.service,
         config=config
+    )
+
+    # Container for Search entity
+    search: Container[SearchContainer] = Container(
+        SearchContainer,
+        config=config,
+        graph=graph.container.service
     )

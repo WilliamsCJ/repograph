@@ -487,7 +487,7 @@ class DocstringRaises(Node):
 <dl>
 <dt id="repograph.models.nodes.Argument"><code class="flex name class">
 <span>class <span class="ident">Argument</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Node representing an argument to a function.</p>
@@ -535,7 +535,7 @@ specifically with a Node object.</p>
 </dd>
 <dt id="repograph.models.nodes.Body"><code class="flex name class">
 <span>class <span class="ident">Body</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Node represents a generic Node in Repograph.</p>
@@ -567,7 +567,7 @@ specifically with a Node object.</p>
 </dd>
 <dt id="repograph.models.nodes.Class"><code class="flex name class">
 <span>class <span class="ident">Class</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a Python class.</p>
@@ -706,7 +706,7 @@ specifically with a Node object.</p>
 </dd>
 <dt id="repograph.models.nodes.Docstring"><code class="flex name class">
 <span>class <span class="ident">Docstring</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a docstring for a function or class.</p>
@@ -770,7 +770,7 @@ specifically with a Node object.</p>
 </dd>
 <dt id="repograph.models.nodes.DocstringArgument"><code class="flex name class">
 <span>class <span class="ident">DocstringArgument</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents an argument description with a docstring.</p>
@@ -842,7 +842,7 @@ specifically with a Node object.</p>
 </dd>
 <dt id="repograph.models.nodes.DocstringRaises"><code class="flex name class">
 <span>class <span class="ident">DocstringRaises</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a raises/exception descritpion within a docstring.</p>
@@ -898,7 +898,7 @@ specifically with a Node object.</p>
 </dd>
 <dt id="repograph.models.nodes.DocstringReturnValue"><code class="flex name class">
 <span>class <span class="ident">DocstringReturnValue</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a return value description within a docstring.</p>
@@ -962,7 +962,7 @@ specifically with a Node object.</p>
 </dd>
 <dt id="repograph.models.nodes.Function"><code class="flex name class">
 <span>class <span class="ident">Function</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a Python function or method.</p>
@@ -1079,7 +1079,7 @@ specifically with a Node object.</p>
 </dd>
 <dt id="repograph.models.nodes.License"><code class="flex name class">
 <span>class <span class="ident">License</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a software license.
@@ -1145,7 +1145,7 @@ specifically with a Node object.</p>
 </dd>
 <dt id="repograph.models.nodes.Module"><code class="flex name class">
 <span>class <span class="ident">Module</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a Module within the repository.</p>
@@ -1562,7 +1562,7 @@ def create_from_external_dependency(cls, package: str) -&gt; &#34;Package&#34;:
 </dd>
 <dt id="repograph.models.nodes.README"><code class="flex name class">
 <span>class <span class="ident">README</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a README file in a repository.</p>
@@ -1618,7 +1618,7 @@ specifically with a Node object.</p>
 </dd>
 <dt id="repograph.models.nodes.Repository"><code class="flex name class">
 <span>class <span class="ident">Repository</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a software repository.</p>
@@ -2155,7 +2155,7 @@ def create_from_metadata(
 </dd>
 <dt id="repograph.models.nodes.ReturnValue"><code class="flex name class">
 <span>class <span class="ident">ReturnValue</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Node representing a return value from a function.</p>
@@ -2203,7 +2203,7 @@ specifically with a Node object.</p>
 </dd>
 <dt id="repograph.models.nodes.Variable"><code class="flex name class">
 <span>class <span class="ident">Variable</span></span>
-<span>(</span><span>**data: Any)</span>
+<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a Python variable.</p>

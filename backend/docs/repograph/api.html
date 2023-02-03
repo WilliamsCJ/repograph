@@ -32,19 +32,18 @@ API entrypoint.
 &#34;&#34;&#34;
 # Base imports
 import logging
-import sys
 
 # pip imports
 from dependency_injector.wiring import inject, Provide
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
 
 # Application Container
 from repograph.container import ApplicationContainer
 
 # Entity imports
 from repograph.entities.graph.router import GraphRouter
+from repograph.entities.search.router import SearchRouter
 
 # Utilities
 from repograph.utils.logging import configure_logging
@@ -56,12 +55,19 @@ log = logging.getLogger(&#39;repograph.api&#39;)
 
 @inject
 def create_app(
-    graph_router: GraphRouter = Provide[ApplicationContainer.graph.container.router]
+    graph_router: GraphRouter = Provide[ApplicationContainer.graph.container.router],
+    search_router: SearchRouter = Provide[ApplicationContainer.search.container.router]
 ) -&gt; FastAPI:
     &#34;&#34;&#34;Creates FastAPI application.
+
+    Args:
+        graph_router (GraphRouter): The graph entity router.
+        search_router (SearchRouter): The search entity router.
+
     Returns:
         FastAPI: Initialised FastAPI application object.
     &#34;&#34;&#34;
+    # Configure FastAPI application and metadata
     application = FastAPI(
         title=&#34;Repograph&#34;,
         description=&#34;Backend API&#34;,
@@ -70,8 +76,11 @@ def create_app(
         redoc_url=&#34;/v1/docs&#34;
     )
 
+    # Add sub-routers to base router
     application.include_router(graph_router.router)
+    application.include_router(search_router.router)
 
+    # Configure CORS, https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
     application.add_middleware(
         CORSMiddleware,
         allow_origins=[&#34;*&#34;],
@@ -83,19 +92,14 @@ def create_app(
     return application
 
 
-if __name__ == &#34;__main__&#34;:
-    container = ApplicationContainer()
-    container.config.from_yaml(sys.argv[1])
-    container.init_resources()
-    container.wire(modules=[__name__])
+# if __name__ == &#34;__main__&#34;:
+container = ApplicationContainer()
+container.config.from_yaml(&#34;../config.yaml&#34;)
+container.init_resources()
+container.wire(modules=[__name__])
 
-    print(container.config.get(&#34;database&#34;))
-    print(container.config.get(&#34;uri&#34;))
-    print(container.config.get(&#34;username&#34;))
-    print(container.config.get(&#34;password&#34;))
-
-    app = create_app()
-    uvicorn.run(app, host=&#34;0.0.0.0&#34;, port=3000)</code></pre>
+app = create_app()
+# uvicorn.run(&#34;repograph.api:app&#34;, host=&#34;0.0.0.0&#34;, port=3000, reload=True)</code></pre>
 </details>
 </section>
 <section>
@@ -106,10 +110,17 @@ if __name__ == &#34;__main__&#34;:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="repograph.api.create_app"><code class="name flex">
-<span>def <span class="ident">create_app</span></span>(<span>graph_router: <a title="repograph.entities.graph.router.GraphRouter" href="entities/graph/router.html#repograph.entities.graph.router.GraphRouter">GraphRouter</a> = &lt;dependency_injector.wiring.Provide object&gt;) ‑> fastapi.applications.FastAPI</span>
+<span>def <span class="ident">create_app</span></span>(<span>graph_router: <a title="repograph.entities.graph.router.GraphRouter" href="entities/graph/router.html#repograph.entities.graph.router.GraphRouter">GraphRouter</a> = &lt;dependency_injector.wiring.Provide object&gt;, search_router: <a title="repograph.entities.search.router.SearchRouter" href="entities/search/router.html#repograph.entities.search.router.SearchRouter">SearchRouter</a> = &lt;dependency_injector.wiring.Provide object&gt;) ‑> fastapi.applications.FastAPI</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates FastAPI application.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>graph_router</code></strong> :&ensp;<code>GraphRouter</code></dt>
+<dd>The graph entity router.</dd>
+<dt><strong><code>search_router</code></strong> :&ensp;<code>SearchRouter</code></dt>
+<dd>The search entity router.</dd>
+</dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>FastAPI</code></dt>
@@ -121,12 +132,19 @@ if __name__ == &#34;__main__&#34;:
 </summary>
 <pre><code class="python">@inject
 def create_app(
-    graph_router: GraphRouter = Provide[ApplicationContainer.graph.container.router]
+    graph_router: GraphRouter = Provide[ApplicationContainer.graph.container.router],
+    search_router: SearchRouter = Provide[ApplicationContainer.search.container.router]
 ) -&gt; FastAPI:
     &#34;&#34;&#34;Creates FastAPI application.
+
+    Args:
+        graph_router (GraphRouter): The graph entity router.
+        search_router (SearchRouter): The search entity router.
+
     Returns:
         FastAPI: Initialised FastAPI application object.
     &#34;&#34;&#34;
+    # Configure FastAPI application and metadata
     application = FastAPI(
         title=&#34;Repograph&#34;,
         description=&#34;Backend API&#34;,
@@ -135,8 +153,11 @@ def create_app(
         redoc_url=&#34;/v1/docs&#34;
     )
 
+    # Add sub-routers to base router
     application.include_router(graph_router.router)
+    application.include_router(search_router.router)
 
+    # Configure CORS, https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
     application.add_middleware(
         CORSMiddleware,
         allow_origins=[&#34;*&#34;],

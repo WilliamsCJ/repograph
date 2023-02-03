@@ -53,6 +53,9 @@ class GraphService:
     def bulk_add(self, nodes: List[Node], relationships: List[Relationship]):
         self.repository.add(*nodes, *relationships)
 
+    def get_all_function_nodes(self) -&gt; None:
+        self.repository.get_all()
+
     def get_summary(self) -&gt; RepographSummary:
         if not self.repository.has_nodes():
             log.warning(&#34;Graph has no nodes&#34;)
@@ -106,6 +109,9 @@ class GraphService:
     def bulk_add(self, nodes: List[Node], relationships: List[Relationship]):
         self.repository.add(*nodes, *relationships)
 
+    def get_all_function_nodes(self) -&gt; None:
+        self.repository.get_all()
+
     def get_summary(self) -&gt; RepographSummary:
         if not self.repository.has_nodes():
             log.warning(&#34;Graph has no nodes&#34;)
@@ -150,6 +156,19 @@ class GraphService:
 </summary>
 <pre><code class="python">def bulk_add(self, nodes: List[Node], relationships: List[Relationship]):
     self.repository.add(*nodes, *relationships)</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.graph.service.GraphService.get_all_function_nodes"><code class="name flex">
+<span>def <span class="ident">get_all_function_nodes</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_all_function_nodes(self) -&gt; None:
+    self.repository.get_all()</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_summary"><code class="name flex">
@@ -218,6 +237,7 @@ class GraphService:
 <h4><code><a title="repograph.entities.graph.service.GraphService" href="#repograph.entities.graph.service.GraphService">GraphService</a></code></h4>
 <ul class="">
 <li><code><a title="repograph.entities.graph.service.GraphService.bulk_add" href="#repograph.entities.graph.service.GraphService.bulk_add">bulk_add</a></code></li>
+<li><code><a title="repograph.entities.graph.service.GraphService.get_all_function_nodes" href="#repograph.entities.graph.service.GraphService.get_all_function_nodes">get_all_function_nodes</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.get_summary" href="#repograph.entities.graph.service.GraphService.get_summary">get_summary</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.prune" href="#repograph.entities.graph.service.GraphService.prune">prune</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.repository" href="#repograph.entities.graph.service.GraphService.repository">repository</a></code></li>

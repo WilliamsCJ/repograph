@@ -52,6 +52,7 @@ repos:
             click,
             neo4j,
             transformers,
+            sentence_transformers,
             torch,
             configargparse,
             dependency-injector,

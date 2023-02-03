@@ -15,7 +15,7 @@ def configure_logging():
     """
     # Configure root logger
     logger = logging.getLogger("repograph")
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
 
     # Create stream handler to display logs to stdout
     ch = logging.StreamHandler()
