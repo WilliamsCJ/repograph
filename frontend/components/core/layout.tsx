@@ -26,7 +26,6 @@ export type DefaultLayoutProps = {
   heading: string;
 };
 
-
 /**
  * DefaultLayout is the default page/route layout that contains a header row and then the actual content
  * @param buttons {React.ReactNode[]} Array of Buttons to display on the right
@@ -65,6 +64,11 @@ const FullContainer = tw.div`flex h-full w-full`;
 const HeadingRow = tw.div`flex w-full flex-row justify-between`;
 
 /**
+ * Justified Row is used for placing content justified at either end
+ */
+const JustifiedRow = tw.div`flex flex-row max-w-full justify-between`;
+
+/**
  * MainContainer is the content for the main portion of the application (i.e. not including the sidebar)
  */
 const MainContainer = tw.div`flex h-screen w-full flex-col space-y-20 overflow-y-auto overflow-x-hidden overscroll-contain py-8 pl-24 pr-8`;
@@ -87,4 +91,5 @@ export {
   FullContainer,
   MainContainer,
   SideBar,
+  JustifiedRow,
 };

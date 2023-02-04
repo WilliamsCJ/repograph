@@ -19,7 +19,6 @@ export type EmptyStateProps = {
   buttonIcon: any;
 };
 
-
 /**
  * EmptyState component
  * @param props

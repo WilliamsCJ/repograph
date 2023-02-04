@@ -5,5 +5,3 @@ export type GraphSummary = {
   modules: number;
   packages: number;
 };
-
-

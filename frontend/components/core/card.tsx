@@ -44,7 +44,7 @@ const Card: React.FC<DefaultCardProps> = ({ children, ...props }) => (
  * @constructor
  */
 const FullWidthCard: React.FC<CardProps> = ({ children, ...props }) => (
-  <Card {...props} size={tw`w-full h-1/2`}>
+  <Card {...props} size={tw`w-full`}>
     {children}
   </Card>
 );

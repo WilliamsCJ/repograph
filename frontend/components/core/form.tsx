@@ -3,7 +3,10 @@ import React from "react";
 import tw from "twin.macro";
 import { Field, FieldProps } from "formik";
 import { IconWrapper } from "./icon";
-import { ArrowUpTrayIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowUpTrayIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 
 /**
  * InputProps type for InputSection component.
@@ -170,15 +173,14 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
   );
 };
 
-
 /**
  * SearchBarInputProps for SearchBarInput
  */
 export type SearchBarInputSectionProps = {
-  name: string
-  id: string
+  name: string;
+  id: string;
   placeholder: string;
-  label: string
+  label: string;
 };
 
 /**
@@ -190,21 +192,16 @@ const SearchBarInputSection: React.FC<SearchBarInputSectionProps> = (props) => {
   return (
     <Field name={props.name} id={props.id}>
       {({ field, form: { setFieldValue }, meta }: FieldProps) => (
-      <div tw="relative col-span-4 sm:col-span-5 md:col-span-7">
-        <div tw="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-          <MagnifyingGlassIcon tw="h-6 w-6" />
+        <div tw="relative col-span-4 sm:col-span-5 md:col-span-7">
+          <div tw="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+            <MagnifyingGlassIcon tw="h-6 w-6" />
+          </div>
+          <SearchBarInput required placeholder={props.placeholder} {...field} />
         </div>
-        <SearchBarInput
-          required
-          placeholder={props.placeholder}
-          {...field}
-        />
-      </div>
       )}
     </Field>
-  )
-}
-
+  );
+};
 
 /**
  * TextArea component.
@@ -268,4 +265,9 @@ const HelpText = tw.p`text-sm text-gray-400 mt-2`;
  */
 const ErrorText = tw.p`text-sm text-red-700 mt-2`;
 
-export { InputSection, TextAreaSection, FileUploadSection, SearchBarInputSection };
+export {
+  InputSection,
+  TextAreaSection,
+  FileUploadSection,
+  SearchBarInputSection,
+};

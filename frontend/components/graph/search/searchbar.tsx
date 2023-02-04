@@ -1,25 +1,25 @@
-import React from 'react';
+import React from "react";
 
 import tw from "twin.macro";
 
-import { Button } from "../core/button";
-import { SearchBarInputSection } from "../core/form";
+import { Button } from "../../core/button";
+import { SearchBarInputSection } from "../../core/form";
 import { Formik, Form } from "formik";
 
 export type SearchBarProps = {
-  label: string
-  placeholder: string
-  executeQuery: any
-  setResults: any
-}
+  label: string;
+  placeholder: string;
+  executeQuery: any;
+  setResults: any;
+};
 
 type SearchBarValues = {
-  query: string
-}
+  query: string;
+};
 
 type SearchBarErrors = {
-  query?: string
-}
+  query?: string;
+};
 
 const SearchBar: React.FC<SearchBarProps> = (props) => {
   const initialValues: SearchBarValues = {
@@ -31,8 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
       initialValues={initialValues}
       // @ts-ignore
       onSubmit={async (values, actions) => {
-        console.log("Hello")
-        const results = await props.executeQuery('any', values.query);
+        const results = await props.executeQuery("any", values.query);
         props.setResults(results);
       }}
       validate={(values) => {
@@ -59,8 +58,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
         </div>
       </Form>
     </Formik>
-
-  )
-}
+  );
+};
 
 export { SearchBar };
