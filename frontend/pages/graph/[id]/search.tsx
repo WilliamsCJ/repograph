@@ -23,6 +23,7 @@ const Search: NextPage = () => {
   <DefaultLayout buttons={[]} heading="Search">
     <TabGroup titles={options} panels={searchBars} />
     {/* TODO: Render results */}
+    {JSON.stringify(results)}
   </DefaultLayout>
   );
 };

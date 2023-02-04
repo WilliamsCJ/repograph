@@ -47,18 +47,18 @@ class GraphRouter:
 
         self.router = APIRouter(
             prefix=&#34;/graph&#34;,
-            tags=[&#34;Graph&#34;],
+            tags=[&#34;Summar&#34;],
             responses={}
         )
 
         self.router.add_api_route(
-            &#34;/summary&#34;,
+            &#34;/{graph}/summary&#34;,
             self.summary,
             methods=[&#34;GET&#34;],
             status_code=status.HTTP_200_OK
         )
 
-    async def summary(self):
+    async def summary(self, graph: str):
         return self.service.get_summary()</code></pre>
 </details>
 </section>
@@ -89,18 +89,18 @@ class GraphRouter:
 
         self.router = APIRouter(
             prefix=&#34;/graph&#34;,
-            tags=[&#34;Graph&#34;],
+            tags=[&#34;Summar&#34;],
             responses={}
         )
 
         self.router.add_api_route(
-            &#34;/summary&#34;,
+            &#34;/{graph}/summary&#34;,
             self.summary,
             methods=[&#34;GET&#34;],
             status_code=status.HTTP_200_OK
         )
 
-    async def summary(self):
+    async def summary(self, graph: str):
         return self.service.get_summary()</code></pre>
 </details>
 <h3>Class variables</h3>
@@ -113,7 +113,7 @@ class GraphRouter:
 <h3>Methods</h3>
 <dl>
 <dt id="repograph.entities.graph.router.GraphRouter.summary"><code class="name flex">
-<span>async def <span class="ident">summary</span></span>(<span>self)</span>
+<span>async def <span class="ident">summary</span></span>(<span>self, graph: str)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -121,7 +121,7 @@ class GraphRouter:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def summary(self):
+<pre><code class="python">async def summary(self, graph: str):
     return self.service.get_summary()</code></pre>
 </details>
 </dd>

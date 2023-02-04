@@ -18,16 +18,16 @@ class GraphRouter:
 
         self.router = APIRouter(
             prefix="/graph",
-            tags=["Graph"],
+            tags=["Summar"],
             responses={}
         )
 
         self.router.add_api_route(
-            "/summary",
+            "/{graph}/summary",
             self.summary,
             methods=["GET"],
             status_code=status.HTTP_200_OK
         )
 
-    async def summary(self):
+    async def summary(self, graph: str):
         return self.service.get_summary()

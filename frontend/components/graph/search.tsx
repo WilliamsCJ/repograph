@@ -31,6 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
       initialValues={initialValues}
       // @ts-ignore
       onSubmit={async (values, actions) => {
+        console.log("Hello")
         const results = await props.executeQuery('any', values.query);
         props.setResults(results);
       }}
