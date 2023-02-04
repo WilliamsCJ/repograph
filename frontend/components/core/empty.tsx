@@ -5,10 +5,26 @@ import React from "react";
 import tw from "twin.macro";
 
 import { Text, TextLight } from "./text";
-import { EmptyStateProps } from "../../types/components/core/empty";
 import { IconWrapper } from "./icon";
 import { Button } from "./button";
 
+/**
+ * EmptyStateProps for EmptyState component.
+ */
+export type EmptyStateProps = {
+  icon: any;
+  heading: string;
+  description: string;
+  buttonText: string;
+  buttonIcon: any;
+};
+
+
+/**
+ * EmptyState component
+ * @param props
+ * @constructor
+ */
 const EmptyState: React.FC<EmptyStateProps> = (props) => {
   return (
     <div tw="w-full h-full flex text-center border-dashed">

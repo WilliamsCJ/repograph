@@ -10,7 +10,7 @@ import Link from "next/link";
 export type ButtonProps = {
   icon?: any;
   text: string;
-  primary: boolean;
+  primary?: boolean;
 };
 
 /**

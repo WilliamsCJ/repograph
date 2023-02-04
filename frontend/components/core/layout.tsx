@@ -3,9 +3,6 @@ import React from "react";
 // Styling
 import tw from "twin.macro";
 
-// Prop types
-import type { DefaultLayoutProps } from "../../types/components/core/layout";
-
 // Other components
 import { Title } from "./text";
 import { ButtonGroup } from "./button";
@@ -19,6 +16,16 @@ const ApplicationShell = tw.div`w-screen min-h-screen max-h-screen bg-gray-100`;
  * CenteredLayout centers content both horizontally and vertically
  */
 const CenteredLayout = tw.div`m-auto flex flex-col items-center space-y-4`;
+
+/**
+ * DefaultLayoutsProps for DefaultLayout component
+ */
+export type DefaultLayoutProps = {
+  buttons: React.ReactNode[];
+  children: React.ReactNode;
+  heading: string;
+};
+
 
 /**
  * DefaultLayout is the default page/route layout that contains a header row and then the actual content
