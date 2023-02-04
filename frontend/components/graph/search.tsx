@@ -8,6 +8,7 @@ import { getSemanticSearchQuery } from "../../server/search";
 export type SearchBarProps = {
   label: string
   placeholder: string
+  executeQuery: any
   setResults: any
 }
 
@@ -29,7 +30,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
       initialValues={initialValues}
       // @ts-ignore
       onSubmit={async (values, actions) => {
-        const results = await getSemanticSearchQuery('any', values.query);
+        const results = await props.executeQuery('any', values.query);
         props.setResults(results);
       }}
       validate={(values) => {
@@ -57,3 +58,5 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
 
   )
 }
+
+export { SearchBar };

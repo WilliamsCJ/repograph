@@ -40,6 +40,7 @@ const NewGraphForm: React.FC = () => {
   return (
     <Formik
       initialValues={initialValues}
+      // @ts-ignore
       onSubmit={(values, actions) => {
         alert(values.files[0].name);
       }}
