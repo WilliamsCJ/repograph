@@ -20,10 +20,10 @@ const Search: NextPage = () => {
   ];
 
   return (
-    <DefaultLayout buttons={[]} heading="Search">
-      <TabGroup titles={options} panels={searchBars} />
-      {/* TODO: Render results */}
-    </DefaultLayout>
+  <DefaultLayout buttons={[]} heading="Search">
+    <TabGroup titles={options} panels={searchBars} />
+    {/* TODO: Render results */}
+  </DefaultLayout>
   );
 };
 

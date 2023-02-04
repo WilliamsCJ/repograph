@@ -20,7 +20,7 @@ export type TabGroupProps = {
  */
 const TabGroup: React.FC<TabGroupProps> = ({ titles, panels}) => {
   return (
-  <div tw="w-full max-w-md px-2 sm:px-0">
+  <div tw="min-w-full max-w-md px-2 sm:px-0">
     <Tab.Group defaultIndex={1}>
       <Tab.List>
         {titles.map((title, index) => (
@@ -38,9 +38,9 @@ const TabGroup: React.FC<TabGroupProps> = ({ titles, panels}) => {
       </Tab.List>
       <Tab.Panels>
         {panels.map((panel, index) => (
-        <Tab.Panel>
-          {panel}
-        </Tab.Panel>
+          <Tab.Panel>
+            {panel}
+          </Tab.Panel>
         ))}
       </Tab.Panels>
     </Tab.Group>

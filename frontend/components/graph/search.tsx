@@ -1,9 +1,10 @@
 import React from 'react';
 
+import tw from "twin.macro";
+
 import { Button } from "../core/button";
 import { SearchBarInputSection } from "../core/form";
 import { Formik, Form } from "formik";
-import { getSemanticSearchQuery } from "../../server/search";
 
 export type SearchBarProps = {
   label: string
@@ -43,16 +44,18 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
         return errors;
       }}
     >
-      <Form tw="grid grid-cols-8 gap-4 items-center mt-6">
+      <Form>
+        <div tw="flex flex-row grid grid-cols-8 gap-4 items-center mt-6">
           <SearchBarInputSection
-          id="query"
-          name="query"
-          label={props.label}
-          placeholder={props.placeholder}
+            id="query"
+            name="query"
+            label={props.label}
+            placeholder={props.placeholder}
           />
           <div tw="col-span-1">
             <Button text="Search" primary={true} />
           </div>
+        </div>
       </Form>
     </Formik>
 
