@@ -7,7 +7,7 @@ import { DefaultLayout } from "../../../components/core/layout";
 import Summary from "../../../components/graph/summary";
 
 import { getSummary } from "../../../server/summary";
-import { GraphSummary } from "../../../types/components/home/summary";
+import { GraphSummary } from "../../../types/summary";
 
 const ExportButton = () => (
   <Button icon={<CloudArrowDownIcon />} text="Export" />

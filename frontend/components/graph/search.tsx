@@ -1,13 +1,14 @@
 import React from 'react';
 
-import tw from "twin.macro";
 import { Button } from "../core/button";
 import { SearchBarInputSection } from "../core/form";
 import { Formik, Form } from "formik";
+import { getSemanticSearchQuery } from "../../server/search";
 
 export type SearchBarProps = {
   label: string
   placeholder: string
+  setResults: any
 }
 
 type SearchBarValues = {
@@ -26,8 +27,10 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={(values, actions) => {
-
+      // @ts-ignore
+      onSubmit={async (values, actions) => {
+        const results = await getSemanticSearchQuery('any', values.query);
+        props.setResults(results);
       }}
       validate={(values) => {
         const errors: SearchBarErrors = {};

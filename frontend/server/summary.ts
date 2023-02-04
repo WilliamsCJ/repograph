@@ -1,4 +1,4 @@
-import { GraphSummary } from "../types/components/home/summary";
+import { GraphSummary } from "../types/summary";
 
 export async function getSummary(): Promise<GraphSummary> {
   const res = await fetch(

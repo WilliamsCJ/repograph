@@ -6,7 +6,4 @@ export type GraphSummary = {
   packages: number;
 };
 
-export type StatsCardProps = {
-  title: string;
-  value: number;
-};
+

@@ -5,43 +5,7 @@ import tw from "twin.macro";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 import { Tab } from "@headlessui/react";
-import React from "react";
-import { Button } from "../../../components/core/button";
-
-const Input = tw.input`
-  block w-full min-w-0 rounded-lg shadow-sm border p-4
-  text-gray-700 placeholder-gray-300 border-gray-300
-  focus:border-primary-500 focus:ring-primary-500
-`;
-
-export type SearchBarProps = {
-  placeholder: string;
-};
-
-const SearchBar: React.FC<SearchBarProps> = ({ placeholder }) => {
-  return (
-    <div tw="grid grid-cols-8 gap-4 items-center mt-6">
-      <div tw="relative col-span-4 sm:col-span-5 md:col-span-7">
-        <div tw="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-          <MagnifyingGlassIcon tw="h-6 w-6" />
-        </div>
-        <input
-          id="default-search"
-          tw="block w-full p-4 pl-12 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white
-          focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-          dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-          "
-          placeholder={placeholder}
-          required
-          onChange={()}
-        />
-      </div>
-      <div tw="col-span-1">
-        <Button type="submit" text="Search" primary={true} />
-      </div>
-    </div>
-  );
-};
+import React, { useState } from "react";
 
 export function SearchTabs() {
   let options = ["Natural", "Favourites", "Manual"];
@@ -81,9 +45,12 @@ export function SearchTabs() {
 }
 
 const Search: NextPage = () => {
+  const [results, setResults] = useState([]);
+
   return (
     <DefaultLayout buttons={[]} heading="Search">
       <SearchTabs />
+      {/* TODO: Render results */}
     </DefaultLayout>
   );
 };
