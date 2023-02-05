@@ -23,4 +23,5 @@ class SearchRouter:
 
     def semantic_search(self, graph: str, query: str = None):
         results = self.service.find_similar_functions_by_query(query)
+        print(results[0].function._subgraph._identity)
         return results

@@ -1,6 +1,9 @@
 """
 Models representing elements of the Repograph
 """
+# base imports
+from typing import List
+
 # pip imports
 from pydantic import BaseModel
 
@@ -28,3 +31,17 @@ class GraphSummary(BaseModel):
     functions: int = 0
     modules: int = 0
     packages: int = 0
+
+
+class CallGraph(BaseModel):
+    class Function(BaseModel):
+        id: int
+        label: str
+        title: str
+
+    class Relationship(BaseModel):
+        from_id: int
+        to_id: int
+
+    nodes: List[Function] = []
+    edges: List[Relationship] = []

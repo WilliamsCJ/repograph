@@ -1,54 +1,46 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 
+// Styling
 import tw from "twin.macro";
 
-// Components
-import { Card } from "../../core/card";
-import { BlockText, BlockTextAccent, BlockTextLight, SmallHeading } from "../../core/text";
-import "twin.macro";
-import useDimensions from "react-use-dimensions";
-const Graph = dynamic(() => import("../../core/force-graph"), {
-  ssr: false,
-});
+// Data fetching
+import useSWR from 'swr'
 
 
 // Types
 import { SearchResult } from "../../../types/search";
+
+// Components
 import { JustifiedRow } from "../../core/layout";
 import { CodeBlock } from "../../core/code";
 import { BuiltInBadge, FunctionBadge, MethodBadge } from "../../core/badge";
-import dynamic from "next/dynamic";
 import GraphCard from "../../core/graph";
-
-const data = {
-  nodes: [
-    { id: "Myriel", label: "Myriel" },
-    { id: "Napoleon", label: "Myriel" },
-    { id: "Mlle.Baptistine", label: "Myriel" },
-  ],
-  edges: [
-    { from: "Napoleon", to: "Myriel" },
-    { from: "Mlle.Baptistine", to: "Myriel"},
-  ],
-};
+import { Card } from "../../core/card";
+import { BlockText, BlockTextAccent, BlockTextLight, SmallHeading } from "../../core/text";
+import fetcher from "../../../utils/fetcher";
 
 /**
  * Props for SearchResultCardSection
  */
 type SearchResultCardSectionProps = {
   heading: string
-  children: JSX.Element
+  children: JSX.Element,
+  link?: JSX.Element
 }
 
 /**
  * Section within a SearchResultCard (that is divided into 3 sections)
  * @param heading
  * @param children
+ * @param link
  * @constructor
  */
-const SearchResultCardSection: React.FC<SearchResultCardSectionProps> = ({ heading, children }) => (
+const SearchResultCardSection: React.FC<SearchResultCardSectionProps> = ({ heading, children, link }) => (
   <div tw="py-2 px-3 max-h-full flex flex-col space-y-1">
-    <SmallHeading tw="">{heading}</SmallHeading>
+    <div tw="flex flex-row justify-between">
+      <SmallHeading tw="">{heading}</SmallHeading>
+      {link}
+    </div>
     {children}
   </div>
 )
@@ -102,6 +94,12 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   result,
   index,
 }) => {
+  console.log(result.function.id)
+  const graph = "a"; // TODO: Change me
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/node/${result.function.id}/call_graph`;
+  const { data, error } = useSWR(url, fetcher)
+
+
   return (
     <div tw="w-full">
       <JustifiedRow tw="mb-1 mx-2">
@@ -121,18 +119,17 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
           </SearchResultCardSection>
 
           {/* Source Code Section*/}
-          <SearchResultCardSection heading="Source Code">
+          <SearchResultCardSection heading="Source Code" link={<BlockTextAccent>Expand</BlockTextAccent>}>
             <>
               {result.function.source_code &&
                   <CodeBlock source_code={result.function.source_code} styles={tw`grow`}/>
               }
-              <BlockTextAccent>Expand</BlockTextAccent>
             </>
           </SearchResultCardSection>
 
           {/* Subgraph Section */}
           <SearchResultCardSection heading="Subgraph">
-            <GraphCard />
+            <GraphCard data={data} styles={tw`grow`}/>
           </SearchResultCardSection>
         </div>
       </Card>
@@ -140,34 +137,4 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   );
 };
 
-const Pagination = () => {
-  return (
-    <nav
-    tw="flex items-center justify-between py-4"
-    aria-label="Pagination"
-    >
-      <div tw="hidden sm:block">
-        <p tw="text-sm text-gray-700">
-          Showing <span tw="font-medium">1</span> to <span tw="font-medium">10</span> of{' '}
-          <span tw="font-medium">20</span> results
-        </p>
-      </div>
-      <div tw="flex flex-1 justify-between sm:justify-end">
-        <a
-        href="#"
-        tw="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Previous
-        </a>
-        <a
-        href="#"
-        tw="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Next
-        </a>
-      </div>
-    </nav>
-  )
-}
-
-export { SearchResultCard, Pagination };
+export { SearchResultCard };

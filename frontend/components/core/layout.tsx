@@ -13,6 +13,11 @@ import { ButtonGroup } from "./button";
 const ApplicationShell = tw.div`w-screen min-h-screen max-h-screen bg-gray-100`;
 
 /**
+ * Div to center items vertically and horizontally
+ */
+const Center = tw.div`m-auto`;
+
+/**
  * CenteredLayout centers content both horizontally and vertically
  */
 const CenteredLayout = tw.div`m-auto flex flex-col items-center space-y-4`;
@@ -86,6 +91,7 @@ const SideBar = tw.div`h-screen w-16 fixed inset-y-0 bg-white border-r-2 flex fl
 /* Export */
 export {
   ApplicationShell,
+  Center,
   CenteredLayout,
   DefaultLayout,
   FullContainer,

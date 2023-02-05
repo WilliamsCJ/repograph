@@ -4,8 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>repograph.entities.graph.router API documentation</title>
-<meta name="description" content="Routing for build entity." />
+<title>repograph.utils.exception_handlers API documentation</title>
+<meta name="description" content="Custom exception handlers.
+This module provides custom exception handlers that are triggered when exceptions are raised
+to the router handlers." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,58 +21,41 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>repograph.entities.graph.router</code></h1>
+<h1 class="title">Module <code>repograph.utils.exception_handlers</code></h1>
 </header>
 <section id="section-intro">
-<p>Routing for build entity.</p>
+<p>Custom exception handlers.
+This module provides custom exception handlers that are triggered when exceptions are raised
+to the router handlers.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;
-Routing for build entity.
+<pre><code class="python">&#34;&#34;&#34;Custom exception handlers.
+This module provides custom exception handlers that are triggered when exceptions are raised
+to the router handlers.
 &#34;&#34;&#34;
 # pip imports
-from fastapi import APIRouter, status
+from fastapi.requests import Request
+from fastapi.responses import JSONResponse
 
 # Model imports
-from repograph.models.graph import CallGraph
-
-# Graph entity imports
-from repograph.entities.graph.service import GraphService
+from repograph.models.errors import ErrorResponse
 
 
-class GraphRouter:
-    service: GraphService
-
-    def __init__(self, service: GraphService):
-        self.service = service
-
-        self.router = APIRouter(
-            prefix=&#34;/graph&#34;,
-            tags=[&#34;Summar&#34;],
-            responses={}
-        )
-
-        self.router.add_api_route(
-            &#34;/{graph}/summary&#34;,
-            self.summary,
-            methods=[&#34;GET&#34;],
-            status_code=status.HTTP_200_OK
-        )
-
-        self.router.add_api_route(
-            &#34;/{graph}/node/{node_id}/call_graph&#34;,
-            self.call_graph_by_id,
-            methods=[&#34;GET&#34;],
-            status_code=status.HTTP_200_OK
-        )
-
-    async def summary(self, graph: str):
-        return self.service.get_summary()
-
-    async def call_graph_by_id(self, graph: str, node_id: int) -&gt; CallGraph:
-        return self.service.get_call_graph_by_id(node_id)</code></pre>
+async def generic_exception_handler(_: Request, __: Exception):
+    &#34;&#34;&#34;Generic exception handler.
+    This handler is for all other Exceptions, to provide a formatted response.
+    Args:
+        _ (Request): FastAPI request object. Not used.
+        __ (Exception): The Exception object.
+    Returns:
+        JSONResponse containing ErrorResponse.
+    &#34;&#34;&#34;
+    return JSONResponse(
+        ErrorResponse(message=&#34;Internal Server Error&#34;).dict(),
+        status_code=500
+    )</code></pre>
 </details>
 </section>
 <section>
@@ -78,90 +63,45 @@ class GraphRouter:
 <section>
 </section>
 <section>
-</section>
-<section>
-<h2 class="section-title" id="header-classes">Classes</h2>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="repograph.entities.graph.router.GraphRouter"><code class="flex name class">
-<span>class <span class="ident">GraphRouter</span></span>
-<span>(</span><span>service: <a title="repograph.entities.graph.service.GraphService" href="service.html#repograph.entities.graph.service.GraphService">GraphService</a>)</span>
+<dt id="repograph.utils.exception_handlers.generic_exception_handler"><code class="name flex">
+<span>async def <span class="ident">generic_exception_handler</span></span>(<span>_: starlette.requests.Request, __: Exception)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Generic exception handler.
+This handler is for all other Exceptions, to provide a formatted response.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>_</code></strong> :&ensp;<code>Request</code></dt>
+<dd>FastAPI request object. Not used.</dd>
+<dt><strong><code>__</code></strong> :&ensp;<code>Exception</code></dt>
+<dd>The Exception object.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>JSONResponse containing ErrorResponse.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class GraphRouter:
-    service: GraphService
-
-    def __init__(self, service: GraphService):
-        self.service = service
-
-        self.router = APIRouter(
-            prefix=&#34;/graph&#34;,
-            tags=[&#34;Summar&#34;],
-            responses={}
-        )
-
-        self.router.add_api_route(
-            &#34;/{graph}/summary&#34;,
-            self.summary,
-            methods=[&#34;GET&#34;],
-            status_code=status.HTTP_200_OK
-        )
-
-        self.router.add_api_route(
-            &#34;/{graph}/node/{node_id}/call_graph&#34;,
-            self.call_graph_by_id,
-            methods=[&#34;GET&#34;],
-            status_code=status.HTTP_200_OK
-        )
-
-    async def summary(self, graph: str):
-        return self.service.get_summary()
-
-    async def call_graph_by_id(self, graph: str, node_id: int) -&gt; CallGraph:
-        return self.service.get_call_graph_by_id(node_id)</code></pre>
-</details>
-<h3>Class variables</h3>
-<dl>
-<dt id="repograph.entities.graph.router.GraphRouter.service"><code class="name">var <span class="ident">service</span> : <a title="repograph.entities.graph.service.GraphService" href="service.html#repograph.entities.graph.service.GraphService">GraphService</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
-<h3>Methods</h3>
-<dl>
-<dt id="repograph.entities.graph.router.GraphRouter.call_graph_by_id"><code class="name flex">
-<span>async def <span class="ident">call_graph_by_id</span></span>(<span>self, graph: str, node_id: int) ‑> <a title="repograph.models.graph.CallGraph" href="../../models/graph.html#repograph.models.graph.CallGraph">CallGraph</a></span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def call_graph_by_id(self, graph: str, node_id: int) -&gt; CallGraph:
-    return self.service.get_call_graph_by_id(node_id)</code></pre>
-</details>
-</dd>
-<dt id="repograph.entities.graph.router.GraphRouter.summary"><code class="name flex">
-<span>async def <span class="ident">summary</span></span>(<span>self, graph: str)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def summary(self, graph: str):
-    return self.service.get_summary()</code></pre>
+<pre><code class="python">async def generic_exception_handler(_: Request, __: Exception):
+    &#34;&#34;&#34;Generic exception handler.
+    This handler is for all other Exceptions, to provide a formatted response.
+    Args:
+        _ (Request): FastAPI request object. Not used.
+        __ (Exception): The Exception object.
+    Returns:
+        JSONResponse containing ErrorResponse.
+    &#34;&#34;&#34;
+    return JSONResponse(
+        ErrorResponse(message=&#34;Internal Server Error&#34;).dict(),
+        status_code=500
+    )</code></pre>
 </details>
 </dd>
 </dl>
-</dd>
-</dl>
+</section>
+<section>
 </section>
 </article>
 <nav id="sidebar">
@@ -172,19 +112,12 @@ class GraphRouter:
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="repograph.entities.graph" href="index.html">repograph.entities.graph</a></code></li>
+<li><code><a title="repograph.utils" href="index.html">repograph.utils</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-classes">Classes</a></h3>
-<ul>
-<li>
-<h4><code><a title="repograph.entities.graph.router.GraphRouter" href="#repograph.entities.graph.router.GraphRouter">GraphRouter</a></code></h4>
+<li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="repograph.entities.graph.router.GraphRouter.call_graph_by_id" href="#repograph.entities.graph.router.GraphRouter.call_graph_by_id">call_graph_by_id</a></code></li>
-<li><code><a title="repograph.entities.graph.router.GraphRouter.service" href="#repograph.entities.graph.router.GraphRouter.service">service</a></code></li>
-<li><code><a title="repograph.entities.graph.router.GraphRouter.summary" href="#repograph.entities.graph.router.GraphRouter.summary">summary</a></code></li>
-</ul>
-</li>
+<li><code><a title="repograph.utils.exception_handlers.generic_exception_handler" href="#repograph.utils.exception_handlers.generic_exception_handler">generic_exception_handler</a></code></li>
 </ul>
 </li>
 </ul>

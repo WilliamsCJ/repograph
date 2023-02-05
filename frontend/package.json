@@ -23,6 +23,8 @@
     "react-dom": "18.2.0",
     "react-force-graph": "^1.41.16",
     "react-graph-vis": "^1.0.7",
+    "react-hot-toast": "^2.4.0",
+    "react-spinners": "^0.13.8",
     "react-syntax-highlighter": "^15.5.0",
     "react-use-dimensions": "^1.2.1",
     "styled-components": "^5.3.6",

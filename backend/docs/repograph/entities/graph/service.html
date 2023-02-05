@@ -37,7 +37,7 @@ from typing import Dict, List
 # Model imports
 from repograph.models.base import Node, Relationship
 from repograph.models.nodes import Class, Function, Module, Repository
-from repograph.models.graph import GraphSummary
+from repograph.models.graph import GraphSummary, CallGraph
 
 # Graph entity imports
 from repograph.entities.graph.repository import GraphRepository
@@ -122,6 +122,35 @@ class GraphService:
             &#34;&#34;&#34;
         )
         return dict(map(lambda x: (x[&#39;summarization&#39;], x[&#39;function&#39;]), nodes))
+
+    def get_call_graph_by_id(self, node_id: int) -&gt; CallGraph:
+        results = self.repository.execute_query(
+            f&#34;&#34;&#34;
+            MATCH (c:Function)&lt;-[r:Calls]-(f:Function) WHERE ID(f) = {node_id}
+            RETURN f as `function`, c as `call`, r as `relationship`
+            &#34;&#34;&#34;
+        )
+
+        call_graph = CallGraph()
+
+        call_graph.nodes.append(CallGraph.Function(
+            id=results[0][&#34;function&#34;][&#34;_identity&#34;],
+            label=results[0][&#34;function&#34;][&#34;canonical_name&#34;],
+            title=results[0][&#34;function&#34;][&#34;canonical_name&#34;]
+        ))
+
+        call_graph.nodes.extend(list(map(lambda res: CallGraph.Function(
+            id=res[&#34;call&#34;][&#34;_identity&#34;],
+            label=res[&#34;call&#34;][&#34;canonical_name&#34;],
+            title=res[&#34;call&#34;][&#34;canonical_name&#34;]
+        ), results)))
+
+        call_graph.edges.extend(list(map(lambda res: CallGraph.Relationship(
+            from_node=res[&#34;relationship&#34;][&#34;from&#34;],
+            to_node=res[&#34;relationship&#34;][&#34;to&#34;],
+        ), results)))
+
+        return call_graph
 
     def prune(self):
         &#34;&#34;&#34;Delete all nodes and relationships from the graph.&#34;&#34;&#34;
@@ -230,6 +259,35 @@ class GraphService:
         )
         return dict(map(lambda x: (x[&#39;summarization&#39;], x[&#39;function&#39;]), nodes))
 
+    def get_call_graph_by_id(self, node_id: int) -&gt; CallGraph:
+        results = self.repository.execute_query(
+            f&#34;&#34;&#34;
+            MATCH (c:Function)&lt;-[r:Calls]-(f:Function) WHERE ID(f) = {node_id}
+            RETURN f as `function`, c as `call`, r as `relationship`
+            &#34;&#34;&#34;
+        )
+
+        call_graph = CallGraph()
+
+        call_graph.nodes.append(CallGraph.Function(
+            id=results[0][&#34;function&#34;][&#34;_identity&#34;],
+            label=results[0][&#34;function&#34;][&#34;canonical_name&#34;],
+            title=results[0][&#34;function&#34;][&#34;canonical_name&#34;]
+        ))
+
+        call_graph.nodes.extend(list(map(lambda res: CallGraph.Function(
+            id=res[&#34;call&#34;][&#34;_identity&#34;],
+            label=res[&#34;call&#34;][&#34;canonical_name&#34;],
+            title=res[&#34;call&#34;][&#34;canonical_name&#34;]
+        ), results)))
+
+        call_graph.edges.extend(list(map(lambda res: CallGraph.Relationship(
+            from_node=res[&#34;relationship&#34;][&#34;from&#34;],
+            to_node=res[&#34;relationship&#34;][&#34;to&#34;],
+        ), results)))
+
+        return call_graph
+
     def prune(self):
         &#34;&#34;&#34;Delete all nodes and relationships from the graph.&#34;&#34;&#34;
         self.repository.delete_all()</code></pre>
@@ -272,6 +330,45 @@ class GraphService:
         None
     &#34;&#34;&#34;
     self.repository.add(*nodes, *relationships)</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.graph.service.GraphService.get_call_graph_by_id"><code class="name flex">
+<span>def <span class="ident">get_call_graph_by_id</span></span>(<span>self, node_id: int) ‑> <a title="repograph.models.graph.CallGraph" href="../../models/graph.html#repograph.models.graph.CallGraph">CallGraph</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_call_graph_by_id(self, node_id: int) -&gt; CallGraph:
+    results = self.repository.execute_query(
+        f&#34;&#34;&#34;
+        MATCH (c:Function)&lt;-[r:Calls]-(f:Function) WHERE ID(f) = {node_id}
+        RETURN f as `function`, c as `call`, r as `relationship`
+        &#34;&#34;&#34;
+    )
+
+    call_graph = CallGraph()
+
+    call_graph.nodes.append(CallGraph.Function(
+        id=results[0][&#34;function&#34;][&#34;_identity&#34;],
+        label=results[0][&#34;function&#34;][&#34;canonical_name&#34;],
+        title=results[0][&#34;function&#34;][&#34;canonical_name&#34;]
+    ))
+
+    call_graph.nodes.extend(list(map(lambda res: CallGraph.Function(
+        id=res[&#34;call&#34;][&#34;_identity&#34;],
+        label=res[&#34;call&#34;][&#34;canonical_name&#34;],
+        title=res[&#34;call&#34;][&#34;canonical_name&#34;]
+    ), results)))
+
+    call_graph.edges.extend(list(map(lambda res: CallGraph.Relationship(
+        from_node=res[&#34;relationship&#34;][&#34;from&#34;],
+        to_node=res[&#34;relationship&#34;][&#34;to&#34;],
+    ), results)))
+
+    return call_graph</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_function_summarizations"><code class="name flex">
@@ -386,6 +483,7 @@ class GraphService:
 <h4><code><a title="repograph.entities.graph.service.GraphService" href="#repograph.entities.graph.service.GraphService">GraphService</a></code></h4>
 <ul class="">
 <li><code><a title="repograph.entities.graph.service.GraphService.bulk_add" href="#repograph.entities.graph.service.GraphService.bulk_add">bulk_add</a></code></li>
+<li><code><a title="repograph.entities.graph.service.GraphService.get_call_graph_by_id" href="#repograph.entities.graph.service.GraphService.get_call_graph_by_id">get_call_graph_by_id</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.get_function_summarizations" href="#repograph.entities.graph.service.GraphService.get_function_summarizations">get_function_summarizations</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.get_summary" href="#repograph.entities.graph.service.GraphService.get_summary">get_summary</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.prune" href="#repograph.entities.graph.service.GraphService.prune">prune</a></code></li>

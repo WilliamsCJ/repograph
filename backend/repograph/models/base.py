@@ -2,7 +2,7 @@
 """
 from __future__ import annotations
 import py2neo
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel, PrivateAttr, validator
 from typing import Any, Dict, Optional, Set
 
 
@@ -41,7 +41,9 @@ class Node(BaseSubgraph):
 
     All Node types inherit from this class.
     """
-    def __init__(self, identity: Optional[int] = None, **data: Any) -> None:
+    id: Optional[int]
+
+    def __init__(self, **data: Any) -> None:
         """Constructor
 
         Args:
@@ -57,6 +59,15 @@ class Node(BaseSubgraph):
             py2neo.Node(self.__class__.__name__, **data),
             **data
         )
+
+    @validator('id')
+    def set_id(cls, v):
+        """Round match score to 3 decimal places."""
+        return round(v, 3)
+
+    @validator('id')
+    def passwords_match(cls, v, values, **kwargs):
+        return values['_subgraph']['identity']
 
 
 class InvalidRelationshipException(TypeError):

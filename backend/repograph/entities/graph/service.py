@@ -8,7 +8,7 @@ from typing import Dict, List
 # Model imports
 from repograph.models.base import Node, Relationship
 from repograph.models.nodes import Class, Function, Module, Repository
-from repograph.models.graph import GraphSummary
+from repograph.models.graph import GraphSummary, CallGraph
 
 # Graph entity imports
 from repograph.entities.graph.repository import GraphRepository
@@ -93,6 +93,35 @@ class GraphService:
             """
         )
         return dict(map(lambda x: (x['summarization'], x['function']), nodes))
+
+    def get_call_graph_by_id(self, node_id: int) -> CallGraph:
+        results = self.repository.execute_query(
+            f"""
+            MATCH (c:Function)<-[r:Calls]-(f:Function) WHERE ID(f) = {node_id}
+            RETURN f as `function`, c as `call`, r as `relationship`
+            """
+        )
+
+        call_graph = CallGraph()
+
+        call_graph.nodes.append(CallGraph.Function(
+            id=results[0]["function"]["_identity"],
+            label=results[0]["function"]["canonical_name"],
+            title=results[0]["function"]["canonical_name"]
+        ))
+
+        call_graph.nodes.extend(list(map(lambda res: CallGraph.Function(
+            id=res["call"]["_identity"],
+            label=res["call"]["canonical_name"],
+            title=res["call"]["canonical_name"]
+        ), results)))
+
+        call_graph.edges.extend(list(map(lambda res: CallGraph.Relationship(
+            from_node=res["relationship"]["from"],
+            to_node=res["relationship"]["to"],
+        ), results)))
+
+        return call_graph
 
     def prune(self):
         """Delete all nodes and relationships from the graph."""

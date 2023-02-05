@@ -45,12 +45,14 @@ class SemanticSearchResult(BaseModel):
         summarization (str): The summarization of the function&#39;s source code.
         score (float): The cosine distance score.
     &#34;&#34;&#34;
+    id: int
     function: Function = Field(..., exclude={&#39;ast&#39;})
     summarization: str
     score: float
 
     @validator(&#39;score&#39;)
-    def result_check(cls, v):
+    def round_score(cls, v):
+        &#34;&#34;&#34;Round match score to 3 decimal places.&#34;&#34;&#34;
         return round(v, 3)</code></pre>
 </details>
 </section>
@@ -92,12 +94,14 @@ class SemanticSearchResult(BaseModel):
         summarization (str): The summarization of the function&#39;s source code.
         score (float): The cosine distance score.
     &#34;&#34;&#34;
+    id: int
     function: Function = Field(..., exclude={&#39;ast&#39;})
     summarization: str
     score: float
 
     @validator(&#39;score&#39;)
-    def result_check(cls, v):
+    def round_score(cls, v):
+        &#34;&#34;&#34;Round match score to 3 decimal places.&#34;&#34;&#34;
         return round(v, 3)</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -108,6 +112,10 @@ class SemanticSearchResult(BaseModel):
 <h3>Class variables</h3>
 <dl>
 <dt id="repograph.models.search.SemanticSearchResult.function"><code class="name">var <span class="ident">function</span> : <a title="repograph.models.nodes.Function" href="nodes.html#repograph.models.nodes.Function">Function</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.models.search.SemanticSearchResult.id"><code class="name">var <span class="ident">id</span> : int</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -122,17 +130,18 @@ class SemanticSearchResult(BaseModel):
 </dl>
 <h3>Static methods</h3>
 <dl>
-<dt id="repograph.models.search.SemanticSearchResult.result_check"><code class="name flex">
-<span>def <span class="ident">result_check</span></span>(<span>v)</span>
+<dt id="repograph.models.search.SemanticSearchResult.round_score"><code class="name flex">
+<span>def <span class="ident">round_score</span></span>(<span>v)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Round match score to 3 decimal places.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@validator(&#39;score&#39;)
-def result_check(cls, v):
+def round_score(cls, v):
+    &#34;&#34;&#34;Round match score to 3 decimal places.&#34;&#34;&#34;
     return round(v, 3)</code></pre>
 </details>
 </dd>
@@ -158,7 +167,8 @@ def result_check(cls, v):
 <h4><code><a title="repograph.models.search.SemanticSearchResult" href="#repograph.models.search.SemanticSearchResult">SemanticSearchResult</a></code></h4>
 <ul class="">
 <li><code><a title="repograph.models.search.SemanticSearchResult.function" href="#repograph.models.search.SemanticSearchResult.function">function</a></code></li>
-<li><code><a title="repograph.models.search.SemanticSearchResult.result_check" href="#repograph.models.search.SemanticSearchResult.result_check">result_check</a></code></li>
+<li><code><a title="repograph.models.search.SemanticSearchResult.id" href="#repograph.models.search.SemanticSearchResult.id">id</a></code></li>
+<li><code><a title="repograph.models.search.SemanticSearchResult.round_score" href="#repograph.models.search.SemanticSearchResult.round_score">round_score</a></code></li>
 <li><code><a title="repograph.models.search.SemanticSearchResult.score" href="#repograph.models.search.SemanticSearchResult.score">score</a></code></li>
 <li><code><a title="repograph.models.search.SemanticSearchResult.summarization" href="#repograph.models.search.SemanticSearchResult.summarization">summarization</a></code></li>
 </ul>

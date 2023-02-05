@@ -3,9 +3,12 @@ import React, { useState } from "react";
 /* Next */
 import dynamic from "next/dynamic";
 
+// Styling
 import tw, { TwStyle } from "twin.macro"
+import colors from "tailwindcss/colors";
 
 /* External dependencies */
+import ClipLoader from "react-spinners/ClipLoader";
 const Graph = dynamic(() => import("./force-graph"), {
   ssr: false,
 });
@@ -13,13 +16,26 @@ const Graph = dynamic(() => import("./force-graph"), {
 /* Components */
 import { Border } from "./border";
 import { Network, NetworkEvents } from "vis";
+import { Center } from "./layout";
 
 /**
  * GraphCard props
  */
 type GraphCardProps = {
   data: any;
-  styles: TwStyle
+  styles?: TwStyle
+};
+
+const data = {
+  nodes: [
+    { id: "Myriel", label: "Myriel" },
+    { id: "Napoleon", label: "Myriel" },
+    { id: "Mlle.Baptistine", label: "Myriel" },
+  ],
+  edges: [
+    { from: "Napoleon", to: "Myriel" },
+    { from: "Mlle.Baptistine", to: "Myriel"},
+  ],
 };
 
 /**
@@ -72,15 +88,27 @@ const GraphCard: React.FC<GraphCardProps> = ({ data, styles }) => {
   };
 
   return (
-    <Border css={[styles]}>
-      <Graph
-      graph={data}
-      options={options}
-      events={events}
-      getNetwork={network => {
-        setNetwork(network);
-      }}
-      />
+    <Border css={[styles, tw`flex `]}>
+      {data ?
+        <Graph
+          graph={data}
+          options={options}
+          events={events}
+          getNetwork={network => {
+            setNetwork(network);
+          }}
+        />
+      :
+        <Center>
+          <ClipLoader
+            color={colors.gray["400"]}
+            loading={true}
+            size={24}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </Center>
+      }
     </Border>
   );
 };

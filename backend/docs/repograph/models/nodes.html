@@ -487,7 +487,7 @@ class DocstringRaises(Node):
 <dl>
 <dt id="repograph.models.nodes.Argument"><code class="flex name class">
 <span>class <span class="ident">Argument</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Node representing an argument to a function.</p>
@@ -532,10 +532,18 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.nodes.Variable" href="#repograph.models.nodes.Variable">Variable</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.nodes.Variable.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.Body"><code class="flex name class">
 <span>class <span class="ident">Body</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Node represents a generic Node in Repograph.</p>
@@ -564,10 +572,25 @@ specifically with a Node object.</p>
 <li>pydantic.main.BaseModel</li>
 <li>pydantic.utils.Representation</li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="repograph.models.nodes.Body.id"><code class="name">var <span class="ident">id</span> : Optional[int]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.base.Node" href="base.html#repograph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.base.Node.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.Class"><code class="flex name class">
 <span>class <span class="ident">Class</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a Python class.</p>
@@ -633,6 +656,14 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.base.Node" href="base.html#repograph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.base.Node.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.Directory"><code class="flex name class">
 <span>class <span class="ident">Directory</span></span>
@@ -703,10 +734,18 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.base.Node" href="base.html#repograph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.base.Node.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.Docstring"><code class="flex name class">
 <span>class <span class="ident">Docstring</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a docstring for a function or class.</p>
@@ -767,10 +806,18 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.base.Node" href="base.html#repograph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.base.Node.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.DocstringArgument"><code class="flex name class">
 <span>class <span class="ident">DocstringArgument</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents an argument description with a docstring.</p>
@@ -839,10 +886,18 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.nodes.Argument" href="#repograph.models.nodes.Argument">Argument</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.nodes.Argument.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.DocstringRaises"><code class="flex name class">
 <span>class <span class="ident">DocstringRaises</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a raises/exception descritpion within a docstring.</p>
@@ -895,10 +950,18 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.base.Node" href="base.html#repograph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.base.Node.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.DocstringReturnValue"><code class="flex name class">
 <span>class <span class="ident">DocstringReturnValue</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a return value description within a docstring.</p>
@@ -959,10 +1022,18 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.nodes.ReturnValue" href="#repograph.models.nodes.ReturnValue">ReturnValue</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.nodes.ReturnValue.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.Function"><code class="flex name class">
 <span>class <span class="ident">Function</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a Python function or method.</p>
@@ -1076,10 +1147,18 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.base.Node" href="base.html#repograph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.base.Node.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.License"><code class="flex name class">
 <span>class <span class="ident">License</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a software license.
@@ -1142,10 +1221,18 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.base.Node" href="base.html#repograph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.base.Node.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.Module"><code class="flex name class">
 <span>class <span class="ident">Module</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a Module within the repository.</p>
@@ -1342,6 +1429,14 @@ def create_init_module(cls, parent_canonical_name: str) -&gt; &#34;Module&#34;:
 </details>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.base.Node" href="base.html#repograph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.base.Node.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.Package"><code class="flex name class">
 <span>class <span class="ident">Package</span></span>
@@ -1559,10 +1654,18 @@ def create_from_external_dependency(cls, package: str) -&gt; &#34;Package&#34;:
 </details>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.base.Node" href="base.html#repograph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.base.Node.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.README"><code class="flex name class">
 <span>class <span class="ident">README</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a README file in a repository.</p>
@@ -1615,10 +1718,18 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.base.Node" href="base.html#repograph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.base.Node.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.Repository"><code class="flex name class">
 <span>class <span class="ident">Repository</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a software repository.</p>
@@ -2152,10 +2263,18 @@ def create_from_metadata(
 </details>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.base.Node" href="base.html#repograph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.base.Node.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.ReturnValue"><code class="flex name class">
 <span>class <span class="ident">ReturnValue</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Node representing a return value from a function.</p>
@@ -2200,10 +2319,18 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.nodes.Variable" href="#repograph.models.nodes.Variable">Variable</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.nodes.Variable.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.models.nodes.Variable"><code class="flex name class">
 <span>class <span class="ident">Variable</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents a Python variable.</p>
@@ -2261,6 +2388,14 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.models.base.Node" href="base.html#repograph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.models.base.Node.set_id" href="base.html#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 </dl>
 </section>
@@ -2287,6 +2422,9 @@ specifically with a Node object.</p>
 </li>
 <li>
 <h4><code><a title="repograph.models.nodes.Body" href="#repograph.models.nodes.Body">Body</a></code></h4>
+<ul class="">
+<li><code><a title="repograph.models.nodes.Body.id" href="#repograph.models.nodes.Body.id">id</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="repograph.models.nodes.Class" href="#repograph.models.nodes.Class">Class</a></code></h4>

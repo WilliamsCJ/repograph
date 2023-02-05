@@ -30,7 +30,7 @@
 &#34;&#34;&#34;
 from __future__ import annotations
 import py2neo
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel, PrivateAttr, validator
 from typing import Any, Dict, Optional, Set
 
 
@@ -69,7 +69,9 @@ class Node(BaseSubgraph):
 
     All Node types inherit from this class.
     &#34;&#34;&#34;
-    def __init__(self, identity: Optional[int] = None, **data: Any) -&gt; None:
+    id: Optional[int]
+
+    def __init__(self, **data: Any) -&gt; None:
         &#34;&#34;&#34;Constructor
 
         Args:
@@ -85,6 +87,15 @@ class Node(BaseSubgraph):
             py2neo.Node(self.__class__.__name__, **data),
             **data
         )
+
+    @validator(&#39;id&#39;)
+    def set_id(cls, v):
+        &#34;&#34;&#34;Round match score to 3 decimal places.&#34;&#34;&#34;
+        return round(v, 3)
+
+    @validator(&#39;id&#39;)
+    def passwords_match(cls, v, values, **kwargs):
+        return values[&#39;_subgraph&#39;][&#39;identity&#39;]
 
 
 class InvalidRelationshipException(TypeError):
@@ -275,7 +286,7 @@ based on the parent and child types.</p>
 </dd>
 <dt id="repograph.models.base.Node"><code class="flex name class">
 <span>class <span class="ident">Node</span></span>
-<span>(</span><span>identity: Optional[int] = None, **data: Any)</span>
+<span>(</span><span>**data: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Node represents a generic Node in Repograph.</p>
@@ -299,7 +310,9 @@ specifically with a Node object.</p>
 
     All Node types inherit from this class.
     &#34;&#34;&#34;
-    def __init__(self, identity: Optional[int] = None, **data: Any) -&gt; None:
+    id: Optional[int]
+
+    def __init__(self, **data: Any) -&gt; None:
         &#34;&#34;&#34;Constructor
 
         Args:
@@ -314,7 +327,16 @@ specifically with a Node object.</p>
         super().__init__(
             py2neo.Node(self.__class__.__name__, **data),
             **data
-        )</code></pre>
+        )
+
+    @validator(&#39;id&#39;)
+    def set_id(cls, v):
+        &#34;&#34;&#34;Round match score to 3 decimal places.&#34;&#34;&#34;
+        return round(v, 3)
+
+    @validator(&#39;id&#39;)
+    def passwords_match(cls, v, values, **kwargs):
+        return values[&#39;_subgraph&#39;][&#39;identity&#39;]</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -337,6 +359,45 @@ specifically with a Node object.</p>
 <li><a title="repograph.models.nodes.Repository" href="nodes.html#repograph.models.nodes.Repository">Repository</a></li>
 <li><a title="repograph.models.nodes.Variable" href="nodes.html#repograph.models.nodes.Variable">Variable</a></li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="repograph.models.base.Node.id"><code class="name">var <span class="ident">id</span> : Optional[int]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="repograph.models.base.Node.passwords_match"><code class="name flex">
+<span>def <span class="ident">passwords_match</span></span>(<span>v, values, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@validator(&#39;id&#39;)
+def passwords_match(cls, v, values, **kwargs):
+    return values[&#39;_subgraph&#39;][&#39;identity&#39;]</code></pre>
+</details>
+</dd>
+<dt id="repograph.models.base.Node.set_id"><code class="name flex">
+<span>def <span class="ident">set_id</span></span>(<span>v)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Round match score to 3 decimal places.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@validator(&#39;id&#39;)
+def set_id(cls, v):
+    &#34;&#34;&#34;Round match score to 3 decimal places.&#34;&#34;&#34;
+    return round(v, 3)</code></pre>
+</details>
+</dd>
+</dl>
 </dd>
 <dt id="repograph.models.base.Relationship"><code class="flex name class">
 <span>class <span class="ident">Relationship</span></span>
@@ -472,6 +533,11 @@ the mappings in _allowed_types.</dd>
 </li>
 <li>
 <h4><code><a title="repograph.models.base.Node" href="#repograph.models.base.Node">Node</a></code></h4>
+<ul class="">
+<li><code><a title="repograph.models.base.Node.id" href="#repograph.models.base.Node.id">id</a></code></li>
+<li><code><a title="repograph.models.base.Node.passwords_match" href="#repograph.models.base.Node.passwords_match">passwords_match</a></code></li>
+<li><code><a title="repograph.models.base.Node.set_id" href="#repograph.models.base.Node.set_id">set_id</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="repograph.models.base.Relationship" href="#repograph.models.base.Relationship">Relationship</a></code></h4>

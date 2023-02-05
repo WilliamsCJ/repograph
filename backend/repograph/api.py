@@ -17,6 +17,7 @@ from repograph.entities.graph.router import GraphRouter
 from repograph.entities.search.router import SearchRouter
 
 # Utilities
+from repograph.utils.exception_handlers import generic_exception_handler
 from repograph.utils.logging import configure_logging
 
 # Configure logging format
@@ -56,6 +57,9 @@ def create_app(
         allow_methods=["*"],
         allow_headers=["*"]
     )
+
+    # Add exception handlers
+    application.add_exception_handler(Exception, generic_exception_handler)
 
     return application
 

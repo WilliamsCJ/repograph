@@ -1,4 +1,5 @@
 export type Function = {
+  id: number
   name: string;
   type: string; // TODO: Enum
   builtin: boolean;
