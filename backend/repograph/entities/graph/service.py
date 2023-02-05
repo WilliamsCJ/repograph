@@ -95,7 +95,6 @@ class GraphService:
         return dict(map(lambda x: (x['summarization'], Function(identity=x['function'].identity, **x['function'])), nodes))  # noqa: 501
 
     def get_call_graph_by_id(self, node_id: int) -> CallGraph:
-        print(node_id)
         results = self.repository.execute_query(
             f"""
             MATCH (c:Function)-[r:Calls*0..1]-(f:Function) WHERE ID(f) = {node_id}
@@ -104,9 +103,6 @@ class GraphService:
         )
 
         call_graph = CallGraph()
-
-        print(results[0])
-        print(results[0]["function"].identity)
 
         call_graph.nodes.append(CallGraph.Function(
             id=results[0]["function"].identity,
@@ -120,14 +116,19 @@ class GraphService:
 
         call_graph.nodes.extend(list(map(lambda res: CallGraph.Function(
             id=res["call"].identity,
-            label=res["call"]["canonical_name"],
-            title=res["call"]["canonical_name"]
+            label=(res["call"]["canonical_name"] if "canonical_name" in res else res["call"]["name"]),  # noqa: 501
+            title=(res["call"]["canonical_name"] if "canonical_name" in res else res["call"]["name"])  # noqa: 501
         ), results)))
 
-        call_graph.edges.extend(list(map(lambda res: CallGraph.Relationship(
-            from_node=res["relationship"]["from"],
-            to_node=res["relationship"]["to"],
-        ), results)))
+        def parse_relationships(x):
+            return list(map(lambda y: CallGraph.Relationship(
+                from_id=y.start_node.identity,
+                to_id=y.end_node.identity,
+            ), x["relationship"]))
+
+        call_graph.edges.extend(
+            [item for sublist in list(map(parse_relationships, results)) for item in sublist]
+        )
 
         return call_graph
 

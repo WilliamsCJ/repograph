@@ -96,9 +96,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
 }) => {
   const graph = "a"; // TODO: Change me
   const url = `/graph/${graph}/node/${result.function.id}/call_graph`;
-  console.log(url)
   const { data, error } = useSWR(url, fetcher)
-  console.log(data)
 
   return (
     <div tw="w-full">
@@ -129,7 +127,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
 
           {/* Subgraph Section */}
           <SearchResultCardSection heading="Subgraph">
-            <GraphCard data={data} styles={tw`grow`}/>
+            <GraphCard data={data} styles={tw`grow`} error={error}/>
           </SearchResultCardSection>
         </div>
       </Card>

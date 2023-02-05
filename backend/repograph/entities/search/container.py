@@ -20,7 +20,6 @@ class SearchContainer(DeclarativeContainer):
     service: Singleton[SearchService] = Singleton(
         SearchService,
         graph=graph,
-        active=config.search
     )
 
     router: Singleton[SearchRouter] = Singleton(

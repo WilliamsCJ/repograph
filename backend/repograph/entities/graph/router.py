@@ -19,7 +19,7 @@ class GraphRouter:
 
         self.router = APIRouter(
             prefix="/graph",
-            tags=["Summar"],
+            tags=["Summary"],
             responses={}
         )
 
@@ -34,7 +34,9 @@ class GraphRouter:
             "/{graph}/node/{node_id}/call_graph",
             self.call_graph_by_id,
             methods=["GET"],
-            status_code=status.HTTP_200_OK
+            status_code=status.HTTP_200_OK,
+            response_model_by_alias=True,
+            response_model=CallGraph
         )
 
     async def summary(self, graph: str):

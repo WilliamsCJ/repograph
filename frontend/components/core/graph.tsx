@@ -17,61 +17,55 @@ const Graph = dynamic(() => import("./force-graph"), {
 import { Border } from "./border";
 import { Network, NetworkEvents } from "vis";
 import { Center } from "./layout";
+import { IconWrapper } from "./icon";
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { BlockText, BlockTextLight } from "./text";
 
 /**
  * GraphCard props
  */
 type GraphCardProps = {
   data: any;
+  error: boolean
   styles?: TwStyle
 };
 
-const data = {
-  nodes: [
-    { id: "Myriel", label: "Myriel" },
-    { id: "Napoleon", label: "Myriel" },
-    { id: "Mlle.Baptistine", label: "Myriel" },
-  ],
-  edges: [
-    { from: "Napoleon", to: "Myriel" },
-    { from: "Mlle.Baptistine", to: "Myriel"},
-  ],
+const options = {
+  layout: {
+    hierarchical: false
+  },
+  edges: {
+    color: "#000000"
+  },
+  physics: {
+    forceAtlas2Based: {
+      gravitationalConstant: -26,
+      centralGravity: 0.005,
+      springLength: 230,
+      springConstant: 0.18,
+    },
+    maxVelocity: 146,
+    solver: "forceAtlas2Based",
+    timestep: 0.35,
+    stabilization: {
+      enabled: true,
+      iterations: 2000,
+      updateInterval: 25,
+    },
+  }
 };
 
 /**
  * Card to display graph of data.
  * @param data
  * @param styles
+ * @param error
  * @constructor
  */
-const GraphCard: React.FC<GraphCardProps> = ({ data, styles }) => {
+const GraphCard: React.FC<GraphCardProps> = ({ data, styles, error }) => {
   const [network, setNetwork] = useState<Network | null>(null);
-
-  const options = {
-    layout: {
-      hierarchical: false
-    },
-    edges: {
-      color: "#000000"
-    },
-    physics: {
-      forceAtlas2Based: {
-        gravitationalConstant: -26,
-        centralGravity: 0.005,
-        springLength: 230,
-        springConstant: 0.18,
-      },
-      maxVelocity: 146,
-      solver: "forceAtlas2Based",
-      timestep: 0.35,
-      stabilization: {
-        enabled: true,
-        iterations: 2000,
-        updateInterval: 25,
-      },
-    }
-  };
-
+  
+  // Events
   const events = {
     doubleClick: function() {
       if (network !== null) network.fit();
@@ -87,6 +81,7 @@ const GraphCard: React.FC<GraphCardProps> = ({ data, styles }) => {
     }
   };
 
+  if (data) console.log(data)
   return (
     <Border css={[styles, tw`flex `]}>
       {data ?
@@ -100,13 +95,20 @@ const GraphCard: React.FC<GraphCardProps> = ({ data, styles }) => {
         />
       :
         <Center>
-          <ClipLoader
-            color={colors.gray["400"]}
-            loading={true}
-            size={24}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
+          {error ?
+            <div>
+              <IconWrapper  color="dark" icon={<ExclamationCircleIcon />} size="md"/>
+              <BlockText>Error</BlockText>
+            </div>
+          :
+            <ClipLoader
+              color={colors.gray["400"]}
+              loading={true}
+              size={24}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          }
         </Center>
       }
     </Border>

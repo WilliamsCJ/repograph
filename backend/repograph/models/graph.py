@@ -5,7 +5,7 @@ Models representing elements of the Repograph
 from typing import List
 
 # pip imports
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class GraphSummary(BaseModel):
@@ -40,8 +40,14 @@ class CallGraph(BaseModel):
         title: str
 
     class Relationship(BaseModel):
-        from_id: int
-        to_id: int
+        from_id: int = Field(..., alias="from")
+        to_id: int = Field(..., alias="to")
+
+        class Config:
+            allow_population_by_field_name = True
+
+    class Config:
+        allow_population_by_field_name = True
 
     nodes: List[Function] = []
     edges: List[Relationship] = []

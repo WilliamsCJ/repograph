@@ -13,8 +13,8 @@ export type CallGraphFunction = {
 }
 
 export type CallGraphRelationship = {
-  from_node: number
-  to_node: number
+  from: number
+  to: number
 }
 
 export type CallGraph = {

@@ -47,7 +47,6 @@ from typing import List, Optional
 from sentence_transformers import SentenceTransformer, util
 
 # Model imports
-from repograph.models.nodes import Function
 from repograph.models.search import SemanticSearchResult
 
 # Graph entity imports
@@ -64,7 +63,7 @@ class SearchService:
     graph: GraphService
     model: Optional[SentenceTransformer] = None
 
-    def __init__(self, graph: GraphService, active: bool = True):
+    def __init__(self, graph: GraphService):
         &#34;&#34;&#34;Constructor
 
         Args:
@@ -73,7 +72,16 @@ class SearchService:
         log.info(&#34;Initialising model...&#34;)
         self.model = SentenceTransformer(&#39;sentence-transformers/multi-qa-distilbert-cos-v1&#39;)
 
-    def find_similar_functions_by_query(self, query: str) -&gt; List[Function]:
+    def find_similar_functions_by_query(self, query: str) -&gt; List[SemanticSearchResult]:
+        &#34;&#34;&#34;Finds similar functions using semantic search of function summarizations.
+
+        Args:
+            query (str): The semantic query.
+
+        Return:
+            List[SemanticSearchResult]: Top 5
+
+        &#34;&#34;&#34;
         query_embedding = self.model.encode(query)
         summarizations_map = self.graph.get_function_summarizations()
         summarizations = list(summarizations_map.keys())
@@ -83,13 +91,11 @@ class SearchService:
         score_pairs = list(zip(summarizations, scores))
         score_pairs = sorted(score_pairs, key=lambda x: x[1], reverse=True)
 
-        top_5 = list(map(lambda x: SemanticSearchResult(
+        return list(map(lambda x: SemanticSearchResult(
             function=summarizations_map[x[0]],
             summarization=x[0],
             score=x[1]
-        ), score_pairs))[:5]
-
-        return top_5</code></pre>
+        ), score_pairs))[:5]</code></pre>
 </details>
 </section>
 <section>
@@ -103,7 +109,7 @@ class SearchService:
 <dl>
 <dt id="repograph.entities.search.service.SearchService"><code class="flex name class">
 <span>class <span class="ident">SearchService</span></span>
-<span>(</span><span>graph: <a title="repograph.entities.graph.service.GraphService" href="../graph/service.html#repograph.entities.graph.service.GraphService">GraphService</a>, active: bool = True)</span>
+<span>(</span><span>graph: <a title="repograph.entities.graph.service.GraphService" href="../graph/service.html#repograph.entities.graph.service.GraphService">GraphService</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Constructor</p>
@@ -116,7 +122,7 @@ class SearchService:
     graph: GraphService
     model: Optional[SentenceTransformer] = None
 
-    def __init__(self, graph: GraphService, active: bool = True):
+    def __init__(self, graph: GraphService):
         &#34;&#34;&#34;Constructor
 
         Args:
@@ -125,7 +131,16 @@ class SearchService:
         log.info(&#34;Initialising model...&#34;)
         self.model = SentenceTransformer(&#39;sentence-transformers/multi-qa-distilbert-cos-v1&#39;)
 
-    def find_similar_functions_by_query(self, query: str) -&gt; List[Function]:
+    def find_similar_functions_by_query(self, query: str) -&gt; List[SemanticSearchResult]:
+        &#34;&#34;&#34;Finds similar functions using semantic search of function summarizations.
+
+        Args:
+            query (str): The semantic query.
+
+        Return:
+            List[SemanticSearchResult]: Top 5
+
+        &#34;&#34;&#34;
         query_embedding = self.model.encode(query)
         summarizations_map = self.graph.get_function_summarizations()
         summarizations = list(summarizations_map.keys())
@@ -135,13 +150,11 @@ class SearchService:
         score_pairs = list(zip(summarizations, scores))
         score_pairs = sorted(score_pairs, key=lambda x: x[1], reverse=True)
 
-        top_5 = list(map(lambda x: SemanticSearchResult(
+        return list(map(lambda x: SemanticSearchResult(
             function=summarizations_map[x[0]],
             summarization=x[0],
             score=x[1]
-        ), score_pairs))[:5]
-
-        return top_5</code></pre>
+        ), score_pairs))[:5]</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -157,15 +170,31 @@ class SearchService:
 <h3>Methods</h3>
 <dl>
 <dt id="repograph.entities.search.service.SearchService.find_similar_functions_by_query"><code class="name flex">
-<span>def <span class="ident">find_similar_functions_by_query</span></span>(<span>self, query: str) ‑> List[<a title="repograph.models.nodes.Function" href="../../models/nodes.html#repograph.models.nodes.Function">Function</a>]</span>
+<span>def <span class="ident">find_similar_functions_by_query</span></span>(<span>self, query: str) ‑> List[<a title="repograph.models.search.SemanticSearchResult" href="../../models/search.html#repograph.models.search.SemanticSearchResult">SemanticSearchResult</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Finds similar functions using semantic search of function summarizations.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
+<dd>The semantic query.</dd>
+</dl>
+<h2 id="return">Return</h2>
+<p>List[SemanticSearchResult]: Top 5</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def find_similar_functions_by_query(self, query: str) -&gt; List[Function]:
+<pre><code class="python">def find_similar_functions_by_query(self, query: str) -&gt; List[SemanticSearchResult]:
+    &#34;&#34;&#34;Finds similar functions using semantic search of function summarizations.
+
+    Args:
+        query (str): The semantic query.
+
+    Return:
+        List[SemanticSearchResult]: Top 5
+
+    &#34;&#34;&#34;
     query_embedding = self.model.encode(query)
     summarizations_map = self.graph.get_function_summarizations()
     summarizations = list(summarizations_map.keys())
@@ -175,13 +204,11 @@ class SearchService:
     score_pairs = list(zip(summarizations, scores))
     score_pairs = sorted(score_pairs, key=lambda x: x[1], reverse=True)
 
-    top_5 = list(map(lambda x: SemanticSearchResult(
+    return list(map(lambda x: SemanticSearchResult(
         function=summarizations_map[x[0]],
         summarization=x[0],
         score=x[1]
-    ), score_pairs))[:5]
-
-    return top_5</code></pre>
+    ), score_pairs))[:5]</code></pre>
 </details>
 </dd>
 </dl>
