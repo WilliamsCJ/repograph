@@ -20,6 +20,7 @@ import { Center } from "./layout";
 import { IconWrapper } from "./icon";
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { BlockText, BlockTextLight } from "./text";
+import Script from "next/script";
 
 /**
  * GraphCard props
@@ -27,32 +28,8 @@ import { BlockText, BlockTextLight } from "./text";
 type GraphCardProps = {
   data: any;
   error: boolean
-  styles?: TwStyle
-};
-
-const options = {
-  layout: {
-    hierarchical: false
-  },
-  edges: {
-    color: "#000000"
-  },
-  physics: {
-    forceAtlas2Based: {
-      gravitationalConstant: -26,
-      centralGravity: 0.005,
-      springLength: 230,
-      springConstant: 0.18,
-    },
-    maxVelocity: 146,
-    solver: "forceAtlas2Based",
-    timestep: 0.35,
-    stabilization: {
-      enabled: true,
-      iterations: 2000,
-      updateInterval: 25,
-    },
-  }
+  styles?: TwStyle,
+  root_id: number
 };
 
 /**
@@ -62,17 +39,30 @@ const options = {
  * @param error
  * @constructor
  */
-const GraphCard: React.FC<GraphCardProps> = ({ data, styles, error }) => {
+const GraphCard: React.FC<GraphCardProps> = ({ data, styles, error, root_id }) => {
   const [network, setNetwork] = useState<Network | null>(null);
+
+  // Options
+  const options = {
+    layout: {
+      hierarchical: false,
+    },
+    edges: {
+      color: "#000000",
+      smooth: {
+        enabled: true
+      }
+    }
+  };
   
   // Events
   const events = {
     doubleClick: function() {
       if (network !== null) network.fit();
     },
-    // select: function(event: NetworkEvents) {
-    //   var { nodes, edges } = event;
-    // },
+    select: function(event: NetworkEvents) {
+      var { nodes, edges } = event;
+    },
     stabilized: () => {
       if (network) { // Network will be set using getNetwork event from the Graph component
         network.setOptions({ physics: false }); // Disable physics after stabilization
@@ -81,14 +71,16 @@ const GraphCard: React.FC<GraphCardProps> = ({ data, styles, error }) => {
     }
   };
 
-  if (data) console.log(data)
   return (
-    <Border css={[styles, tw`flex `]}>
+    <Border css={[styles, tw`flex max-h-full`]}>
+      <Script type="text/javascript" src="ttps://visjs.github.io/vis-network/standalone/umd/vis-network.min.js" />
       {data ?
         <Graph
+          autoResize={true}
           graph={data}
           options={options}
           events={events}
+          css={tw`max-h-full bg-red-100`}
           getNetwork={network => {
             setNetwork(network);
           }}

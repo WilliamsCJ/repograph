@@ -127,7 +127,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
 
           {/* Subgraph Section */}
           <SearchResultCardSection heading="Subgraph">
-            <GraphCard data={data} styles={tw`grow`} error={error}/>
+            <GraphCard data={data} styles={tw`grow`} error={error} root_id={result.function.id}/>
           </SearchResultCardSection>
         </div>
       </Card>
