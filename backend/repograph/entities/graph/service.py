@@ -95,23 +95,31 @@ class GraphService:
         return dict(map(lambda x: (x['summarization'], Function(identity=x['function'].identity, **x['function'])), nodes))  # noqa: 501
 
     def get_call_graph_by_id(self, node_id: int) -> CallGraph:
+        print(node_id)
         results = self.repository.execute_query(
             f"""
-            MATCH (c:Function)<-[r:Calls]-(f:Function) WHERE ID(f) = {node_id}
+            MATCH (c:Function)-[r:Calls*0..1]-(f:Function) WHERE ID(f) = {node_id}
             RETURN f as `function`, c as `call`, r as `relationship`
             """
         )
 
         call_graph = CallGraph()
 
+        print(results[0])
+        print(results[0]["function"].identity)
+
         call_graph.nodes.append(CallGraph.Function(
-            id=results[0]["function"]["_identity"],
+            id=results[0]["function"].identity,
             label=results[0]["function"]["canonical_name"],
             title=results[0]["function"]["canonical_name"]
         ))
 
+        results = list(filter(lambda x: x["call"].identity != node_id, results))
+        if len(results) == 0:
+            return call_graph
+
         call_graph.nodes.extend(list(map(lambda res: CallGraph.Function(
-            id=res["call"]["_identity"],
+            id=res["call"].identity,
             label=res["call"]["canonical_name"],
             title=res["call"]["canonical_name"]
         ), results)))

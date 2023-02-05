@@ -63,7 +63,7 @@ const NewGraphForm: React.FC = () => {
       }}
     >
       <Form tw="max-h-full overflow-clip">
-        <div tw="w-full bg-red-100 min-h-full grid grid-cols-2 grid-rows-2 gap-8">
+        <div tw="w-full min-h-full grid grid-cols-2 grid-rows-2 gap-8">
           <Card
             size={tw`w-full max-h-full row-span-2 col-span-2 px-6 py-6 overflow-hidden`}
           >
