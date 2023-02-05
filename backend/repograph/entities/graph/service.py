@@ -92,7 +92,7 @@ class GraphService:
             RETURN n.summarization as `summarization`, f as `function`
             """
         )
-        return dict(map(lambda x: (x['summarization'], x['function']), nodes))
+        return dict(map(lambda x: (x['summarization'], Function(identity=x['function'].identity, **x['function'])), nodes))  # noqa: 501
 
     def get_call_graph_by_id(self, node_id: int) -> CallGraph:
         results = self.repository.execute_query(

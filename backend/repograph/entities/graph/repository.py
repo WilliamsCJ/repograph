@@ -3,12 +3,16 @@ Graph database repository.
 """
 # Base imports
 from typing import Any, Dict, List, Tuple
+from logging import getLogger
 
 # pip imports
 from py2neo import Graph, NodeMatch, Transaction, Node as py2neoNode
 
 # Models
 from repograph.models.base import BaseSubgraph, Node
+
+# Configure logging
+log = getLogger('repograph.entities.graph.repository')
 
 
 class GraphRepository:
@@ -78,7 +82,7 @@ class GraphRepository:
         match: NodeMatch = self._graph.nodes.match(node_label.__name__)
 
         def cast(node: py2neoNode):
-            new = node_label(**dict(node))
+            new = node_label(identity=node.identity, **dict(node))
             new._subgraph.identity = node.identity
             return new
 

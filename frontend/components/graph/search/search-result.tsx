@@ -94,11 +94,11 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   result,
   index,
 }) => {
-  console.log(result.function.id)
   const graph = "a"; // TODO: Change me
-  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/node/${result.function.id}/call_graph`;
+  const url = `/graph/${graph}/node/${result.function.id}/call_graph`;
+  console.log(url)
   const { data, error } = useSWR(url, fetcher)
-
+  console.log(data)
 
   return (
     <div tw="w-full">

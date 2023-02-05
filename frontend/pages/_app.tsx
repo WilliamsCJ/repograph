@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <GlobalStyles />
       <ApplicationShell>
         <Toaster
-          position="top-right"
+          position="top-center"
           reverseOrder={false}
         />
         <NavigationBar routes={navigation} currentPath={router.route} />

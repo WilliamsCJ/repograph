@@ -30,11 +30,17 @@
 <pre><code class="python">&#34;&#34;&#34;
 Routing for build entity.
 &#34;&#34;&#34;
+# Base imports
+from logging import getLogger
+
 # pip imports
 from fastapi import APIRouter
 
 # Build entity imports
 from repograph.entities.search.service import SearchService
+
+# Configure logging
+log = getLogger(&#39;repograph.entities.search.router&#39;)
 
 
 class SearchRouter:
@@ -47,12 +53,11 @@ class SearchRouter:
             &#34;/semantic&#34;,
             self.semantic_search,
             methods=[&#34;GET&#34;],
-            response_model_exclude={&#34;ast&#34;}
+            response_model_exclude={&#34;ast&#34;},
         )
 
     def semantic_search(self, graph: str, query: str = None):
         results = self.service.find_similar_functions_by_query(query)
-        print(results[0].function._subgraph._identity)
         return results</code></pre>
 </details>
 </section>
@@ -85,12 +90,11 @@ class SearchRouter:
             &#34;/semantic&#34;,
             self.semantic_search,
             methods=[&#34;GET&#34;],
-            response_model_exclude={&#34;ast&#34;}
+            response_model_exclude={&#34;ast&#34;},
         )
 
     def semantic_search(self, graph: str, query: str = None):
         results = self.service.find_similar_functions_by_query(query)
-        print(results[0].function._subgraph._identity)
         return results</code></pre>
 </details>
 <h3>Class variables</h3>
@@ -113,7 +117,6 @@ class SearchRouter:
 </summary>
 <pre><code class="python">def semantic_search(self, graph: str, query: str = None):
     results = self.service.find_similar_functions_by_query(query)
-    print(results[0].function._subgraph._identity)
     return results</code></pre>
 </details>
 </dd>

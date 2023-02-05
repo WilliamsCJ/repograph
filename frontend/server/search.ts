@@ -12,6 +12,10 @@ export async function getSemanticSearchQuery(
   url.search = new URLSearchParams(params).toString();
 
   const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error("An error occurred!")
+  }
+
   return (await res.json()) as SearchResultSet;
 }
 

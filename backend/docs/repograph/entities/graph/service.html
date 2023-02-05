@@ -121,7 +121,7 @@ class GraphService:
             RETURN n.summarization as `summarization`, f as `function`
             &#34;&#34;&#34;
         )
-        return dict(map(lambda x: (x[&#39;summarization&#39;], x[&#39;function&#39;]), nodes))
+        return dict(map(lambda x: (x[&#39;summarization&#39;], Function(identity=x[&#39;function&#39;].identity, **x[&#39;function&#39;])), nodes))  # noqa: 501
 
     def get_call_graph_by_id(self, node_id: int) -&gt; CallGraph:
         results = self.repository.execute_query(
@@ -257,7 +257,7 @@ class GraphService:
             RETURN n.summarization as `summarization`, f as `function`
             &#34;&#34;&#34;
         )
-        return dict(map(lambda x: (x[&#39;summarization&#39;], x[&#39;function&#39;]), nodes))
+        return dict(map(lambda x: (x[&#39;summarization&#39;], Function(identity=x[&#39;function&#39;].identity, **x[&#39;function&#39;])), nodes))  # noqa: 501
 
     def get_call_graph_by_id(self, node_id: int) -&gt; CallGraph:
         results = self.repository.execute_query(
@@ -397,7 +397,7 @@ class GraphService:
         RETURN n.summarization as `summarization`, f as `function`
         &#34;&#34;&#34;
     )
-    return dict(map(lambda x: (x[&#39;summarization&#39;], x[&#39;function&#39;]), nodes))</code></pre>
+    return dict(map(lambda x: (x[&#39;summarization&#39;], Function(identity=x[&#39;function&#39;].identity, **x[&#39;function&#39;])), nodes))  # noqa: 501</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_summary"><code class="name flex">

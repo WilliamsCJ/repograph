@@ -1,10 +1,15 @@
 import React from "react";
 
+// Styling
 import tw from "twin.macro";
 
+// External dependencies
+import { Formik, Form } from "formik";
+import toast from 'react-hot-toast';
+
+// Components
 import { Button } from "../../core/button";
 import { SearchBarInputSection } from "../../core/form";
-import { Formik, Form } from "formik";
 
 export type SearchBarProps = {
   label: string;
@@ -31,8 +36,12 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
       initialValues={initialValues}
       // @ts-ignore
       onSubmit={async (values, actions) => {
-        const results = await props.executeQuery("any", values.query);
-        props.setResults(results);
+        try {
+          const results = await props.executeQuery("any", values.query);
+          props.setResults(results);
+        } catch (e) {
+          toast.error("An error occurred!", {duration: 6000})
+        }
       }}
       validate={(values) => {
         const errors: SearchBarErrors = {};
@@ -45,7 +54,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
       }}
     >
       <Form>
-        <div tw="flex flex-row grid grid-cols-8 gap-4 items-center mt-6">
+        <div tw="flex flex-row grid grid-cols-8 gap-4 items-center mt-6 bg-red-200 justify-between">
           <SearchBarInputSection
             id="query"
             name="query"

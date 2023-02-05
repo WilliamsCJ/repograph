@@ -16,7 +16,6 @@ class SemanticSearchResult(BaseModel):
         summarization (str): The summarization of the function's source code.
         score (float): The cosine distance score.
     """
-    id: int
     function: Function = Field(..., exclude={'ast'})
     summarization: str
     score: float

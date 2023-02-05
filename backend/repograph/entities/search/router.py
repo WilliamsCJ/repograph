@@ -1,11 +1,17 @@
 """
 Routing for build entity.
 """
+# Base imports
+from logging import getLogger
+
 # pip imports
 from fastapi import APIRouter
 
 # Build entity imports
 from repograph.entities.search.service import SearchService
+
+# Configure logging
+log = getLogger('repograph.entities.search.router')
 
 
 class SearchRouter:
@@ -18,10 +24,9 @@ class SearchRouter:
             "/semantic",
             self.semantic_search,
             methods=["GET"],
-            response_model_exclude={"ast"}
+            response_model_exclude={"ast"},
         )
 
     def semantic_search(self, graph: str, query: str = None):
         results = self.service.find_similar_functions_by_query(query)
-        print(results[0].function._subgraph._identity)
         return results
