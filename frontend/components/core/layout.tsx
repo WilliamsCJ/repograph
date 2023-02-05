@@ -71,12 +71,12 @@ const JustifiedRow = tw.div`flex flex-row max-w-full justify-between`;
 /**
  * MainContainer is the content for the main portion of the application (i.e. not including the sidebar)
  */
-const MainContainer = tw.div`flex h-screen w-full flex-col space-y-20 overflow-y-auto overflow-x-hidden overscroll-contain py-8 pl-24 pr-8`;
+const MainContainer = tw.div`flex h-screen w-full flex-col space-y-20 overflow-y-auto overflow-x-hidden overscroll-contain pt-8 pl-24 pr-8`;
 
 /**
 RowLayout displays an array of components with consistent spacing
  */
-const RowLayout = tw.div`flex h-full w-full flex-col space-y-8`;
+const RowLayout = tw.div`flex h-full w-full flex-col space-y-4`;
 
 /**
 Fixed sidebar for navigation

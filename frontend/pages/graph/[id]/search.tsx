@@ -12,7 +12,7 @@ import { SearchBar } from "../../../components/graph/search/searchbar";
 import { getSemanticSearchQuery } from "../../../server/search";
 import { Card, FullWidthCard } from "../../../components/core/card";
 import { Heading, TextAccent, TextLight } from "../../../components/core/text";
-import { SearchResultCard } from "../../../components/graph/search/search-result";
+import { Pagination, SearchResultCard } from "../../../components/graph/search/search-result";
 
 const Search: NextPage = () => {
   const [results, setResults] = useState([]);
@@ -43,10 +43,13 @@ const Search: NextPage = () => {
     <DefaultLayout buttons={[]} heading="Search">
       <TabGroup titles={options} panels={searchBars} />
       {/* TODO: Render results */}
-      {results &&
+      <div tw="flex flex-col space-y-4">
+        {results &&
         results.map((result, index) => (
-          <SearchResultCard result={result} index={index} />
+        <SearchResultCard result={result} index={index} />
         ))}
+      </div>
+      <Pagination />
     </DefaultLayout>
   );
 };
