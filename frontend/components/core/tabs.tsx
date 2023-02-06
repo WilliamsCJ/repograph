@@ -25,7 +25,7 @@ const TabGroup: React.FC<TabGroupProps> = ({ titles, panels }) => {
         <Tab.List>
           {titles.map((title, index) => (
             <Tab
-              key={index}
+              key={title}
               css={[
                 tw`px-3 py-2 font-medium text-sm rounded-md`,
                 tw`ui-selected:(bg-indigo-100 text-indigo-700)`,

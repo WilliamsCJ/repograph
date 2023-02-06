@@ -1,5 +1,5 @@
 export type Function = {
-  id: number
+  id: number;
   name: string;
   type: string; // TODO: Enum
   builtin: boolean;
@@ -16,4 +16,9 @@ export type SearchResult = {
   score: number;
 };
 
-export type SearchResultSet = SearchResult[];
+export type SearchResultSet = {
+  results: SearchResult[];
+  offset: number;
+  limit: number;
+  total: number;
+};

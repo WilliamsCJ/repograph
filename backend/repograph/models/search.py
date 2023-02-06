@@ -1,6 +1,9 @@
 """
 Search entity-related models.
 """
+# Base imports
+from typing import List
+
 # pip imports
 from pydantic import BaseModel, Field, validator
 
@@ -24,3 +27,10 @@ class SemanticSearchResult(BaseModel):
     def round_score(cls, v):
         """Round match score to 3 decimal places."""
         return round(v, 3)
+
+
+class SemanticSearchResultSet(BaseModel):
+    results: List[SemanticSearchResult]
+    offset: int
+    limit: int
+    total: int

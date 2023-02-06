@@ -32,8 +32,8 @@ declare module "react-graph-vis" {
   }
 
   export default class NetworkGraph extends Component<
-  NetworkGraphProps,
-  NetworkGraphState
+    NetworkGraphProps,
+    NetworkGraphState
   > {
     render();
   }

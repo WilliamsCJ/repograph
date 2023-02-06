@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 
 // Styling
-import tw, { TwStyle } from "twin.macro"
+import tw, { TwStyle } from "twin.macro";
 import colors from "tailwindcss/colors";
 
 /* External dependencies */
@@ -27,9 +27,9 @@ import Script from "next/script";
  */
 type GraphCardProps = {
   data: any;
-  error: boolean
-  styles?: TwStyle,
-  root_id: number
+  error: boolean;
+  styles?: TwStyle;
+  root_id: number;
 };
 
 /**
@@ -39,7 +39,12 @@ type GraphCardProps = {
  * @param error
  * @constructor
  */
-const GraphCard: React.FC<GraphCardProps> = ({ data, styles, error, root_id }) => {
+const GraphCard: React.FC<GraphCardProps> = ({
+  data,
+  styles,
+  error,
+  root_id,
+}) => {
   const [network, setNetwork] = useState<Network | null>(null);
 
   // Options
@@ -50,49 +55,54 @@ const GraphCard: React.FC<GraphCardProps> = ({ data, styles, error, root_id }) =
     edges: {
       color: "#000000",
       smooth: {
-        enabled: true
-      }
-    }
+        enabled: true,
+      },
+    },
   };
-  
+
   // Events
-  const events = {
-    doubleClick: function() {
-      if (network !== null) network.fit();
-    },
-    select: function(event: NetworkEvents) {
-      var { nodes, edges } = event;
-    },
-    stabilized: () => {
-      if (network) { // Network will be set using getNetwork event from the Graph component
-        network.setOptions({ physics: false }); // Disable physics after stabilization
-        network.fit();
-      }
-    }
-  };
+  // const events = {
+  //   doubleClick: function() {
+  //     if (network !== null) network.fit();
+  //   },
+  //   select: function(event: NetworkEvents) {
+  //     var { nodes, edges } = event;
+  //   },
+  //   stabilized: () => {
+  //     if (network) { // Network will be set using getNetwork event from the Graph component
+  //       network.fit();
+  //     }
+  //   }
+  // };
 
   return (
     <Border css={[styles, tw`flex max-h-full`]}>
-      <Script type="text/javascript" src="ttps://visjs.github.io/vis-network/standalone/umd/vis-network.min.js" />
-      {data ?
+      <Script
+        type="text/javascript"
+        src="ttps://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"
+      />
+      {data ? (
         <Graph
           autoResize={true}
           graph={data}
           options={options}
-          events={events}
           css={tw`max-h-full bg-red-100`}
-          getNetwork={network => {
-            setNetwork(network);
-          }}
+          // getNetwork={network => {
+          //   setNetwork(network);
+          // }}
         />
-      :
+      ) : (
         <Center>
-          {error ?
+          {error ? (
             <div>
-              <IconWrapper  color="dark" icon={<ExclamationCircleIcon />} size="md"/>
+              <IconWrapper
+                color="dark"
+                icon={<ExclamationCircleIcon />}
+                size="md"
+              />
               <BlockText>Error</BlockText>
             </div>
-          :
+          ) : (
             <ClipLoader
               color={colors.gray["400"]}
               loading={true}
@@ -100,9 +110,9 @@ const GraphCard: React.FC<GraphCardProps> = ({ data, styles, error, root_id }) =
               aria-label="Loading Spinner"
               data-testid="loader"
             />
-          }
+          )}
         </Center>
-      }
+      )}
     </Border>
   );
 };

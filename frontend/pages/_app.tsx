@@ -35,11 +35,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <GlobalStyles />
-      <ApplicationShell>
-        <Toaster
-          position="top-center"
-          reverseOrder={false}
-        />
+      <ApplicationShell id="shell">
+        <Toaster position="top-center" reverseOrder={false} />
         <NavigationBar routes={navigation} currentPath={router.route} />
         <MainContainer>
           <Component {...pageProps} />

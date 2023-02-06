@@ -1,35 +1,63 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
+// Styling
 import tw from "twin.macro";
 
-const Pagination = () => {
+// Components
+import { TextButton } from "../../core/button";
+import { Text, TextLight } from "../../core/text";
+
+/**
+ * Props for Pagination component
+ */
+export type PaginationProps = {
+  limit: number;
+  offset: number;
+  setOffset: Dispatch<SetStateAction<number>>;
+  total: number;
+};
+
+/**
+ * Pagination controls and information
+ * @param limit
+ * @param offset
+ * @param setOffset
+ * @param total
+ * @constructor
+ */
+const Pagination: React.FC<PaginationProps> = ({
+  limit,
+  offset,
+  setOffset,
+  total,
+}) => {
   return (
-  <nav
-  tw="flex items-center justify-between py-4"
-  aria-label="Pagination"
-  >
-    <div tw="hidden sm:block">
-      <p tw="text-sm text-gray-700">
-        Showing <span tw="font-medium">1</span> to <span tw="font-medium">10</span> of{' '}
-        <span tw="font-medium">20</span> results
-      </p>
-    </div>
-    <div tw="flex flex-1 justify-between sm:justify-end">
-      <a
-      href="#"
-      tw="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-      >
-        Previous
-      </a>
-      <a
-      href="#"
-      tw="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-      >
-        Next
-      </a>
-    </div>
-  </nav>
-  )
-}
+    <nav tw="flex items-center justify-between py-4" aria-label="Pagination">
+      <div tw="hidden sm:block">
+        <TextLight>
+          Showing <Text as={"span"}>{offset + 1}</Text> to{" "}
+          <Text as={"span"}>{Math.min(limit + offset, total)}</Text> of{" "}
+          <Text as={"span"}>{total}</Text> results
+        </TextLight>
+      </div>
+      <div tw="flex flex-1 justify-between sm:justify-end space-x-2">
+        <TextButton
+          onClick={() => {
+            if (offset !== 0) setOffset(offset - limit);
+          }}
+        >
+          Previous
+        </TextButton>
+        <TextButton
+          onClick={() => {
+            if (offset + limit <= total) setOffset(offset + limit);
+          }}
+        >
+          Next
+        </TextButton>
+      </div>
+    </nav>
+  );
+};
 
 export { Pagination };

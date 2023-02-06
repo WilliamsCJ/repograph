@@ -1,11 +1,11 @@
-import React from "react";
+import React, { MutableRefObject, useRef } from "react";
 
 // Styling
 import tw from "twin.macro";
 
 // External dependencies
 import { Formik, Form } from "formik";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 // Components
 import { Button } from "../../core/button";
@@ -15,7 +15,6 @@ export type SearchBarProps = {
   label: string;
   placeholder: string;
   executeQuery: any;
-  setResults: any;
 };
 
 type SearchBarValues = {
@@ -33,15 +32,15 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
 
   return (
     <Formik
+      // @ts-ignore
       initialValues={initialValues}
+      onChange={async (event) => {
+        console.log("hi");
+        console.log(event);
+      }}
       // @ts-ignore
       onSubmit={async (values, actions) => {
-        try {
-          const results = await props.executeQuery("any", values.query);
-          props.setResults(results);
-        } catch (e) {
-          toast.error("An error occurred!", {duration: 6000})
-        }
+        props.executeQuery(values.query);
       }}
       validate={(values) => {
         const errors: SearchBarErrors = {};

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MutableRefObject } from "react";
 
 // Styling
 import tw from "twin.macro";
@@ -29,6 +29,7 @@ export type DefaultLayoutProps = {
   buttons: React.ReactNode[];
   children: React.ReactNode;
   heading: string;
+  topRef: MutableRefObject<any>;
 };
 
 /**
@@ -36,15 +37,17 @@ export type DefaultLayoutProps = {
  * @param buttons {React.ReactNode[]} Array of Buttons to display on the right
  * @param children {React.ReactNode[]} The child nodes i.e. the content
  * @param heading {string} The page heading
+ * @param topRef
  * @constructor
  */
 const DefaultLayout: React.FC<DefaultLayoutProps> = ({
   buttons,
   children,
   heading,
+  topRef,
 }) => {
   return (
-    <RowLayout>
+    <RowLayout ref={topRef}>
       <HeadingRow>
         <Title>{heading}</Title>
         <ButtonGroup>

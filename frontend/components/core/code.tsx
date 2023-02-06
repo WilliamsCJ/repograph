@@ -12,9 +12,9 @@ hljs.registerLanguage("python", python);
  * Props for the CodeBlock component.
  */
 export type CodeBlockProps = {
-  source_code: string
-  styles?: TwStyle
-}
+  source_code: string;
+  styles?: TwStyle;
+};
 
 /**
  * CodeBlock component
@@ -26,16 +26,16 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ source_code, styles }) => {
   const code = hljs.highlight(source_code, { language: "python" }).value;
 
   return (
-  <pre
-    css={[
-      tw`max-h-full max-w-full overflow-x-auto overflow-y-auto scrollbar-hide`,
-      tw`border rounded-lg text-xs p-1`,
-      styles
-    ]}
-  >
-    {code && <code dangerouslySetInnerHTML={{ __html: code }} />}
-  </pre>
-  )
-}
+    <pre
+      css={[
+        tw`max-h-full max-w-full overflow-x-auto overflow-y-auto scrollbar-hide`,
+        tw`border rounded-lg text-xs p-1`,
+        styles,
+      ]}
+    >
+      {code && <code dangerouslySetInnerHTML={{ __html: code }} />}
+    </pre>
+  );
+};
 
 export { CodeBlock };

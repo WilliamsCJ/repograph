@@ -7,17 +7,17 @@ export type GraphSummary = {
 };
 
 export type CallGraphFunction = {
-  id: number
-  label: string
-  title: string
-}
+  id: number;
+  label: string;
+  title: string;
+};
 
 export type CallGraphRelationship = {
-  from: number
-  to: number
-}
+  from: number;
+  to: number;
+};
 
 export type CallGraph = {
-  nodes: CallGraphFunction[]
-  edges: CallGraphRelationship[]
-}
+  nodes: CallGraphFunction[];
+  edges: CallGraphRelationship[];
+};
