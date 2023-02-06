@@ -8,6 +8,8 @@ import {
 import { ApplicationShell, MainContainer } from "../components/core/layout";
 import GlobalStyles from "../styles/GlobalStyles";
 import { useRouter } from "next/router";
+import React from "react";
+import { Toaster } from "react-hot-toast";
 
 const navigation: NavigationRoute[] = [
   {
@@ -33,7 +35,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <GlobalStyles />
-      <ApplicationShell>
+      <ApplicationShell id="shell">
+        <Toaster position="top-center" reverseOrder={false} />
         <NavigationBar routes={navigation} currentPath={router.route} />
         <MainContainer>
           <Component {...pageProps} />

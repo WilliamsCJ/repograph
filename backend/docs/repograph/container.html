@@ -38,6 +38,7 @@ from py2neo import Graph
 # Containers
 from repograph.entities.build.container import BuildContainer
 from repograph.entities.graph.container import GraphContainer
+from repograph.entities.search.container import SearchContainer
 from repograph.entities.summarization.container import SummarizationContainer
 
 
@@ -74,6 +75,13 @@ class ApplicationContainer(DeclarativeContainer):
         graph=graph.container.service,
         summarization=summarization.container.service,
         config=config
+    )
+
+    # Container for Search entity
+    search: Container[SearchContainer] = Container(
+        SearchContainer,
+        config=config,
+        graph=graph.container.service
     )</code></pre>
 </details>
 </section>
@@ -130,6 +138,13 @@ This container wires together all other containers to bring together the applica
         graph=graph.container.service,
         summarization=summarization.container.service,
         config=config
+    )
+
+    # Container for Search entity
+    search: Container[SearchContainer] = Container(
+        SearchContainer,
+        config=config,
+        graph=graph.container.service
     )</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -173,6 +188,10 @@ This container wires together all other containers to bring together the applica
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="repograph.container.ApplicationContainer.search"><code class="name">var <span class="ident">search</span> : dependency_injector.providers.Container</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="repograph.container.ApplicationContainer.summarization"><code class="name">var <span class="ident">summarization</span> : dependency_injector.providers.Container</code></dt>
 <dd>
 <div class="desc"></div>
@@ -210,6 +229,7 @@ This container wires together all other containers to bring together the applica
 <li><code><a title="repograph.container.ApplicationContainer.inherited_providers" href="#repograph.container.ApplicationContainer.inherited_providers">inherited_providers</a></code></li>
 <li><code><a title="repograph.container.ApplicationContainer.neo4j" href="#repograph.container.ApplicationContainer.neo4j">neo4j</a></code></li>
 <li><code><a title="repograph.container.ApplicationContainer.providers" href="#repograph.container.ApplicationContainer.providers">providers</a></code></li>
+<li><code><a title="repograph.container.ApplicationContainer.search" href="#repograph.container.ApplicationContainer.search">search</a></code></li>
 <li><code><a title="repograph.container.ApplicationContainer.summarization" href="#repograph.container.ApplicationContainer.summarization">summarization</a></code></li>
 <li><code><a title="repograph.container.ApplicationContainer.wiring_config" href="#repograph.container.ApplicationContainer.wiring_config">wiring_config</a></code></li>
 </ul>

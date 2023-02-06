@@ -3,7 +3,7 @@
 from __future__ import annotations
 import py2neo
 from pydantic import BaseModel, PrivateAttr
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, Optional, Set, Union
 
 
 class BaseSubgraph(BaseModel):
@@ -22,18 +22,24 @@ class BaseSubgraph(BaseModel):
         _subgraph (py2neo.Subgraph): Py2neo Node representation.
     """
     _subgraph: py2neo.Subgraph = PrivateAttr()
+    id: Optional[int]
 
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, subgraph: py2neo.Subgraph, **data: Any) -> None:
+    def __init__(
+        self,
+        subgraph: Union[py2neo.Node, py2neo.Relationship],
+        identity: Optional[int] = None,
+        **data: Any
+    ) -> None:
         """Constructor
 
         Args:
             subgraph (py2neo.Subgraph): Subgraph - either Node or Relationship.
         """
         self._subgraph = subgraph
-        super().__init__(**data)
+        super().__init__(id=identity, **data)
 
 
 class Node(BaseSubgraph):
@@ -41,7 +47,8 @@ class Node(BaseSubgraph):
 
     All Node types inherit from this class.
     """
-    def __init__(self, **data: Any) -> None:
+
+    def __init__(self, identity: Optional[int] = None, **data: Any) -> None:
         """Constructor
 
         Args:
@@ -55,6 +62,7 @@ class Node(BaseSubgraph):
         """
         super().__init__(
             py2neo.Node(self.__class__.__name__, **data),
+            identity=identity,
             **data
         )
 

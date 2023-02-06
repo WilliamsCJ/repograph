@@ -36,27 +36,28 @@ repos:
         additional_dependencies: [reindent]
         pass_filenames: false
         stages: [commit]
-      - id: pdoc
-        name: pdoc
-        entry: pdoc backend/repograph --html -f -o backend/docs
-        language: python
-        "types": [python]
-        pass_filenames: false
-        stages: [commit]
-        additional_dependencies:
-          [
-            pdoc3,
-            pydantic,
-            fastapi,
-            py2neo,
-            click,
-            neo4j,
-            transformers,
-            torch,
-            configargparse,
-            dependency-injector,
-            uvicorn,
-          ]
+#      - id: pdoc
+#        name: pdoc
+#        entry: pdoc backend/repograph --html -f -o backend/docs
+#        language: python
+#        "types": [python]
+#        pass_filenames: false
+#        stages: [commit]
+#        additional_dependencies:
+#          [
+#            pdoc3,
+#            pydantic,
+#            fastapi,
+#            py2neo,
+#            click,
+#            neo4j,
+#            transformers,
+#            sentence_transformers,
+#            torch,
+#            configargparse,
+#            dependency-injector,
+#            uvicorn,
+#          ]
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: "v3.0.0-alpha.4"
     hooks:

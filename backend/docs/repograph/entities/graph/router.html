@@ -34,6 +34,7 @@ Routing for build entity.
 from fastapi import APIRouter, status
 
 # Model imports
+from repograph.models.graph import CallGraph
 
 # Graph entity imports
 from repograph.entities.graph.service import GraphService
@@ -44,20 +45,34 @@ class GraphRouter:
 
     def __init__(self, service: GraphService):
         self.service = service
+
         self.router = APIRouter(
             prefix=&#34;/graph&#34;,
-            tags=[&#34;Graph&#34;],
+            tags=[&#34;Summary&#34;],
             responses={}
         )
+
         self.router.add_api_route(
-            &#34;/summary&#34;,
+            &#34;/{graph}/summary&#34;,
             self.summary,
             methods=[&#34;GET&#34;],
             status_code=status.HTTP_200_OK
         )
 
-    async def summary(self):
-        return self.service.get_summary()</code></pre>
+        self.router.add_api_route(
+            &#34;/{graph}/node/{node_id}/call_graph&#34;,
+            self.call_graph_by_id,
+            methods=[&#34;GET&#34;],
+            status_code=status.HTTP_200_OK,
+            response_model_by_alias=True,
+            response_model=CallGraph
+        )
+
+    async def summary(self, graph: str):
+        return self.service.get_summary()
+
+    async def call_graph_by_id(self, graph: str, node_id: int) -&gt; CallGraph:
+        return self.service.get_call_graph_by_id(node_id)</code></pre>
 </details>
 </section>
 <section>
@@ -84,20 +99,34 @@ class GraphRouter:
 
     def __init__(self, service: GraphService):
         self.service = service
+
         self.router = APIRouter(
             prefix=&#34;/graph&#34;,
-            tags=[&#34;Graph&#34;],
+            tags=[&#34;Summary&#34;],
             responses={}
         )
+
         self.router.add_api_route(
-            &#34;/summary&#34;,
+            &#34;/{graph}/summary&#34;,
             self.summary,
             methods=[&#34;GET&#34;],
             status_code=status.HTTP_200_OK
         )
 
-    async def summary(self):
-        return self.service.get_summary()</code></pre>
+        self.router.add_api_route(
+            &#34;/{graph}/node/{node_id}/call_graph&#34;,
+            self.call_graph_by_id,
+            methods=[&#34;GET&#34;],
+            status_code=status.HTTP_200_OK,
+            response_model_by_alias=True,
+            response_model=CallGraph
+        )
+
+    async def summary(self, graph: str):
+        return self.service.get_summary()
+
+    async def call_graph_by_id(self, graph: str, node_id: int) -&gt; CallGraph:
+        return self.service.get_call_graph_by_id(node_id)</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -108,8 +137,8 @@ class GraphRouter:
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="repograph.entities.graph.router.GraphRouter.summary"><code class="name flex">
-<span>async def <span class="ident">summary</span></span>(<span>self)</span>
+<dt id="repograph.entities.graph.router.GraphRouter.call_graph_by_id"><code class="name flex">
+<span>async def <span class="ident">call_graph_by_id</span></span>(<span>self, graph: str, node_id: int) ‑> <a title="repograph.models.graph.CallGraph" href="../../models/graph.html#repograph.models.graph.CallGraph">CallGraph</a></span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -117,7 +146,20 @@ class GraphRouter:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def summary(self):
+<pre><code class="python">async def call_graph_by_id(self, graph: str, node_id: int) -&gt; CallGraph:
+    return self.service.get_call_graph_by_id(node_id)</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.graph.router.GraphRouter.summary"><code class="name flex">
+<span>async def <span class="ident">summary</span></span>(<span>self, graph: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def summary(self, graph: str):
     return self.service.get_summary()</code></pre>
 </details>
 </dd>
@@ -142,6 +184,7 @@ class GraphRouter:
 <li>
 <h4><code><a title="repograph.entities.graph.router.GraphRouter" href="#repograph.entities.graph.router.GraphRouter">GraphRouter</a></code></h4>
 <ul class="">
+<li><code><a title="repograph.entities.graph.router.GraphRouter.call_graph_by_id" href="#repograph.entities.graph.router.GraphRouter.call_graph_by_id">call_graph_by_id</a></code></li>
 <li><code><a title="repograph.entities.graph.router.GraphRouter.service" href="#repograph.entities.graph.router.GraphRouter.service">service</a></code></li>
 <li><code><a title="repograph.entities.graph.router.GraphRouter.summary" href="#repograph.entities.graph.router.GraphRouter.summary">summary</a></code></li>
 </ul>

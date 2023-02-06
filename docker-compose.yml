@@ -26,6 +26,8 @@ services:
       - backend/.env
     ports:
       - "3000:3000"
+    volumes:
+      - ./backend/repograph:/code/repograph
     networks:
       - repograph-network
     depends_on:

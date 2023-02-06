@@ -33,7 +33,7 @@ This module defines the Repograph class and the operations/queries that can be p
 import logging
 from typing import List
 
-from repograph.models.repograph import RepographSummary
+from repograph.models.repograph import GraphSummary
 from repograph.utils.neo4j import Neo4JDatabase
 
 log = logging.getLogger(&#39;repograph.repograph&#39;)
@@ -49,12 +49,12 @@ class Repograph(Neo4JDatabase):
     def __init__(self, uri, user, password, database) -&gt; None:
         super().__init__(uri, user, password, database)
 
-    def get_summary(self) -&gt; RepographSummary:
+    def get_summary(self) -&gt; GraphSummary:
         if not self.has_nodes():
             log.warning(&#34;Graph has no nodes&#34;)
-            return RepographSummary()
+            return GraphSummary()
 
-        summary = RepographSummary(is_empty=False)
+        summary = GraphSummary(is_empty=False)
 
         # Modules
         _, count = self.get_all(&#34;Module&#34;)
@@ -114,12 +114,12 @@ and provides functionality for interacting with it.</p>
     def __init__(self, uri, user, password, database) -&gt; None:
         super().__init__(uri, user, password, database)
 
-    def get_summary(self) -&gt; RepographSummary:
+    def get_summary(self) -&gt; GraphSummary:
         if not self.has_nodes():
             log.warning(&#34;Graph has no nodes&#34;)
-            return RepographSummary()
+            return GraphSummary()
 
-        summary = RepographSummary(is_empty=False)
+        summary = GraphSummary(is_empty=False)
 
         # Modules
         _, count = self.get_all(&#34;Module&#34;)
@@ -153,7 +153,7 @@ and provides functionality for interacting with it.</p>
 <h3>Methods</h3>
 <dl>
 <dt id="repograph.repograph.Repograph.get_summary"><code class="name flex">
-<span>def <span class="ident">get_summary</span></span>(<span>self) ‑> <a title="repograph.models.repograph.RepographSummary" href="models/repograph.html#repograph.models.repograph.RepographSummary">RepographSummary</a></span>
+<span>def <span class="ident">get_summary</span></span>(<span>self) ‑> <a title="repograph.models.repograph.GraphSummary" href="models/repograph.html#repograph.models.repograph.RepographSummary">GraphSummary</a></span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -161,12 +161,12 @@ and provides functionality for interacting with it.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_summary(self) -&gt; RepographSummary:
+<pre><code class="python">def get_summary(self) -&gt; GraphSummary:
     if not self.has_nodes():
         log.warning(&#34;Graph has no nodes&#34;)
-        return RepographSummary()
+        return GraphSummary()
 
-    summary = RepographSummary(is_empty=False)
+    summary = GraphSummary(is_empty=False)
 
     # Modules
     _, count = self.get_all(&#34;Module&#34;)

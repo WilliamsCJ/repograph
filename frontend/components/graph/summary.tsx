@@ -2,11 +2,22 @@ import React from "react";
 
 import tw from "twin.macro";
 import { Card } from "../core/card";
-import {
-  GraphSummary,
-  StatsCardProps,
-} from "../../types/components/home/summary";
+import { GraphSummary } from "../../types/summary";
 
+/**
+ * StatsCardProps for StatsCard component
+ */
+export type StatsCardProps = {
+  title: string;
+  value: number;
+};
+
+/**
+ * StatsCard component
+ * @param title {string}: The Card title
+ * @param value {number}: The value of the
+ * @constructor
+ */
 const StatsCard: React.FC<StatsCardProps> = ({ title, value }) => {
   return (
     <Card size={tw`shadow-sm h-24`}>
@@ -20,6 +31,11 @@ const StatsCard: React.FC<StatsCardProps> = ({ title, value }) => {
   );
 };
 
+/**
+ * Summary component contains an array of StatsCards
+ * @param summary {GraphSummary}: The Summary details
+ * @constructor
+ */
 const Summary = ({ summary }: { summary: GraphSummary }) => {
   return (
     <dl tw="grid grid-cols-2 md:grid-cols-4 gap-4">

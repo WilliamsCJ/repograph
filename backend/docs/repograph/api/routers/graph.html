@@ -35,7 +35,7 @@ from fastapi import APIRouter, Depends, status
 
 from repograph.api.containers import ApplicationContainer
 from repograph.repograph import Repograph
-from repograph.models.repograph import RepographSummary
+from repograph.models.repograph import GraphSummary
 
 repograph_service: Provide = Provide[ApplicationContainer.repograph]
 
@@ -48,7 +48,7 @@ graphRouter = APIRouter(
 
 @graphRouter.get(
     &#34;/summary&#34;,
-    response_model=RepographSummary,
+    response_model=GraphSummary,
     status_code=status.HTTP_200_OK
 )
 @inject
@@ -74,7 +74,7 @@ async def get_summary(repograph: Repograph = Depends(repograph_service)):
 </summary>
 <pre><code class="python">@graphRouter.get(
     &#34;/summary&#34;,
-    response_model=RepographSummary,
+    response_model=GraphSummary,
     status_code=status.HTTP_200_OK
 )
 @inject

@@ -10,7 +10,8 @@ import Link from "next/link";
 export type ButtonProps = {
   icon?: any;
   text: string;
-  primary: boolean;
+  primary?: boolean;
+  type?: "submit" | "button";
 };
 
 /**
@@ -18,15 +19,17 @@ export type ButtonProps = {
  * @param icon {any} Icon to display
  * @param text {string} Button text
  * @param primary
+ * @param type
  * @constructor
  */
-const Button = ({ icon, text, primary }: ButtonProps) => {
+const Button = ({ icon, text, primary, type }: ButtonProps) => {
   const color = primary
     ? tw`bg-primary-500 text-white hover:bg-primary-600 border-transparent`
     : tw`bg-white hover:bg-gray-50 text-gray-700 border-gray-300`;
 
   return (
     <button
+      type={type}
       css={[
         color,
         tw`h-10 w-28 mx-auto flex flex-row justify-center items-center space-x-2`,
@@ -67,4 +70,9 @@ const LinkButton = ({ href, ...props }: LinkButtonProps) => (
  */
 const ButtonGroup = tw.div`flex flex-row justify-center space-x-4`;
 
-export { Button, LinkButton, ButtonGroup };
+const TextButton = tw.button`
+  relative inline-flex items-center rounded-md border border-gray-300 bg-white
+  px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50
+ `;
+
+export { Button, LinkButton, TextButton, ButtonGroup };
