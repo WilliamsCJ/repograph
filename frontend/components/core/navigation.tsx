@@ -2,6 +2,9 @@ import tw from "twin.macro";
 import { SideBar } from "./layout";
 import Link from "next/link";
 
+import { Graph } from "phosphor-react"
+import { useState } from "react";
+
 export type NavIconProps = {
   href: string;
   icon: any;
@@ -36,8 +39,24 @@ const NavIcon = ({ icon, href, active }: NavIconProps) => {
   );
 };
 
+const NavLogo = () => {
+  const [active, setActive] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setActive(true)}
+      onMouseLeave={() => setActive(false)}
+      tw="flex h-10 items-center justify-center hover:cursor-pointer"
+    >
+      <Graph size={48} color="#454545" weight={active ? "duotone" : "light"} />
+    </div>
+  )
+}
+
+
 const NavigationBar = ({ routes, currentPath }: NavigationBarProps) => (
   <SideBar>
+    <NavLogo />
     {routes.map((route, index) => (
       <NavIcon
         key={index}

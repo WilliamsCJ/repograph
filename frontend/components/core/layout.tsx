@@ -69,7 +69,7 @@ const FullContainer = tw.div`flex h-full w-full`;
 /**
  * HeadingRow is used for displaying the top row of a page
  */
-const HeadingRow = tw.div`flex w-full flex-row justify-between`;
+const HeadingRow = tw.div`flex w-full flex-row justify-between mb-4`;
 
 /**
  * Justified Row is used for placing content justified at either end
