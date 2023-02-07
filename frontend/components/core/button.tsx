@@ -26,6 +26,14 @@ export type ButtonProps = {
   type?: "submit" | "button";
 };
 
+/**
+ * Base Button
+ * @param icon {any} Icon to display
+ * @param text {string} Button text
+ * @param primary
+ * @param type
+ * @constructor
+ */
 export const Button = ({ icon, text, type }: ButtonProps) => (
   <button
     css={[Background, ButtonText, Border, ButtonStyles, Hover]}
@@ -35,6 +43,14 @@ export const Button = ({ icon, text, type }: ButtonProps) => (
   </button>
 );
 
+/**
+ * Button in accent color
+ * @param icon {any} Icon to display
+ * @param text {string} Button text
+ * @param primary
+ * @param type
+ * @constructor
+ */
 export const AccentButton = ({ icon, text, type }: ButtonProps) => (
   <button
     css={[
@@ -49,31 +65,6 @@ export const AccentButton = ({ icon, text, type }: ButtonProps) => (
     <span>{text}</span>
   </button>
 );
-
-// /**
-//  * Base Button
-//  * @param icon {any} Icon to display
-//  * @param text {string} Button text
-//  * @param primary
-//  * @param type
-//  * @constructor
-//  */
-// const Button = ({ icon, text, primary, type }: ButtonProps) => {
-//   return (
-//     <button
-//       type={type}
-//       css={[
-//         tw`bg-white bg-emerald-400/25 font-semibold`,
-//         tw`text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300`,
-//         tw`border border-emerald-400 dark:hover:border-emerald-200 dark:border-emerald-700 rounded-lg`,
-//         tw`mx-auto flex flex-row justify-center items-center space-x-2`,
-//         // tw`focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`,
-//       ]}
-//     >
-//       <span>{text}</span>
-//     </button>
-//   );
-// };
 
 // Link Button
 

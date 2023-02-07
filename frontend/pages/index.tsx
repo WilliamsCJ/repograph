@@ -24,8 +24,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       graphs: [
-        { id: 1, name: "fastapi", createdAt: "05-09-2023" },
-        { id: 2, name: "pyLODE", createdAt: "05-10-2023" },
+        { name: "fastapi", createdAt: "05-09-2023" },
+        { name: "pyLODE", createdAt: "05-10-2023" },
       ],
     },
   };

@@ -54,7 +54,7 @@ const GraphListRow: React.FC<GraphListRowProps> = ({ graph, index, total }) => {
     <ListRow
       index={index}
       total={total}
-      href={`/graph/${graph.id}`}
+      href={`/graph/${graph.name}`}
       leftComponent={left}
       rightComponent={right}
     />
