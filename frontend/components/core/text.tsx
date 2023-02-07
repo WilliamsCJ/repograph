@@ -11,5 +11,5 @@ export const SmallHeading = tw.h3`text-base font-semibold text-zinc-900 dark:tex
 export const Text = tw.p`text-base font-medium text-zinc-800 dark:text-zinc-200`;
 export const AccentText = tw.p`text-base font-semibold text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300`;
 export const DetailText = tw.p`text-sm text-zinc-700 dark:text-zinc-300`;
-export const BoldDetailText = tw.h4`text-sm font-medium text-zinc-700 dark:text-zinc-300`;
+export const BoldDetailText = tw.p`text-sm font-medium text-zinc-700 dark:text-zinc-300`;
 export const NumericalValue = tw.p`text-3xl font-semibold tracking-tight text-zinc-800 dark:text-zinc-200`;

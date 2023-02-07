@@ -1,9 +1,18 @@
 import React, { MutableRefObject, useEffect, useState } from "react";
+
+// Styling
+import tw from 'twin.macro';
+
+// Dependencies
+import toast from "react-hot-toast";
+
+// Components
 import { SearchBar } from "./searchbar";
 import { getSemanticSearchQuery } from "../../../lib/search";
 import { SearchResultCard } from "./search-result";
 import { Pagination } from "./pagination";
-import toast from "react-hot-toast";
+
+// Search
 import { SearchResultSet } from "../../../types/search";
 
 export const SemanticSearch = ({
@@ -50,7 +59,7 @@ export const SemanticSearch = ({
       />
       {results && (
         <>
-          <div tw="mt-4 flex flex-col space-y-4">
+          <div css={tw`mt-6 flex flex-col space-y-8`}>
             {results.results.map((result, index) => (
               <SearchResultCard result={result} index={index} />
             ))}

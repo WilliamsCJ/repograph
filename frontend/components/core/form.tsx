@@ -192,7 +192,7 @@ export type SearchBarInputSectionProps = {
   name: string;
   id: string;
   placeholder: string;
-  BoldDetailText: string;
+  label: string;
 };
 
 /**
@@ -282,19 +282,19 @@ const ErrorInput = (props: React.HTMLProps<HTMLInputElement>) => (
 /**
  * SearchBarInput component
  */
-const SearchBarInput = tw.input`
-block w-full px-4 py-3 pl-12 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white
-focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-`;
+const SearchBarInput = (props: React.HTMLProps<HTMLInputElement>) => (
+  <input
+    css={[
+      tw`block w-full px-4 py-2 pl-12`,
+      Background,
+      Border,
+      Placeholder,
+      Focus
+    ]}
+    {...props}
+  />
+)
 
-/**
- * Form BoldDetailText.
- */
-// const BoldDetailText = tw.BoldDetailText`block text-sm font-medium text-gray-700`;
-// // const BoldDetailText = ({ children }: { children: React.ReactNode }) => (
-// //   <BoldDetailText css={[]}>{children}</BoldDetailText>
-// // )
 
 /**
  * Form help/hint text.

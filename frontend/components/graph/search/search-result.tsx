@@ -104,11 +104,12 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   const url = `/graph/${graph}/node/${result.function.id}/call_graph`;
   const { data, error } = useSWR(url, fetcher);
 
+  console.log(result)
   return (
     <div tw="w-full">
       <JustifiedRow tw="mb-1 mx-2">
         <BoldDetailText>{`${result.repository} > ${result.function.canonical_name}`}</BoldDetailText>
-        <BoldDetailText>{`#${index} (${result.score})`}</BoldDetailText>
+        <BoldDetailText>{`#${index + 1} (${result.score})`}</BoldDetailText>
       </JustifiedRow>
       <Card size={tw`w-full h-48`}>
         <div tw="w-full h-full grid grid-cols-3 grid-rows-1 divide-x">
