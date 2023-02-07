@@ -23,7 +23,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ title, value }) => {
   return (
     <Card size={tw`shadow-sm`}>
       <div tw="h-full w-full p-4 overflow-hidden">
-        <Text>{title}</Text>
+        <Text tw="truncate">{title}</Text>
         <NumericalValue tw="mt-2">{value}</NumericalValue>
       </div>
     </Card>

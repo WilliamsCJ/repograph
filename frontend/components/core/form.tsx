@@ -7,8 +7,8 @@ import {
   ArrowUpTrayIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { Background, Border } from "./constants";
-import { BoldDetailText } from "./text";
+import { Background, Border, Focus, FocusError, Placeholder, PlaceholderError } from "./constants";
+import { AccentText, BoldDetailText, DetailText } from "./text";
 
 /**
  * InputProps type for InputSection component.
@@ -16,7 +16,7 @@ import { BoldDetailText } from "./text";
 export type InputProps = {
   id: string;
   name: string;
-  BoldDetailText: string;
+  label: string;
   placeholder: string;
   helpMessage: string;
   errorMessage: string;
@@ -35,7 +35,7 @@ const InputSection: React.FC<InputProps> = (props) => {
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
           {meta.touched && meta.error ? (
             <>
-              <BoldDetailText>{props.BoldDetailText}</BoldDetailText>
+              <BoldDetailText>{props.label}</BoldDetailText>
               <div tw="sm:col-span-2 sm:mt-0">
                 <ErrorInput placeholder={props.placeholder} {...field} />
                 <ErrorText>{meta.error}</ErrorText>
@@ -43,7 +43,7 @@ const InputSection: React.FC<InputProps> = (props) => {
             </>
           ) : (
             <>
-              <BoldDetailText>{props.BoldDetailText}</BoldDetailText>
+              <BoldDetailText>{props.label}</BoldDetailText>
               <div tw="sm:col-span-2 sm:mt-0">
                 <Input placeholder={props.placeholder} {...field} />
                 <HelpText>{props.helpMessage}</HelpText>
@@ -62,7 +62,7 @@ const InputSection: React.FC<InputProps> = (props) => {
 export type TextAreaProps = {
   id: string;
   name: string;
-  BoldDetailText: string;
+  label: string;
   placeholder: string;
   helpMessage: string;
   errorMessage: string;
@@ -81,7 +81,7 @@ const TextAreaSection: React.FC<TextAreaProps> = (props) => {
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
           {meta.touched && meta.error ? (
             <>
-              <BoldDetailText>{props.BoldDetailText}</BoldDetailText>
+              <BoldDetailText>{props.label}</BoldDetailText>
               <div tw="sm:col-span-2 sm:mt-0">
                 <ErrorTextArea
                   rows={3}
@@ -93,7 +93,7 @@ const TextAreaSection: React.FC<TextAreaProps> = (props) => {
             </>
           ) : (
             <>
-              <BoldDetailText>{props.BoldDetailText}</BoldDetailText>
+              <BoldDetailText>{props.label}</BoldDetailText>
               <div tw="sm:col-span-2 sm:mt-0">
                 <TextArea placeholder={props.placeholder} {...field} />
                 <HelpText>{props.helpMessage}</HelpText>
@@ -112,7 +112,7 @@ const TextAreaSection: React.FC<TextAreaProps> = (props) => {
 export type FileUploadProps = {
   id: string;
   name: string;
-  BoldDetailText: string;
+  label: string;
   helpMessage: string;
   errorMessage: string;
 };
@@ -128,20 +128,23 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
     <Field name={props.name} id={props.id}>
       {({ field, form: { setFieldValue }, meta }: FieldProps) => (
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
-          <BoldDetailText as="BoldDetailText">{props.BoldDetailText}</BoldDetailText>
+          <BoldDetailText as="label">{props.label}</BoldDetailText>
           <div tw="sm:col-span-2 sm:mt-0">
             <div
-              tw="
-        flex flex-col max-w-lg justify-center rounded-md
-        border border-dashed border-gray-300 text-center space-y-1 p-4"
+              css={[
+                Border,
+                tw`border-dashed text-center space-y-1 p-4`,
+                tw`flex flex-col max-w-lg justify-center`,
+                tw`dark:border-zinc-700`
+              ]}
             >
               <IconWrapper
                 size="md"
                 color="detail"
                 icon={<ArrowUpTrayIcon />}
               />
-              <BoldDetailText tw="cursor-pointer">
-                <span tw="text-primary-700">Upload a file</span>
+              <label tw="cursor-pointer">
+                <AccentText as="span">Upload a file</AccentText>
                 <input
                   type="file"
                   tw="sr-only"
@@ -153,25 +156,28 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
                     setFieldValue(props.id, updated);
                   }}
                 />
-                <span tw="text-sm text-gray-500"> or drag and drop</span>
-              </BoldDetailText>
+                <DetailText as="span"> or drag and drop</DetailText>
+              </label>
+              {/* // TODO: Light */}
               <HelpText>{props.helpMessage}</HelpText>
             </div>
-            {field.value.length === 0 ? (
+            <div tw="mt-1">
+              {field.value.length === 0 ? (
               meta.touched && meta.error ? (
-                <ErrorText>{meta.error}</ErrorText>
+              <ErrorText>{meta.error}</ErrorText>
               ) : (
-                <span>No files uploaded</span>
+              <BoldDetailText as="span">No files uploaded</BoldDetailText>
               )
-            ) : (
+              ) : (
               <BoldDetailText tw="truncate max-w-lg">
                 {field.value
-                  .map((file: File) => {
-                    return file.name;
-                  })
-                  .join(", ")}
+                .map((file: File) => {
+                  return file.name;
+                })
+                .join(", ")}
               </BoldDetailText>
-            )}
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -209,53 +215,69 @@ const SearchBarInputSection: React.FC<SearchBarInputSectionProps> = (props) => {
   );
 };
 
-const TextArea = () => (
+/**
+ * TextArea component.
+ */
+const TextArea = (props: React.HTMLProps<HTMLTextAreaElement>) => (
   <textarea
     css={[
       tw`block w-full min-w-0 resize-none`,
       Border,
       Background,
+      Focus,
+      Placeholder
     ]}
+    {...props}
   />
 )
-
-// /**
-//  * TextArea component.
-//  */
-// const TextArea = tw.textarea`
-//   block w-full min-w-0 rounded-md shadow-sm
-//   text-gray-700 placeholder-gray-300 border-gray-300
-//   focus:border-primary-500 focus:ring-primary-500
-//   resize-none
-// `;
 
 /**
  * Error version of TextArea component.
  */
-const ErrorTextArea = tw.textarea`
-  block w-full min-w-0 rounded-md border border-gray-300
-  text-red-900 placeholder-red-300 focus:border-red-500 
-  focus:outline-none focus:ring-red-500
-  resize-none
- `;
+const ErrorTextArea = (props: React.HTMLProps<HTMLTextAreaElement>) => (
+  <textarea
+    css={[
+      tw`block w-full min-w-0 resize-none`,
+      Border,
+      Background,
+      FocusError,
+      PlaceholderError,
+    ]}
+    {...props}
+  />
+)
 
 /**
  * Input component
  */
-const Input = tw.input`
-  block w-full min-w-0 rounded-lg shadow-sm border p-2
-  text-gray-700 placeholder-gray-300 border-gray-300
-  focus:border-primary-500 focus:ring-primary-500
-`;
+const Input = (props: React.HTMLProps<HTMLInputElement>) => (
+  <input
+    css={[
+      tw`block w-full min-w-0 resize-none p-2`,
+      Border,
+      Background,
+      Focus,
+      Placeholder,
+    ]}
+    {...props}
+  />
+)
 
 /**
  * Error version of Input component
  */
-const ErrorInput = tw.input`
-  block w-full min-w-0 rounded-lg shadow-sm border p-2
-  text-gray-700 placeholder-gray-300 border-gray-300
-  focus:border-red-500 focus:ring-red-500
- `;
+const ErrorInput = (props: React.HTMLProps<HTMLInputElement>) => (
+  <input
+    css={[
+      tw`block w-full min-w-0 resize-none p-2`,
+      Border,
+      Background,
+      FocusError,
+      PlaceholderError,
+    ]}
+    {...props}
+  />
+)
 
 /**
  * SearchBarInput component

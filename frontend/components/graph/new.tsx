@@ -3,7 +3,7 @@ import React from "react";
 import tw from "twin.macro";
 import { Form, Formik } from "formik";
 
-import { Button } from "../core/button";
+import { AccentButton, Button } from "../core/button";
 import { Card } from "../core/card";
 import { FileUploadSection, InputSection, TextAreaSection } from "../core/form";
 import { Heading, DetailText } from "../core/text";
@@ -108,7 +108,7 @@ const NewGraphForm: React.FC = () => {
               </div>
 
               <div tw="pt-6">
-                <Button text="Create" />
+                <AccentButton text="Create" />
               </div>
             </div>
           </Card>

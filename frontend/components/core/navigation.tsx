@@ -1,4 +1,4 @@
-import tw from "twin.macro";
+import tw, { TwStyle } from "twin.macro";
 import { SideBar } from "./layout";
 import Link from "next/link";
 
@@ -27,20 +27,20 @@ export type NavIconProps = {
  */
 const NavIcon = ({ icon, href, active }: NavIconProps) => {
   return (
-    <Link href={href}>
-      <div tw="flex h-10">
-        <div
-          css={[
-            tw`flex m-auto w-10 h-full rounded-lg space-y-4`,
-            active ? tw`bg-gray-100 hover:bg-gray-200` : tw`hover:bg-gray-200`,
-          ]}
-        >
-          <IconWrapper size="md" color="strong" icon={icon} />
-        </div>
+  <Link href={href}>
+    <div tw="flex flex-col">
+      <div tw="p-2 flex flex-col m-auto w-10 h-full rounded-lg space-y-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
+        <IconWrapper size="md" color="strong" icon={icon}/>
+        {active &&  <div tw="h-2 w-2 m-auto">
+            <svg className="h-2 w-2 fill-transparent" fill="currentColor" viewBox="0 0 8 8">
+                <circle cx={4} cy={4} r={3}/>
+            </svg>
+        </div>}
       </div>
-    </Link>
+    </div>
+  </Link>
   );
-};
+}
 
 /**
  * Repograph logo for navigation bar. Also a link to the homepage.
@@ -131,15 +131,13 @@ export type NavigationBarProps = {
  * @constructor
  */
 const NavigationBar = ({ routes, currentPath, graphName }: NavigationBarProps) => {
-  console.log(currentPath)
-  console.log(graphName)
   return (
     <SideBar>
       <div tw="flex flex-col justify-between h-full">
         <div tw="flex flex-col space-y-8">
           <NavLogo/>
           <div tw="flex flex-col space-y-4">
-            {currentPath !== "/" &&
+            {currentPath !== "/" && currentPath !== "/graph/new" &&
             routes.map((route, index) => (
               <NavIcon
               key={index}

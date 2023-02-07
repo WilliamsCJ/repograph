@@ -9,3 +9,9 @@ export const AccentBackground = tw`bg-emerald-400/25`;
 export const ButtonText = tw`text-base font-semibold text-zinc-800 dark:text-zinc-200`;
 export const AccentText = tw`text-base font-semibold text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300`;
 export const AccentBorder = tw`border rounded-lg border-emerald-400 dark:border-emerald-700 dark:hover:border-emerald-200`;
+export const Focus = tw`focus:outline-none focus:border-emerald-400 focus:ring-emerald-600 focus:ring-2 focus:ring-offset-2`;
+export const FocusError = tw`focus:outline-none focus:border-red-400 focus:ring-red-600 focus:ring-2 focus:ring-offset-2`;
+export const ErrorBorder = tw``;
+export const Placeholder = tw`text-zinc-700 dark:text-zinc-300`;
+export const PlaceholderError = tw`text-red-700 dark:text-red-300`;
+
