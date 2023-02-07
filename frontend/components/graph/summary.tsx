@@ -2,7 +2,7 @@ import React from "react";
 
 import tw from "twin.macro";
 import { Card } from "../core/card";
-import { GraphSummary } from "../../types/summary";
+import { GraphSummary } from "../../types/graph";
 
 /**
  * StatsCardProps for StatsCard component

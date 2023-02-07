@@ -14,7 +14,10 @@ const ExportButton = () => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const summary = await getSummary();
+  // @ts-ignore
+  const { name } = context.params
+  const summary = await getSummary(name);
+
   return {
     props: {
       summary: summary,
@@ -30,7 +33,6 @@ const RepositoryHome: NextPage<GraphHomePageProps> = ({ summary }) => {
   return (
     <DefaultLayout buttons={[<ExportButton />]} heading="Summary">
       <Summary summary={summary} />
-      {/*<GraphCard data={data} />*/}
     </DefaultLayout>
   );
 };
