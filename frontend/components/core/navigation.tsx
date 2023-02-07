@@ -8,27 +8,23 @@ import IconWrapper from "./icon";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import { useTheme } from "next-themes";
 import colors from "tailwindcss/colors";
-import { act } from "react-dom/test-utils";
-import graph from "./graph";
 
+/**
+ * Props for NavIcon Component
+ */
 export type NavIconProps = {
   href: string;
   icon: any;
   active: boolean;
 };
 
-export type NavigationRoute = {
-  description: string;
-  href: string;
-  icon: any;
-};
-
-export type NavigationBarProps = {
-  routes: NavigationRoute[];
-  currentPath: string;
-  graphName: string | string[] | undefined;
-};
-
+/**
+ * Icon in the Navigation Bar. Provides link to respective page.
+ * @param icon
+ * @param href
+ * @param active
+ * @constructor
+ */
 const NavIcon = ({ icon, href, active }: NavIconProps) => {
   return (
     <Link href={href}>
@@ -46,6 +42,10 @@ const NavIcon = ({ icon, href, active }: NavIconProps) => {
   );
 };
 
+/**
+ * Repograph logo for navigation bar. Also a link to the homepage.
+ * @constructor
+ */
 const NavLogo = () => {
   const [active, setActive] = useState(false);
   const { theme } = useTheme();
@@ -66,6 +66,10 @@ const NavLogo = () => {
   );
 };
 
+/**
+ * Toggle switch for dark mode.
+ * @constructor
+ */
 const DarkModeToggle = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -101,6 +105,31 @@ const DarkModeToggle = () => {
   );
 };
 
+/**
+ * Navigation route used in NavigationBarProps
+ */
+export type NavigationRoute = {
+  description: string;
+  href: string;
+  icon: any;
+};
+
+/**
+ * Props for NavigationBar
+ */
+export type NavigationBarProps = {
+  routes: NavigationRoute[];
+  currentPath: string;
+  graphName: string | string[] | undefined;
+};
+
+/**
+ * Navigation sidebar component. Displayed on the side of the screen and contains links.
+ * @param routes
+ * @param currentPath
+ * @param graphName
+ * @constructor
+ */
 const NavigationBar = ({ routes, currentPath, graphName }: NavigationBarProps) => {
   console.log(currentPath)
   console.log(graphName)
