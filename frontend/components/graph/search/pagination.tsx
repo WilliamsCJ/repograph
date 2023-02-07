@@ -5,7 +5,7 @@ import tw from "twin.macro";
 
 // Components
 import { TextButton } from "../../core/button";
-import { Text, TextLight } from "../../core/text";
+import { Text, DetailText } from "../../core/text";
 
 /**
  * Props for Pagination component
@@ -34,11 +34,11 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <nav tw="flex items-center justify-between py-4" aria-label="Pagination">
       <div tw="hidden sm:block">
-        <TextLight>
+        <DetailText>
           Showing <Text as={"span"}>{offset + 1}</Text> to{" "}
           <Text as={"span"}>{Math.min(limit + offset, total)}</Text> of{" "}
           <Text as={"span"}>{total}</Text> results
-        </TextLight>
+        </DetailText>
       </div>
       <div tw="flex flex-1 justify-between sm:justify-end space-x-2">
         <TextButton

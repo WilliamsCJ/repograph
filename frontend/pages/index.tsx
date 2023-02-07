@@ -3,7 +3,7 @@ import React from "react";
 import type { GetServerSideProps, NextPage } from "next";
 import { FolderPlusIcon, PlusIcon } from "@heroicons/react/24/outline";
 
-import { LinkButton } from "../components/core/button";
+import { AccentLinkButton, LinkButton } from "../components/core/button";
 import { DefaultLayout } from "../components/core/layout";
 import GraphList, { GraphEntry } from "../components/home/list";
 import { EmptyState } from "../components/core/empty";
@@ -13,10 +13,9 @@ export type HomePageProps = {
 };
 
 const NewButton = () => (
-  <LinkButton
-    primary={false}
+  <AccentLinkButton
     icon={<FolderPlusIcon />}
-    text="New"
+    text="Create a graph"
     href="/graph/new"
   />
 );

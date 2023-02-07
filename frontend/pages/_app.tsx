@@ -10,6 +10,7 @@ import GlobalStyles from "../styles/GlobalStyles";
 import { useRouter } from "next/router";
 import React from "react";
 import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "next-themes";
 
 const navigation: NavigationRoute[] = [
   {
@@ -35,13 +36,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <GlobalStyles />
-      <ApplicationShell id="shell">
-        <Toaster position="top-center" reverseOrder={false} />
-        <NavigationBar routes={navigation} currentPath={router.route} />
-        <MainContainer>
-          <Component {...pageProps} />
-        </MainContainer>
-      </ApplicationShell>
+      <ThemeProvider attribute="class">
+        <ApplicationShell>
+          <Toaster position="top-center" reverseOrder={false} />
+          <NavigationBar routes={navigation} currentPath={router.route} />
+          <MainContainer>
+            <Component {...pageProps} />
+          </MainContainer>
+        </ApplicationShell>
+      </ThemeProvider>
     </>
   );
 }

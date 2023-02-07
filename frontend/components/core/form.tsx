@@ -2,7 +2,7 @@ import React from "react";
 
 import tw from "twin.macro";
 import { Field, FieldProps } from "formik";
-import { IconWrapper } from "./icon";
+import IconWrapper from "./icon";
 import {
   ArrowUpTrayIcon,
   MagnifyingGlassIcon,
@@ -133,7 +133,11 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
         flex flex-col max-w-lg justify-center rounded-md
         border border-dashed border-gray-300 text-center space-y-1 p-4"
             >
-              <IconWrapper size="md" color="light" icon={<ArrowUpTrayIcon />} />
+              <IconWrapper
+                size="md"
+                color="detail"
+                icon={<ArrowUpTrayIcon />}
+              />
               <Label tw="cursor-pointer">
                 <span tw="text-primary-700">Upload a file</span>
                 <input

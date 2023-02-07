@@ -15,12 +15,7 @@ import { CodeBlock } from "../../core/code";
 import { BuiltInBadge, FunctionBadge, MethodBadge } from "../../core/badge";
 import GraphCard from "../../core/graph";
 import { Card } from "../../core/card";
-import {
-  BlockText,
-  BlockTextAccent,
-  BlockTextLight,
-  SmallHeading,
-} from "../../core/text";
+import { BoldDetailText, DetailText, SmallHeading } from "../../core/text";
 import fetcher from "../../../utils/fetcher";
 
 /**
@@ -72,8 +67,8 @@ const DetailsSection: React.FC<DetailsSectionProps> = ({
   detail,
 }) => (
   <div>
-    <BlockText>{detailName}</BlockText>
-    <BlockTextLight>{detail}</BlockTextLight>
+    <BoldDetailText>{detailName}</BoldDetailText>
+    <DetailText>{detail}</DetailText>
   </div>
 );
 
@@ -112,8 +107,8 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   return (
     <div tw="w-full">
       <JustifiedRow tw="mb-1 mx-2">
-        <BlockText>{`${result.repository} > ${result.function.canonical_name}`}</BlockText>
-        <BlockText>{`#${index} (${result.score})`}</BlockText>
+        <BoldDetailText>{`${result.repository} > ${result.function.canonical_name}`}</BoldDetailText>
+        <BoldDetailText>{`#${index} (${result.score})`}</BoldDetailText>
       </JustifiedRow>
       <Card size={tw`w-full h-48`}>
         <div tw="w-full h-full grid grid-cols-3 grid-rows-1 divide-x">
@@ -138,7 +133,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
           {/* Source Code Section*/}
           <SearchResultCardSection
             heading="Source Code"
-            link={<BlockTextAccent>Expand</BlockTextAccent>}
+            link={<DetailText>Expand</DetailText>}
           >
             <>
               {result.function.source_code && (

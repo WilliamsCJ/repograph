@@ -17,9 +17,9 @@ const Graph = dynamic(() => import("./force-graph"), {
 import { Border } from "./border";
 import { Network, NetworkEvents } from "vis";
 import { Center } from "./layout";
-import { IconWrapper } from "./icon";
+import IconWrapper from "./icon";
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
-import { BlockText, BlockTextLight } from "./text";
+import { BoldDetailText, DetailText } from "./text";
 import Script from "next/script";
 
 /**
@@ -100,7 +100,7 @@ const GraphCard: React.FC<GraphCardProps> = ({
                 icon={<ExclamationCircleIcon />}
                 size="md"
               />
-              <BlockText>Error</BlockText>
+              <BoldDetailText>Error</BoldDetailText>
             </div>
           ) : (
             <ClipLoader

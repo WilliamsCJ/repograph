@@ -6,11 +6,16 @@ import tw from "twin.macro";
 // Other components
 import { Title } from "./text";
 import { ButtonGroup } from "./button";
+import { ApplicationBackground, Background, Border } from "./constants";
 
 /**
  * ApplicationShell wraps the entire application and prevents overscrolling
  */
-const ApplicationShell = tw.div`w-screen min-h-screen max-h-screen bg-gray-100`;
+const ApplicationShell = ({ children }: { children: React.ReactNode }) => (
+  <div css={[tw`w-screen min-h-screen max-h-screen`, ApplicationBackground]}>
+    {children}
+  </div>
+);
 
 /**
  * Div to center items vertically and horizontally
@@ -29,7 +34,7 @@ export type DefaultLayoutProps = {
   buttons: React.ReactNode[];
   children: React.ReactNode;
   heading: string;
-  topRef: MutableRefObject<any>;
+  topRef?: MutableRefObject<any>;
 };
 
 /**
@@ -89,7 +94,18 @@ const RowLayout = tw.div`flex h-full w-full flex-col space-y-4`;
 /**
 Fixed sidebar for navigation
  */
-const SideBar = tw.div`h-screen w-16 fixed inset-y-0 bg-white border-r-2 flex flex-col py-8 space-y-8`;
+const SideBar = ({ children }: { children: React.ReactNode }) => (
+  <div
+    css={[
+      tw`h-screen w-16 fixed inset-y-0`,
+      tw`flex flex-col py-8 space-y-8`,
+      tw`border-r dark:border-zinc-700/50 border-gray-300`,
+      Background,
+    ]}
+  >
+    {children}
+  </div>
+);
 
 /* Export */
 export {

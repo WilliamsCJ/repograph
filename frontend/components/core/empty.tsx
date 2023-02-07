@@ -4,8 +4,8 @@ import React from "react";
 
 import tw from "twin.macro";
 
-import { Text, TextLight } from "./text";
-import { IconWrapper } from "./icon";
+import { DetailText, Text } from "./text";
+import IconWrapper from "./icon";
 import { Button } from "./button";
 
 /**
@@ -28,9 +28,9 @@ const EmptyState: React.FC<EmptyStateProps> = (props) => {
   return (
     <div tw="w-full h-full flex text-center border-dashed">
       <div tw="m-auto text-center">
-        <IconWrapper size="lg" color="light" icon={props.icon} />
+        <IconWrapper size="lg" color="detail" icon={props.icon} />
         <Text tw="mt-2">{props.heading}</Text>
-        <TextLight tw="mt-2">{props.description}</TextLight>
+        <DetailText tw="mt-2">{props.description}</DetailText>
         <div tw="mt-6">
           <Button icon={props.buttonIcon} text={props.buttonText} />
         </div>
