@@ -7,6 +7,8 @@ import {
   ArrowUpTrayIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import { Background, Border } from "./constants";
+import { BoldDetailText } from "./text";
 
 /**
  * InputProps type for InputSection component.
@@ -14,7 +16,7 @@ import {
 export type InputProps = {
   id: string;
   name: string;
-  label: string;
+  BoldDetailText: string;
   placeholder: string;
   helpMessage: string;
   errorMessage: string;
@@ -22,7 +24,7 @@ export type InputProps = {
 
 /**
  * InputSection component contains a Formik input field
- * along with label, helper text and error handling.
+ * along with BoldDetailText, helper text and error handling.
  * @param props
  * @constructor
  */
@@ -33,7 +35,7 @@ const InputSection: React.FC<InputProps> = (props) => {
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
           {meta.touched && meta.error ? (
             <>
-              <Label>{props.label}</Label>
+              <BoldDetailText>{props.BoldDetailText}</BoldDetailText>
               <div tw="sm:col-span-2 sm:mt-0">
                 <ErrorInput placeholder={props.placeholder} {...field} />
                 <ErrorText>{meta.error}</ErrorText>
@@ -41,7 +43,7 @@ const InputSection: React.FC<InputProps> = (props) => {
             </>
           ) : (
             <>
-              <Label>{props.label}</Label>
+              <BoldDetailText>{props.BoldDetailText}</BoldDetailText>
               <div tw="sm:col-span-2 sm:mt-0">
                 <Input placeholder={props.placeholder} {...field} />
                 <HelpText>{props.helpMessage}</HelpText>
@@ -60,7 +62,7 @@ const InputSection: React.FC<InputProps> = (props) => {
 export type TextAreaProps = {
   id: string;
   name: string;
-  label: string;
+  BoldDetailText: string;
   placeholder: string;
   helpMessage: string;
   errorMessage: string;
@@ -68,7 +70,7 @@ export type TextAreaProps = {
 
 /**
  * TextAreaSection component contains a Formik textarea field
- * along with label, helper text and error handling.
+ * along with BoldDetailText, helper text and error handling.
  * @param props
  * @constructor
  */
@@ -79,7 +81,7 @@ const TextAreaSection: React.FC<TextAreaProps> = (props) => {
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
           {meta.touched && meta.error ? (
             <>
-              <Label>{props.label}</Label>
+              <BoldDetailText>{props.BoldDetailText}</BoldDetailText>
               <div tw="sm:col-span-2 sm:mt-0">
                 <ErrorTextArea
                   rows={3}
@@ -91,7 +93,7 @@ const TextAreaSection: React.FC<TextAreaProps> = (props) => {
             </>
           ) : (
             <>
-              <Label>{props.label}</Label>
+              <BoldDetailText>{props.BoldDetailText}</BoldDetailText>
               <div tw="sm:col-span-2 sm:mt-0">
                 <TextArea placeholder={props.placeholder} {...field} />
                 <HelpText>{props.helpMessage}</HelpText>
@@ -110,14 +112,14 @@ const TextAreaSection: React.FC<TextAreaProps> = (props) => {
 export type FileUploadProps = {
   id: string;
   name: string;
-  label: string;
+  BoldDetailText: string;
   helpMessage: string;
   errorMessage: string;
 };
 
 /**
  * FileUploadSection component contains a Formik-compatible file upload input
- * along with label, helper text and error handling.
+ * along with BoldDetailText, helper text and error handling.
  * @param props
  * @constructor
  */
@@ -126,7 +128,7 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
     <Field name={props.name} id={props.id}>
       {({ field, form: { setFieldValue }, meta }: FieldProps) => (
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
-          <Label>{props.label}</Label>
+          <BoldDetailText as="BoldDetailText">{props.BoldDetailText}</BoldDetailText>
           <div tw="sm:col-span-2 sm:mt-0">
             <div
               tw="
@@ -138,7 +140,7 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
                 color="detail"
                 icon={<ArrowUpTrayIcon />}
               />
-              <Label tw="cursor-pointer">
+              <BoldDetailText tw="cursor-pointer">
                 <span tw="text-primary-700">Upload a file</span>
                 <input
                   type="file"
@@ -152,7 +154,7 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
                   }}
                 />
                 <span tw="text-sm text-gray-500"> or drag and drop</span>
-              </Label>
+              </BoldDetailText>
               <HelpText>{props.helpMessage}</HelpText>
             </div>
             {field.value.length === 0 ? (
@@ -162,13 +164,13 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
                 <span>No files uploaded</span>
               )
             ) : (
-              <Label tw="truncate max-w-lg">
+              <BoldDetailText tw="truncate max-w-lg">
                 {field.value
                   .map((file: File) => {
                     return file.name;
                   })
                   .join(", ")}
-              </Label>
+              </BoldDetailText>
             )}
           </div>
         </div>
@@ -184,7 +186,7 @@ export type SearchBarInputSectionProps = {
   name: string;
   id: string;
   placeholder: string;
-  label: string;
+  BoldDetailText: string;
 };
 
 /**
@@ -207,15 +209,25 @@ const SearchBarInputSection: React.FC<SearchBarInputSectionProps> = (props) => {
   );
 };
 
-/**
- * TextArea component.
- */
-const TextArea = tw.textarea`
-  block w-full min-w-0 rounded-md shadow-sm
-  text-gray-700 placeholder-gray-300 border-gray-300
-  focus:border-primary-500 focus:ring-primary-500
-  resize-none
-`;
+const TextArea = () => (
+  <textarea
+    css={[
+      tw`block w-full min-w-0 resize-none`,
+      Border,
+      Background,
+    ]}
+  />
+)
+
+// /**
+//  * TextArea component.
+//  */
+// const TextArea = tw.textarea`
+//   block w-full min-w-0 rounded-md shadow-sm
+//   text-gray-700 placeholder-gray-300 border-gray-300
+//   focus:border-primary-500 focus:ring-primary-500
+//   resize-none
+// `;
 
 /**
  * Error version of TextArea component.
@@ -255,9 +267,12 @@ dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
 `;
 
 /**
- * Form label.
+ * Form BoldDetailText.
  */
-const Label = tw.label`block text-sm font-medium text-gray-700`;
+// const BoldDetailText = tw.BoldDetailText`block text-sm font-medium text-gray-700`;
+// // const BoldDetailText = ({ children }: { children: React.ReactNode }) => (
+// //   <BoldDetailText css={[]}>{children}</BoldDetailText>
+// // )
 
 /**
  * Form help/hint text.
