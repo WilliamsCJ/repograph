@@ -7,7 +7,7 @@ from typing import Dict, List
 
 # Model imports
 from repograph.models.base import Node, Relationship
-from repograph.models.nodes import Class, Function, Module, Repository
+from repograph.models.nodes import Class, Function, Module, Package, Repository
 from repograph.models.graph import GraphSummary, CallGraph
 
 # Graph entity imports
@@ -61,20 +61,19 @@ class GraphService:
         summary.relationships_total = relationships
 
         # Repositories
-        _, count = self.repository.get_all_nodes_by_label(Repository)
-        summary.repositories = count
+        summary.repositories = len(self.repository.get_all_nodes_by_label(Repository))
+
+        # Packages
+        summary.packages = len(self.repository.get_all_nodes_by_label(Package))
 
         # Modules
-        _, count = self.repository.get_all_nodes_by_label(Module)
-        summary.modules = count
+        summary.modules = len(self.repository.get_all_nodes_by_label(Module))
 
         # Classes
-        _, count = self.repository.get_all_nodes_by_label(Class)
-        summary.classes = count
+        summary.classes = len(self.repository.get_all_nodes_by_label(Class))
 
         # Functions
-        _, count = self.repository.get_all_nodes_by_label(Function)
-        summary.functions = count
+        summary.functions = len(self.repository.get_all_nodes_by_label(Function))
 
         return summary
 
