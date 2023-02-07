@@ -1,5 +1,8 @@
 export type GraphSummary = {
   is_empty: boolean;
+  nodes_total: number;
+  relationships_total: number;
+  repositories: number;
   classes: number;
   functions: number;
   modules: number;
