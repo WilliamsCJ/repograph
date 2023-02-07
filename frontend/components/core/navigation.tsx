@@ -8,6 +8,8 @@ import IconWrapper from "./icon";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import { useTheme } from "next-themes";
 import colors from "tailwindcss/colors";
+import { act } from "react-dom/test-utils";
+import graph from "./graph";
 
 export type NavIconProps = {
   href: string;
@@ -24,6 +26,7 @@ export type NavigationRoute = {
 export type NavigationBarProps = {
   routes: NavigationRoute[];
   currentPath: string;
+  graphName: string | string[] | undefined;
 };
 
 const NavIcon = ({ icon, href, active }: NavIconProps) => {
@@ -32,11 +35,11 @@ const NavIcon = ({ icon, href, active }: NavIconProps) => {
       <div tw="flex h-10">
         <div
           css={[
-            tw`flex m-auto w-10 h-full rounded-lg`,
+            tw`flex m-auto w-10 h-full rounded-lg space-y-4`,
             active ? tw`bg-gray-100 hover:bg-gray-200` : tw`hover:bg-gray-200`,
           ]}
         >
-          <div tw="m-auto h-6 w-6">{icon}</div>
+          <IconWrapper size="md" color="strong" icon={icon} />
         </div>
       </div>
     </Link>
@@ -45,20 +48,21 @@ const NavIcon = ({ icon, href, active }: NavIconProps) => {
 
 const NavLogo = () => {
   const [active, setActive] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
 
   return (
-    <div
+    <Link
+      href="/"
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}
       tw="flex h-10 items-center justify-center hover:cursor-pointer"
     >
       <Graph
-        size={48}
+        size={36}
         color={theme === "dark" ? colors.white : colors.zinc[800]}
         weight={active ? "duotone" : "light"}
       />
-    </div>
+    </Link>
   );
 };
 
@@ -83,7 +87,7 @@ const DarkModeToggle = () => {
         tw="dark:hidden"
         onClick={() => setTheme("dark")}
       >
-        <IconWrapper size="md" color="dark" icon={<MoonIcon />} />
+        <IconWrapper size="md" color="strong" icon={<MoonIcon />} />
       </button>
       <button
         tw="hidden dark:block"
@@ -97,24 +101,30 @@ const DarkModeToggle = () => {
   );
 };
 
-const NavigationBar = ({ routes, currentPath }: NavigationBarProps) => (
-  <SideBar>
-    <div tw="flex flex-col justify-between h-full">
-      <div tw="">
-        <NavLogo />
-        {currentPath !== "/" &&
-          routes.map((route, index) => (
-            <NavIcon
+const NavigationBar = ({ routes, currentPath, graphName }: NavigationBarProps) => {
+  console.log(currentPath)
+  console.log(graphName)
+  return (
+    <SideBar>
+      <div tw="flex flex-col justify-between h-full">
+        <div tw="flex flex-col space-y-8">
+          <NavLogo/>
+          <div tw="flex flex-col space-y-4">
+            {currentPath !== "/" &&
+            routes.map((route, index) => (
+              <NavIcon
               key={index}
-              href={route.href}
+              href={`/graph/${graphName}` + route.href}
               icon={route.icon}
-              active={route.href === currentPath}
-            />
-          ))}
+              active={currentPath === '/graph/[name]' ? route.href === '/' : currentPath.endsWith(route.href)}
+              />
+            ))
+            }
+          </div>
+        </div>
+        <DarkModeToggle/>
       </div>
-      <DarkModeToggle />
-    </div>
-  </SideBar>
-);
+    </SideBar>
+)};
 
 export default NavigationBar;

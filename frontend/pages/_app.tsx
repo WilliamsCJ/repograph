@@ -1,6 +1,7 @@
 import type { AppProps } from "next/app";
 import NavigationBar, { NavigationRoute } from "../components/core/navigation";
 import {
+  ArrowLeftIcon,
   ExclamationTriangleIcon,
   HomeIcon,
   MagnifyingGlassIcon,
@@ -14,7 +15,7 @@ import { ThemeProvider } from "next-themes";
 
 const navigation: NavigationRoute[] = [
   {
-    description: "Home",
+    description: "Summary",
     href: "/",
     icon: <HomeIcon />,
   },
@@ -31,7 +32,8 @@ const navigation: NavigationRoute[] = [
 ];
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const router = useRouter();
+  const router = useRouter()
+  const { name } = router.query
 
   return (
     <>
@@ -39,7 +41,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider attribute="class">
         <ApplicationShell>
           <Toaster position="top-center" reverseOrder={false} />
-          <NavigationBar routes={navigation} currentPath={router.route} />
+          <NavigationBar routes={navigation} currentPath={router.route} graphName={name} />
           <MainContainer>
             <Component {...pageProps} />
           </MainContainer>

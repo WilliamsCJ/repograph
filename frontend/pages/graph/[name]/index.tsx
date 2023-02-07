@@ -6,7 +6,7 @@ import { Button } from "../../../components/core/button";
 import { DefaultLayout } from "../../../components/core/layout";
 import Summary from "../../../components/graph/summary";
 
-import { getSummary } from "../../../server/summary";
+import { getSummary } from "../../../lib/summary";
 import { GraphSummary } from "../../../types/graph";
 
 const ExportButton = () => (
@@ -28,7 +28,7 @@ export type GraphHomePageProps = {
 
 const RepositoryHome: NextPage<GraphHomePageProps> = ({ summary }) => {
   return (
-    <DefaultLayout buttons={[<ExportButton />]} heading="Graph">
+    <DefaultLayout buttons={[<ExportButton />]} heading="Summary">
       <Summary summary={summary} />
       {/*<GraphCard data={data} />*/}
     </DefaultLayout>

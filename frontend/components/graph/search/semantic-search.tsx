@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useEffect, useState } from "react";
 import { SearchBar } from "./searchbar";
-import { getSemanticSearchQuery } from "../../../server/search";
+import { getSemanticSearchQuery } from "../../../lib/search";
 import { SearchResultCard } from "./search-result";
 import { Pagination } from "./pagination";
 import toast from "react-hot-toast";

@@ -108,7 +108,7 @@ const NewGraphForm: React.FC = () => {
               </div>
 
               <div tw="pt-6">
-                <Button primary text="Create" />
+                <Button text="Create" />
               </div>
             </div>
           </Card>
