@@ -69,7 +69,7 @@ const DetailsSection: React.FC<DetailsSectionProps> = ({
 }) => (
   <div>
     <BoldDetailText>{detailName}</BoldDetailText>
-    <DetailText>{detail}</DetailText>
+    <DetailText tw="truncate">{detail}</DetailText>
   </div>
 );
 
@@ -89,6 +89,7 @@ function createResultTypes(result: SearchResult) {
 export type SearchResultCardProps = {
   result: SearchResult;
   index: number;
+  graph: string;
 };
 
 /**
@@ -100,12 +101,11 @@ export type SearchResultCardProps = {
 const SearchResultCard: React.FC<SearchResultCardProps> = ({
   result,
   index,
+  graph
 }) => {
-  const graph = "a"; // TODO: Change me
   const url = `/graph/${graph}/node/${result.function.id}/call_graph`;
   const { data, error } = useSWR(url, fetcher);
 
-  console.log(result)
   return (
     <div tw="w-full">
       <JustifiedRow tw="mb-1 mx-2">

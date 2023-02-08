@@ -6,8 +6,10 @@ import tw, { TwStyle } from "twin.macro";
 import "highlight.js/styles/stackoverflow-light.css";
 import hljs from "highlight.js/lib/core";
 import python from "highlight.js/lib/languages/python";
-import { Border, InteriorBorder } from "./constants";
 hljs.registerLanguage("python", python);
+
+// Components
+import { InteriorBorder } from "./constants";
 
 /**
  * Props for the CodeBlock component.

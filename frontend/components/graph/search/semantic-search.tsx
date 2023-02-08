@@ -15,10 +15,18 @@ import { Pagination } from "./pagination";
 // Search
 import { SearchResultSet } from "../../../types/search";
 
+/**
+ * Semantic search bar and results component
+ * @param topRef
+ * @param graph
+ * @constructor
+ */
 export const SemanticSearch = ({
   topRef,
+  graph,
 }: {
   topRef: MutableRefObject<any>;
+  graph: string
 }) => {
   // Query state
   const [query, setQuery] = useState<string | null>(null);
@@ -35,7 +43,7 @@ export const SemanticSearch = ({
   const executeQuery = async (query: string) => {
     setQuery(query);
     try {
-      const res = await getSemanticSearchQuery("any", query, limit, offset);
+      const res = await getSemanticSearchQuery(graph, query, limit, offset);
       setResults(res);
     } catch (e) {
       toast.error("An error occurred!", { duration: 6000 });
@@ -61,7 +69,7 @@ export const SemanticSearch = ({
         <>
           <div css={tw`mt-6 flex flex-col space-y-8`}>
             {results.results.map((result, index) => (
-              <SearchResultCard result={result} index={index} />
+              <SearchResultCard result={result} index={index} graph={graph} />
             ))}
           </div>
           <Pagination
