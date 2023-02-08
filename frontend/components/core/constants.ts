@@ -2,6 +2,7 @@ import tw from "twin.macro";
 export const ApplicationBackground = tw`bg-zinc-100 dark:bg-zinc-900`;
 export const Background = tw`bg-white dark:bg-zinc-800/50`;
 export const Border = tw`border dark:border-zinc-700/50 border-gray-300 rounded-lg`;
+export const InteriorBorder = tw`border border-zinc-200 dark:border-zinc-600 rounded-lg`;
 export const Hover = tw`hover:bg-zinc-100/50 dark:hover:bg-zinc-700/50 hover:transition hover:ease-in-out hover:duration-300`;
 export const AccentHover = tw`hover:bg-emerald-200/25 hover:bg-emerald-400/25 hover:transition hover:ease-in-out hover:duration-300`;
 export const Divide = tw`divide-zinc-200 dark:divide-zinc-600`;

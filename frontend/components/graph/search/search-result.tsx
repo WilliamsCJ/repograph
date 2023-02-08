@@ -17,6 +17,7 @@ import GraphCard from "../../core/graph";
 import { Card } from "../../core/card";
 import { BoldDetailText, DetailText, SmallHeading } from "../../core/text";
 import fetcher from "../../../utils/fetcher";
+import { Divide } from "../../core/constants";
 
 /**
  * Props for SearchResultCardSection
@@ -112,7 +113,12 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
         <BoldDetailText>{`#${index + 1} (${result.score})`}</BoldDetailText>
       </JustifiedRow>
       <Card size={tw`w-full h-48`}>
-        <div tw="w-full h-full grid grid-cols-3 grid-rows-1 divide-x">
+        <div
+        css={[
+          tw`w-full h-full grid grid-cols-3 grid-rows-1 divide-x`,
+          Divide
+        ]}
+        >
           {/* Details Section */}
           <SearchResultCardSection heading="Details">
             <div tw="flex flex-col space-y-2">

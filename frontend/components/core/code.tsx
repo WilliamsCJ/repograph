@@ -6,6 +6,7 @@ import tw, { TwStyle } from "twin.macro";
 import "highlight.js/styles/stackoverflow-light.css";
 import hljs from "highlight.js/lib/core";
 import python from "highlight.js/lib/languages/python";
+import { Border, InteriorBorder } from "./constants";
 hljs.registerLanguage("python", python);
 
 /**
@@ -29,8 +30,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ source_code, styles }) => {
     <>
       <pre
       css={[
-        tw`max-h-full max-w-full overflow-x-auto overflow-y-auto scrollbar-hide`,
-        tw`border rounded-lg text-xs p-1`,
+        tw`max-h-full max-w-full overflow-x-auto overflow-y-auto scrollbar-hide text-xs p-1`,
+        InteriorBorder,
         styles,
       ]}
       >
