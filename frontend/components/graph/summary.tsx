@@ -1,9 +1,14 @@
 import React from "react";
 
+// Styling
 import tw from "twin.macro";
+
+// Components
 import { Card } from "../core/card";
-import { GraphSummary } from "../../types/graph";
 import { NumericalValue, Text } from "../core/text";
+
+// Types
+import { GraphSummary } from "../../types/graph";
 
 /**
  * StatsCardProps for StatsCard component
@@ -19,9 +24,9 @@ export type StatsCardProps = {
  * @param value {number}: The value of the
  * @constructor
  */
-const StatsCard: React.FC<StatsCardProps> = ({ title, value }) => {
+export const StatsCard: React.FC<StatsCardProps> = ({ title, value }) => {
   return (
-    <Card size={tw`shadow-sm`}>
+    <Card size={tw`shadow-sm col-span-1 row-span-2`}>
       <div tw="h-full w-full p-4 overflow-hidden">
         <Text tw="truncate">{title}</Text>
         <NumericalValue tw="mt-2">{value}</NumericalValue>
@@ -45,8 +50,6 @@ const Summary = ({ summary }: { summary: GraphSummary }) => {
           value={summary.relationships_total}
         />
         <StatsCard title="Repositories" value={summary.repositories} />
-      </dl>
-      <dl tw="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatsCard title="Packages" value={summary.packages} />
         <StatsCard title="Modules" value={summary.modules} />
         <StatsCard title="Functions" value={summary.functions} />

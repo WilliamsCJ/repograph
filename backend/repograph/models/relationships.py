@@ -40,18 +40,14 @@ class Contains(Relationship):
     }
 
 
-class ImportedBy(Relationship):
+class Imports(Relationship):
     """Imports Relationship
 
     Usage:
-        - Module -> Module
-        - Package -> Module
+        - Module -> Module, Function, Package, Class
     """
     _allowed_types = {
-        Module: {Module},
-        Class: {Module},
-        Function: {Module},
-        Package: {Module}
+        Module: {Module, Package, Class, Function},
     }
 
     alias: Optional[str]

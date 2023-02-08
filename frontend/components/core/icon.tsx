@@ -5,9 +5,11 @@ import React from "react";
 import tw, { TwStyle } from "twin.macro";
 
 // Icon styling
-export const StrongIcon = tw`stroke-zinc-900 dark:stroke-zinc-100`;
-export const NormalIcon = tw`stroke-zinc-800 dark:stroke-zinc-200`;
-export const DetailIcon = tw`stroke-zinc-700 dark:stroke-zinc-300`;
+export const StrongIcon = tw`text-zinc-900 dark:text-zinc-100`;
+export const NormalIcon = tw`text-zinc-800 dark:text-zinc-200`;
+export const DetailIcon = tw`text-zinc-700 dark:text-zinc-300`;
+export const GreenIcon = tw`text-emerald-700 dark:text-emerald-300`;
+export const RedIcon = tw`text-rose-700 dark:text-rose-300`;
 
 /**
  * Props for IconWrapper component
@@ -15,7 +17,7 @@ export const DetailIcon = tw`stroke-zinc-700 dark:stroke-zinc-300`;
 export type IconWrapperProps = {
   additional?: TwStyle;
   size: "sm" | "md" | "lg" | "xl";
-  color: "strong" | "normal" | "detail";
+  color: "strong" | "normal" | "detail" | "green" | "red";
   icon: any;
 };
 
@@ -43,6 +45,8 @@ const IconWrapper: React.FC<IconWrapperProps> = ({
     strong: StrongIcon,
     normal: NormalIcon,
     detail: DetailIcon,
+    green: GreenIcon,
+    red: RedIcon,
   };
 
   return (

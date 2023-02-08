@@ -1,12 +1,15 @@
 import { NextPage } from "next";
 import { DefaultLayout } from "../../../components/core/layout";
+import React from "react";
 
-const Issues: NextPage = () => {
+import Issues from "../../../components/graph/issues";
+
+const GraphIssues: NextPage = () => {
   return (
     <DefaultLayout buttons={[]} heading="Issues">
-      <p>Coming soon...</p>
+      <Issues />
     </DefaultLayout>
   );
 };
 
-export default Issues;
+export default GraphIssues;

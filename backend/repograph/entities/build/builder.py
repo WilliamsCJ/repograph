@@ -15,7 +15,7 @@ from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument
                                    DocstringRaises, DocstringReturnValue, Directory, Module, \
                                    Function, License, Package, README, Repository, ReturnValue
 from repograph.models.relationships import Calls, Contains, Describes, Documents, HasArgument, \
-                                           HasFunction, HasMethod, ImportedBy, LicensedBy, \
+                                           HasFunction, HasMethod, Imports, LicensedBy, \
                                            Returns, Requires
 
 # Utility imports
@@ -205,6 +205,9 @@ class RepographBuilder:
             None
         """
         log.info("Parsing README files...")
+        if not info:
+            log.warning("No READMEs found!")
+            return
 
         readmes = []
         relationships = []
@@ -738,7 +741,7 @@ class RepographBuilder:
                 if imports_module:
                     # ...and it already exists create the relationship
                     if imported_module:
-                        self.relationships.append(ImportedBy(imported_module, module))
+                        self.relationships.append(Imports(module, imported_module))
                         self.module_dependencies[module].append(imported_module)
                     # ...and if it doesn't recursively create it
                     else:
@@ -786,7 +789,7 @@ class RepographBuilder:
                             log.warning("More than 1 matching object found in import.")
 
                         for match in matching_objects:
-                            self.relationships.append(ImportedBy(match, module))
+                            self.relationships.append(Imports(module, match))
                             self.module_dependencies[module].append(match)
                     # ...and if it doesn't recursively create it
                     else:
@@ -819,7 +822,7 @@ class RepographBuilder:
                                 import_object=imported_object
                             )
 
-                        self.relationships.append(ImportedBy(imported_object, module))
+                        self.relationships.append(Imports(module, imported_object))
                         self.module_dependencies[module].append(imported_object)
 
         # Second pass on unresolved dependencies that are likely to be imports of other modules.
@@ -837,7 +840,7 @@ class RepographBuilder:
                 remaining.append(dependency)
 
             for match in matching_objects:
-                self.relationships.append(ImportedBy(match, module))
+                self.relationships.append(Imports(module, match))
                 self.module_dependencies[module].append(match)
 
         if len(remaining) > 0:
@@ -1014,12 +1017,6 @@ class RepographBuilder:
             # If the call is to an imported function...
             if call in module_imports:
                 matching_imports = find_node_object_by_name(module_dependencies, call, canonical=True)  # noqa: 501
-                print("HI")
-                print(caller)
-                print(" ")
-                print(parent_module)
-                print(" ")
-                print(matching_imports)
                 relationship = Calls(caller if caller else parent_module, matching_imports)
             # ...or if the call is to a built-in function...
             elif call in PYTHON_BUILT_IN_FUNCTIONS:

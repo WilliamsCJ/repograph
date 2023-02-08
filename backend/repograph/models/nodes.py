@@ -24,6 +24,7 @@ class Repository(Node):
         """Enum for SoftwareType of Repository."""
         SERVICE = "service"
         SCRIPT_WITH_MAIN = "script with main"
+        SCRIPT_WITHOUT_MAIN = "script without main"
         SCRIPT = "script"
         PACKAGE = "package"
 
@@ -134,6 +135,7 @@ class Repository(Node):
         metadata.pop("topics", None)
         metadata.pop("organization", None)
         metadata.pop("name", None)
+        metadata.pop("id", None)
 
         return Repository(
             name=name,

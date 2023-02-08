@@ -132,6 +132,9 @@ class GraphService:
 
         return call_graph
 
+    def get_cyclical_dependencies(self) -> None:
+        pass
+
     def prune(self):
         """Delete all nodes and relationships from the graph."""
         self.repository.delete_all()
