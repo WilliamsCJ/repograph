@@ -4,7 +4,7 @@ import tw from "twin.macro";
 import { NumericalValue, Text } from "../core/text";
 import { GraphSummary } from "../../types/graph";
 import { StatsCardProps } from "./summary";
-import { ShieldCheckIcon } from "@heroicons/react/24/outline";
+import { ShieldCheckIcon, ShieldExclamationIcon } from "@heroicons/react/24/outline";
 import IconWrapper from "../core/icon";
 
 const IssueCard: React.FC<StatsCardProps> = ({ title, value }) => {
@@ -32,7 +32,7 @@ const IssueCard: React.FC<StatsCardProps> = ({ title, value }) => {
           <IconWrapper
             size="lg"
             color="red"
-            icon={<ShieldCheckIcon />}
+            icon={<ShieldExclamationIcon />}
             additional={tw`absolute top-4 right-4`}
           />
         </div>

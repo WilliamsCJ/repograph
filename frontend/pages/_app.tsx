@@ -1,10 +1,8 @@
 import type { AppProps } from "next/app";
 import NavigationBar, { NavigationRoute } from "../components/core/navigation";
 import {
-  ArrowLeftIcon,
-  ExclamationTriangleIcon,
   HomeIcon,
-  MagnifyingGlassIcon,
+  MagnifyingGlassIcon, ShieldExclamationIcon,
 } from "@heroicons/react/24/outline";
 import { ApplicationShell, MainContainer } from "../components/core/layout";
 import GlobalStyles from "../styles/GlobalStyles";
@@ -27,7 +25,7 @@ const navigation: NavigationRoute[] = [
   {
     description: "Issues",
     href: "/issues",
-    icon: <ExclamationTriangleIcon />,
+    icon: <ShieldExclamationIcon />,
   },
 ];
 
