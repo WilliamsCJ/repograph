@@ -1,7 +1,7 @@
 import React, { MutableRefObject, useEffect, useState } from "react";
 
 // Styling
-import tw from 'twin.macro';
+import tw from "twin.macro";
 
 // Dependencies
 import toast from "react-hot-toast";
@@ -26,7 +26,7 @@ export const SemanticSearch = ({
   graph,
 }: {
   topRef: MutableRefObject<any>;
-  graph: string
+  graph: string;
 }) => {
   // Query state
   const [query, setQuery] = useState<string | null>(null);

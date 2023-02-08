@@ -101,7 +101,7 @@ export type SearchResultCardProps = {
 const SearchResultCard: React.FC<SearchResultCardProps> = ({
   result,
   index,
-  graph
+  graph,
 }) => {
   const url = `/graph/${graph}/node/${result.function.id}/call_graph`;
   const { data, error } = useSWR(url, fetcher);
@@ -114,10 +114,10 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
       </JustifiedRow>
       <Card size={tw`w-full h-48`}>
         <div
-        css={[
-          tw`w-full h-full grid grid-cols-3 grid-rows-1 divide-x`,
-          Divide
-        ]}
+          css={[
+            tw`w-full h-full grid grid-cols-3 grid-rows-1 divide-x`,
+            Divide,
+          ]}
         >
           {/* Details Section */}
           <SearchResultCardSection heading="Details">

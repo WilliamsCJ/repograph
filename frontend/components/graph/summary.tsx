@@ -40,7 +40,10 @@ const Summary = ({ summary }: { summary: GraphSummary }) => {
     <>
       <dl tw="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatsCard title="Total Nodes" value={summary.nodes_total} />
-        <StatsCard title="Total Relationships" value={summary.relationships_total} />
+        <StatsCard
+          title="Total Relationships"
+          value={summary.relationships_total}
+        />
         <StatsCard title="Repositories" value={summary.repositories} />
       </dl>
       <dl tw="grid grid-cols-2 md:grid-cols-4 gap-4">

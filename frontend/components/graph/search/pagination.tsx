@@ -36,8 +36,10 @@ const Pagination: React.FC<PaginationProps> = ({
       <div tw="hidden sm:block">
         <DetailText>
           Showing <BoldDetailText as={"span"}>{offset + 1}</BoldDetailText> to{" "}
-          <BoldDetailText as={"span"}>{Math.min(limit + offset, total)}</BoldDetailText> of{" "}
-          <BoldDetailText as={"span"}>{total}</BoldDetailText> results
+          <BoldDetailText as={"span"}>
+            {Math.min(limit + offset, total)}
+          </BoldDetailText>{" "}
+          of <BoldDetailText as={"span"}>{total}</BoldDetailText> results
         </DetailText>
       </div>
       <div tw="flex flex-1 justify-between sm:justify-end space-x-2">

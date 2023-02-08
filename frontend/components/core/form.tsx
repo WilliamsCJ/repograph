@@ -7,7 +7,14 @@ import {
   ArrowUpTrayIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { Background, Border, Focus, FocusError, Placeholder, PlaceholderError } from "./constants";
+import {
+  Background,
+  Border,
+  Focus,
+  FocusError,
+  Placeholder,
+  PlaceholderError,
+} from "./constants";
 import { AccentText, BoldDetailText, DetailText } from "./text";
 
 /**
@@ -135,7 +142,7 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
                 Border,
                 tw`border-dashed text-center space-y-1 p-4`,
                 tw`flex flex-col max-w-lg justify-center`,
-                tw`dark:border-zinc-700`
+                tw`dark:border-zinc-700`,
               ]}
             >
               <IconWrapper
@@ -163,19 +170,19 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
             </div>
             <div tw="mt-1">
               {field.value.length === 0 ? (
-              meta.touched && meta.error ? (
-              <ErrorText>{meta.error}</ErrorText>
+                meta.touched && meta.error ? (
+                  <ErrorText>{meta.error}</ErrorText>
+                ) : (
+                  <BoldDetailText as="span">No files uploaded</BoldDetailText>
+                )
               ) : (
-              <BoldDetailText as="span">No files uploaded</BoldDetailText>
-              )
-              ) : (
-              <BoldDetailText tw="truncate max-w-lg">
-                {field.value
-                .map((file: File) => {
-                  return file.name;
-                })
-                .join(", ")}
-              </BoldDetailText>
+                <BoldDetailText tw="truncate max-w-lg">
+                  {field.value
+                    .map((file: File) => {
+                      return file.name;
+                    })
+                    .join(", ")}
+                </BoldDetailText>
               )}
             </div>
           </div>
@@ -225,11 +232,11 @@ const TextArea = (props: React.HTMLProps<HTMLTextAreaElement>) => (
       Border,
       Background,
       Focus,
-      Placeholder
+      Placeholder,
     ]}
     {...props}
   />
-)
+);
 
 /**
  * Error version of TextArea component.
@@ -245,7 +252,7 @@ const ErrorTextArea = (props: React.HTMLProps<HTMLTextAreaElement>) => (
     ]}
     {...props}
   />
-)
+);
 
 /**
  * Input component
@@ -261,7 +268,7 @@ const Input = (props: React.HTMLProps<HTMLInputElement>) => (
     ]}
     {...props}
   />
-)
+);
 
 /**
  * Error version of Input component
@@ -277,7 +284,7 @@ const ErrorInput = (props: React.HTMLProps<HTMLInputElement>) => (
     ]}
     {...props}
   />
-)
+);
 
 /**
  * SearchBarInput component
@@ -289,12 +296,11 @@ const SearchBarInput = (props: React.HTMLProps<HTMLInputElement>) => (
       Background,
       Border,
       Placeholder,
-      Focus
+      Focus,
     ]}
     {...props}
   />
-)
-
+);
 
 /**
  * Form help/hint text.

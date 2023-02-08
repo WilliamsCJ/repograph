@@ -15,7 +15,7 @@ const ExportButton = () => (
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // @ts-ignore
-  const { name } = context.params
+  const { name } = context.params;
   const summary = await getSummary(name);
 
   return {

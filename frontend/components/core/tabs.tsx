@@ -3,7 +3,15 @@ import React from "react";
 // Styling and base components
 import { Tab } from "@headlessui/react";
 import tw from "twin.macro";
-import { AccentBackground, AccentBorder, AccentText, Border, Focus, SelectedTab, UnselectedTab } from "./constants";
+import {
+  AccentBackground,
+  AccentBorder,
+  AccentText,
+  Border,
+  Focus,
+  SelectedTab,
+  UnselectedTab,
+} from "./constants";
 
 /**
  * TabGroupProps for TabGroup component.

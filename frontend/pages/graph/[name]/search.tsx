@@ -14,7 +14,7 @@ import { GraphSummary } from "../../../types/graph";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // @ts-ignore
-  const { name } = context.params
+  const { name } = context.params;
 
   return {
     props: {
@@ -26,7 +26,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 export type SearchPageProps = {
   graph: string;
 };
-
 
 const Search: NextPage<SearchPageProps> = ({ graph }) => {
   const topRef = useRef(null);

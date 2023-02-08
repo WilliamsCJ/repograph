@@ -31,14 +31,14 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ source_code, styles }) => {
   return (
     <>
       <pre
-      css={[
-        tw`max-h-full max-w-full overflow-x-auto overflow-y-auto scrollbar-hide text-xs p-1`,
-        InteriorBorder,
-        styles,
-      ]}
+        css={[
+          tw`max-h-full max-w-full overflow-x-auto overflow-y-auto scrollbar-hide text-xs p-1`,
+          InteriorBorder,
+          styles,
+        ]}
       >
-      {code && <code dangerouslySetInnerHTML={{ __html: code }} />}
-    </pre>
+        {code && <code dangerouslySetInnerHTML={{ __html: code }} />}
+      </pre>
     </>
   );
 };

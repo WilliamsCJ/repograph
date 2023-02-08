@@ -32,8 +32,8 @@ const navigation: NavigationRoute[] = [
 ];
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const router = useRouter()
-  const { name } = router.query
+  const router = useRouter();
+  const { name } = router.query;
 
   return (
     <>
@@ -41,7 +41,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider attribute="class">
         <ApplicationShell>
           <Toaster position="top-center" reverseOrder={false} />
-          <NavigationBar routes={navigation} currentPath={router.route} graphName={name} />
+          <NavigationBar
+            routes={navigation}
+            currentPath={router.route}
+            graphName={name}
+          />
           <MainContainer>
             <Component {...pageProps} />
           </MainContainer>

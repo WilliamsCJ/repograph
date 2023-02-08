@@ -46,9 +46,7 @@ const IconWrapper: React.FC<IconWrapperProps> = ({
   };
 
   return (
-    <div css={[sizes[size], colors[color], tw`m-auto`, additional]}>
-      {icon}
-    </div>
+    <div css={[sizes[size], colors[color], tw`m-auto`, additional]}>{icon}</div>
   );
 };
 

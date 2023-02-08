@@ -28,20 +28,26 @@ export type NavIconProps = {
  */
 const NavIcon = ({ icon, href, active }: NavIconProps) => {
   return (
-  <Link href={href}>
-    <div tw="flex flex-col">
-      <div tw="p-2 flex flex-col m-auto w-10 h-full rounded-lg space-y-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
-        <IconWrapper size="md" color="strong" icon={icon}/>
-        {active &&  <div tw="h-2 w-2 m-auto">
-            <svg className="h-2 w-2 fill-transparent" fill="currentColor" viewBox="0 0 8 8">
-                <circle cx={4} cy={4} r={3}/>
-            </svg>
-        </div>}
+    <Link href={href}>
+      <div tw="flex flex-col">
+        <div tw="p-2 flex flex-col m-auto w-10 h-full rounded-lg space-y-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
+          <IconWrapper size="md" color="strong" icon={icon} />
+          {active && (
+            <div tw="h-2 w-2 m-auto">
+              <svg
+                className="h-2 w-2 fill-transparent"
+                fill="currentColor"
+                viewBox="0 0 8 8"
+              >
+                <circle cx={4} cy={4} r={3} />
+              </svg>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  </Link>
+    </Link>
   );
-}
+};
 
 /**
  * Repograph logo for navigation bar. Also a link to the homepage.
@@ -131,28 +137,37 @@ export type NavigationBarProps = {
  * @param graphName
  * @constructor
  */
-const NavigationBar = ({ routes, currentPath, graphName }: NavigationBarProps) => {
+const NavigationBar = ({
+  routes,
+  currentPath,
+  graphName,
+}: NavigationBarProps) => {
   return (
     <SideBar>
       <div tw="flex flex-col justify-between h-full">
         <div tw="flex flex-col space-y-8">
-          <NavLogo/>
+          <NavLogo />
           <div tw="flex flex-col space-y-4">
-            {currentPath !== "/" && currentPath !== "/graph/new" &&
-            routes.map((route, index) => (
-              <NavIcon
-              key={index}
-              href={`/graph/${graphName}` + route.href}
-              icon={route.icon}
-              active={currentPath === '/graph/[name]' ? route.href === '/' : currentPath.endsWith(route.href)}
-              />
-            ))
-            }
+            {currentPath !== "/" &&
+              currentPath !== "/graph/new" &&
+              routes.map((route, index) => (
+                <NavIcon
+                  key={index}
+                  href={`/graph/${graphName}` + route.href}
+                  icon={route.icon}
+                  active={
+                    currentPath === "/graph/[name]"
+                      ? route.href === "/"
+                      : currentPath.endsWith(route.href)
+                  }
+                />
+              ))}
           </div>
         </div>
-        <DarkModeToggle/>
+        <DarkModeToggle />
       </div>
     </SideBar>
-)};
+  );
+};
 
 export default NavigationBar;
