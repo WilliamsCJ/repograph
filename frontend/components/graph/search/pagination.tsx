@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import tw from "twin.macro";
 
 // Components
-import { TextButton } from "../../core/button";
+import { Button, TextButton } from "../../core/button";
 import { Text, DetailText, BoldDetailText } from "../../core/text";
 
 /**
@@ -41,20 +41,20 @@ const Pagination: React.FC<PaginationProps> = ({
         </DetailText>
       </div>
       <div tw="flex flex-1 justify-between sm:justify-end space-x-2">
-        <TextButton
+        <Button
+          text="Previous"
           onClick={() => {
             if (offset !== 0) setOffset(offset - limit);
           }}
-        >
-          Previous
-        </TextButton>
-        <TextButton
+        />
+        <Button
+          text="Next"
           onClick={() => {
             if (offset + limit <= total) setOffset(offset + limit);
           }}
         >
           Next
-        </TextButton>
+        </Button>
       </div>
     </nav>
   );

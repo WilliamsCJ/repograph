@@ -13,7 +13,7 @@ import {
 } from "./constants";
 import { DetailText } from "./text";
 
-const ButtonStyles = tw`px-4 py-2 mx-auto flex flex-row justify-center items-center space-x-2`;
+const ButtonStyles = tw`relative inline-flex items-center px-4 py-2.5`;
 
 // Button
 
