@@ -1,15 +1,32 @@
 import React, { MutableRefObject, useEffect, useState } from "react";
+
+// Styling
+import tw from "twin.macro";
+
+// Dependencies
+import toast from "react-hot-toast";
+
+// Components
 import { SearchBar } from "./searchbar";
-import { getSemanticSearchQuery } from "../../../server/search";
+import { getSemanticSearchQuery } from "../../../lib/search";
 import { SearchResultCard } from "./search-result";
 import { Pagination } from "./pagination";
-import toast from "react-hot-toast";
+
+// Search
 import { SearchResultSet } from "../../../types/search";
 
+/**
+ * Semantic search bar and results component
+ * @param topRef
+ * @param graph
+ * @constructor
+ */
 export const SemanticSearch = ({
   topRef,
+  graph,
 }: {
   topRef: MutableRefObject<any>;
+  graph: string;
 }) => {
   // Query state
   const [query, setQuery] = useState<string | null>(null);
@@ -26,7 +43,7 @@ export const SemanticSearch = ({
   const executeQuery = async (query: string) => {
     setQuery(query);
     try {
-      const res = await getSemanticSearchQuery("any", query, limit, offset);
+      const res = await getSemanticSearchQuery(graph, query, limit, offset);
       setResults(res);
     } catch (e) {
       toast.error("An error occurred!", { duration: 6000 });
@@ -50,9 +67,9 @@ export const SemanticSearch = ({
       />
       {results && (
         <>
-          <div tw="mt-4 flex flex-col space-y-4">
+          <div css={tw`mt-6 flex flex-col space-y-8`}>
             {results.results.map((result, index) => (
-              <SearchResultCard result={result} index={index} />
+              <SearchResultCard result={result} index={index} graph={graph} />
             ))}
           </div>
           <Pagination

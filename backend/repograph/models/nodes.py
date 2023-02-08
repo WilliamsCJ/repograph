@@ -232,7 +232,8 @@ class Package(Node):
         parent_package: str,
         path: Optional[str] = None,
         parent_path: Optional[str] = None,
-        external: bool = False
+        external: bool = False,
+        identity: Optional[int] = None
     ):
         """Constructor
 
@@ -244,8 +245,10 @@ class Package(Node):
             parent_path (Optional[str], optional): The path of the parent package. Defaults to None.
             external (bool, optional): Whether the package is an external dependency of
                                        the repository. Defaults to False.
+            identity (int, optional): Optional Node identity
         """
         super().__init__(
+            identity=identity,
             name=name,
             canonical_name=canonical_name,
             parent_package=parent_package,

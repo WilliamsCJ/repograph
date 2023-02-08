@@ -2,6 +2,7 @@ import React from "react";
 
 /* External dependencies */
 import tw, { TwStyle } from "twin.macro";
+import { Background, Border } from "./constants";
 
 /**
  * Props for all Card components.
@@ -26,13 +27,7 @@ type DefaultCardProps = CardProps & {
  * @param props
  */
 const Card: React.FC<DefaultCardProps> = ({ children, ...props }) => (
-  <div
-    ref={props.ref}
-    css={[
-      tw`bg-white rounded-lg border border-gray-300 overflow-hidden`,
-      props.size,
-    ]}
-  >
+  <div ref={props.ref} css={[Background, Border, props.size]}>
     {children}
   </div>
 );

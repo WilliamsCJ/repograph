@@ -2,11 +2,20 @@ import React from "react";
 
 import tw from "twin.macro";
 import { Field, FieldProps } from "formik";
-import { IconWrapper } from "./icon";
+import IconWrapper from "./icon";
 import {
   ArrowUpTrayIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import {
+  Background,
+  Border,
+  Focus,
+  FocusError,
+  Placeholder,
+  PlaceholderError,
+} from "./constants";
+import { AccentText, BoldDetailText, DetailText } from "./text";
 
 /**
  * InputProps type for InputSection component.
@@ -22,7 +31,7 @@ export type InputProps = {
 
 /**
  * InputSection component contains a Formik input field
- * along with label, helper text and error handling.
+ * along with BoldDetailText, helper text and error handling.
  * @param props
  * @constructor
  */
@@ -33,7 +42,7 @@ const InputSection: React.FC<InputProps> = (props) => {
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
           {meta.touched && meta.error ? (
             <>
-              <Label>{props.label}</Label>
+              <BoldDetailText>{props.label}</BoldDetailText>
               <div tw="sm:col-span-2 sm:mt-0">
                 <ErrorInput placeholder={props.placeholder} {...field} />
                 <ErrorText>{meta.error}</ErrorText>
@@ -41,7 +50,7 @@ const InputSection: React.FC<InputProps> = (props) => {
             </>
           ) : (
             <>
-              <Label>{props.label}</Label>
+              <BoldDetailText>{props.label}</BoldDetailText>
               <div tw="sm:col-span-2 sm:mt-0">
                 <Input placeholder={props.placeholder} {...field} />
                 <HelpText>{props.helpMessage}</HelpText>
@@ -68,7 +77,7 @@ export type TextAreaProps = {
 
 /**
  * TextAreaSection component contains a Formik textarea field
- * along with label, helper text and error handling.
+ * along with BoldDetailText, helper text and error handling.
  * @param props
  * @constructor
  */
@@ -79,7 +88,7 @@ const TextAreaSection: React.FC<TextAreaProps> = (props) => {
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
           {meta.touched && meta.error ? (
             <>
-              <Label>{props.label}</Label>
+              <BoldDetailText>{props.label}</BoldDetailText>
               <div tw="sm:col-span-2 sm:mt-0">
                 <ErrorTextArea
                   rows={3}
@@ -91,7 +100,7 @@ const TextAreaSection: React.FC<TextAreaProps> = (props) => {
             </>
           ) : (
             <>
-              <Label>{props.label}</Label>
+              <BoldDetailText>{props.label}</BoldDetailText>
               <div tw="sm:col-span-2 sm:mt-0">
                 <TextArea placeholder={props.placeholder} {...field} />
                 <HelpText>{props.helpMessage}</HelpText>
@@ -117,7 +126,7 @@ export type FileUploadProps = {
 
 /**
  * FileUploadSection component contains a Formik-compatible file upload input
- * along with label, helper text and error handling.
+ * along with BoldDetailText, helper text and error handling.
  * @param props
  * @constructor
  */
@@ -126,16 +135,23 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
     <Field name={props.name} id={props.id}>
       {({ field, form: { setFieldValue }, meta }: FieldProps) => (
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
-          <Label>{props.label}</Label>
+          <BoldDetailText as="label">{props.label}</BoldDetailText>
           <div tw="sm:col-span-2 sm:mt-0">
             <div
-              tw="
-        flex flex-col max-w-lg justify-center rounded-md
-        border border-dashed border-gray-300 text-center space-y-1 p-4"
+              css={[
+                Border,
+                tw`border-dashed text-center space-y-1 p-4`,
+                tw`flex flex-col max-w-lg justify-center`,
+                tw`dark:border-zinc-700`,
+              ]}
             >
-              <IconWrapper size="md" color="light" icon={<ArrowUpTrayIcon />} />
-              <Label tw="cursor-pointer">
-                <span tw="text-primary-700">Upload a file</span>
+              <IconWrapper
+                size="md"
+                color="detail"
+                icon={<ArrowUpTrayIcon />}
+              />
+              <label tw="cursor-pointer">
+                <AccentText as="span">Upload a file</AccentText>
                 <input
                   type="file"
                   tw="sr-only"
@@ -147,25 +163,28 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
                     setFieldValue(props.id, updated);
                   }}
                 />
-                <span tw="text-sm text-gray-500"> or drag and drop</span>
-              </Label>
+                <DetailText as="span"> or drag and drop</DetailText>
+              </label>
+              {/* // TODO: Light */}
               <HelpText>{props.helpMessage}</HelpText>
             </div>
-            {field.value.length === 0 ? (
-              meta.touched && meta.error ? (
-                <ErrorText>{meta.error}</ErrorText>
+            <div tw="mt-1">
+              {field.value.length === 0 ? (
+                meta.touched && meta.error ? (
+                  <ErrorText>{meta.error}</ErrorText>
+                ) : (
+                  <BoldDetailText as="span">No files uploaded</BoldDetailText>
+                )
               ) : (
-                <span>No files uploaded</span>
-              )
-            ) : (
-              <Label tw="truncate max-w-lg">
-                {field.value
-                  .map((file: File) => {
-                    return file.name;
-                  })
-                  .join(", ")}
-              </Label>
-            )}
+                <BoldDetailText tw="truncate max-w-lg">
+                  {field.value
+                    .map((file: File) => {
+                      return file.name;
+                    })
+                    .join(", ")}
+                </BoldDetailText>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -206,54 +225,82 @@ const SearchBarInputSection: React.FC<SearchBarInputSectionProps> = (props) => {
 /**
  * TextArea component.
  */
-const TextArea = tw.textarea`
-  block w-full min-w-0 rounded-md shadow-sm
-  text-gray-700 placeholder-gray-300 border-gray-300
-  focus:border-primary-500 focus:ring-primary-500
-  resize-none
-`;
+const TextArea = (props: React.HTMLProps<HTMLTextAreaElement>) => (
+  <textarea
+    css={[
+      tw`block w-full min-w-0 resize-none`,
+      Border,
+      Background,
+      Focus,
+      Placeholder,
+    ]}
+    {...props}
+  />
+);
 
 /**
  * Error version of TextArea component.
  */
-const ErrorTextArea = tw.textarea`
-  block w-full min-w-0 rounded-md border border-gray-300
-  text-red-900 placeholder-red-300 focus:border-red-500 
-  focus:outline-none focus:ring-red-500
-  resize-none
- `;
+const ErrorTextArea = (props: React.HTMLProps<HTMLTextAreaElement>) => (
+  <textarea
+    css={[
+      tw`block w-full min-w-0 resize-none`,
+      Border,
+      Background,
+      FocusError,
+      PlaceholderError,
+    ]}
+    {...props}
+  />
+);
 
 /**
  * Input component
  */
-const Input = tw.input`
-  block w-full min-w-0 rounded-lg shadow-sm border p-2
-  text-gray-700 placeholder-gray-300 border-gray-300
-  focus:border-primary-500 focus:ring-primary-500
-`;
+const Input = (props: React.HTMLProps<HTMLInputElement>) => (
+  <input
+    css={[
+      tw`block w-full min-w-0 resize-none p-2`,
+      Border,
+      Background,
+      Focus,
+      Placeholder,
+    ]}
+    {...props}
+  />
+);
 
 /**
  * Error version of Input component
  */
-const ErrorInput = tw.input`
-  block w-full min-w-0 rounded-lg shadow-sm border p-2
-  text-gray-700 placeholder-gray-300 border-gray-300
-  focus:border-red-500 focus:ring-red-500
- `;
+const ErrorInput = (props: React.HTMLProps<HTMLInputElement>) => (
+  <input
+    css={[
+      tw`block w-full min-w-0 resize-none p-2`,
+      Border,
+      Background,
+      FocusError,
+      PlaceholderError,
+    ]}
+    {...props}
+  />
+);
 
 /**
  * SearchBarInput component
  */
-const SearchBarInput = tw.input`
-block w-full px-4 py-3 pl-12 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white
-focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-`;
-
-/**
- * Form label.
- */
-const Label = tw.label`block text-sm font-medium text-gray-700`;
+const SearchBarInput = (props: React.HTMLProps<HTMLInputElement>) => (
+  <input
+    css={[
+      tw`block w-full px-4 py-2 pl-12`,
+      Background,
+      Border,
+      Placeholder,
+      Focus,
+    ]}
+    {...props}
+  />
+);
 
 /**
  * Form help/hint text.

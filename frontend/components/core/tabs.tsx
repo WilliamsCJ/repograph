@@ -3,6 +3,15 @@ import React from "react";
 // Styling and base components
 import { Tab } from "@headlessui/react";
 import tw from "twin.macro";
+import {
+  AccentBackground,
+  AccentBorder,
+  AccentText,
+  Border,
+  Focus,
+  SelectedTab,
+  UnselectedTab,
+} from "./constants";
 
 /**
  * TabGroupProps for TabGroup component.
@@ -27,9 +36,11 @@ const TabGroup: React.FC<TabGroupProps> = ({ titles, panels }) => {
             <Tab
               key={title}
               css={[
+                SelectedTab,
+                UnselectedTab,
+                Focus,
                 tw`px-3 py-2 font-medium text-sm rounded-md`,
-                tw`ui-selected:(bg-indigo-100 text-indigo-700)`,
-                tw`ui-not-selected:(text-gray-500 hover:text-gray-700)`,
+                // tw`ui-not-selected:(text-gray-500 hover:text-emerald-700)`,
               ]}
             >
               {title}

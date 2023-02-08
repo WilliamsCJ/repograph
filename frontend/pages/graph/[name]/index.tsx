@@ -6,15 +6,18 @@ import { Button } from "../../../components/core/button";
 import { DefaultLayout } from "../../../components/core/layout";
 import Summary from "../../../components/graph/summary";
 
-import { getSummary } from "../../../server/summary";
-import { GraphSummary } from "../../../types/summary";
+import { getSummary } from "../../../lib/summary";
+import { GraphSummary } from "../../../types/graph";
 
 const ExportButton = () => (
   <Button icon={<CloudArrowDownIcon />} text="Export" />
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const summary = await getSummary();
+  // @ts-ignore
+  const { name } = context.params;
+  const summary = await getSummary(name);
+
   return {
     props: {
       summary: summary,
@@ -28,9 +31,8 @@ export type GraphHomePageProps = {
 
 const RepositoryHome: NextPage<GraphHomePageProps> = ({ summary }) => {
   return (
-    <DefaultLayout buttons={[<ExportButton />]} heading="Graph">
+    <DefaultLayout buttons={[<ExportButton />]} heading="Summary">
       <Summary summary={summary} />
-      {/*<GraphCard data={data} />*/}
     </DefaultLayout>
   );
 };

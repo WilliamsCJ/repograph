@@ -82,7 +82,11 @@ class GraphRepository:
         match: NodeMatch = self._graph.nodes.match(node_label.__name__)
 
         def cast(node: py2neoNode):
-            new = node_label(identity=node.identity, **dict(node))
+            properties = dict(node)
+            if "id" in properties:
+                properties.pop("id")
+
+            new = node_label(identity=node.identity, **properties)
             new._subgraph.identity = node.identity
             return new
 

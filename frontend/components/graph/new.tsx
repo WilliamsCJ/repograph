@@ -3,10 +3,10 @@ import React from "react";
 import tw from "twin.macro";
 import { Form, Formik } from "formik";
 
-import { Button } from "../core/button";
+import { AccentButton, Button } from "../core/button";
 import { Card } from "../core/card";
 import { FileUploadSection, InputSection, TextAreaSection } from "../core/form";
-import { Heading, TextLight } from "../core/text";
+import { Heading, DetailText } from "../core/text";
 
 /**
  * Form values type for NewGraphForm
@@ -70,9 +70,9 @@ const NewGraphForm: React.FC = () => {
             <div tw="space-y-6">
               <div>
                 <Heading>1. Add Graph Information</Heading>
-                <TextLight tw="mt-1">
+                <DetailText tw="mt-1">
                   Describe the purpose of your graph.
-                </TextLight>
+                </DetailText>
 
                 <InputSection
                   id="name"
@@ -95,9 +95,9 @@ const NewGraphForm: React.FC = () => {
 
               <div tw="border-t pt-6">
                 <Heading>2. Upload Repositories</Heading>
-                <TextLight tw="mt-1">
+                <DetailText tw="mt-1">
                   Add repositories you wish to add to the graph.
-                </TextLight>
+                </DetailText>
                 <FileUploadSection
                   id="files"
                   name="files"
@@ -108,7 +108,7 @@ const NewGraphForm: React.FC = () => {
               </div>
 
               <div tw="pt-6">
-                <Button primary text="Create" />
+                <AccentButton text="Create" />
               </div>
             </div>
           </Card>

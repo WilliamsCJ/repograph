@@ -61,7 +61,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
             placeholder={props.placeholder}
           />
           <div tw="col-span-1">
-            <Button text="Search" primary={true} />
+            <Button text="Search" />
           </div>
         </div>
       </Form>

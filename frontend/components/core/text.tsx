@@ -5,24 +5,11 @@ import React from "react";
  * Heading text, used at the top of pages.
  * @constructor
  */
-const Title = tw.h1`font-semibold text-3xl align-text-top text-gray-900`;
-const Heading = tw.h2`font-medium text-lg text-gray-900`;
-const SmallHeading = tw.h2`text-sm font-semibold text-gray-900`;
-const Text = tw.h3`text-sm font-medium text-gray-700`;
-const TextLight = tw.h3`text-sm text-gray-700`;
-const BlockText = tw.h4`block text-sm font-medium text-gray-700`;
-const BlockTextLight = tw.p`block text-sm text-gray-700`;
-const TextAccent = tw.h3`text-sm font-medium text-primary-600`;
-const BlockTextAccent = tw.h3`block text-xs font-medium text-primary-700`;
-
-export {
-  Title,
-  Heading,
-  SmallHeading,
-  Text,
-  BlockText,
-  BlockTextLight,
-  BlockTextAccent,
-  TextAccent,
-  TextLight,
-};
+export const Title = tw.h1`text-3xl font-semibold align-text-top text-zinc-900 dark:text-zinc-100`;
+export const Heading = tw.h2`text-lg font-medium text-zinc-900 dark:text-zinc-100`;
+export const SmallHeading = tw.h3`text-base font-semibold text-zinc-900 dark:text-zinc-100`;
+export const Text = tw.p`text-base font-medium text-zinc-800 dark:text-zinc-200`;
+export const AccentText = tw.p`text-base font-semibold text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300`;
+export const DetailText = tw.p`text-sm text-zinc-700 dark:text-zinc-300`;
+export const BoldDetailText = tw.p`text-sm font-medium text-zinc-700 dark:text-zinc-300`;
+export const NumericalValue = tw.p`text-3xl font-semibold tracking-tight text-zinc-800 dark:text-zinc-200`;

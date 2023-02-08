@@ -5,8 +5,8 @@ import moment from "moment";
 
 import { List, ListRow } from "../core/list";
 import { CalendarIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import { TextAccent, TextLight } from "../core/text";
-import { IconWrapper } from "../core/icon";
+import { DetailText, SmallHeading } from "../core/text";
+import IconWrapper from "../core/icon";
 
 export type GraphEntry = {
   id: string;
@@ -23,7 +23,7 @@ export type GraphListProps = {
 
 const GraphList: React.FC<GraphListProps> = ({ graphs }) => {
   const rows = graphs.map((graph, index) => (
-    <GraphListRow graph={graph} index={index} />
+    <GraphListRow graph={graph} index={index} total={graphs.length} />
   ));
 
   return <List rows={rows} />;
@@ -34,9 +34,10 @@ const GraphList: React.FC<GraphListProps> = ({ graphs }) => {
 export type GraphListRowProps = {
   graph: GraphEntry;
   index: number;
+  total: number;
 };
 
-const GraphListRow: React.FC<GraphListRowProps> = ({ graph, index }) => {
+const GraphListRow: React.FC<GraphListRowProps> = ({ graph, index, total }) => {
   const left = <GraphEntry createdAt={graph.createdAt} name={graph.name} />;
 
   const right = (
@@ -44,7 +45,7 @@ const GraphListRow: React.FC<GraphListRowProps> = ({ graph, index }) => {
       aria-hidden="true"
       additional={tw`ml-5 flex-shrink-0`}
       size="sm"
-      color="light"
+      color="detail"
       icon={<ChevronRightIcon />}
     />
   );
@@ -52,7 +53,8 @@ const GraphListRow: React.FC<GraphListRowProps> = ({ graph, index }) => {
   return (
     <ListRow
       index={index}
-      href={`/graph/${graph.id}`}
+      total={total}
+      href={`/graph/${graph.name}`}
       leftComponent={left}
       rightComponent={right}
     />
@@ -70,19 +72,19 @@ const GraphEntry: React.FC<GraphEntryProps> = ({ createdAt, name }) => {
   return (
     <div tw="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
       <div tw="truncate">
-        <TextAccent>{name}</TextAccent>
+        <SmallHeading>{name}</SmallHeading>
         <div tw="mt-2 flex">
           <div tw="flex items-center">
             <IconWrapper
               aria-hidden="true"
               additional={tw`mr-1.5 flex-shrink-0`}
               size="sm"
-              color="light"
+              color="detail"
               icon={<CalendarIcon />}
             />
-            <TextLight>
+            <DetailText>
               Created on <time>{moment().format("DD-MM-YYYY")}</time>
-            </TextLight>
+            </DetailText>
           </div>
         </div>
       </div>

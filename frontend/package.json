@@ -20,6 +20,8 @@
     "highlight.js": "^11.7.0",
     "moment": "^2.29.4",
     "next": "latest",
+    "next-themes": "^0.2.1",
+    "phosphor-react": "^1.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-force-graph": "^1.41.16",

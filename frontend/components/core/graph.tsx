@@ -14,12 +14,12 @@ const Graph = dynamic(() => import("./force-graph"), {
 });
 
 /* Components */
-import { Border } from "./border";
+import { Border, InteriorBorder } from "./constants";
 import { Network, NetworkEvents } from "vis";
 import { Center } from "./layout";
-import { IconWrapper } from "./icon";
+import IconWrapper from "./icon";
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
-import { BlockText, BlockTextLight } from "./text";
+import { BoldDetailText, DetailText } from "./text";
 import Script from "next/script";
 
 /**
@@ -76,7 +76,7 @@ const GraphCard: React.FC<GraphCardProps> = ({
   // };
 
   return (
-    <Border css={[styles, tw`flex max-h-full`]}>
+    <div css={[styles, tw`flex max-h-full`, InteriorBorder]}>
       <Script
         type="text/javascript"
         src="ttps://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"
@@ -100,7 +100,7 @@ const GraphCard: React.FC<GraphCardProps> = ({
                 icon={<ExclamationCircleIcon />}
                 size="md"
               />
-              <BlockText>Error</BlockText>
+              <BoldDetailText>Error</BoldDetailText>
             </div>
           ) : (
             <ClipLoader
@@ -113,7 +113,7 @@ const GraphCard: React.FC<GraphCardProps> = ({
           )}
         </Center>
       )}
-    </Border>
+    </div>
   );
 };
 
