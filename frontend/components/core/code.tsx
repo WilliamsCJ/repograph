@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import tw, { TwStyle } from "twin.macro";
 
 // Syntax highlighting
-import "highlight.js/styles/github.css";
+import "highlight.js/styles/stackoverflow-light.css";
 import hljs from "highlight.js/lib/core";
 import python from "highlight.js/lib/languages/python";
 hljs.registerLanguage("python", python);
@@ -26,15 +26,17 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ source_code, styles }) => {
   const code = hljs.highlight(source_code, { language: "python" }).value;
 
   return (
-    <pre
+    <>
+      <pre
       css={[
         tw`max-h-full max-w-full overflow-x-auto overflow-y-auto scrollbar-hide`,
         tw`border rounded-lg text-xs p-1`,
         styles,
       ]}
-    >
+      >
       {code && <code dangerouslySetInnerHTML={{ __html: code }} />}
     </pre>
+    </>
   );
 };
 

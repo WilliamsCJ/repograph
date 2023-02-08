@@ -3,11 +3,12 @@ import { SideBar } from "./layout";
 import Link from "next/link";
 
 import { Graph } from "phosphor-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import IconWrapper from "./icon";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import { useTheme } from "next-themes";
 import colors from "tailwindcss/colors";
+import Script from "next/script";
 
 /**
  * Props for NavIcon Component
