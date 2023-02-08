@@ -13,4 +13,10 @@ export const Focus = tw`focus:outline-none focus:border-emerald-400 focus:ring-e
 export const FocusError = tw`focus:outline-none focus:border-red-400 focus:ring-red-600 focus:ring-2 focus:ring-offset-2`;
 export const Placeholder = tw`text-zinc-700 dark:text-zinc-300`;
 export const PlaceholderError = tw`text-red-700 dark:text-red-300`;
-
+export const SelectedTab = tw`ui-selected:(
+  bg-emerald-400/25 
+  border rounded-lg border-emerald-400 dark:border-emerald-700 dark:hover:border-emerald-200
+)`;
+export const UnselectedTab = tw`ui-not-selected:(
+  dark:hover:text-emerald-400 hover:text-emerald-600 hover:transition hover:ease-in-out hover:duration-300
+)`;
