@@ -166,15 +166,16 @@ class Directory(Node):
     path: str
     parent_path: str
 
-    def __init__(self, path=None):
-        """_summary_
+    def __init__(self, graph_name: str, path=None):
+        """Create directory
 
         Args:
-            path (_type_): _description_
+            graph_name: str
+            path (_type_): Path of directory
         """
         name = get_path_name(path)
         parent = get_path_parent(path)
-        super().__init__(path=path, name=name, parent_path=parent)
+        super().__init__(path=path, name=name, parent_path=parent, graph_name=graph_name)
 
 
 class Package(Node):
@@ -197,22 +198,34 @@ class Package(Node):
     external: bool
 
     @classmethod
-    def create_from_directory(cls, path: str, canonical_name: str) -> "Package":
+    def create_from_directory(cls, path: str, canonical_name: str, graph_name: str) -> "Package":
+        """Creates a Package instance from a directory.
+
+        Args:
+            path (str): The dependency name.
+            canonical_name (str): The canonical name of the package.
+            graph_name (str): The name of the associated graph.
+
+        Returns:
+            Package: A Package instance.
+        """
         parent, name = get_package_parent_and_name(canonical_name)
         return Package(
             name,
             canonical_name,
             parent,
+            graph_name,
             path=path,
             parent_path=get_path_parent(path),
         )
 
     @classmethod
-    def create_from_external_dependency(cls, package: str) -> "Package":
+    def create_from_external_dependency(cls, package: str, graph_name: str) -> "Package":
         """Creates a Package instance from an external dependency.
 
         Args:
             package (str): The dependency name.
+            graph_name (str): The name of the associated graph.
 
         Returns:
             Package: A Package instance.
@@ -222,6 +235,7 @@ class Package(Node):
             name,
             package,
             parent,
+            graph_name,
             external=True
         )
 
@@ -230,17 +244,19 @@ class Package(Node):
         name: str,
         canonical_name: str,
         parent_package: str,
+        graph_name: str,
         path: Optional[str] = None,
         parent_path: Optional[str] = None,
         external: bool = False,
-        identity: Optional[int] = None
+        identity: Optional[int] = None,
     ):
         """Constructor
 
         Args:
             name (str): The name of the package.
             canonical_name (str): The full canonical name (including all parents) of the package.
-            parent_package (str): The canonical name of the
+            parent_package (str): The canonical name of the package.
+            graph_name (str): The name of the graph.
             path (Optional[str], optional): The path of the package. Defaults to None.
             parent_path (Optional[str], optional): The path of the parent package. Defaults to None.
             external (bool, optional): Whether the package is an external dependency of
@@ -254,7 +270,8 @@ class Package(Node):
             parent_package=parent_package,
             path=path,
             parent_path=parent_path,
-            external=external
+            external=external,
+            graph_name=graph_name
         )
 
 
@@ -295,15 +312,17 @@ class Module(Node):
             path=self.path,
             parent_path=self.parent_path,
             extension=self.extension,
-            is_test=self.is_test
+            is_test=self.is_test,
+            graph_name=self.graphName
         )
 
     @classmethod
-    def create_init_module(cls, parent_canonical_name: str) -> "Module":
+    def create_init_module(cls, parent_canonical_name: str, graph_name: str) -> "Module":
         """Create an __init__ module for a Package.
 
         Args:
             parent_canonical_name (str): The canonical name of the parent Package.
+            graph_name (str): The name of the associated graph.
 
         Returns:
             Module: __init__
@@ -311,6 +330,7 @@ class Module(Node):
         return Module(
             name="__init__",
             canonical_name=f"{parent_canonical_name}.__init__",
+            graph_name=graph_name
         )
 
 
@@ -335,9 +355,8 @@ class Function(Node):
         name (str): The name of the function or method.
         type (FunctionType): Whether this is a function or a method.
         builtin (bool): Whether the function is a Python interpreter built-in function.
-        imported_as (str): The name by which the function is imported, if so.
         source_code (Optional[str]): The original source code string.
-        _ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
+        ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
         min_line_number (Optional[int]): The first line of the function definition.
         max_line_number (Optional[int]): The last line of the function definition.
     """

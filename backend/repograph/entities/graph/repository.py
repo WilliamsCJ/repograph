@@ -30,6 +30,10 @@ class GraphRepository:
         print(graph)
         self._graph = graph
 
+        # Create indices
+        self._graph.run("""CREATE TEXT INDEX graph_name_index for (n) ON (n.graphName)""")
+        self._graph.run("""CREATE RANGE INDEX graph_name_and_repository_name_index for (n) ON (n.graphName, n.repositoryName)""")  # noqa:501
+
     def add(self, *args: BaseSubgraph, tx: Transaction = None) -> None:
         """Add nodes/relationships to the graph.
 
