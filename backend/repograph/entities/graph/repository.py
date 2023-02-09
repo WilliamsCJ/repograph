@@ -11,6 +11,9 @@ from py2neo import Graph, NodeMatch, Transaction, Node as py2neoNode
 # Models
 from repograph.models.base import BaseSubgraph, Node
 
+# Util imports
+from repograph.utils.neo4j import create_indices
+
 # Configure logging
 log = getLogger('repograph.entities.graph.repository')
 
@@ -27,12 +30,10 @@ class GraphRepository:
         Args:
             graph (Graph): Neo4j database connection.
         """
-        print(graph)
         self._graph = graph
 
         # Create indices
-        self._graph.run("""CREATE TEXT INDEX graph_name_index for (n) ON (n.graphName)""")
-        self._graph.run("""CREATE RANGE INDEX graph_name_and_repository_name_index for (n) ON (n.graphName, n.repositoryName)""")  # noqa:501
+        create_indices(self._graph)
 
     def add(self, *args: BaseSubgraph, tx: Transaction = None) -> None:
         """Add nodes/relationships to the graph.
