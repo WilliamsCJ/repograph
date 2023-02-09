@@ -35,6 +35,9 @@ class GraphRepository:
         # Create indices
         create_indices(self._graph)
 
+    def get_transaction(self) -> Transaction:
+        return self._graph.begin()
+
     def add(self, *args: BaseSubgraph, tx: Transaction = None) -> None:
         """Add nodes/relationships to the graph.
 

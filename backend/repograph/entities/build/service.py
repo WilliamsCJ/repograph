@@ -135,31 +135,35 @@ class BuildService:
             self.graph.prune()
 
         for i in input_list:
-            try:
-                self.call_inspect4py(i, self.temp_output)
-                directory_info, call_graph = self.parse_inspect4py_output(self.temp_output)
+            with self.graph.get_transaction() as tx:
+                try:
+                    self.call_inspect4py(i, self.temp_output)
+                    directory_info, call_graph = self.parse_inspect4py_output(self.temp_output)
 
-                builder = RepographBuilder(
-                    summarize=self.summarization.summarize_function if self.summarization.active else None,  # noqa: 501
-                    base_path=self.temp_output,
-                    graph_name=name
-                )
-                nodes, relationships = builder.build(directory_info, call_graph)
+                    builder = RepographBuilder(
+                        self.summarization.summarize_function if self.summarization.active else None,  # noqa: 501
+                        self.temp_output,
+                        name,
+                        self.graph,
+                        tx
+                    )
 
-                log.info("Writing nodes and relationships to graph...")
-                self.graph.bulk_add(nodes, relationships)
-                log.info("Done!")
+                    builder.build(directory_info, call_graph)
 
-                success += 1
-            except subprocess.CalledProcessError as e:
-                log.error("Error invoking inspect4py - %s", str(e))
-                failure += 1
-            except RepographBuildError as e:
-                log.error("Error building repograph - %s", str(e))
-                failure += 1
-            finally:
-                self.cleanup_inspect4py_output()
-                pass
+                    log.info("Done!")
+
+                    success += 1
+                except subprocess.CalledProcessError as e:
+                    log.error("Error invoking inspect4py - %s", str(e))
+                    failure += 1
+                    raise e
+                except RepographBuildError as e:
+                    log.error("Error building repograph - %s", str(e))
+                    failure += 1
+                    raise e
+                finally:
+                    self.cleanup_inspect4py_output()
+                    pass
 
         log.info(
             "Parsed %d repositories successfully with %d failures (%d total)",

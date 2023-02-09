@@ -1,12 +1,14 @@
 """
 Graph entity application logic.
 """
+import contextlib
 # Base imports
 from logging import getLogger
+from py2neo import Transaction
 from typing import Dict, List
 
 # Model imports
-from repograph.models.base import Node, Relationship
+from repograph.models.base import BaseSubgraph, Node, Relationship
 from repograph.models.nodes import Class, Function, Module, Package, Repository
 from repograph.models.graph import GraphSummary, CallGraph
 
@@ -30,6 +32,21 @@ class GraphService:
             repository (GraphRepository): The Neo4j graph repository.
         """
         self.repository = repository
+
+    @contextlib.contextmanager
+    def get_transaction(self):
+        tx = self.repository.get_transaction()
+        try:
+            yield tx
+            log.info("Committing changes to graph...")
+            tx.commit()
+            log.info("Done!")
+        except Exception as e:
+            log.error("An error occurred. Rolling back graph transaction!\n" + str(e))
+            tx.rollback()
+
+    def add(self, *args: BaseSubgraph, tx: Transaction = None):
+        self.repository.add(*args, tx=tx)
 
     def bulk_add(self, nodes: List[Node], relationships: List[Relationship]):
         """Bulk add nodes and relationships.
