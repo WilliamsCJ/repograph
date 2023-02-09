@@ -114,12 +114,14 @@ class BuildService:
     def build(
         self,
         input_list: List[str],
+        name: str,
         prune: bool = False
     ) -> None:
         """Build a  graph using the input repositories.
 
         Args:
             input_list (List[str]): The list of paths to repositories to add the graph.
+            name (str): The name to assign to the graph.
             prune (bool): Whether to prune existing nodes from the graph.
 
         Returns:
@@ -139,7 +141,8 @@ class BuildService:
 
                 builder = RepographBuilder(
                     summarize=self.summarization.summarize_function if self.summarization.active else None,  # noqa: 501
-                    base_path=self.temp_output
+                    base_path=self.temp_output,
+                    graph_name=name
                 )
                 nodes, relationships = builder.build(directory_info, call_graph)
 

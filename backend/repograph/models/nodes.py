@@ -116,7 +116,9 @@ class Repository(Node):
             name: str,
             metadata: JSONDict,
             is_root_package: bool,
-            software_type: Optional[SoftwareType]
+            software_type: Optional[SoftwareType],
+            graph_name: str,
+            repository_name: str
     ) -> 'Repository':
         """Create from metadata JSON.
 
@@ -134,11 +136,14 @@ class Repository(Node):
         metadata.pop("topics", None)
         metadata.pop("organization", None)
         metadata.pop("name", None)
+        metadata.pop("id", None)
 
         return Repository(
             name=name,
             is_root_package=is_root_package,
             type=software_type,
+            graph_name=graph_name,
+            repository_name=repository_name,
             **metadata
         )
 
@@ -166,16 +171,23 @@ class Directory(Node):
     path: str
     parent_path: str
 
-    def __init__(self, graph_name: str, path=None):
+    def __init__(self, graph_name: str, repository_name: str, path=None):
         """Create directory
 
         Args:
             graph_name: str
+            repository_name: str
             path (_type_): Path of directory
         """
         name = get_path_name(path)
         parent = get_path_parent(path)
-        super().__init__(path=path, name=name, parent_path=parent, graph_name=graph_name)
+        super().__init__(
+            path=path,
+            name=name,
+            parent_path=parent,
+            graph_name=graph_name,
+            repository_name=repository_name
+        )
 
 
 class Package(Node):
@@ -198,13 +210,20 @@ class Package(Node):
     external: bool
 
     @classmethod
-    def create_from_directory(cls, path: str, canonical_name: str, graph_name: str) -> "Package":
+    def create_from_directory(
+            cls,
+            path: str,
+            canonical_name: str,
+            graph_name: str,
+            repository_name: str,
+    ) -> "Package":
         """Creates a Package instance from a directory.
 
         Args:
             path (str): The dependency name.
             canonical_name (str): The canonical name of the package.
             graph_name (str): The name of the associated graph.
+            repository_name (str): The name of the associated repository.
 
         Returns:
             Package: A Package instance.
@@ -215,17 +234,24 @@ class Package(Node):
             canonical_name,
             parent,
             graph_name,
+            repository_name,
             path=path,
             parent_path=get_path_parent(path),
         )
 
     @classmethod
-    def create_from_external_dependency(cls, package: str, graph_name: str) -> "Package":
+    def create_from_external_dependency(
+        cls,
+        package: str,
+        graph_name: str,
+        repository_name: str,
+    ) -> "Package":
         """Creates a Package instance from an external dependency.
 
         Args:
             package (str): The dependency name.
             graph_name (str): The name of the associated graph.
+            repository_name (str): The name of the associated repository.
 
         Returns:
             Package: A Package instance.
@@ -236,6 +262,7 @@ class Package(Node):
             package,
             parent,
             graph_name,
+            repository_name,
             external=True
         )
 
@@ -245,6 +272,7 @@ class Package(Node):
         canonical_name: str,
         parent_package: str,
         graph_name: str,
+        repository_name: str,
         path: Optional[str] = None,
         parent_path: Optional[str] = None,
         external: bool = False,
@@ -257,6 +285,7 @@ class Package(Node):
             canonical_name (str): The full canonical name (including all parents) of the package.
             parent_package (str): The canonical name of the package.
             graph_name (str): The name of the graph.
+            repository_name (str): The name of the repository.
             path (Optional[str], optional): The path of the package. Defaults to None.
             parent_path (Optional[str], optional): The path of the parent package. Defaults to None.
             external (bool, optional): Whether the package is an external dependency of
@@ -271,7 +300,8 @@ class Package(Node):
             path=path,
             parent_path=parent_path,
             external=external,
-            graph_name=graph_name
+            graph_name=graph_name,
+            repository_name=repository_name
         )
 
 
@@ -313,16 +343,23 @@ class Module(Node):
             parent_path=self.parent_path,
             extension=self.extension,
             is_test=self.is_test,
-            graph_name=self.graphName
+            graph_name=self.graph_name,
+            repository_name=self.repository_name,
         )
 
     @classmethod
-    def create_init_module(cls, parent_canonical_name: str, graph_name: str) -> "Module":
+    def create_init_module(
+        cls,
+        parent_canonical_name: str,
+        graph_name: str,
+        repository_name: str
+    ) -> "Module":
         """Create an __init__ module for a Package.
 
         Args:
             parent_canonical_name (str): The canonical name of the parent Package.
             graph_name (str): The name of the associated graph.
+            repository_name (str): The name of the associated repository.
 
         Returns:
             Module: __init__
@@ -330,7 +367,8 @@ class Module(Node):
         return Module(
             name="__init__",
             canonical_name=f"{parent_canonical_name}.__init__",
-            graph_name=graph_name
+            graph_name=graph_name,
+            repository_name=repository_name,
         )
 
 
