@@ -16,7 +16,7 @@ const IssueCard: React.FC<StatsCardProps> = ({ title, value }) => {
           <NumericalValue tw="mt-2">{value}</NumericalValue>
           <IconWrapper
             size="lg"
-            color="green"
+            color="detail"
             icon={<ShieldCheckIcon />}
             additional={tw`absolute top-4 right-4`}
           />
@@ -31,7 +31,7 @@ const IssueCard: React.FC<StatsCardProps> = ({ title, value }) => {
           <NumericalValue tw="mt-2">{value}</NumericalValue>
           <IconWrapper
             size="lg"
-            color="red"
+            color="detail"
             icon={<ShieldExclamationIcon />}
             additional={tw`absolute top-4 right-4`}
           />
