@@ -11,6 +11,9 @@ from py2neo import Graph, NodeMatch, Transaction, Node as py2neoNode
 # Models
 from repograph.models.base import BaseSubgraph, Node
 
+# Util imports
+from repograph.utils.neo4j import create_indices
+
 # Configure logging
 log = getLogger('repograph.entities.graph.repository')
 
@@ -27,8 +30,13 @@ class GraphRepository:
         Args:
             graph (Graph): Neo4j database connection.
         """
-        print(graph)
         self._graph = graph
+
+        # Create indices
+        create_indices(self._graph)
+
+    def get_transaction(self) -> Transaction:
+        return self._graph.begin()
 
     def add(self, *args: BaseSubgraph, tx: Transaction = None) -> None:
         """Add nodes/relationships to the graph.

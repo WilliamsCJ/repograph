@@ -30,6 +30,7 @@ p.add_argument('--username', required=True, help='The username to supply to the 
 p.add_argument('--password', required=True, help='The password to supply to the Neo4J server.')
 p.add_argument('--database', required=False, default='neo4j', help="The database name to use.")
 p.add_argument('--input', required=True, action='append', help='The directory_info.json file.')
+p.add_argument('--name', required=True, help='The name of the graph.')
 p.add_argument(
     '--prune',
     required=False,
@@ -57,6 +58,7 @@ p.add_argument(
 @inject
 def main(
     input_list: List[str],
+    name: str,
     build: BuildService = Provide[ApplicationContainer.build.container.service],
     prune: bool = False
 ) -> None:
@@ -69,13 +71,14 @@ def main(
 
     Args:
         input_list (List[str]): The list of input paths for the build service.
+        name (str): The graph name
         build (BuildService): The injected Build Service.
         prune (bool): Whether to call build.build with the prune flag.
 
     Returns:
         None
     """
-    build.build(input_list, prune=prune)
+    build.build(input_list, name, prune=prune)
 
 
 if __name__ == "__main__":
@@ -85,4 +88,4 @@ if __name__ == "__main__":
     container.config.from_dict(vars(args))
     container.wire(modules=[__name__])
 
-    main(args.input, prune=args.prune)
+    main(args.input, args.name, prune=args.prune)

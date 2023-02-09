@@ -23,6 +23,8 @@ class BaseSubgraph(BaseModel):
     """
     _subgraph: py2neo.Subgraph = PrivateAttr()
     id: Optional[int]
+    graph_name: str
+    repository_name: str
 
     class Config:
         arbitrary_types_allowed = True
@@ -30,6 +32,8 @@ class BaseSubgraph(BaseModel):
     def __init__(
         self,
         subgraph: Union[py2neo.Node, py2neo.Relationship],
+        graph_name: str,
+        repository_name: str,
         identity: Optional[int] = None,
         **data: Any
     ) -> None:
@@ -37,9 +41,18 @@ class BaseSubgraph(BaseModel):
 
         Args:
             subgraph (py2neo.Subgraph): Subgraph - either Node or Relationship.
+            graph_name (str): The name of the graph.
+            repository_name (str): The name of the repository this node is connected to.
+            identity (int, optional): Optional entity ID.
         """
         self._subgraph = subgraph
-        super().__init__(id=identity, **data)
+
+        super().__init__(
+            id=identity,
+            graph_name=graph_name,
+            repository_name=repository_name,
+            **data
+        )
 
 
 class Node(BaseSubgraph):
@@ -48,7 +61,13 @@ class Node(BaseSubgraph):
     All Node types inherit from this class.
     """
 
-    def __init__(self, identity: Optional[int] = None, **data: Any) -> None:
+    def __init__(
+        self,
+        graph_name: str = None,
+        repository_name: str = None,
+        identity: Optional[int] = None,
+        **data: Any
+    ) -> None:
         """Constructor
 
         Args:
@@ -61,7 +80,14 @@ class Node(BaseSubgraph):
         Class name used as Py2neo Node label.
         """
         super().__init__(
-            py2neo.Node(self.__class__.__name__, **data),
+            py2neo.Node(
+                self.__class__.__name__,
+                graph_name=graph_name,
+                repository_name=repository_name,
+                **data
+            ),
+            graph_name,
+            repository_name,
             identity=identity,
             **data
         )
@@ -103,7 +129,14 @@ class Relationship(BaseSubgraph):
 
     _allowed_types: Optional[Dict[Node, Set[Node]]] = None
 
-    def __init__(self, parent: Node, child: Node, **data: Any) -> None:
+    def __init__(
+            self,
+            parent: Node,
+            child: Node,
+            graph_name: str,
+            repository_name: str,
+            **data: Any
+    ) -> None:
         """Constructor
 
         Args:
@@ -118,7 +151,17 @@ class Relationship(BaseSubgraph):
             raise InvalidRelationshipException(parent, child, self)
 
         super().__init__(
-            py2neo.Relationship(parent._subgraph, self.__class__.__name__, child._subgraph, **data),
-            parent=parent, child=child,
+            py2neo.Relationship(
+                parent._subgraph,
+                self.__class__.__name__,
+                child._subgraph,
+                graph_name=graph_name,
+                repository_name=repository_name,
+                **data
+            ),
+            graph_name,
+            repository_name,
+            parent=parent,
+            child=child,
             **data
         )
