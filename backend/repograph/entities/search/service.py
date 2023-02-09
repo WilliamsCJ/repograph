@@ -57,8 +57,11 @@ class SearchService:
         """
         query_embedding = self.model.encode(query)
         summarizations_map = self.graph.get_function_summarizations()
-        summarizations = list(summarizations_map.keys())
-        summarization_embeddings = self.model.encode(summarizations)
+        summarizations_extended = list(
+            [f"{v.canonical_name} k" for k, v in summarizations_map.items()]
+        )
+        summarizations = summarizations_map.keys()
+        summarization_embeddings = self.model.encode(summarizations_extended)
 
         scores = util.dot_score(query_embedding, summarization_embeddings)[0].cpu().tolist()
         score_pairs = list(zip(summarizations, scores))
