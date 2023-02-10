@@ -20,7 +20,7 @@ from repograph.models.search import SemanticSearchResult, SemanticSearchResultSe
 from repograph.entities.graph.service import GraphService
 
 # Utils imports
-
+from repograph.entities.search.utils import remove_stop_words
 
 # Setup logging
 log = getLogger('repograph.entities.search.service')
@@ -55,6 +55,7 @@ class SearchService:
         Return:
             SemanticSearchResultSet
         """
+        query = remove_stop_words(query)
         query_embedding = self.model.encode(query)
         summarizations_map = self.graph.get_function_summarizations()
         summarizations_extended = list(
