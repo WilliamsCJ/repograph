@@ -26,6 +26,7 @@ repos:
             nose,
             fastapi,
             dependency-injector,
+            nltk
           ]
         stages: [commit]
       - id: reindent

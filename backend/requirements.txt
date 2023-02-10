@@ -7,3 +7,4 @@ inspect4py
 dependency-injector
 uvicorn
 sentence-transformers
+nltk
