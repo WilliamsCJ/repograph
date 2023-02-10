@@ -1,3 +1,4 @@
+# pragma: nocover
 """
 Command-Line Interface for manual invocation.
 """

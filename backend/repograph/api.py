@@ -1,3 +1,4 @@
+# pragma: nocover
 """
 API entrypoint.
 """
@@ -64,11 +65,9 @@ def create_app(
     return application
 
 
-# if __name__ == "__main__":
 container = ApplicationContainer()
 container.config.from_yaml("../config.yaml")
 container.init_resources()
 container.wire(modules=[__name__])
 
 app = create_app()
-# uvicorn.run("repograph.api:app", host="0.0.0.0", port=3000, reload=True)

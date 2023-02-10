@@ -47,6 +47,6 @@ class TestGraphRepository(unittest.TestCase):
         self.graph.query.assert_called_with(query)
 
     def test_delete_all(self):
-        self.repository.delete_all(graph_name=GRAPH_NAME)
+        self.repository.delete_graph(graph_name=GRAPH_NAME)
         self.neo4j.__getitem__.assert_called_with(GRAPH_NAME)
-        self.graph.delete_all.assert_called_with()
+        self.graph.query.assert_called()

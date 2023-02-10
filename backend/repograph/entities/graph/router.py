@@ -40,7 +40,7 @@ class GraphRouter:
         )
 
     async def summary(self, graph: str):
-        return self.service.get_summary()
+        return self.service.get_summary(graph)
 
     async def call_graph_by_id(self, graph: str, node_id: int) -> CallGraph:
-        return self.service.get_call_graph_by_id(node_id)
+        return self.service.get_call_graph_by_id(node_id, graph)

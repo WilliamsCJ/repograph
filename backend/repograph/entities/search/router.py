@@ -39,5 +39,5 @@ class SearchRouter:
             limit: int = 0
     ) -> SemanticSearchResultSet:
         """Semantic search endpoint."""
-        results = self.service.find_similar_functions_by_query(query, offset, limit)
+        results = self.service.find_similar_functions_by_query(graph, query, offset, limit)
         return results

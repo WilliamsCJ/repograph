@@ -126,7 +126,7 @@ class GraphRepository:
         cursor = self._graph_service[graph_name].query(query)
         return cursor.data()
 
-    def delete_all(self, graph_name: str = None) -> None:
+    def delete_graph(self, graph_name: str) -> None:
         """Deletes all nodes from the graph.
 
         Args:
@@ -135,4 +135,6 @@ class GraphRepository:
         Returns:
             None
         """
-        self._graph_service[graph_name].delete_all()
+        self._graph_service[graph_name].query(
+            f"""DROP DATABASE {graph_name}"""
+        )

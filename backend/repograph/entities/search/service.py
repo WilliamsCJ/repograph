@@ -41,6 +41,7 @@ class SearchService:
 
     def find_similar_functions_by_query(
         self,
+        graph: str,
         query: str,
         offset: int,
         limit: int,
@@ -48,6 +49,7 @@ class SearchService:
         """Finds similar functions using semantic search of function summarizations.
 
         Args:
+            graph (str): The graph name.
             query (str): The semantic query.
             offset (int): Where to start when slicing the total set of results. For pagination.
             limit (int): The maximum number of results to return in the result set. For pagination.
@@ -57,7 +59,7 @@ class SearchService:
         """
         query = remove_stop_words(query)
         query_embedding = self.model.encode(query)
-        summarizations_map = self.graph.get_function_summarizations()
+        summarizations_map = self.graph.get_function_summarizations(graph)
         summarizations_extended = list(
             [f"{v.canonical_name} k" for k, v in summarizations_map.items()]
         )
