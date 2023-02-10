@@ -131,11 +131,11 @@ class BuildService:
         success = 0
 
         if prune:
-            log.info("Pruning existing nodes...")
-            self.graph.prune()
+            log.info("Pruning existing graph...")
+            self.graph.prune(name)
 
         for i in input_list:
-            with self.graph.get_transaction() as tx:
+            with self.graph.get_transaction(name) as tx:
                 try:
                     self.call_inspect4py(i, self.temp_output)
                     directory_info, call_graph = self.parse_inspect4py_output(self.temp_output)

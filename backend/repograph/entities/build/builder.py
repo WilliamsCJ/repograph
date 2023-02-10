@@ -148,7 +148,7 @@ class RepographBuilder:
 
         self.repository_name = repository.name
 
-        self.graph.add(repository, tx=self.tx)
+        self.graph.add(repository, tx=self.tx, graph_name=self.graph_name)
         self.directories[repository.name] = repository
 
         # Parse each extracted module
@@ -162,8 +162,8 @@ class RepographBuilder:
 
             # Create a relationship between the Repository and the Module
             relationship = Contains(repository, module, self.graph_name, self.repository_name)
-            self.graph.add(module, tx=self.tx)
-            self.graph.add(relationship, tx=self.tx)
+            self.graph.add(module, tx=self.tx, graph_name=self.graph_name)
+            self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
             # Finally add the module to the list of stored modules
             self.modules[module.canonical_name] = module
@@ -197,8 +197,8 @@ class RepographBuilder:
                     self.repository_name,
                     version=version,
                 )
-                self.graph.add(package, tx=self.tx)
-                self.graph.add(relationship, tx=self.tx)
+                self.graph.add(package, tx=self.tx, graph_name=self.graph_name)
+                self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
                 self.requirements[requirement] = package
 
     def _parse_license(self, licenses: Optional[JSONDict], repository: Repository) -> None:
@@ -234,8 +234,8 @@ class RepographBuilder:
                         self.graph_name,
                         self.repository_name
                     )
-                    self.graph.add(license_node, tx=self.tx)
-                    self.graph.add(relationship, tx=self.tx)
+                    self.graph.add(license_node, tx=self.tx, graph_name=self.graph_name)
+                    self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
     def _parse_readme(self, info: JSONDict):
         """Parse README files in the repository
@@ -271,8 +271,8 @@ class RepographBuilder:
             else:
                 log.error("Couldn't find parent for README at path: %s", path)
 
-        self.graph.add(*readmes, tx=self.tx)
-        self.graph.add(*relationships, tx=self.tx)
+        self.graph.add(*readmes, tx=self.tx, graph_name=self.graph_name)
+        self.graph.add(*relationships, tx=self.tx, graph_name=self.graph_name)
 
     def _get_parent_directory(self, parent_path: str) -> Directory:
         """Retrieves the parent directory for supplied path.
@@ -300,14 +300,14 @@ class RepographBuilder:
             if not parent:
                 parent = Directory(self.graph_name, self.repository_name, child.parent_path)
                 relationship = Contains(parent, child, self.graph_name, self.repository_name)
-                self.graph.add(parent, tx=self.tx)
-                self.graph.add(relationship, tx=self.tx)
+                self.graph.add(parent, tx=self.tx, graph_name=self.graph_name)
+                self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
                 self.directories[parent.path] = parent
                 return add_parents_recursively(parent)
             else:
                 parent_relationship = Contains(parent, child, self.graph_name, self.repository_name)
-                self.graph.add(child, tx=self.tx)
-                self.graph.add(parent_relationship, tx=self.tx)
+                self.graph.add(child, tx=self.tx, graph_name=self.graph_name)
+                self.graph.add(parent_relationship, tx=self.tx, graph_name=self.graph_name)
                 return
 
         # Attempt to get the parent directory from the list of created directories.
@@ -317,7 +317,7 @@ class RepographBuilder:
 
         # If it doesn't exist create a new Directory and then call the recursive function.
         new_parent = Directory(self.graph_name, self.repository_name, parent_path)
-        self.graph.add(new_parent, tx=self.tx)
+        self.graph.add(new_parent, tx=self.tx, graph_name=self.graph_name)
         self.directories[new_parent.path] = new_parent
         add_parents_recursively(new_parent)
 
@@ -389,8 +389,8 @@ class RepographBuilder:
         # and the relationship to its parent, to the Repograph.
         self.directories[directory.path] = directory
         relationship = Contains(parent, directory, self.graph_name, self.repository_name)
-        self.graph.add(parent, tx=self.tx)
-        self.graph.add(relationship, tx=self.tx)
+        self.graph.add(parent, tx=self.tx, graph_name=self.graph_name)
+        self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
         # Parse each extracted module
         for module, file_info in modules:
@@ -404,8 +404,8 @@ class RepographBuilder:
 
             # Create a relationship between the Directory and the Module.
             relationship = Contains(directory, module, self.graph_name, self.repository_name)
-            self.graph.add(module, tx=self.tx)
-            self.graph.add(relationship, tx=self.tx)
+            self.graph.add(module, tx=self.tx, graph_name=self.graph_name)
+            self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
             # Finally add the module to the list of stored modules.
             self.modules[module.path] = module
@@ -536,7 +536,7 @@ class RepographBuilder:
             )
 
             # Add to graph
-            self.graph.add(function, tx=self.tx)
+            self.graph.add(function, tx=self.tx, graph_name=self.graph_name)
 
             # Parse the docstring for the function
             self._parse_docstring(info.get("doc", {}), function)
@@ -546,7 +546,7 @@ class RepographBuilder:
                 relationship = HasMethod(parent, function, self.graph_name, self.repository_name)
             else:
                 relationship = HasFunction(parent, function, self.graph_name, self.repository_name)
-            self.graph.add(relationship, tx=self.tx)
+            self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
             # If parent is a module, add to the module_objects set
             if isinstance(parent, Module):
@@ -585,8 +585,8 @@ class RepographBuilder:
                 repository_name=self.repository_name
             )
             relationship = Contains(parent, class_node, self.graph_name, self.repository_name)
-            self.graph.add(class_node, tx=self.tx)
-            self.graph.add(relationship, tx=self.tx)
+            self.graph.add(class_node, tx=self.tx, graph_name=self.graph_name)
+            self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
             # Add to module objects set
             self.module_objects[parent] = self.module_objects.get(parent, []) + [class_node]
@@ -629,8 +629,8 @@ class RepographBuilder:
                 repository_name=self.repository_name
             )
             relationship = HasArgument(parent, argument, self.graph_name, self.repository_name)
-            self.graph.add(argument, tx=self.tx)
-            self.graph.add(relationship, tx=self.tx)
+            self.graph.add(argument, tx=self.tx, graph_name=self.graph_name)
+            self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
     def _parse_return_values(
         self,
@@ -670,8 +670,8 @@ class RepographBuilder:
                         self.graph_name,
                         self.repository_name
                     )
-                    self.graph.add(return_value, tx=self.tx)
-                    self.graph.add(relationship, tx=self.tx)
+                    self.graph.add(return_value, tx=self.tx, graph_name=self.graph_name)
+                    self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
                 else:
                     log.error(
                         "Unexpected return value type `%s` for function `%s`",
@@ -790,8 +790,8 @@ class RepographBuilder:
                 relationships.append(relationship)
 
         # Add nodes and relationships to graph
-        self.graph.add(*nodes, tx=self.tx)
-        self.graph.add(*relationships, tx=self.tx)
+        self.graph.add(*nodes, tx=self.tx, graph_name=self.graph_name)
+        self.graph.add(*relationships, tx=self.tx, graph_name=self.graph_name)
 
     def _parse_dependencies(self) -> None:  # noqa: C901
         """Parse the dependencies between Modules.
@@ -833,7 +833,7 @@ class RepographBuilder:
                 if imports_module:
                     # ...and it already exists create the relationship
                     if imported_module:
-                        self.graph.add(ImportedBy(imported_module, module, self.graph_name), tx=self.tx)  # noqa: 501
+                        self.graph.add(ImportedBy(imported_module, module, self.graph_name), tx=self.tx, graph_name=self.graph_name)  # noqa: 501
                         self.module_dependencies[module].append(imported_module)
                     # ...and if it doesn't recursively create it
                     else:
@@ -1048,8 +1048,8 @@ class RepographBuilder:
             child = import_object
 
         # Add the created nodes and relationships to the Repograph.
-        self.graph.add(*nodes, tx=self.tx)
-        self.graph.add(*relationships, tx=self.tx)
+        self.graph.add(*nodes, tx=self.tx, graph_name=self.graph_name)
+        self.graph.add(*relationships, tx=self.tx, graph_name=self.graph_name)
 
         return child
 
@@ -1118,7 +1118,11 @@ class RepographBuilder:
                     )
 
         # Add called builtin functions to the graph
-        self.graph.add(*self.called_builtin_functions.values(), tx=self.tx)
+        self.graph.add(
+            *self.called_builtin_functions.values(),
+            tx=self.tx,
+            graph_name=self.graph_name
+        )
 
     def _parse_calls(
             self,
@@ -1188,7 +1192,7 @@ class RepographBuilder:
                 log.debug("Call to some other variable (%s). Ignoring.", call)
                 relationship = None
 
-            self.graph.add(relationship, tx=self.tx)
+            self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
     def build(
             self,

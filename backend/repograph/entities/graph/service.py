@@ -208,4 +208,4 @@ class GraphService:
             graph_name (str): The name of the graph to delete.
 
         """
-        self.repository.delete_graph()
+        self.repository.delete_graph(graph_name)
