@@ -41,4 +41,6 @@ jobs:
         run: pip3 install -r requirements.txt -r tests/requirements.txt
       - name: Test with unittest
         run: |
-          python3 -m unittest
+          coverage run  --source=repograph -m unittest && coverage xml
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
