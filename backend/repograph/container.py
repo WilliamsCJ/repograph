@@ -4,7 +4,7 @@
 # pip imports
 from dependency_injector.containers import DeclarativeContainer
 from dependency_injector.providers import Container, Configuration, Resource
-from py2neo import Graph
+from py2neo import GraphService
 
 
 # Containers
@@ -22,11 +22,10 @@ class ApplicationContainer(DeclarativeContainer):
     config = Configuration()
 
     # Neo4j resource
-    neo4j: Resource[Graph] = Resource(
-        Graph,
+    neo4j: Resource[GraphService] = Resource(
+        GraphService,
         config.uri,
         auth=("neo4j", "s3cr3t"),
-        name=config.database
     )
 
     # Container for Graph entity

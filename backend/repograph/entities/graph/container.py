@@ -3,7 +3,7 @@
 # pip imports
 from dependency_injector.containers import DeclarativeContainer
 from dependency_injector.providers import Dependency, Singleton
-from py2neo import Graph
+from py2neo import GraphService as py2neoGraphService
 
 # Graph entity imports
 from repograph.entities.graph.repository import GraphRepository
@@ -12,7 +12,7 @@ from repograph.entities.graph.service import GraphService
 
 
 class GraphContainer(DeclarativeContainer):
-    neo4j: Dependency[Graph] = Dependency()
+    neo4j: Dependency[py2neoGraphService] = Dependency()
 
     repository: Singleton[GraphRepository] = Singleton(
         GraphRepository,
