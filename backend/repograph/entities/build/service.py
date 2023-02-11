@@ -115,14 +115,18 @@ class BuildService:
         self,
         input_list: List[str],
         name: str,
-        prune: bool = False
+        description: str,
+        prune: bool = False,
+        cleanup_inputs: bool = False,
     ) -> None:
         """Build a  graph using the input repositories.
 
         Args:
             input_list (List[str]): The list of paths to repositories to add the graph.
             name (str): The name to assign to the graph.
+            description (str): The description to associate with the graph.
             prune (bool): Whether to prune existing nodes from the graph.
+            cleanup_inputs (bool): Whether to delete the input directories in input_list.
 
         Returns:
             None
@@ -133,6 +137,8 @@ class BuildService:
         if prune:
             log.info("Pruning existing graph...")
             self.graph.prune(name)
+
+        self.graph.create_graph(name, description)
 
         for i in input_list:
             with self.graph.get_transaction(name) as tx:
@@ -163,6 +169,9 @@ class BuildService:
                     raise e
                 finally:
                     self.cleanup_inspect4py_output()
+                    if cleanup_inputs:
+                        shutil.rmtree(i, ignore_errors=True)
+
                     pass
 
         log.info(
