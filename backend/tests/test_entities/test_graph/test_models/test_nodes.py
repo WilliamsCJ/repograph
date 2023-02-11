@@ -2,7 +2,8 @@ import unittest
 
 import py2neo
 from parameterized import parameterized
-from repograph.models.nodes import Class, Docstring, Module, Directory, License, Package
+from repograph.entities.graph.models.nodes import Class, Docstring, Module, Directory, License, \
+                                                  Package
 
 REPOSITORY_NAME = "REPOSITORY"
 

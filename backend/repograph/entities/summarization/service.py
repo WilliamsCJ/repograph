@@ -13,7 +13,7 @@ from logging import getLogger
 from transformers import RobertaTokenizerFast, T5ForConditionalGeneration
 
 # Model imports
-from repograph.models.nodes import Function
+from repograph.entities.graph.models.nodes import Function
 
 # Utils imports
 from repograph.entities.summarization.utils import clean_source_code

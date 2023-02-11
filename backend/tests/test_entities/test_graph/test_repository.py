@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 
 from py2neo import GraphService, Graph
 
-from repograph.models.nodes import Function
+from repograph.entities.graph.models.nodes import Function
 from repograph.entities.graph.repository import GraphRepository
 
 

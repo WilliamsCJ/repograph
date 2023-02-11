@@ -13,12 +13,12 @@ from repograph.entities.build.exceptions import RepographBuildError
 from repograph.entities.graph.service import GraphService
 
 # Models imports
-from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
+from repograph.entities.graph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
                                    DocstringRaises, DocstringReturnValue, Directory, Module, \
                                    Function, License, Package, README, Repository, ReturnValue
-from repograph.models.relationships import Calls, Contains, Describes, Documents, HasArgument, \
-                                           HasFunction, HasMethod, ImportedBy, LicensedBy, \
-                                           Returns, Requires
+from repograph.entities.graph.models.relationships import Calls, Contains, Describes, Documents, \
+                                                          HasArgument, HasFunction, HasMethod, \
+                                                          ImportedBy, LicensedBy, Returns, Requires
 
 # Utility imports
 from repograph.utils.builtin import PYTHON_BUILT_IN_FUNCTIONS

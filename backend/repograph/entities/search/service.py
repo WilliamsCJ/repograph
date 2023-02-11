@@ -14,7 +14,7 @@ from typing import Optional
 from sentence_transformers import SentenceTransformer, util
 
 # Model imports
-from repograph.models.search import SemanticSearchResult, SemanticSearchResultSet
+from repograph.entities.search.models import SemanticSearchResult, SemanticSearchResultSet
 
 # Graph entity imports
 from repograph.entities.graph.service import GraphService

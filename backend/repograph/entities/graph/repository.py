@@ -9,7 +9,7 @@ from logging import getLogger
 from py2neo import GraphService, NodeMatch, Transaction, Node as py2neoNode
 
 # Models
-from repograph.models.base import BaseSubgraph, Node
+from repograph.entities.graph.models.base import BaseSubgraph, Node
 
 # Configure logging
 log = getLogger('repograph.entities.graph.repository')

@@ -9,9 +9,9 @@ from py2neo import Transaction
 from typing import Dict, List
 
 # Model imports
-from repograph.models.base import BaseSubgraph, Node, Relationship
-from repograph.models.nodes import Class, Function, Module, Package, Repository
-from repograph.models.graph import GraphSummary, CallGraph
+from repograph.entities.graph.models import BaseSubgraph, Node, Relationship
+from repograph.entities.graph.models.nodes import Class, Function, Module, Package, Repository
+from repograph.entities.graph.models import GraphSummary, CallGraph
 
 # Graph entity imports
 from repograph.entities.graph.repository import GraphRepository

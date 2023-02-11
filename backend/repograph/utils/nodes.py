@@ -2,7 +2,7 @@
 import logging
 from typing import List, Optional, Union
 
-from repograph.models.nodes import Module, Class, Function
+from repograph.entities.graph.models.nodes import Module, Class, Function
 
 log = logging.getLogger("repograph.utils.nodes")
 

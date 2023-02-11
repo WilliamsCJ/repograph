@@ -8,7 +8,7 @@ from typing import List
 from pydantic import BaseModel, Field, validator
 
 # Model imports
-from repograph.models.nodes import Function
+from repograph.entities.graph.models.nodes import Function
 
 
 class SemanticSearchResult(BaseModel):

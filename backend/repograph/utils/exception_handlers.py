@@ -5,9 +5,18 @@ to the router handlers.
 # pip imports
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
-# Model imports
-from repograph.models.errors import ErrorResponse
+
+class ErrorResponse(BaseModel):
+    """Generic error response.
+
+    Attributes:
+        status (str): Always "error"
+        message (str): Message describe error. Should match status code.
+    """
+    status: str = "ERROR"
+    message: str
 
 
 async def generic_exception_handler(_: Request, __: Exception):

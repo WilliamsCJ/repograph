@@ -11,7 +11,7 @@ from fastapi import APIRouter
 from repograph.entities.search.service import SearchService
 
 # Model imports
-from repograph.models.search import SemanticSearchResultSet
+from repograph.entities.search.models import SemanticSearchResultSet
 
 # Configure logging
 log = getLogger('repograph.entities.search.router')

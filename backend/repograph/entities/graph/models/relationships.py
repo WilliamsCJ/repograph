@@ -3,10 +3,12 @@ Relationships between Nodes.
 """
 from typing import Optional
 
-from repograph.models.base import Relationship
-from repograph.models.nodes import Argument, Body, Class, Docstring, DocstringArgument, \
-                                   DocstringRaises, DocstringReturnValue, Module, Directory, \
-                                   Function, README, Repository, ReturnValue, Package, License
+from repograph.entities.graph.models.base import Relationship
+from repograph.entities.graph.models.nodes import Argument, Body, Class, Docstring, \
+                                                  DocstringArgument, DocstringRaises, \
+                                                  DocstringReturnValue, Module, Directory, \
+                                                  Function, README, Repository, ReturnValue, \
+                                                  Package, License
 
 
 class Requires(Relationship):
