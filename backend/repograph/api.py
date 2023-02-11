@@ -1,4 +1,4 @@
-# pragma: nocover
+# pragma: no cover
 """
 API entrypoint.
 """

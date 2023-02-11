@@ -1,4 +1,4 @@
-# pragma: nocover
+# pragma: no cover
 """
 Container for search entity for dependency injection.
 """

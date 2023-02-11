@@ -37,6 +37,7 @@ class BuildRouter:
                 paths.append(paths)
                 repository.extractall(path=path)
 
+        print(name)
         background_tasks.add_task(self.service.build, paths, name, description, cleanup_inputs=True)
 
         return {"status": "pending"}

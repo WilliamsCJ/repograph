@@ -10,3 +10,4 @@ sentence-transformers
 nltk
 pyyaml
 python-multipart
+neo4j

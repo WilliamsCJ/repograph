@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from py2neo import GraphService, Graph
+from neo4j import Driver
 
 from repograph.entities.graph.models.nodes import Function
 from repograph.entities.graph.repository import GraphRepository
@@ -16,8 +17,9 @@ class TestGraphRepository(unittest.TestCase):
     def setUp(self):
         self.neo4j = MagicMock(autospec=GraphService)
         self.graph = MagicMock(autospec=Graph)
+        self.driver = MagicMock(autospec=Driver)
         self.neo4j.__getitem__.return_value = self.graph
-        self.repository = GraphRepository(self.neo4j)
+        self.repository = GraphRepository(self.neo4j, self.driver)
 
     def test_begin_transaction(self):
         self.repository.get_transaction(GRAPH_NAME)

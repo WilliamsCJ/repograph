@@ -1,6 +1,7 @@
 import sqlite3
 import unittest
 import datetime
+from unittest import mock
 from unittest.mock import MagicMock
 
 from repograph.entities.metadata.repository import MetadataRepository
@@ -12,12 +13,14 @@ class TestGraphRepository(unittest.TestCase):
     repository: MetadataRepository
 
     def setUp(self):
-        self.db = MagicMock(autospec=sqlite3.Connection)
-        self.repository = MetadataRepository(self.db)
+        self.repository = MetadataRepository("./test.db")
 
     def test_list_databases(self):
-        self.repository.list_databases()
-        self.db.execute.assert_called_with("SELECT * FROM graphs")
+        with mock.patch("sqlite3.connect") as connectMock:
+            connectionMock = MagicMock(auto_spec=sqlite3.Connection)
+            connectMock.return_value = connectionMock
+            self.repository.list_databases()
+            connectionMock.execute.assert_called_with("SELECT * FROM graphs")
 
     def test_add_database(self):
         graph = Graph(
@@ -27,8 +30,12 @@ class TestGraphRepository(unittest.TestCase):
             created=datetime.datetime.now()
         )
 
-        self.repository.add_database(graph)
-        self.db.execute.assert_called_with(
-            "INSERT INTO graphs VALUES (?, ?, ?, ?)",
-            (graph.neo4j_name, graph.name, graph.description, datetime_to_string(graph.created))
-        )
+        with mock.patch("sqlite3.connect") as connectMock:
+            connectionMock = MagicMock(auto_spec=sqlite3.Connection)
+            connectMock.return_value = connectionMock
+            self.repository.add_database(graph)
+
+            connectionMock.execute.assert_called_with(
+                "INSERT INTO graphs VALUES (?, ?, ?, ?)",
+                (graph.neo4j_name, graph.name, graph.description, datetime_to_string(graph.created))
+            )

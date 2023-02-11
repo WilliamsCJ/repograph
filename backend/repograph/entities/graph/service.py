@@ -52,6 +52,8 @@ class GraphService:
         self.repository.create_graph(graph.neo4j_name)
         self.metadata.register_graph(graph)
 
+        return graph
+
     @contextlib.contextmanager
     def get_transaction(self, graph_name):
         """Obtain a Neo4j transaction for a given graph.

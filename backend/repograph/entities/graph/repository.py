@@ -7,6 +7,7 @@ from logging import getLogger
 
 # pip imports
 from py2neo import GraphService, NodeMatch, Transaction, Node as py2neoNode
+from neo4j import Driver
 
 # Models
 from repograph.entities.graph.models.base import BaseSubgraph, Node
@@ -21,13 +22,15 @@ class GraphRepository:
     """
     _graph_service: GraphService
 
-    def __init__(self, graph: GraphService) -> None:
+    def __init__(self, graph: GraphService, driver: Driver) -> None:
         """Neo4JDatabase constructor.
 
         Args:
             graph (Graph): Neo4j database connection.
         """
         self._graph_service = graph
+        self._driver = driver
+        self._driver.verify_connectivity()
 
     def create_graph(self, graph_name: str):
         """Create a new Graph on the Neo4j server.
@@ -38,10 +41,7 @@ class GraphRepository:
         Returns:
 
         """
-        for g in self._graph_service:
-            print(g)
-
-        self._graph_service.system_graph.run(f"CREATE DATABASE {graph_name}")
+        self._driver.execute_query(f"CREATE DATABASE {graph_name}")
 
     def get_transaction(self, graph_name) -> Transaction:
         """Begin transaction for named graph

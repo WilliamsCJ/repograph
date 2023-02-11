@@ -1,4 +1,5 @@
-uri: neo4j://repograph-database:7687
+uri: bolt://repograph-database:7687
+driver_uri: bolt://repograph-database:7687
 username: neo4j
 password: s3cr3t
 database: neo4j

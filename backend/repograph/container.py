@@ -1,14 +1,12 @@
-# pragma: nocover
+# pragma: no cover
 """
 Application-level Container for dependency injection.
 """
-# Base imports
-from sqlite3 import connect, Connection
-
 # pip imports
 from dependency_injector.containers import DeclarativeContainer
 from dependency_injector.providers import Container, Configuration, Resource
 from py2neo import GraphService
+from neo4j import GraphDatabase, Driver
 
 
 # Containers
@@ -30,27 +28,27 @@ class ApplicationContainer(DeclarativeContainer):
     neo4j: Resource[GraphService] = Resource(
         GraphService,
         config.uri,
-        # auth=(config.username, config.password),
         auth=("neo4j", "s3cr3t")
     )
 
-    # SQLite3 resource
-    sqlite: Resource[Connection] = Resource(
-        connect,
-        config.metadata_db
+    # Manual Neo4j driver
+    driver: Resource[Driver] = Resource(
+        GraphDatabase.driver,
+        config.driver_uri,
+        auth=("neo4j", "s3cr3t")
     )
 
     # Container for Metadata entity
     metadata: Container[MetadataContainer] = Container(
         MetadataContainer,
         config=config,
-        sqlite=sqlite.provided
     )
 
     # Container for Graph entity
     graph: Container[GraphContainer] = Container(
         GraphContainer,
         neo4j=neo4j.provided,
+        driver=driver.provided,
         metadata=metadata.container.service
     )
 

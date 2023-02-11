@@ -1,7 +1,7 @@
 """
 Metadata repository.
 """
-from sqlite3 import Connection
+import sqlite3
 from typing import List
 
 # Metadata entity imports
@@ -12,16 +12,20 @@ from repograph.entities.metadata.utils import datetime_to_string, string_to_date
 class MetadataRepository:
     """
     SQLite3 Repository for storing Graph metadata.
-    """
-    db: Connection
 
-    def __init__(self, db: Connection):
+    NOTE: We create a new SQLite3 connection for each method,
+    as SQLite connections must be called from the same thread
+    they were created in.
+    """
+    db_path: str
+
+    def __init__(self, db_path: str):
         """
         Constructor
         """
-        # self.db = sqlite3.connect(db_path) // TODO: Do in container
-        self.db = db
-        self.db.execute("""
+        self.db_path = db_path
+        db = sqlite3.connect(db_path)
+        db.execute("""
             CREATE TABLE IF NOT EXISTS graphs
             (neo4j_name TEXT, name TEXT, description TEXT, created TEXT)
         """)
@@ -29,10 +33,11 @@ class MetadataRepository:
     def list_databases(self) -> List[Graph]:
         """List the metadata for all databases.
 
-        Returns:
+        Returns:§
             List[Graph]
         """
-        rows = self.db.execute("SELECT * FROM graphs")
+        db = sqlite3.connect(self.db_path)
+        rows = db.execute("SELECT * FROM graphs")
         return list(map(lambda row: Graph(
             neo4j_name=row[0],
             name=row[1],
@@ -49,7 +54,8 @@ class MetadataRepository:
         Returns:
             None
         """
-        rows = self.db.execute(
+        db = sqlite3.connect(self.db_path)
+        rows = db.execute(
             "INSERT INTO graphs VALUES (?, ?, ?, ?)",
             (graph.neo4j_name, graph.name, graph.description, datetime_to_string(graph.created))
         )

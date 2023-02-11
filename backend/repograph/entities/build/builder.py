@@ -293,6 +293,9 @@ class RepographBuilder:
             parent = self.directories.get(child.parent_path, None)
 
             if not parent:
+                # print(parent)
+                # print(child)
+                # print(self.repository_name)
                 parent = Directory(self.repository_name, child.parent_path)
                 relationship = Contains(parent, child, self.repository_name)
                 self.graph.add(parent, tx=self.tx, graph_name=self.graph_name)

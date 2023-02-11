@@ -134,14 +134,16 @@ class BuildService:
         failure = 0
         success = 0
 
-        if prune:
-            log.info("Pruning existing graph...")
-            self.graph.prune(name)
+        # if prune:
+        #     log.info("Pruning existing graph...")
+        #     self.graph.prune(name.lower())
 
-        self.graph.create_graph(name, description)
+        print(name)
+        graph = self.graph.create_graph(name, description)
+        print(graph)
 
         for i in input_list:
-            with self.graph.get_transaction(name) as tx:
+            with self.graph.get_transaction(graph.neo4j_name) as tx:
                 try:
                     self.call_inspect4py(i, self.temp_output)
                     directory_info, call_graph = self.parse_inspect4py_output(self.temp_output)
@@ -149,7 +151,7 @@ class BuildService:
                     builder = RepographBuilder(
                         self.summarization.summarize_function if self.summarization.active else None,  # noqa: 501
                         self.temp_output,
-                        name,
+                        graph.neo4j_name,
                         self.graph,
                         tx
                     )
