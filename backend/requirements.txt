@@ -8,3 +8,4 @@ dependency-injector
 uvicorn
 sentence-transformers
 nltk
+pyyaml

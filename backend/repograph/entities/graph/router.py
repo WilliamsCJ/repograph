@@ -5,7 +5,7 @@ Routing for build entity.
 from fastapi import APIRouter, status
 
 # Model imports
-from repograph.entities.graph.models import CallGraph
+from repograph.entities.graph.models.graph import CallGraph
 
 # Graph entity imports
 from repograph.entities.graph.service import GraphService

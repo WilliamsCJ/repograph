@@ -1,6 +1,7 @@
 **/.idea/
 **/*.log
 **/.neo4j
+**/.sqlite
 **/.VSCodeCounter
 **/tmp
 **/.DS_Store

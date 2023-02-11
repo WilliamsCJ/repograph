@@ -9,6 +9,7 @@ import logging
 from dependency_injector.wiring import inject, Provide
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from yaml import UnsafeLoader
 
 # Application Container
 from repograph.container import ApplicationContainer
@@ -66,8 +67,7 @@ def create_app(
 
 
 container = ApplicationContainer()
-container.config.from_yaml("../config.yaml")
-container.init_resources()
+container.config.from_yaml("../config.yaml", loader=UnsafeLoader)
 container.wire(modules=[__name__])
 
 app = create_app()
