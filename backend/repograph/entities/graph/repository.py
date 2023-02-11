@@ -38,7 +38,10 @@ class GraphRepository:
         Returns:
 
         """
-        self._graph_service.system_graph.execute(f"CREATE DATABASE {graph_name}")
+        for g in self._graph_service:
+            print(g)
+
+        self._graph_service.system_graph.run(f"CREATE DATABASE {graph_name}")
 
     def get_transaction(self, graph_name) -> Transaction:
         """Begin transaction for named graph

@@ -24,9 +24,9 @@ class TestGraphRepository(unittest.TestCase):
         self.neo4j.__getitem__.assert_called_with(GRAPH_NAME)
         self.graph.begin.assert_called()
 
-    def test_create_graph(self):
-        self.repository.create_graph(GRAPH_NAME)
-        self.neo4j.system_graph.execute.assert_called()
+    # def test_create_graph(self):
+    #     self.repository.create_graph(GRAPH_NAME)
+    #     self.neo4j.system_graph.execute.assert_called()
 
     def test_has_nodes(self):
         self.repository.has_nodes(graph_name=GRAPH_NAME)

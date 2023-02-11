@@ -6,6 +6,9 @@
 **/tmp
 **/.DS_Store
 
+**/requirements_*.txt
+!**/requirements_test.txt
+
 
 # Demo repositories
 demo/*

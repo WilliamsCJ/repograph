@@ -30,7 +30,8 @@ class ApplicationContainer(DeclarativeContainer):
     neo4j: Resource[GraphService] = Resource(
         GraphService,
         config.uri,
-        auth=(config.username, config.password),
+        # auth=(config.username, config.password),
+        auth=("neo4j", "s3cr3t")
     )
 
     # SQLite3 resource
