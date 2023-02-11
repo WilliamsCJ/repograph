@@ -15,6 +15,7 @@ from yaml import UnsafeLoader
 from repograph.container import ApplicationContainer
 
 # Entity imports
+from repograph.entities.build.router import BuildRouter
 from repograph.entities.graph.router import GraphRouter
 from repograph.entities.search.router import SearchRouter
 
@@ -29,12 +30,14 @@ log = logging.getLogger('repograph.api')
 
 @inject
 def create_app(
+    build_router: BuildRouter = Provide[ApplicationContainer.build.container.router],
     graph_router: GraphRouter = Provide[ApplicationContainer.graph.container.router],
     search_router: SearchRouter = Provide[ApplicationContainer.search.container.router]
 ) -> FastAPI:
     """Creates FastAPI application.
 
     Args:
+        build_router (BuildRouter): The build entity router.
         graph_router (GraphRouter): The graph entity router.
         search_router (SearchRouter): The search entity router.
 
@@ -50,6 +53,7 @@ def create_app(
     # Add sub-routers to base router
     application.include_router(graph_router.router)
     application.include_router(search_router.router)
+    application.include_router(build_router.router)
 
     # Configure CORS, https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
     application.add_middleware(
