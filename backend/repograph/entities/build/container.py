@@ -1,4 +1,6 @@
-""""
+# pragma: nocover
+"""
+Container for build entity for dependency injection.
 """
 # pip imports
 from dependency_injector.containers import DeclarativeContainer

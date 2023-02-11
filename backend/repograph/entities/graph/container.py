@@ -1,4 +1,6 @@
-""""
+# pragma: nocover
+"""
+Container for graph entity for dependency injection.
 """
 # pip imports
 from dependency_injector.containers import DeclarativeContainer
@@ -10,9 +12,14 @@ from repograph.entities.graph.repository import GraphRepository
 from repograph.entities.graph.router import GraphRouter
 from repograph.entities.graph.service import GraphService
 
+# Metadata entity imports
+from repograph.entities.metadata.service import MetadataService
+
 
 class GraphContainer(DeclarativeContainer):
     neo4j: Dependency[py2neoGraphService] = Dependency()
+
+    metadata: Dependency[MetadataService] = Dependency()
 
     repository: Singleton[GraphRepository] = Singleton(
         GraphRepository,
@@ -21,7 +28,8 @@ class GraphContainer(DeclarativeContainer):
 
     service: Singleton[GraphService] = Singleton(
         GraphService,
-        repository=repository
+        repository=repository,
+        metadata=metadata
     )
 
     router: Singleton[GraphRouter] = Singleton(

@@ -1,6 +1,10 @@
+# pragma: nocover
 """
+Application-level Container for dependency injection.
+"""
+# Base imports
+from sqlite3 import connect, Connection
 
-"""
 # pip imports
 from dependency_injector.containers import DeclarativeContainer
 from dependency_injector.providers import Container, Configuration, Resource
@@ -12,6 +16,7 @@ from repograph.entities.build.container import BuildContainer
 from repograph.entities.graph.container import GraphContainer
 from repograph.entities.search.container import SearchContainer
 from repograph.entities.summarization.container import SummarizationContainer
+from repograph.entities.metadata.container import MetadataContainer
 
 
 class ApplicationContainer(DeclarativeContainer):
@@ -28,10 +33,24 @@ class ApplicationContainer(DeclarativeContainer):
         auth=("neo4j", "s3cr3t"),
     )
 
+    # SQLite3 resource
+    sqlite: Resource[Connection] = Resource(
+        connect,
+        config.metadata_db
+    )
+
+    # Container for Metadata entity
+    metadata: Container[MetadataContainer] = Container(
+        MetadataContainer,
+        config=config,
+        sqlite=sqlite.provided
+    )
+
     # Container for Graph entity
     graph: Container[GraphContainer] = Container(
         GraphContainer,
         neo4j=neo4j.provided,
+        metadata=metadata.container.service
     )
 
     # Container for Summarization entity

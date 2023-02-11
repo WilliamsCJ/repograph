@@ -31,13 +31,15 @@ class GraphService:
     repository: GraphRepository
     metadata: MetadataService
 
-    def __init__(self, repository: GraphRepository):
+    def __init__(self, repository: GraphRepository, metadata: MetadataService):
         """Constructor
 
         Args:
             repository (GraphRepository): The Neo4j graph repository.
+            metadata (MetadataService): The metadata service.
         """
         self.repository = repository
+        self.metadata = metadata
 
     def create_graph(self, name: str, description: str):
         graph = Graph(
