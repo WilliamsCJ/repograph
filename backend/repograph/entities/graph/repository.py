@@ -29,6 +29,17 @@ class GraphRepository:
         """
         self._graph_service = graph
 
+    def create_graph(self, graph_name: str):
+        """Create a new Graph on the Neo4j server.
+
+        Args:
+            graph_name (str): The name of the graph database.
+
+        Returns:
+
+        """
+        self._graph_service.system_graph.execute(f"CREATE DATABASE {graph_name}")
+
     def get_transaction(self, graph_name) -> Transaction:
         """Begin transaction for named graph
 

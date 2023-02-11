@@ -2,6 +2,7 @@
 Graph entity application logic.
 """
 import contextlib
+import datetime
 # Base imports
 from logging import getLogger
 from py2neo import Transaction
@@ -15,6 +16,10 @@ from repograph.models.graph import GraphSummary, CallGraph
 # Graph entity imports
 from repograph.entities.graph.repository import GraphRepository
 
+# Metadata entity imports
+from repograph.entities.metadata.models import Graph
+from repograph.entities.metadata.service import MetadataService
+
 # Configure logging
 log = getLogger('repograph.entities.graph.service')
 
@@ -24,6 +29,7 @@ class GraphService:
     The GraphService class implements all application-logic related to the graph entity.
     """
     repository: GraphRepository
+    metadata: MetadataService
 
     def __init__(self, repository: GraphRepository):
         """Constructor
@@ -32,6 +38,17 @@ class GraphService:
             repository (GraphRepository): The Neo4j graph repository.
         """
         self.repository = repository
+
+    def create_graph(self, name: str, description: str):
+        graph = Graph(
+            neo4j_name=name.lower(),
+            name=name,
+            description=description,
+            created=datetime.datetime.now()
+        )
+
+        self.repository.create_graph(graph.neo4j_name)
+        self.metadata.register_graph(graph)
 
     @contextlib.contextmanager
     def get_transaction(self, graph_name):
