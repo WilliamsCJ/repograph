@@ -23,7 +23,6 @@ class BaseSubgraph(BaseModel):
     """
     _subgraph: py2neo.Subgraph = PrivateAttr()
     id: Optional[int]
-    graph_name: str
     repository_name: str
 
     class Config:
@@ -32,7 +31,6 @@ class BaseSubgraph(BaseModel):
     def __init__(
         self,
         subgraph: Union[py2neo.Node, py2neo.Relationship],
-        graph_name: str,
         repository_name: str,
         identity: Optional[int] = None,
         **data: Any
@@ -41,7 +39,6 @@ class BaseSubgraph(BaseModel):
 
         Args:
             subgraph (py2neo.Subgraph): Subgraph - either Node or Relationship.
-            graph_name (str): The name of the graph.
             repository_name (str): The name of the repository this node is connected to.
             identity (int, optional): Optional entity ID.
         """
@@ -49,7 +46,6 @@ class BaseSubgraph(BaseModel):
 
         super().__init__(
             id=identity,
-            graph_name=graph_name,
             repository_name=repository_name,
             **data
         )
@@ -63,7 +59,6 @@ class Node(BaseSubgraph):
 
     def __init__(
         self,
-        graph_name: str = None,
         repository_name: str = None,
         identity: Optional[int] = None,
         **data: Any
@@ -82,11 +77,9 @@ class Node(BaseSubgraph):
         super().__init__(
             py2neo.Node(
                 self.__class__.__name__,
-                graph_name=graph_name,
                 repository_name=repository_name,
                 **data
             ),
-            graph_name,
             repository_name,
             identity=identity,
             **data
@@ -133,7 +126,6 @@ class Relationship(BaseSubgraph):
             self,
             parent: Node,
             child: Node,
-            graph_name: str,
             repository_name: str,
             **data: Any
     ) -> None:
@@ -155,11 +147,9 @@ class Relationship(BaseSubgraph):
                 parent._subgraph,
                 self.__class__.__name__,
                 child._subgraph,
-                graph_name=graph_name,
                 repository_name=repository_name,
                 **data
             ),
-            graph_name,
             repository_name,
             parent=parent,
             child=child,

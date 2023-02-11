@@ -134,7 +134,6 @@ class RepographBuilder:
                 metadata,
                 is_package,
                 software_type,
-                self.graph_name,
                 path
             )
         else:
@@ -142,7 +141,6 @@ class RepographBuilder:
                 name=path,
                 is_root_package=is_package,
                 type=software_type,
-                graph_name=self.graph_name,
                 repository_name=path
             )
 
@@ -161,7 +159,7 @@ class RepographBuilder:
             self._parse_module_contents(module, file_info)
 
             # Create a relationship between the Repository and the Module
-            relationship = Contains(repository, module, self.graph_name, self.repository_name)
+            relationship = Contains(repository, module, self.repository_name)
             self.graph.add(module, tx=self.tx, graph_name=self.graph_name)
             self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
@@ -187,13 +185,11 @@ class RepographBuilder:
             for requirement, version in requirements.items():
                 package = Package.create_from_external_dependency(
                     requirement,
-                    self.graph_name,
                     self.repository_name
                 )
                 relationship = Requires(
                     repository,
                     package,
-                    self.graph_name,
                     self.repository_name,
                     version=version,
                 )
@@ -231,7 +227,6 @@ class RepographBuilder:
                     relationship = LicensedBy(
                         repository,
                         license_node,
-                        self.graph_name,
                         self.repository_name
                     )
                     self.graph.add(license_node, tx=self.tx, graph_name=self.graph_name)
@@ -266,7 +261,7 @@ class RepographBuilder:
             parent = self.directories.get(parent_path, None)
 
             if parent:
-                relationship = Contains(parent, readme, self.graph_name, self.repository_name)
+                relationship = Contains(parent, readme, self.repository_name)
                 relationships.append(relationship)
             else:
                 log.error("Couldn't find parent for README at path: %s", path)
@@ -298,14 +293,14 @@ class RepographBuilder:
             parent = self.directories.get(child.parent_path, None)
 
             if not parent:
-                parent = Directory(self.graph_name, self.repository_name, child.parent_path)
-                relationship = Contains(parent, child, self.graph_name, self.repository_name)
+                parent = Directory(self.repository_name, child.parent_path)
+                relationship = Contains(parent, child, self.repository_name)
                 self.graph.add(parent, tx=self.tx, graph_name=self.graph_name)
                 self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
                 self.directories[parent.path] = parent
                 return add_parents_recursively(parent)
             else:
-                parent_relationship = Contains(parent, child, self.graph_name, self.repository_name)
+                parent_relationship = Contains(parent, child, self.repository_name)
                 self.graph.add(child, tx=self.tx, graph_name=self.graph_name)
                 self.graph.add(parent_relationship, tx=self.tx, graph_name=self.graph_name)
                 return
@@ -316,7 +311,7 @@ class RepographBuilder:
             return existing_parent
 
         # If it doesn't exist create a new Directory and then call the recursive function.
-        new_parent = Directory(self.graph_name, self.repository_name, parent_path)
+        new_parent = Directory(self.repository_name, parent_path)
         self.graph.add(new_parent, tx=self.tx, graph_name=self.graph_name)
         self.directories[new_parent.path] = new_parent
         add_parents_recursively(new_parent)
@@ -379,16 +374,15 @@ class RepographBuilder:
             directory = Package.create_from_directory(
                 directory_path,
                 canonical_name,
-                self.graph_name,
                 self.repository_name
             )
         else:
-            directory = Directory(self.graph_name, self.repository_name, directory_path)
+            directory = Directory(self.repository_name, directory_path)
 
         # Add the list of created directories, the directory node,
         # and the relationship to its parent, to the Repograph.
         self.directories[directory.path] = directory
-        relationship = Contains(parent, directory, self.graph_name, self.repository_name)
+        relationship = Contains(parent, directory, self.repository_name)
         self.graph.add(parent, tx=self.tx, graph_name=self.graph_name)
         self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
@@ -403,7 +397,7 @@ class RepographBuilder:
             self._parse_module_contents(module, file_info)
 
             # Create a relationship between the Directory and the Module.
-            relationship = Contains(directory, module, self.graph_name, self.repository_name)
+            relationship = Contains(directory, module, self.repository_name)
             self.graph.add(module, tx=self.tx, graph_name=self.graph_name)
             self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
@@ -456,7 +450,6 @@ class RepographBuilder:
             parent_path=get_path_parent(file_info["file"]["path"]),
             extension=file_info["file"]["extension"],
             is_test=file_info.get("is_test", False),
-            graph_name=self.graph_name,
             repository_name=self.repository_name
         )
 
@@ -531,7 +524,6 @@ class RepographBuilder:
                 ast=ast_string,
                 min_line_number=min_lineno,
                 max_line_number=max_lineno,
-                graph_name=self.graph_name,
                 repository_name=self.repository_name
             )
 
@@ -543,9 +535,9 @@ class RepographBuilder:
 
             # Create HasFunction Relationship
             if methods:
-                relationship = HasMethod(parent, function, self.graph_name, self.repository_name)
+                relationship = HasMethod(parent, function, self.repository_name)
             else:
-                relationship = HasFunction(parent, function, self.graph_name, self.repository_name)
+                relationship = HasFunction(parent, function, self.repository_name)
             self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
             # If parent is a module, add to the module_objects set
@@ -581,10 +573,9 @@ class RepographBuilder:
                 canonical_name=f"{parent.canonical_name}.{name}",
                 min_line_number=min_lineno,
                 max_line_number=max_lineno,
-                graph_name=self.graph_name,
                 repository_name=self.repository_name
             )
-            relationship = Contains(parent, class_node, self.graph_name, self.repository_name)
+            relationship = Contains(parent, class_node, self.repository_name)
             self.graph.add(class_node, tx=self.tx, graph_name=self.graph_name)
             self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
@@ -625,10 +616,9 @@ class RepographBuilder:
             argument = Argument(
                 name=arg,
                 type=arg_type,
-                graph_name=self.graph_name,
                 repository_name=self.repository_name
             )
-            relationship = HasArgument(parent, argument, self.graph_name, self.repository_name)
+            relationship = HasArgument(parent, argument, self.repository_name)
             self.graph.add(argument, tx=self.tx, graph_name=self.graph_name)
             self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
@@ -647,7 +637,6 @@ class RepographBuilder:
         """
         if len(return_values) > 1:
             return_type = "Any"
-            # TODO: SH-16 Regex extraction?
         elif len(return_values) == 1:
             return_type = annotated_type
         else:
@@ -661,13 +650,11 @@ class RepographBuilder:
                     return_value = ReturnValue(
                         name=value,
                         type=return_type,
-                        graph_name=self.graph_name,
                         repository_name=self.repository_name
                     )
                     relationship = Returns(
                         parent,
                         return_value,
-                        self.graph_name,
                         self.repository_name
                     )
                     self.graph.add(return_value, tx=self.tx, graph_name=self.graph_name)
@@ -724,10 +711,9 @@ class RepographBuilder:
             summarization=summary,
             short_description=docstring_info.get("short_description", None),
             long_description=docstring_info.get("long_description", None),
-            graph_name=self.graph_name,
             repository_name=self.repository_name
         )
-        relationship = Documents(docstring, parent, self.graph_name, self.repository_name)
+        relationship = Documents(docstring, parent, self.repository_name)
         nodes.append(docstring)
         relationships.append(relationship)
 
@@ -740,13 +726,11 @@ class RepographBuilder:
                     description=arg_info.get("description", None),
                     is_optional=arg_info.get("is_optional", False),
                     default=arg_info.get("default", None),
-                    graph_name=self.graph_name,
                     repository_name=self.repository_name
                 )
                 relationship = Describes(
                     docstring,
                     docstring_arg,
-                    self.graph_name,
                     self.repository_name
                 )
                 nodes.append(docstring_arg)
@@ -760,13 +744,11 @@ class RepographBuilder:
                     description=returns_info.get("description", None),
                     type=returns_info.get("type_name", None),
                     is_generator=returns_info.get("is_generator", False),
-                    graph_name=self.graph_name,
                     repository_name=self.repository_name
                 )
                 relationship = Describes(
                     docstring,
                     docstring_return_value,
-                    self.graph_name,
                     self.repository_name
                 )
                 nodes.append(docstring_return_value)
@@ -777,13 +759,11 @@ class RepographBuilder:
                 docstring_raises = DocstringRaises(
                     description=raises.get("description", None),
                     type=raises.get("type_name", None),
-                    graph_name=self.graph_name,
                     repository_name=self.repository_name
                 )
                 relationship = Describes(
                     docstring,
                     docstring_raises,
-                    self.graph_name,
                     self.repository_name
                 )
                 nodes.append(docstring_raises)
@@ -884,7 +864,6 @@ class RepographBuilder:
                             self.graph.add(ImportedBy(
                                 match,
                                 module,
-                                self.graph_name,
                                 self.repository_name
                             ), tx=self.tx)
                             self.module_dependencies[module].append(match)
@@ -894,7 +873,6 @@ class RepographBuilder:
                             imported_object = Class(
                                 name=imported_object,
                                 canonical_name=f"{dependency['from_module']}.{dependency['import']}",  # noqa: 501
-                                graph_name=self.graph_name,
                                 repository_name=self.repository_name
                             )
                         else:
@@ -902,7 +880,6 @@ class RepographBuilder:
                                 name=imported_object,
                                 canonical_name=f"{dependency['from_module']}.{dependency['import']}",  # noqa: 501
                                 type=str(Function.FunctionType.FUNCTION.value),
-                                graph_name=self.graph_name,
                                 repository_name=self.repository_name
                             )
 
@@ -926,7 +903,6 @@ class RepographBuilder:
                         self.graph.add(ImportedBy(
                             imported_object,
                             module,
-                            self.graph_name,
                             self.repository_name
                         ), tx=self.tx)
                         self.module_dependencies[module].append(imported_object)
@@ -949,7 +925,6 @@ class RepographBuilder:
                 self.graph.add(ImportedBy(
                     match,
                     module,
-                    self.graph_name,
                     self.repository_name
                 ), tx=self.tx)
                 self.module_dependencies[module].append(match)
@@ -1001,7 +976,6 @@ class RepographBuilder:
             if index == len(missing) - 1:
                 new = Module(
                     name=m,
-                    graph_name=self.graph_name,
                     repository_name=self.repository_name
                 )
                 child = new
@@ -1011,7 +985,6 @@ class RepographBuilder:
                     canonical_name=f"{parent.canonical_name}.{m}" if parent else m,
                     parent_package=parent.canonical_name if parent else "",
                     external=True,
-                    graph_name=self.graph_name,
                     repository_name=self.repository_name
                 )
 
@@ -1019,7 +992,6 @@ class RepographBuilder:
                 relationships.append(Contains(
                     parent,
                     new,
-                    self.graph_name,
                     self.repository_name
                 ))
 
@@ -1031,10 +1003,9 @@ class RepographBuilder:
         if import_object and parent and isinstance(parent, Package):
             new = Module.create_init_module(
                 parent.canonical_name,
-                self.graph_name,
                 self.repository_name
             )
-            relationships.append(Contains(parent, new, self.graph_name, self.repository_name))
+            relationships.append(Contains(parent, new, self.repository_name))
             parent = new
 
         # If we have an import object, create a Contains relationship with the parent module.
@@ -1042,7 +1013,6 @@ class RepographBuilder:
             relationships.append(Contains(
                 parent,
                 import_object,
-                self.graph_name,
                 self.repository_name
             ))
             child = import_object
@@ -1155,7 +1125,6 @@ class RepographBuilder:
                 relationship = Calls(
                     caller if caller else parent_module,
                     matching_imports,
-                    self.graph_name,
                     self.repository_name
                 )
             # ...or if the call is to a built-in function...
@@ -1167,7 +1136,6 @@ class RepographBuilder:
                         name=function,
                         type=str(Function.FunctionType.FUNCTION.value),
                         builtin=True,
-                        graph_name=self.graph_name,
                         repository_name=self.repository_name
                     )
                     self.called_builtin_functions[function] = function_node
@@ -1176,7 +1144,6 @@ class RepographBuilder:
                 relationship = Calls(
                     caller if caller else parent_module,
                     function_node,
-                    self.graph_name,
                     self.repository_name
                 )
 
@@ -1185,7 +1152,6 @@ class RepographBuilder:
                 relationship = Calls(
                     caller if caller else parent_module,
                     matching_objects_in_module,
-                    self.graph_name,
                     self.repository_name
                 )
             else:
