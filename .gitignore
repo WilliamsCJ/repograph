@@ -14,6 +14,7 @@
 demo/*
 !demo/clone.sh
 !demo/README.md
+**/test.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

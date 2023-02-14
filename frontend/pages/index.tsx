@@ -3,13 +3,15 @@ import React from "react";
 import type { GetServerSideProps, NextPage } from "next";
 import { FolderPlusIcon, PlusIcon } from "@heroicons/react/24/outline";
 
-import { AccentLinkButton, LinkButton } from "../components/core/button";
+import { AccentLinkButton } from "../components/core/button";
 import { DefaultLayout } from "../components/core/layout";
-import GraphList, { GraphEntry } from "../components/home/list";
+import GraphList from "../components/home/list";
 import { EmptyState } from "../components/core/empty";
+import { getGraphListings } from "../lib/home";
+import { GraphListing } from "../types/graph";
 
 export type HomePageProps = {
-  graphs: GraphEntry[];
+  graphs: GraphListing[];
 };
 
 const NewButton = () => (
@@ -21,12 +23,14 @@ const NewButton = () => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const graphs = await getGraphListings();
+
+  console.log(graphs)
+
+
   return {
     props: {
-      graphs: [
-        { name: "fastapi", createdAt: "05-09-2023" },
-        { name: "pyLODE", createdAt: "05-10-2023" },
-      ],
+      graphs: graphs.filter((graph: GraphListing) => graph.status !== "PENDING"),
     },
   };
 };

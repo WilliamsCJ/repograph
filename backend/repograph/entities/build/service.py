@@ -16,6 +16,7 @@ from repograph.entities.build.utils import read_json_from_file
 # Other service imports
 from repograph.entities.graph.service import GraphService
 from repograph.entities.summarization.service import SummarizationService
+from repograph.entities.metadata.service import MetadataService
 
 
 # Configure logging
@@ -25,22 +26,26 @@ log = getLogger('repograph.entities.build.service')
 class BuildService:
     graph: GraphService
     summarization: SummarizationService
+    metadata: MetadataService
 
     temp_output = "./tmp"
 
     def __init__(
         self,
         graph: GraphService,
-        summarization: SummarizationService
+        summarization: SummarizationService,
+        metadata: MetadataService
     ):
         """Constructor
 
         Args:
             graph (GraphService): The Graph Service.
             summarization (SummarizationService): The Summarization Service
+            metadata (MetadataService): The Metadata Service
         """
         self.graph = graph
         self.summarization = summarization
+        self.metadata = metadata
 
     @staticmethod
     def call_inspect4py(input_path: str, output_path: str) -> str:
@@ -53,7 +58,7 @@ class BuildService:
         Returns:
             output_path (str)
         """
-        log.info("Extracting information from %s using inspect4py...", input_path)
+        log.info("Extracting information from %s using inspect4py to %s...", input_path, output_path)  # noqa: 501
 
         subprocess.check_call([
             "inspect4py",
@@ -117,7 +122,6 @@ class BuildService:
         name: str,
         description: str,
         prune: bool = False,
-        cleanup_inputs: bool = False,
     ) -> None:
         """Build a  graph using the input repositories.
 
@@ -126,7 +130,6 @@ class BuildService:
             name (str): The name to assign to the graph.
             description (str): The description to associate with the graph.
             prune (bool): Whether to prune existing nodes from the graph.
-            cleanup_inputs (bool): Whether to delete the input directories in input_list.
 
         Returns:
             None
@@ -134,16 +137,13 @@ class BuildService:
         failure = 0
         success = 0
 
-        # if prune:
-        #     log.info("Pruning existing graph...")
-        #     self.graph.prune(name.lower())
+        if prune:
+            log.info("Pruning existing graph...")
+            self.graph.prune(name.lower())
 
-        print(name)
         graph = self.graph.create_graph(name, description)
-        print(graph)
 
         for i in input_list:
-            print(i)
             with self.graph.get_transaction(graph.neo4j_name) as tx:
                 try:
                     self.call_inspect4py(i, self.temp_output)
@@ -172,10 +172,9 @@ class BuildService:
                     raise e
                 finally:
                     self.cleanup_inspect4py_output()
-                    if cleanup_inputs:
-                        shutil.rmtree(i, ignore_errors=True)
 
-                    pass
+        # Set graph status to created now that we are done
+        self.metadata.set_graph_status_to_created(graph)
 
         log.info(
             "Parsed %d repositories successfully with %d failures (%d total)",

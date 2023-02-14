@@ -18,6 +18,7 @@ from repograph.container import ApplicationContainer
 from repograph.entities.build.router import BuildRouter
 from repograph.entities.graph.router import GraphRouter
 from repograph.entities.search.router import SearchRouter
+from repograph.entities.metadata.router import MetadataRouter
 
 # Utilities
 from repograph.utils.exception_handlers import generic_exception_handler
@@ -32,7 +33,8 @@ log = logging.getLogger('repograph.api')
 def create_app(
     build_router: BuildRouter = Provide[ApplicationContainer.build.container.router],
     graph_router: GraphRouter = Provide[ApplicationContainer.graph.container.router],
-    search_router: SearchRouter = Provide[ApplicationContainer.search.container.router]
+    search_router: SearchRouter = Provide[ApplicationContainer.search.container.router],
+    metadata_router: MetadataRouter = Provide[ApplicationContainer.metadata.container.router]
 ) -> FastAPI:
     """Creates FastAPI application.
 
@@ -40,6 +42,7 @@ def create_app(
         build_router (BuildRouter): The build entity router.
         graph_router (GraphRouter): The graph entity router.
         search_router (SearchRouter): The search entity router.
+        metadata_router (MetadataRouter): The metadata entity router.
 
     Returns:
         FastAPI: Initialised FastAPI application object.
@@ -54,6 +57,7 @@ def create_app(
     application.include_router(graph_router.router)
     application.include_router(search_router.router)
     application.include_router(build_router.router)
+    application.include_router(metadata_router.router)
 
     # Configure CORS, https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
     application.add_middleware(

@@ -36,6 +36,6 @@ class TestGraphRepository(unittest.TestCase):
             self.repository.add_database(graph)
 
             connectionMock.execute.assert_called_with(
-                "INSERT INTO graphs VALUES (?, ?, ?, ?)",
-                (graph.neo4j_name, graph.name, graph.description, datetime_to_string(graph.created))
+                "INSERT INTO graphs VALUES (?, ?, ?, ?, ?)",
+                (graph.neo4j_name, graph.name, graph.description, datetime_to_string(graph.created), graph.status)  # noqa: 501
             )

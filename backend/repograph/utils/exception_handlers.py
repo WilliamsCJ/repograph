@@ -3,6 +3,7 @@ This module provides custom exception handlers that are triggered when exception
 to the router handlers.
 """
 # pip imports
+from fastapi import status
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -17,6 +18,29 @@ class ErrorResponse(BaseModel):
     """
     status: str = "ERROR"
     message: str
+
+
+class RepographException(Exception):
+    """
+    Custom base exception.
+    """
+    message: str = "An error occurred."
+    code: status = status.HTTP_500_INTERNAL_SERVER_ERROR
+
+
+async def base_exception_handler(_: Request, e: RepographException):
+    """Generic exception handler.
+    This handler is for all other Exceptions, to provide a formatted response.
+    Args:
+        _ (Request): FastAPI request object. Not used.
+        e (RepographException): The RepographException object.
+    Returns:
+        JSONResponse containing ErrorResponse.
+    """
+    return JSONResponse(
+        ErrorResponse(message=e.message).dict(),
+        status_code=e.code
+    )
 
 
 async def generic_exception_handler(_: Request, __: Exception):

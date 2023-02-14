@@ -13,6 +13,7 @@ from repograph.entities.build.router import BuildRouter
 # Other entity imports
 from repograph.entities.graph.service import GraphService
 from repograph.entities.summarization.service import SummarizationService
+from repograph.entities.metadata.service import MetadataService
 
 
 class BuildContainer(DeclarativeContainer):
@@ -22,10 +23,13 @@ class BuildContainer(DeclarativeContainer):
 
     summarization: Dependency[SummarizationService] = Dependency()
 
+    metadata: Dependency[MetadataService] = Dependency()
+
     service: Singleton[BuildService] = Singleton(
         BuildService,
         graph=graph,
-        summarization=summarization
+        summarization=summarization,
+        metadata=metadata
     )
 
     router: Singleton[BuildRouter] = Singleton(

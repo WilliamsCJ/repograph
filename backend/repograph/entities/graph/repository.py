@@ -8,9 +8,13 @@ from logging import getLogger
 # pip imports
 from py2neo import GraphService, NodeMatch, Transaction, Node as py2neoNode
 from neo4j import Driver
+from neo4j.exceptions import ClientError
 
 # Models
 from repograph.entities.graph.models.base import BaseSubgraph, Node
+
+# Utils
+from repograph.entities.graph.exceptions import GraphExistsError
 
 # Configure logging
 log = getLogger('repograph.entities.graph.repository')
@@ -39,9 +43,15 @@ class GraphRepository:
             graph_name (str): The name of the graph database.
 
         Returns:
+            None
 
+        Raises:
+            GraphExistsError: If graph name already exists.
         """
-        self._driver.execute_query(f"CREATE DATABASE {graph_name}")
+        try:
+            self._driver.execute_query(f"CREATE DATABASE {graph_name}")
+        except ClientError:
+            raise GraphExistsError(graph_name)
 
     def get_transaction(self, graph_name) -> Transaction:
         """Begin transaction for named graph

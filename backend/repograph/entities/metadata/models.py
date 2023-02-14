@@ -16,3 +16,4 @@ class Graph(BaseModel):
     name: str
     description: str
     created: datetime.datetime = Field(default_factor=datetime.datetime.now)
+    status: str = "PENDING"

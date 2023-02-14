@@ -1,7 +1,6 @@
 import type { AppProps } from "next/app";
 import NavigationBar, { NavigationRoute } from "../components/core/navigation";
 import {
-  ArrowLeftIcon,
   ExclamationTriangleIcon,
   HomeIcon,
   MagnifyingGlassIcon,

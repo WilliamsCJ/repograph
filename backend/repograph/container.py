@@ -63,7 +63,8 @@ class ApplicationContainer(DeclarativeContainer):
         BuildContainer,
         graph=graph.container.service,
         summarization=summarization.container.service,
-        config=config
+        config=config,
+        metadata=metadata.container.service
     )
 
     # Container for Search entity

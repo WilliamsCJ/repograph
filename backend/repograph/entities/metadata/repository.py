@@ -27,13 +27,13 @@ class MetadataRepository:
         db = sqlite3.connect(db_path)
         db.execute("""
             CREATE TABLE IF NOT EXISTS graphs
-            (neo4j_name TEXT, name TEXT, description TEXT, created TEXT)
+            (neo4j_name TEXT, name TEXT, description TEXT, created TEXT, status TEXT)
         """)
 
     def list_databases(self) -> List[Graph]:
         """List the metadata for all databases.
 
-        Returns:§
+        Returns:
             List[Graph]
         """
         db = sqlite3.connect(self.db_path)
@@ -42,7 +42,8 @@ class MetadataRepository:
             neo4j_name=row[0],
             name=row[1],
             description=row[2],
-            created=string_to_datetime(row[3])
+            created=string_to_datetime(row[3]),
+            status=row[4]
         ), rows))
 
     def add_database(self, graph: Graph) -> None:
@@ -55,8 +56,14 @@ class MetadataRepository:
             None
         """
         db = sqlite3.connect(self.db_path)
-        rows = db.execute(
-            "INSERT INTO graphs VALUES (?, ?, ?, ?)",
-            (graph.neo4j_name, graph.name, graph.description, datetime_to_string(graph.created))
+        db.execute(
+            "INSERT INTO graphs VALUES (?, ?, ?, ?, ?)",
+            (graph.neo4j_name, graph.name, graph.description, datetime_to_string(graph.created), graph.status)  # noqa: 501
         )
-        print(rows)
+
+    def update_graph(self, graph: Graph):
+        db = sqlite3.connect(self.db_path)
+        db.execute(
+            "UPDATE graphs SET name = ?, description = ?, status = ? WHERE neo4j_name = ?",
+            (graph.name, graph.description, graph.status, graph.neo4j_name)
+        )
