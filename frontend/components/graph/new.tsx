@@ -1,12 +1,21 @@
 import React from "react";
 
+// Nextjs
+import { useRouter } from 'next/router'
+
+// Dependencies
 import tw from "twin.macro";
 import { Form, Formik } from "formik";
+import toast from 'react-hot-toast';
 
-import { AccentButton, Button } from "../core/button";
+// Components
+import { AccentButton } from "../core/button";
 import { Card } from "../core/card";
 import { FileUploadSection, InputSection, TextAreaSection } from "../core/form";
 import { Heading, DetailText } from "../core/text";
+
+// Functions
+import { postNewGraph } from "../../lib/new";
 
 /**
  * Form values type for NewGraphForm
@@ -31,6 +40,8 @@ interface NewGraphFormErrors {
  * @constructor
  */
 const NewGraphForm: React.FC = () => {
+  const router = useRouter();
+
   const initialValues: NewGraphFormValues = {
     name: "",
     description: "",
@@ -41,8 +52,22 @@ const NewGraphForm: React.FC = () => {
     <Formik
       initialValues={initialValues}
       // @ts-ignore
-      onSubmit={(values, actions) => {
-        alert(values.files[0].name);
+      onSubmit={async (values, actions) => {
+        let redirect = false;
+
+        const promise = postNewGraph(values.name, values.description, values.files);
+
+        await toast.promise(promise, {
+          loading: 'Uploading...',
+          success: () => {
+            redirect = true;
+            return 'Submitted!'
+          },
+          // error: 'Error uploading repositories',
+          error: (err) => `This just happened: ${err.toString()}`,
+        })
+
+        if (redirect) await router.push("/")
       }}
       validate={(values) => {
         const errors: NewGraphFormErrors = {};
