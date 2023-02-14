@@ -44,7 +44,7 @@ class MetadataRepository:
             description=row[2],
             created=string_to_datetime(row[3]),
             status=row[4]
-        ), rows))
+        ), rows.fetchall()))
 
     def add_database(self, graph: Graph) -> None:
         """Add a Graph to the metadata database.
@@ -60,6 +60,7 @@ class MetadataRepository:
             "INSERT INTO graphs VALUES (?, ?, ?, ?, ?)",
             (graph.neo4j_name, graph.name, graph.description, datetime_to_string(graph.created), graph.status)  # noqa: 501
         )
+        db.commit()
 
     def update_graph(self, graph: Graph):
         db = sqlite3.connect(self.db_path)
@@ -67,3 +68,4 @@ class MetadataRepository:
             "UPDATE graphs SET name = ?, description = ?, status = ? WHERE neo4j_name = ?",
             (graph.name, graph.description, graph.status, graph.neo4j_name)
         )
+        db.commit()
