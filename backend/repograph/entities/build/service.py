@@ -143,6 +143,7 @@ class BuildService:
         print(graph)
 
         for i in input_list:
+            print(i)
             with self.graph.get_transaction(graph.neo4j_name) as tx:
                 try:
                     self.call_inspect4py(i, self.temp_output)
