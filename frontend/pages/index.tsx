@@ -25,12 +25,13 @@ const NewButton = () => (
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const graphs = await getGraphListings();
 
-  console.log(graphs)
-
+  console.log(graphs);
 
   return {
     props: {
-      graphs: graphs.filter((graph: GraphListing) => graph.status !== "PENDING"),
+      graphs: graphs.filter(
+        (graph: GraphListing) => graph.status !== "PENDING"
+      ),
     },
   };
 };

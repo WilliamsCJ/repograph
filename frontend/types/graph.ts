@@ -27,13 +27,13 @@ export type CallGraph = {
 
 enum GraphListingStatus {
   PENDING = "PENDING",
-  CREATED = "CREATED"
+  CREATED = "CREATED",
 }
 
 export type GraphListing = {
-  neo4j_name: string
-  name: string
-  description: string
-  created: string
-  status: GraphListingStatus
-}
+  neo4j_name: string;
+  name: string;
+  description: string;
+  created: string;
+  status: GraphListingStatus;
+};
