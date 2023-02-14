@@ -14,7 +14,6 @@ import IconWrapper from "../core/icon";
 // Types
 import { GraphListing } from "../../types/graph";
 
-
 // GraphList
 
 /**
