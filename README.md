@@ -7,7 +7,7 @@ Knowledge Graph extraction and semantic code search for Python repositories.
 ## Requirements
 
 This project requires Python 3.10 (preferably 3.10.8). This is due to issues related to the
-`inspect4py` library and `pigar`. 
+`inspect4py` library and `pigar`.
 
 ## Running
 
