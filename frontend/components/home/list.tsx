@@ -5,6 +5,7 @@ import tw from "twin.macro";
 
 // 3rd Party dependencies
 import { CalendarIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import moment from 'moment';
 
 // Components
 import { List, ListRow } from "../core/list";
@@ -109,7 +110,7 @@ const GraphEntry: React.FC<GraphEntryProps> = ({ created, name }) => {
               icon={<CalendarIcon />}
             />
             <DetailText>
-              Created on <time>{created}</time>
+              Created <time>{moment(created).fromNow()}</time>
             </DetailText>
           </div>
         </div>

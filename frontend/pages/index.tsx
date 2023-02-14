@@ -25,8 +25,6 @@ const NewButton = () => (
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const graphs = await getGraphListings();
 
-  console.log(graphs);
-
   return {
     props: {
       graphs: graphs.filter(
