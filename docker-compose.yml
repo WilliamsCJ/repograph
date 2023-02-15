@@ -22,6 +22,12 @@ services:
     build:
       context: backend
       dockerfile: Dockerfile
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [ gpu ]
     env_file:
       - backend/.env
     ports:

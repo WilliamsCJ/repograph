@@ -10,6 +10,7 @@ Typical usage:
 from logging import getLogger
 
 # pip imports
+import torch
 from transformers import RobertaTokenizerFast, T5ForConditionalGeneration
 
 # Model imports
@@ -35,11 +36,14 @@ class SummarizationService:
             summarize (bool): Whether to initialise model and tokenizer.
         """
         self.active = summarize
+        self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
+
 
         if summarize:
             log.info("Initialising CodeT5 model...")
             self.tokenizer = RobertaTokenizerFast.from_pretrained("Salesforce/codet5-base")
             self.model = T5ForConditionalGeneration.from_pretrained("Salesforce/codet5-base-multi-sum")  # noqa: 501
+            self.model = self.model.to(self.device)
             log.info("Ready!")
         else:
             log.info("Summarization flag not set. Skipping setup.")
@@ -71,7 +75,7 @@ class SummarizationService:
             str: The summarization.
         """
         log.debug("Tokenizing...")
-        input_ids = self.tokenizer(source_code, return_tensors="pt").input_ids
+        input_ids = self.tokenizer(source_code, return_tensors="pt").to(self.device).input_ids
 
         log.debug("Summarizing...")
         generated_ids = self.model.generate(input_ids, max_length=200)
