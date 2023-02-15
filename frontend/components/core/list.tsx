@@ -2,9 +2,6 @@ import React from "react";
 
 import tw from "twin.macro";
 import { Card } from "./card";
-import IconWrapper from "./icon";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
-import { GraphEntry } from "../home/list";
 import { Divide, Hover } from "./constants";
 
 export type ListProps = {
@@ -17,6 +14,7 @@ export type ListRowProps = {
   href: string;
   leftComponent: React.ReactNode;
   rightComponent: React.ReactNode;
+  active: boolean
 };
 
 const List: React.FC<ListProps> = ({ rows }) => {
@@ -35,6 +33,7 @@ const ListRow: React.FC<ListRowProps> = ({
   href,
   leftComponent,
   rightComponent,
+  active
 }) => {
   let round = null;
 
@@ -46,7 +45,7 @@ const ListRow: React.FC<ListRowProps> = ({
 
   return (
     <li key={index}>
-      <a href={href} css={[tw`block`, Hover, round]}>
+      <a href={active ? href : ''} css={[tw`block`, active ? Hover : tw`cursor-not-allowed pointer-events-none`, round]}>
         <div tw="flex items-center px-4 py-4 sm:px-6">
           {leftComponent}
           {rightComponent}

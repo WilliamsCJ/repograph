@@ -1,19 +1,33 @@
 import React from "react";
 
+// Next
 import type { GetServerSideProps, NextPage } from "next";
+
+// Icons
 import { FolderPlusIcon, PlusIcon } from "@heroicons/react/24/outline";
 
+// Components
 import { AccentLinkButton } from "../components/core/button";
 import { DefaultLayout } from "../components/core/layout";
-import GraphList from "../components/home/list";
-import { EmptyState } from "../components/core/empty";
-import { getGraphListings } from "../lib/home";
-import { GraphListing } from "../types/graph";
+import GraphListingComponent from "../components/home/index";
 
+// Functions
+import { getGraphListings } from "../lib/home";
+
+// Types
+import { SWRConfig } from "swr";
+
+/**
+ * Page props.
+ */
 export type HomePageProps = {
-  graphs: GraphListing[];
+  fallback: any;
 };
 
+/**
+ * New graph button
+ * @constructor
+ */
 const NewButton = () => (
   <AccentLinkButton
     icon={<FolderPlusIcon />}
@@ -27,30 +41,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
-      graphs: graphs.filter(
-        (graph: GraphListing) => graph.status !== "PENDING"
-      ),
+      fallback: {
+        '/metadata/graphs': graphs
+      },
     },
   };
 };
 
-const Home: NextPage<HomePageProps> = ({ graphs }) => {
+const Home: NextPage<HomePageProps> = ({ fallback }) => {
   return (
     <DefaultLayout
-      buttons={graphs.length === 0 ? [] : [<NewButton />]}
+      buttons={[<NewButton />]}
       heading="Your Graphs"
     >
-      {graphs.length === 0 ? (
-        <EmptyState
-          icon={<FolderPlusIcon />}
-          heading="No graphs"
-          description="Get started by uploading a repository"
-          buttonText="Upload"
-          buttonIcon={<PlusIcon />}
-        />
-      ) : (
-        <GraphList graphs={graphs} />
-      )}
+      <SWRConfig value={{ fallback }}>
+        <GraphListingComponent />
+      </SWRConfig>
     </DefaultLayout>
   );
 };

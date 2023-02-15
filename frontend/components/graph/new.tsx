@@ -63,8 +63,7 @@ const NewGraphForm: React.FC = () => {
             redirect = true;
             return 'Submitted!'
           },
-          // error: 'Error uploading repositories',
-          error: (err) => `This just happened: ${err.toString()}`,
+          error: 'Error uploading repositories',
         })
 
         if (redirect) await router.push("/")

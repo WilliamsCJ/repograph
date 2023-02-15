@@ -58,13 +58,13 @@ export type GraphListRowProps = {
 const GraphListRow: React.FC<GraphListRowProps> = ({ graph, index, total }) => {
   const left = <GraphEntry created={graph.created} name={graph.name} />;
 
-  const right = (
+  const right = graph.status === "PENDING" ? null : (
     <IconWrapper
-      aria-hidden="true"
-      additional={tw`ml-5 flex-shrink-0`}
-      size="sm"
-      color="detail"
-      icon={<ChevronRightIcon />}
+    aria-hidden="true"
+    additional={tw`ml-5 flex-shrink-0`}
+    size="sm"
+    color="detail"
+    icon={<ChevronRightIcon />}
     />
   );
 
@@ -75,6 +75,7 @@ const GraphListRow: React.FC<GraphListRowProps> = ({ graph, index, total }) => {
       href={`/graph/${graph.neo4j_name}`}
       leftComponent={left}
       rightComponent={right}
+      active={graph.status !== "PENDING"}
     />
   );
 };
