@@ -5,7 +5,7 @@ import tw from "twin.macro";
 
 // 3rd Party dependencies
 import { CalendarIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import moment from 'moment';
+import moment from "moment";
 
 // Components
 import { List, ListRow } from "../core/list";
