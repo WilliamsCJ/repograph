@@ -1,12 +1,12 @@
 import React from "react";
 
 // Nextjs
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 
 // Dependencies
 import tw from "twin.macro";
 import { Form, Formik } from "formik";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 // Components
 import { AccentButton } from "../core/button";
@@ -55,19 +55,23 @@ const NewGraphForm: React.FC = () => {
       onSubmit={async (values, actions) => {
         let redirect = false;
 
-        const promise = postNewGraph(values.name, values.description, values.files);
+        const promise = postNewGraph(
+          values.name,
+          values.description,
+          values.files
+        );
 
         await toast.promise(promise, {
-          loading: 'Uploading...',
+          loading: "Uploading...",
           success: () => {
             redirect = true;
-            return 'Submitted!'
+            return "Submitted!";
           },
           // error: 'Error uploading repositories',
           error: (err) => `This just happened: ${err.toString()}`,
-        })
+        });
 
-        if (redirect) await router.push("/")
+        if (redirect) await router.push("/");
       }}
       validate={(values) => {
         const errors: NewGraphFormErrors = {};
