@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       fallback: {
-        '/metadata/graphs': graphs
+        "/metadata/graphs": graphs,
       },
     },
   };
@@ -50,10 +50,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const Home: NextPage<HomePageProps> = ({ fallback }) => {
   return (
-    <DefaultLayout
-      buttons={[<NewButton />]}
-      heading="Your Graphs"
-    >
+    <DefaultLayout buttons={[<NewButton />]} heading="Your Graphs">
       <SWRConfig value={{ fallback }}>
         <GraphListingComponent />
       </SWRConfig>
