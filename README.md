@@ -100,5 +100,6 @@ pre-commit install
 ### Testing
 
 #### Coverage
+
 ![Coverage Tree](https://codecov.io/gh/WilliamsCJ/repograph/branch/main/graphs/tree.svg?token=1WYUIBCMQF)
 ![Coverage Sunburst](https://codecov.io/gh/WilliamsCJ/repograph/branch/main/graphs/sunburst.svg?token=1WYUIBCMQF)
