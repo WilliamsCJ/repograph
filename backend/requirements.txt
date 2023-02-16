@@ -5,7 +5,7 @@ astor==0.8.1
 async-timeout==4.0.2
 attrs==22.2.0
 bigcode-astgen==0.2.1
-black==23.1.0
+black==22.12.0
 CacheControl==0.12.11
 certifi==2022.12.7
 cffi==1.15.1
@@ -53,7 +53,7 @@ neo4j-driver==5.5.0
 neotime==1.7.4
 nltk==3.8.1
 numpy==1.24.1
-packaging==23.0
+packaging==21.3
 pansi==2020.7.3
 parameterized==0.8.1
 pathspec==0.11.0
