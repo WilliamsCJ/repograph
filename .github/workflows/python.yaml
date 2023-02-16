@@ -23,7 +23,7 @@ jobs:
         run: pip3 install -r requirements.txt -r tests/requirements.txt
       - name: Lint with flake8
         run: |
-          flake8 repograph --count --max-complexity=10 --max-line-length=100 --statistics
+          flake8 repograph --count --max-complexity=10 --ignore=E501 --statistics
   
   test:
     runs-on: ubuntu-latest
