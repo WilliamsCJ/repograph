@@ -89,6 +89,18 @@ class GraphService:
 
         return graph
 
+    def delete_graph(self, name: str) -> None:
+        """Delete a graph
+
+        Args:
+            name (str): Name of the graph to delete
+
+        Returns:
+            None
+        """
+        self.repository.delete_graph(name)
+        self.metadata.delete_graph(name)
+
     @contextlib.contextmanager
     def get_transaction(self, graph_name):
         """Obtain a Neo4j transaction for a given graph.
@@ -228,7 +240,7 @@ class GraphService:
                 ),
                 nodes,
             )
-        )  # noqa: 501
+        )
 
     def get_call_graph_by_id(self, node_id: int, graph_name: str) -> CallGraph:
         """Get the call graph for a Function node by its ID.
@@ -271,12 +283,12 @@ class GraphService:
                             res["call"]["canonical_name"]
                             if "canonical_name" in res
                             else res["call"]["name"]
-                        ),  # noqa: 501
+                        ),
                         title=(
                             res["call"]["canonical_name"]
                             if "canonical_name" in res
                             else res["call"]["name"]
-                        ),  # noqa: 501
+                        ),
                     ),
                     results,
                 )

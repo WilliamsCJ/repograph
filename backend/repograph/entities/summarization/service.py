@@ -43,7 +43,7 @@ class SummarizationService:
             )
             self.model = T5ForConditionalGeneration.from_pretrained(
                 "Salesforce/codet5-base-multi-sum"
-            )  # noqa: 501
+            )
             log.info("Ready!")
         else:
             log.info("Summarization flag not set. Skipping setup.")

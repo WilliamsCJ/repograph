@@ -175,4 +175,4 @@ class GraphRepository:
         Returns:
             None
         """
-        self._graph_service[graph_name].query(f"""DROP DATABASE {graph_name}""")
+        self._driver.execute_query(f"""DROP DATABASE {graph_name} IF EXISTS""")

@@ -37,6 +37,17 @@ class MetadataService:
         """
         self.repository.add_database(graph, tx)
 
+    def delete_graph(self, graph_name: str) -> None:
+        """Delete the metadata associated with a graph_name.
+
+        Args:
+            graph_name (str): graph_name
+
+        Returns:
+            None
+        """
+        self.repository.delete_database(graph_name)
+
     def get_all_graph_listings(self) -> List[Graph]:
         """Get all graphs
 
@@ -55,4 +66,4 @@ class MetadataService:
             None
         """
         updated_graph = graph.copy(update={"status": "CREATED"})
-        self.repository.update_graph(updated_graph)
+        self.repository.update_database(updated_graph)

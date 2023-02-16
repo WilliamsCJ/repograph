@@ -41,5 +41,5 @@ class TestGraphRepository(unittest.TestCase):
                 graph.description,
                 datetime_to_string(graph.created),
                 graph.status,
-            ),  # noqa: 501
+            ),
         )

@@ -1,6 +1,7 @@
 """
 Metadata repository.
 """
+# Base imports
 import sqlite3
 from typing import List
 
@@ -77,10 +78,31 @@ class MetadataRepository:
                 graph.description,
                 datetime_to_string(graph.created),
                 graph.status,
-            ),  # noqa: 501
+            ),
         )
 
-    def update_graph(self, graph: Graph):
+    def delete_database(self, name: str) -> None:
+        """Delete graph metadata
+
+        Args:
+            name (str): Neo4j name of the graph.
+
+        Returns:
+            None
+        """
+        db = sqlite3.connect(self.db_path)
+        db.execute("DELETE FROM graphs WHERE neo4j_name = ?", name)
+        db.commit()
+
+    def update_database(self, graph: Graph) -> None:
+        """Update the details of a graph.
+
+        Args:
+            graph (Graph): Updated Graph object.
+
+        Returns:
+            None
+        """
         db = sqlite3.connect(self.db_path)
         db.execute(
             "UPDATE graphs SET name = ?, description = ?, status = ? WHERE neo4j_name = ?",

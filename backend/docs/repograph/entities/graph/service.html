@@ -121,7 +121,7 @@ class GraphService:
             RETURN n.summarization as `summarization`, f as `function`
             &#34;&#34;&#34;
         )
-        return dict(map(lambda x: (x[&#39;summarization&#39;], Function(identity=x[&#39;function&#39;].identity, **x[&#39;function&#39;])), nodes))  # noqa: 501
+        return dict(map(lambda x: (x[&#39;summarization&#39;], Function(identity=x[&#39;function&#39;].identity, **x[&#39;function&#39;])), nodes))
 
     def get_call_graph_by_id(self, node_id: int) -&gt; CallGraph:
         results = self.repository.execute_query(
@@ -145,8 +145,8 @@ class GraphService:
 
         call_graph.nodes.extend(list(map(lambda res: CallGraph.Function(
             id=res[&#34;call&#34;].identity,
-            label=(res[&#34;call&#34;][&#34;canonical_name&#34;] if &#34;canonical_name&#34; in res else res[&#34;call&#34;][&#34;name&#34;]),  # noqa: 501
-            title=(res[&#34;call&#34;][&#34;canonical_name&#34;] if &#34;canonical_name&#34; in res else res[&#34;call&#34;][&#34;name&#34;])  # noqa: 501
+            label=(res[&#34;call&#34;][&#34;canonical_name&#34;] if &#34;canonical_name&#34; in res else res[&#34;call&#34;][&#34;name&#34;]),
+            title=(res[&#34;call&#34;][&#34;canonical_name&#34;] if &#34;canonical_name&#34; in res else res[&#34;call&#34;][&#34;name&#34;])
         ), results)))
 
         def parse_relationships(x):
@@ -266,7 +266,7 @@ class GraphService:
             RETURN n.summarization as `summarization`, f as `function`
             &#34;&#34;&#34;
         )
-        return dict(map(lambda x: (x[&#39;summarization&#39;], Function(identity=x[&#39;function&#39;].identity, **x[&#39;function&#39;])), nodes))  # noqa: 501
+        return dict(map(lambda x: (x[&#39;summarization&#39;], Function(identity=x[&#39;function&#39;].identity, **x[&#39;function&#39;])), nodes))
 
     def get_call_graph_by_id(self, node_id: int) -&gt; CallGraph:
         results = self.repository.execute_query(
@@ -290,8 +290,8 @@ class GraphService:
 
         call_graph.nodes.extend(list(map(lambda res: CallGraph.Function(
             id=res[&#34;call&#34;].identity,
-            label=(res[&#34;call&#34;][&#34;canonical_name&#34;] if &#34;canonical_name&#34; in res else res[&#34;call&#34;][&#34;name&#34;]),  # noqa: 501
-            title=(res[&#34;call&#34;][&#34;canonical_name&#34;] if &#34;canonical_name&#34; in res else res[&#34;call&#34;][&#34;name&#34;])  # noqa: 501
+            label=(res[&#34;call&#34;][&#34;canonical_name&#34;] if &#34;canonical_name&#34; in res else res[&#34;call&#34;][&#34;name&#34;]),
+            title=(res[&#34;call&#34;][&#34;canonical_name&#34;] if &#34;canonical_name&#34; in res else res[&#34;call&#34;][&#34;name&#34;])
         ), results)))
 
         def parse_relationships(x):
@@ -381,8 +381,8 @@ class GraphService:
 
     call_graph.nodes.extend(list(map(lambda res: CallGraph.Function(
         id=res[&#34;call&#34;].identity,
-        label=(res[&#34;call&#34;][&#34;canonical_name&#34;] if &#34;canonical_name&#34; in res else res[&#34;call&#34;][&#34;name&#34;]),  # noqa: 501
-        title=(res[&#34;call&#34;][&#34;canonical_name&#34;] if &#34;canonical_name&#34; in res else res[&#34;call&#34;][&#34;name&#34;])  # noqa: 501
+        label=(res[&#34;call&#34;][&#34;canonical_name&#34;] if &#34;canonical_name&#34; in res else res[&#34;call&#34;][&#34;name&#34;]),
+        title=(res[&#34;call&#34;][&#34;canonical_name&#34;] if &#34;canonical_name&#34; in res else res[&#34;call&#34;][&#34;name&#34;])
     ), results)))
 
     def parse_relationships(x):
@@ -424,7 +424,7 @@ class GraphService:
         RETURN n.summarization as `summarization`, f as `function`
         &#34;&#34;&#34;
     )
-    return dict(map(lambda x: (x[&#39;summarization&#39;], Function(identity=x[&#39;function&#39;].identity, **x[&#39;function&#39;])), nodes))  # noqa: 501</code></pre>
+    return dict(map(lambda x: (x[&#39;summarization&#39;], Function(identity=x[&#39;function&#39;].identity, **x[&#39;function&#39;])), nodes))  </code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_summary"><code class="name flex">
