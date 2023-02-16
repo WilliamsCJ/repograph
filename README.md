@@ -1,6 +1,7 @@
 # repograph
 
 ![Workflow](https://github.com/WilliamsCJ/repograph/actions/workflows/python.yaml/badge.svg)
+[![codecov](https://codecov.io/gh/WilliamsCJ/repograph/branch/main/graph/badge.svg?token=1WYUIBCMQF)](https://codecov.io/gh/WilliamsCJ/repograph)
 
 Knowledge Graph extraction and semantic code search for Python repositories.
 
@@ -95,3 +96,9 @@ To install:
 pip3 install -r requirements-test.txt
 pre-commit install
 ```
+
+### Testing
+
+#### Coverage
+![Coverage Tree](https://codecov.io/gh/WilliamsCJ/repograph/branch/main/graphs/tree.svg?token=1WYUIBCMQF)
+![Coverage Sunburst](https://codecov.io/gh/WilliamsCJ/repograph/branch/main/graphs/sunburst.svg?token=1WYUIBCMQF)
