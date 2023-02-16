@@ -14,7 +14,7 @@ export type ListRowProps = {
   href: string;
   leftComponent: React.ReactNode;
   rightComponent: React.ReactNode;
-  active: boolean
+  active: boolean;
 };
 
 const List: React.FC<ListProps> = ({ rows }) => {
@@ -33,7 +33,7 @@ const ListRow: React.FC<ListRowProps> = ({
   href,
   leftComponent,
   rightComponent,
-  active
+  active,
 }) => {
   let round = null;
 
@@ -45,7 +45,14 @@ const ListRow: React.FC<ListRowProps> = ({
 
   return (
     <li key={index}>
-      <a href={active ? href : ''} css={[tw`block`, active ? Hover : tw`cursor-not-allowed pointer-events-none`, round]}>
+      <a
+        href={active ? href : ""}
+        css={[
+          tw`block`,
+          active ? Hover : tw`cursor-not-allowed pointer-events-none`,
+          round,
+        ]}
+      >
         <div tw="flex items-center px-4 py-4 sm:px-6">
           {leftComponent}
           {rightComponent}

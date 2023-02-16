@@ -58,15 +58,16 @@ export type GraphListRowProps = {
 const GraphListRow: React.FC<GraphListRowProps> = ({ graph, index, total }) => {
   const left = <GraphEntry created={graph.created} name={graph.name} />;
 
-  const right = graph.status === "PENDING" ? null : (
-    <IconWrapper
-    aria-hidden="true"
-    additional={tw`ml-5 flex-shrink-0`}
-    size="sm"
-    color="detail"
-    icon={<ChevronRightIcon />}
-    />
-  );
+  const right =
+    graph.status === "PENDING" ? null : (
+      <IconWrapper
+        aria-hidden="true"
+        additional={tw`ml-5 flex-shrink-0`}
+        size="sm"
+        color="detail"
+        icon={<ChevronRightIcon />}
+      />
+    );
 
   return (
     <ListRow

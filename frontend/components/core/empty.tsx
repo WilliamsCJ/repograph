@@ -14,7 +14,7 @@ import { LinkButton } from "./button";
 export type EmptyStateProps = {
   icon: any;
   heading: string;
-  href: string
+  href: string;
   description: string;
   buttonText: string;
   buttonIcon: any;
@@ -33,7 +33,11 @@ const EmptyState: React.FC<EmptyStateProps> = (props) => {
         <Text tw="mt-2">{props.heading}</Text>
         <DetailText tw="mt-2">{props.description}</DetailText>
         <div tw="mt-6">
-          <LinkButton icon={props.buttonIcon} text={props.buttonText} href={props.href} />
+          <LinkButton
+            icon={props.buttonIcon}
+            text={props.buttonText}
+            href={props.href}
+          />
         </div>
       </div>
     </div>
