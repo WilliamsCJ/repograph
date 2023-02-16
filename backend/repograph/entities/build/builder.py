@@ -45,41 +45,6 @@ class RepographBuilder:
     """
     Generates a Repograph from inspect4py output.
     """
-    # Graph name
-    graph_name: str
-
-    # Current repository name
-    repository_name: str
-
-    # Graph service
-    graph: GraphService
-
-    # The optional summarization function
-    summarize: Optional[Callable[[Function], str]]
-
-    # Mapping of paths to Directory (or the Repository) object
-    directories: Dict[str, Union[Repository, Directory]] = dict()
-
-    # Mapping of paths/pacakge names to modules
-    modules: Dict[str, Module] = dict()
-
-    # Mapping of Module objects to Classes/Function objects
-    module_objects: Dict[Module, List[Union[Class, Function]]] = dict()
-
-    # Mapping Module dependencies for retrospective parsing
-    dependencies: List[Tuple[List[JSONDict], Module]] = []
-
-    # The objects a given Module depends on/imports
-    module_dependencies: Dict[Module, List[Union[Module, Function]]] = dict()
-
-    # Module imports
-    module_imports: Dict[Module, Set[str]] = dict()
-
-    # Packages from requirements file
-    requirements: Dict[str, Package] = dict()
-
-    # Mapping of built-in functions that have been called in the repository
-    called_builtin_functions: Dict[str, Function] = dict()
 
     def __init__(
         self,
@@ -96,12 +61,47 @@ class RepographBuilder:
             base_path (str): The base path directory
             graph_name (str): The name of the graph nodes are being added to.
         """
-        self.summarize = summarize
+        # The base directory path used for normalizing paths
         self.base_path = base_path
+
+        # Name of the graph. Used for calls to the graph service
         self.graph_name = graph_name
+
+        # The name of the repository
         self.repository_name = ""
+
+        # Transaction to use for calls to the graph service
         self.tx = tx
-        self.graph = graph
+
+        # Graph service
+        self.graph: GraphService = graph
+
+        # The optional summarization function
+        self.summarize: Optional[Callable[[Function], str]] = summarize
+
+        # Mapping of paths to Directory (or the Repository) object
+        self.directories: Dict[str, Union[Repository, Directory]] = dict()
+
+        # Mapping of paths/pacakge names to modules
+        self.modules: Dict[str, Module] = dict()
+
+        # Mapping of Module objects to Classes/Function objects
+        self.module_objects: Dict[Module, List[Union[Class, Function]]] = dict()
+
+        # Mapping Module dependencies for retrospective parsing
+        self.dependencies: List[Tuple[List[JSONDict], Module]] = []
+
+        # The objects a given Module depends on/imports
+        self.module_dependencies: Dict[Module, List[Union[Module, Function]]] = dict()
+
+        # Module imports
+        self.module_imports: Dict[Module, Set[str]] = dict()
+
+        # Packages from requirements file
+        self.requirements: Dict[str, Package] = dict()
+
+        # Mapping of built-in functions that have been called in the repository
+        self.called_builtin_functions: Dict[str, Function] = dict()
 
     def _parse_repository(
             self,

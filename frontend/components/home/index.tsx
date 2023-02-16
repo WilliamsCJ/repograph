@@ -1,4 +1,7 @@
 import React from 'react';
+
+import tw from "twin.macro";
+
 import { EmptyState } from "../core/empty";
 import { FolderPlusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { SmallHeading } from "../core/text";
@@ -30,7 +33,7 @@ const GraphListingComponent = () => {
   )
 
   return (
-    <>
+    <div tw="pb-4 flex flex-col space-y-4">
       {graphs.length > 0 &&
           <>
               <SmallHeading>Active</SmallHeading>
@@ -43,7 +46,7 @@ const GraphListingComponent = () => {
               <GraphList graphs={pending} />
           </>
       }
-    </>
+    </div>
   )
 }
 

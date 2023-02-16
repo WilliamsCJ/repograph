@@ -113,7 +113,7 @@ class BuildService:
             None
         """
         log.info("Cleaning up temporary directory...")
-        shutil.rmtree("./tmp")
+        shutil.rmtree("./tmp", ignore_errors=True)
         log.info("Done!")
 
     def build(

@@ -70,6 +70,7 @@ class GraphService:
         except Exception as e:
             log.error("An error occurred. Rolling back graph transaction!\n" + str(e))
             tx.rollback()
+            raise e
 
     def add(self, *args: BaseSubgraph, tx: Transaction = None, graph_name=None):
         """Add nodes/relationships to the graph
@@ -103,7 +104,7 @@ class GraphService:
         Return:
             GraphSummary
         """
-        if not self.repository.has_nodes():
+        if not self.repository.has_nodes(graph_name=graph_name):
             log.warning("Graph has no nodes")
             return GraphSummary()
 
