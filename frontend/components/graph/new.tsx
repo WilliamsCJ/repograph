@@ -78,6 +78,8 @@ const NewGraphForm: React.FC = () => {
 
         if (!values.name) {
           errors.name = "Please give your graph a name";
+        } else if (!/^[a-z,A-Z][a-z,A-Z,0-9]{2,63}$/.test(values.name)) {
+          errors.name = "Name can only contain 3 to 63 alphanumeric characters and must begin with a letter.";
         }
 
         if (!values.description) {
