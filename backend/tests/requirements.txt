@@ -1,5 +1,0 @@
-flake8==6.0.0
-pyflakes==3.0.1
-black==23.1.0
-parameterized==0.8.1
-coverage==7.1.0
