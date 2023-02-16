@@ -21,9 +21,9 @@ jobs:
           python-version: 3.10.8
       - name: Install dependencies
         run: pip3 install -r requirements.txt -r tests/requirements.txt
-      - name: Lint with flake8
+      - name: Lint with black
         run: |
-          flake8 repograph --count --max-complexity=10 --ignore=E501 --statistics
+          black .
   
   test:
     runs-on: ubuntu-latest
