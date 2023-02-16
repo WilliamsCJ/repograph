@@ -10,8 +10,8 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
 # nltk initialisation
-nltk.download('stopwords')
-nltk.download('punkt')
+nltk.download("stopwords")
+nltk.download("punkt")
 
 
 def clean_source_code(source_code: str) -> str:
@@ -23,7 +23,7 @@ def clean_source_code(source_code: str) -> str:
     Returns:
         str: Cleaned source_code
     """
-    return re.sub("(?s)\"\"\".*\"\"\"\n", "", source_code)
+    return re.sub('(?s)""".*"""\n', "", source_code)
 
 
 def remove_stop_words(sentence: str) -> str:
@@ -37,6 +37,8 @@ def remove_stop_words(sentence: str) -> str:
     """
     tokens = word_tokenize(sentence)
     filtered_words = [
-        word for word in tokens if (word.isalpha() and word not in set(stopwords.words('english')))
+        word
+        for word in tokens
+        if (word.isalpha() and word not in set(stopwords.words("english")))
     ]
     return " ".join(filtered_words)

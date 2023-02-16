@@ -166,7 +166,7 @@ class BuildService:
                 directory_info, call_graph = self.parse_inspect4py_output(self.temp_output)
 
                 builder = RepographBuilder(
-                    summarize=self.summarization.summarize_function if self.summarization.active else None,  # noqa: 501
+                    summarize=self.summarization.summarize_function if self.summarization.active else None,
                     base_path=self.temp_output
                 )
                 nodes, relationships = builder.build(directory_info, call_graph)
@@ -336,7 +336,7 @@ class BuildService:
                 directory_info, call_graph = self.parse_inspect4py_output(self.temp_output)
 
                 builder = RepographBuilder(
-                    summarize=self.summarization.summarize_function if self.summarization.active else None,  # noqa: 501
+                    summarize=self.summarization.summarize_function if self.summarization.active else None,
                     base_path=self.temp_output
                 )
                 nodes, relationships = builder.build(directory_info, call_graph)
@@ -551,7 +551,7 @@ graph using the input repositories.</p>
             directory_info, call_graph = self.parse_inspect4py_output(self.temp_output)
 
             builder = RepographBuilder(
-                summarize=self.summarization.summarize_function if self.summarization.active else None,  # noqa: 501
+                summarize=self.summarization.summarize_function if self.summarization.active else None,
                 base_path=self.temp_output
             )
             nodes, relationships = builder.build(directory_info, call_graph)

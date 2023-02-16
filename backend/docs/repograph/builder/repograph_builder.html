@@ -328,7 +328,7 @@ class RepographBuilder:
         while parent != &#34;&#34;:
             parent_node = self.directories.get(parent, None)
 
-            if isinstance(parent_node, Package) or (isinstance(parent_node, Repository) and parent_node.is_root_package):  # noqa: 501
+            if isinstance(parent_node, Package) or (isinstance(parent_node, Repository) and parent_node.is_root_package):
                 parts = [get_path_name(parent)] + parts
                 parent = get_path_parent(parent)
             else:
@@ -394,7 +394,7 @@ class RepographBuilder:
             self.modules[module.path] = module
             self.modules[module.canonical_name] = module
 
-    def _parse_files_in_directory(self, directory_info: List[JSONDict]) -&gt; Tuple[List[Tuple[Module, JSONDict]], bool]:  # noqa: 501
+    def _parse_files_in_directory(self, directory_info: List[JSONDict]) -&gt; Tuple[List[Tuple[Module, JSONDict]], bool]:
         &#34;&#34;&#34;Parses files within a directory into Python Module nodes.
 
         Args:
@@ -800,7 +800,7 @@ class RepographBuilder:
                             continue
 
                         # Filter the module objects for only those with the imported name
-                        matching_objects = [obj for obj in module_objects if obj.name == imported_object]  # noqa: 501
+                        matching_objects = [obj for obj in module_objects if obj.name == imported_object]
 
                         # If no matches, log an error and move onto the next dependency
                         if len(matching_objects) == 0:
@@ -825,7 +825,7 @@ class RepographBuilder:
                         else:
                             imported_object = Function(
                                 name=imported_object,
-                                canonical_name=f&#34;{dependency[&#39;from_module&#39;]}.{dependency[&#39;import&#39;]}&#34;,  # noqa: 501
+                                canonical_name=f&#34;{dependency[&#39;from_module&#39;]}.{dependency[&#39;import&#39;]}&#34;,
                                 type=str(Function.FunctionType.FUNCTION.value)
                             )
 
@@ -862,7 +862,7 @@ class RepographBuilder:
             List[str]: Missing packages/modules.
         &#34;&#34;&#34;
         missing = []
-        while source_module not in self.modules and source_module not in self.requirements and source_module != &#34;&#34;:  # noqa: 501
+        while source_module not in self.modules and source_module not in self.requirements and source_module != &#34;&#34;:
             parent, child = get_package_parent_and_name(source_module)
             missing.append(child)
             source_module = parent
@@ -1018,7 +1018,7 @@ class RepographBuilder:
 
             # If the call is to an imported function...
             if call in module_imports:
-                matching_imports = find_node_object_by_name(module_dependencies, call, canonical=True)  # noqa: 501
+                matching_imports = find_node_object_by_name(module_dependencies, call, canonical=True)
                 relationship = Calls(caller if caller else parent_module, matching_imports)
             # ...or if the call is to a built-in function...
             elif call in PYTHON_BUILT_IN_FUNCTIONS:
@@ -1432,7 +1432,7 @@ class RepographBuilder:
         while parent != &#34;&#34;:
             parent_node = self.directories.get(parent, None)
 
-            if isinstance(parent_node, Package) or (isinstance(parent_node, Repository) and parent_node.is_root_package):  # noqa: 501
+            if isinstance(parent_node, Package) or (isinstance(parent_node, Repository) and parent_node.is_root_package):
                 parts = [get_path_name(parent)] + parts
                 parent = get_path_parent(parent)
             else:
@@ -1498,7 +1498,7 @@ class RepographBuilder:
             self.modules[module.path] = module
             self.modules[module.canonical_name] = module
 
-    def _parse_files_in_directory(self, directory_info: List[JSONDict]) -&gt; Tuple[List[Tuple[Module, JSONDict]], bool]:  # noqa: 501
+    def _parse_files_in_directory(self, directory_info: List[JSONDict]) -&gt; Tuple[List[Tuple[Module, JSONDict]], bool]:
         &#34;&#34;&#34;Parses files within a directory into Python Module nodes.
 
         Args:
@@ -1904,7 +1904,7 @@ class RepographBuilder:
                             continue
 
                         # Filter the module objects for only those with the imported name
-                        matching_objects = [obj for obj in module_objects if obj.name == imported_object]  # noqa: 501
+                        matching_objects = [obj for obj in module_objects if obj.name == imported_object]
 
                         # If no matches, log an error and move onto the next dependency
                         if len(matching_objects) == 0:
@@ -1929,7 +1929,7 @@ class RepographBuilder:
                         else:
                             imported_object = Function(
                                 name=imported_object,
-                                canonical_name=f&#34;{dependency[&#39;from_module&#39;]}.{dependency[&#39;import&#39;]}&#34;,  # noqa: 501
+                                canonical_name=f&#34;{dependency[&#39;from_module&#39;]}.{dependency[&#39;import&#39;]}&#34;,
                                 type=str(Function.FunctionType.FUNCTION.value)
                             )
 
@@ -1966,7 +1966,7 @@ class RepographBuilder:
             List[str]: Missing packages/modules.
         &#34;&#34;&#34;
         missing = []
-        while source_module not in self.modules and source_module not in self.requirements and source_module != &#34;&#34;:  # noqa: 501
+        while source_module not in self.modules and source_module not in self.requirements and source_module != &#34;&#34;:
             parent, child = get_package_parent_and_name(source_module)
             missing.append(child)
             source_module = parent
@@ -2122,7 +2122,7 @@ class RepographBuilder:
 
             # If the call is to an imported function...
             if call in module_imports:
-                matching_imports = find_node_object_by_name(module_dependencies, call, canonical=True)  # noqa: 501
+                matching_imports = find_node_object_by_name(module_dependencies, call, canonical=True)
                 relationship = Calls(caller if caller else parent_module, matching_imports)
             # ...or if the call is to a built-in function...
             elif call in PYTHON_BUILT_IN_FUNCTIONS:

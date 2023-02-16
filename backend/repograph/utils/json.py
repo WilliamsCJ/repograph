@@ -62,6 +62,6 @@ def convert_dependencies_map_to_set(dependencies: List[JSONDict]) -> Set[str]:
         if "from_module" in dependency:
             converted.add(f"{dependency['from_module']}.{dependency['import']}")
         else:
-            converted.add(dependency['import'])
+            converted.add(dependency["import"])
 
     return converted

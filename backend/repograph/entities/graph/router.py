@@ -5,7 +5,7 @@ Routing for build entity.
 from fastapi import APIRouter, status
 
 # Model imports
-from repograph.models.graph import CallGraph
+from repograph.entities.graph.models.graph import CallGraph
 
 # Graph entity imports
 from repograph.entities.graph.service import GraphService
@@ -17,17 +17,13 @@ class GraphRouter:
     def __init__(self, service: GraphService):
         self.service = service
 
-        self.router = APIRouter(
-            prefix="/graph",
-            tags=["Summary"],
-            responses={}
-        )
+        self.router = APIRouter(prefix="/graph", tags=["Summary"], responses={})
 
         self.router.add_api_route(
             "/{graph}/summary",
             self.summary,
             methods=["GET"],
-            status_code=status.HTTP_200_OK
+            status_code=status.HTTP_200_OK,
         )
 
         self.router.add_api_route(
@@ -36,11 +32,21 @@ class GraphRouter:
             methods=["GET"],
             status_code=status.HTTP_200_OK,
             response_model_by_alias=True,
-            response_model=CallGraph
+            response_model=CallGraph,
+        )
+
+        self.router.add_api_route(
+            "/{graph}",
+            self.delete_graph,
+            methods=["DELETE"],
+            status_code=status.HTTP_204_NO_CONTENT,
         )
 
     async def summary(self, graph: str):
-        return self.service.get_summary()
+        return self.service.get_summary(graph)
 
     async def call_graph_by_id(self, graph: str, node_id: int) -> CallGraph:
-        return self.service.get_call_graph_by_id(node_id)
+        return self.service.get_call_graph_by_id(node_id, graph)
+
+    async def delete_graph(self, graph_name: str):
+        self.service.delete_graph(graph_name)

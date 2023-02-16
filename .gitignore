@@ -1,15 +1,20 @@
 **/.idea/
 **/*.log
 **/.neo4j
+**/.sqlite
 **/.VSCodeCounter
 **/tmp
 **/.DS_Store
+
+**/requirements_*.txt
+!**/requirements_test.txt
 
 
 # Demo repositories
 demo/*
 !demo/clone.sh
 !demo/README.md
+**/test.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -26,7 +31,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/

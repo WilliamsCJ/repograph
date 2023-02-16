@@ -6,7 +6,7 @@ import tw from "twin.macro";
 
 import { DetailText, Text } from "./text";
 import IconWrapper from "./icon";
-import { Button } from "./button";
+import { LinkButton } from "./button";
 
 /**
  * EmptyStateProps for EmptyState component.
@@ -14,6 +14,7 @@ import { Button } from "./button";
 export type EmptyStateProps = {
   icon: any;
   heading: string;
+  href: string;
   description: string;
   buttonText: string;
   buttonIcon: any;
@@ -32,7 +33,11 @@ const EmptyState: React.FC<EmptyStateProps> = (props) => {
         <Text tw="mt-2">{props.heading}</Text>
         <DetailText tw="mt-2">{props.description}</DetailText>
         <div tw="mt-6">
-          <Button icon={props.buttonIcon} text={props.buttonText} />
+          <LinkButton
+            icon={props.buttonIcon}
+            text={props.buttonText}
+            href={props.href}
+          />
         </div>
       </div>
     </div>

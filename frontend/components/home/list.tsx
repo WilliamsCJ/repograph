@@ -1,26 +1,34 @@
 import React from "react";
 
+// Styling
 import tw from "twin.macro";
+
+// 3rd Party dependencies
+import { CalendarIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
 
+// Components
 import { List, ListRow } from "../core/list";
-import { CalendarIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { DetailText, SmallHeading } from "../core/text";
 import IconWrapper from "../core/icon";
 
-export type GraphEntry = {
-  id: string;
-  name: string;
-  href: string;
-  createdAt: string;
-};
+// Types
+import { GraphListing } from "../../types/graph";
 
 // GraphList
 
+/**
+ * Props for the GraphList component
+ */
 export type GraphListProps = {
-  graphs: GraphEntry[];
+  graphs: GraphListing[];
 };
 
+/**
+ * GraphList displays the list of created graphs.
+ * @param graphs
+ * @constructor
+ */
 const GraphList: React.FC<GraphListProps> = ({ graphs }) => {
   const rows = graphs.map((graph, index) => (
     <GraphListRow graph={graph} index={index} total={graphs.length} />
@@ -31,44 +39,65 @@ const GraphList: React.FC<GraphListProps> = ({ graphs }) => {
 
 // GraphListRow
 
+/**
+ * Props for the GraphListRow component.
+ */
 export type GraphListRowProps = {
-  graph: GraphEntry;
+  graph: GraphListing;
   index: number;
   total: number;
 };
 
+/**
+ * A row in the GraphList component
+ * @param graph
+ * @param index
+ * @param total
+ * @constructor
+ */
 const GraphListRow: React.FC<GraphListRowProps> = ({ graph, index, total }) => {
-  const left = <GraphEntry createdAt={graph.createdAt} name={graph.name} />;
+  const left = <GraphEntry created={graph.created} name={graph.name} />;
 
-  const right = (
-    <IconWrapper
-      aria-hidden="true"
-      additional={tw`ml-5 flex-shrink-0`}
-      size="sm"
-      color="detail"
-      icon={<ChevronRightIcon />}
-    />
-  );
+  const right =
+    graph.status === "PENDING" ? null : (
+      <IconWrapper
+        aria-hidden="true"
+        additional={tw`ml-5 flex-shrink-0`}
+        size="sm"
+        color="detail"
+        icon={<ChevronRightIcon />}
+      />
+    );
 
   return (
     <ListRow
       index={index}
       total={total}
-      href={`/graph/${graph.name}`}
+      href={`/graph/${graph.neo4j_name}`}
       leftComponent={left}
       rightComponent={right}
+      active={graph.status !== "PENDING"}
     />
   );
 };
 
 // GraphEntry
 
+/**
+ * Props for the GraphEntry component.
+ */
 export type GraphEntryProps = {
   name: string;
-  createdAt: Date;
+  created: string;
 };
 
-const GraphEntry: React.FC<GraphEntryProps> = ({ createdAt, name }) => {
+/**
+ * The metadata for a single graph.
+ * @param created
+ * @param name
+ * @constructor
+ */
+const GraphEntry: React.FC<GraphEntryProps> = ({ created, name }) => {
   return (
     <div tw="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
       <div tw="truncate">
@@ -83,7 +112,7 @@ const GraphEntry: React.FC<GraphEntryProps> = ({ createdAt, name }) => {
               icon={<CalendarIcon />}
             />
             <DetailText>
-              Created on <time>{moment().format("DD-MM-YYYY")}</time>
+              Created <time>{moment(created).fromNow()}</time>
             </DetailText>
           </div>
         </div>

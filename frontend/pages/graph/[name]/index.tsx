@@ -10,7 +10,7 @@ import { getSummary } from "../../../lib/summary";
 import { GraphSummary } from "../../../types/graph";
 
 const ExportButton = () => (
-  <Button icon={<CloudArrowDownIcon />} text="Export" />
+  <Button icon={<CloudArrowDownIcon />} text="Delete" />
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

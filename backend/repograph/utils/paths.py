@@ -126,7 +126,9 @@ def get_canonical_package_root_and_child(package: str) -> Tuple[str, str]:
     return parts[0], ".".join(parts[1:])
 
 
-def get_module_and_object_from_canonical_object_name(canonical_name: str) -> Tuple[str, str]:
+def get_module_and_object_from_canonical_object_name(
+    canonical_name: str,
+) -> Tuple[str, str]:
     """Split out the canonical module name and object name from a
     canonical object name.
 

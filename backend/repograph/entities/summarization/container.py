@@ -1,4 +1,6 @@
-""""
+# pragma: no cover
+"""
+Container for build entity for dependency injection.
 """
 # pip imports
 from dependency_injector.containers import DeclarativeContainer
@@ -12,6 +14,5 @@ class SummarizationContainer(DeclarativeContainer):
     config: Configuration = Configuration()
 
     service: Singleton[SummarizationService] = Singleton(
-        SummarizationService,
-        summarize=config.summarize
+        SummarizationService, summarize=config.summarize
     )
