@@ -16,16 +16,11 @@ class MetadataContainer(DeclarativeContainer):
     config: Configuration = Configuration()
 
     repository: Singleton[MetadataRepository] = Singleton(
-        MetadataRepository,
-        db_path=config.metadata_db
+        MetadataRepository, db_path=config.metadata_db
     )
 
     service: Singleton[MetadataService] = Singleton(
-        MetadataService,
-        repository=repository
+        MetadataService, repository=repository
     )
 
-    router: Singleton[MetadataRouter] = Singleton(
-        MetadataRouter,
-        service=service
-    )
+    router: Singleton[MetadataRouter] = Singleton(MetadataRouter, service=service)

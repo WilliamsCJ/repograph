@@ -23,7 +23,7 @@ def configure_logging():
     ch.setStream(stream=sys.stdout)
 
     # Format logs
-    formatter = logging.Formatter('%(levelname)s:%(name)s | %(message)s')
+    formatter = logging.Formatter("%(levelname)s:%(name)s | %(message)s")
     ch.setFormatter(formatter)
 
     logger.addHandler(ch)

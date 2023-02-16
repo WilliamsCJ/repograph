@@ -23,6 +23,7 @@ class GraphSummary(BaseModel):
         packages (int): Number of packages contained in the graph.
 
     """
+
     is_empty: bool = True
     nodes_total: int = True
     relationships_total: int = True

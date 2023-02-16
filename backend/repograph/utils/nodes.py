@@ -8,10 +8,10 @@ log = logging.getLogger("repograph.utils.nodes")
 
 
 def find_node_object_by_name(
-        nodes: List[Union[Class, Function, Module]],
-        name: str,
-        strict: bool = True,
-        canonical: bool = False
+    nodes: List[Union[Class, Function, Module]],
+    name: str,
+    strict: bool = True,
+    canonical: bool = False,
 ) -> Optional[Union[Class, Function, Module]]:
     """Find a Node in a list of Nodes by name.
 
@@ -25,7 +25,9 @@ def find_node_object_by_name(
         Optional[Union[Class, Function, Module]]
     """
     if canonical:
-        filtered = [obj for obj in nodes if obj is not None and obj.canonical_name == name]
+        filtered = [
+            obj for obj in nodes if obj is not None and obj.canonical_name == name
+        ]
     else:
         filtered = [obj for obj in nodes if obj is not None and obj.name == name]
 

@@ -2,17 +2,20 @@ import unittest
 
 import py2neo
 from parameterized import parameterized
-from repograph.entities.graph.models.nodes import Class, Docstring, Module, Directory, License, \
-                                                  Package
+from repograph.entities.graph.models.nodes import (
+    Class,
+    Docstring,
+    Module,
+    Directory,
+    License,
+    Package,
+)
 
 REPOSITORY_NAME = "REPOSITORY"
 
 
 class TestDirectory(unittest.TestCase):
-
-    @parameterized.expand([
-      ["a/b/c", "c", "a/b"]
-    ])
+    @parameterized.expand([["a/b/c", "c", "a/b"]])
     def test_attributes(self, path, name, parent):
         package = Directory(path, REPOSITORY_NAME)
         self.assertEqual(package.name, name)
@@ -21,11 +24,12 @@ class TestDirectory(unittest.TestCase):
 
 
 class TestPackage(unittest.TestCase):
-    @parameterized.expand([
-        ["a/b/c", "a.b.c", "c", "a.b", "a/b"],
-        ["a/b/c", "b.c", "c", "b", "a/b"]
-    ])
-    def test_create_from_directory(self, path, canonical_name, name, parent_package, parent_path):
+    @parameterized.expand(
+        [["a/b/c", "a.b.c", "c", "a.b", "a/b"], ["a/b/c", "b.c", "c", "b", "a/b"]]
+    )
+    def test_create_from_directory(
+        self, path, canonical_name, name, parent_package, parent_path
+    ):
         package = Package.create_from_directory(path, canonical_name, REPOSITORY_NAME)
 
         self.assertEqual(package.name, name)
@@ -36,12 +40,11 @@ class TestPackage(unittest.TestCase):
         self.assertEqual(package.parent_path, parent_path)
         self.assertFalse(package.external)
 
-    @parameterized.expand([
-        ["a.b.c", "c", "a.b"],
-        ["b.c", "c", "b"]
-    ])
+    @parameterized.expand([["a.b.c", "c", "a.b"], ["b.c", "c", "b"]])
     def test_create_external_dependency(self, canonical_name, name, parent_package):
-        package = Package.create_from_external_dependency(canonical_name, REPOSITORY_NAME)
+        package = Package.create_from_external_dependency(
+            canonical_name, REPOSITORY_NAME
+        )
 
         self.assertEqual(package.name, name)
         self.assertEqual(package.canonical_name, canonical_name)
@@ -53,17 +56,14 @@ class TestPackage(unittest.TestCase):
 
 
 class TestFile(unittest.TestCase):
-
-    @parameterized.expand([
-      ["file.py", "/dir/file.py", ".py", False]
-    ])
+    @parameterized.expand([["file.py", "/dir/file.py", ".py", False]])
     def test_attributes(self, name, path, extension, is_test):
         file = Module(
             name=name,
             path=path,
             extension=extension,
             is_test=is_test,
-            repository_name=REPOSITORY_NAME
+            repository_name=REPOSITORY_NAME,
         )
         self.assertEqual(file.name, name)
         self.assertEqual(file.path, path)
@@ -72,20 +72,15 @@ class TestFile(unittest.TestCase):
 
 
 class TestClass(unittest.TestCase):
-
-    @parameterized.expand([
-      ["Class", 1, 2],
-      ["Class", None, 2],
-      ["Class", 1, None],
-      ["Class", None, None]
-
-    ])
+    @parameterized.expand(
+        [["Class", 1, 2], ["Class", None, 2], ["Class", 1, None], ["Class", None, None]]
+    )
     def test_attributes(self, name, min_line, max_line):
         class_node = Class(
             name=name,
             min_line_number=min_line,
             max_line_number=max_line,
-            repository_name=REPOSITORY_NAME
+            repository_name=REPOSITORY_NAME,
         )
         self.assertEqual(class_node.name, name)
         self.assertEqual(class_node.min_line_number, min_line)
@@ -93,29 +88,25 @@ class TestClass(unittest.TestCase):
 
 
 class TestLicense(unittest.TestCase):
-    @parameterized.expand([
-        ["Some text", "MIT", 0.9]
-    ])
+    @parameterized.expand([["Some text", "MIT", 0.9]])
     def test_attributes(self, text, license_type, confidence):
         license = License(
             text=text,
             license_type=license_type,
             confidence=confidence,
-            repository_name=REPOSITORY_NAME
+            repository_name=REPOSITORY_NAME,
         )
         self.assertEqual(license.text, text)
         self.assertEqual(license.license_type, license_type)
         self.assertEqual(license.confidence, confidence)
 
-    @parameterized.expand([
-        ["Some text", "MIT", 0.9]
-    ])
+    @parameterized.expand([["Some text", "MIT", 0.9]])
     def test_py2neo(self, text, license_type, confidence):
         license = License(
             text=text,
             license_type=license_type,
             confidence=confidence,
-            repository_name=REPOSITORY_NAME
+            repository_name=REPOSITORY_NAME,
         )
 
         self.assertIsInstance(license._subgraph, py2neo.Node)
@@ -126,30 +117,28 @@ class TestLicense(unittest.TestCase):
 
 
 class TestDocstring(unittest.TestCase):
-    @parameterized.expand([
-        ["Summarization", "Short Description", "Long description"]
-    ])
+    @parameterized.expand([["Summarization", "Short Description", "Long description"]])
     def test_attributes(self, summary, short_description, long_description):
         docstring = Docstring(
             short_description=short_description,
             long_description=long_description,
             summarization=summary,
-            repository_name=REPOSITORY_NAME
+            repository_name=REPOSITORY_NAME,
         )
         self.assertEqual(docstring.summarization, summary)
 
-    @parameterized.expand([
-        ["Summarization", "Short Description", "Long description"]
-    ])
+    @parameterized.expand([["Summarization", "Short Description", "Long description"]])
     def test_py2neo(self, summary, short_description, long_description):
         docstring = Docstring(
             short_description=short_description,
             long_description=long_description,
             summarization=summary,
-            repository_name=REPOSITORY_NAME
+            repository_name=REPOSITORY_NAME,
         )
 
         self.assertIsInstance(docstring._subgraph, py2neo.Node)
         self.assertEqual(docstring._subgraph.get("summarization"), summary)
-        self.assertEqual(docstring._subgraph.get("short_description"), short_description)
+        self.assertEqual(
+            docstring._subgraph.get("short_description"), short_description
+        )
         self.assertEqual(docstring._subgraph.get("long_description"), long_description)

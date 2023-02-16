@@ -20,7 +20,7 @@ from repograph.entities.metadata.service import MetadataService
 
 
 # Configure logging
-log = getLogger('repograph.entities.build.service')
+log = getLogger("repograph.entities.build.service")
 
 
 class BuildService:
@@ -34,7 +34,7 @@ class BuildService:
         self,
         graph: GraphService,
         summarization: SummarizationService,
-        metadata: MetadataService
+        metadata: MetadataService,
     ):
         """Constructor
 
@@ -58,23 +58,29 @@ class BuildService:
         Returns:
             output_path (str)
         """
-        log.info("Extracting information from %s using inspect4py to %s...", input_path, output_path)  # noqa: 501
-
-        subprocess.check_call([
-            "inspect4py",
-            "-i",
+        log.info(
+            "Extracting information from %s using inspect4py to %s...",
             input_path,
-            "-o",
             output_path,
-            "-md",
-            "-rm",
-            "-si",
-            "-ld",
-            "-sc",
-            "-ast",
-            "-r",
-            "-cl"
-        ])
+        )  # noqa: 501
+
+        subprocess.check_call(
+            [
+                "inspect4py",
+                "-i",
+                input_path,
+                "-o",
+                output_path,
+                "-md",
+                "-rm",
+                "-si",
+                "-ld",
+                "-sc",
+                "-ast",
+                "-r",
+                "-cl",
+            ]
+        )
 
         log.info("Done!")
         return output_path
@@ -141,37 +147,45 @@ class BuildService:
             log.info("Pruning existing graph...")
             self.graph.prune(name.lower())
 
-        graph = self.graph.create_graph(name, description)
+        with self.graph.get_system_transaction() as (system_tx, metadata_tx):
+            graph = self.graph.create_graph(name, description, system_tx, metadata_tx)
 
-        for i in input_list:
-            with self.graph.get_transaction(graph.neo4j_name) as tx:
-                try:
-                    self.call_inspect4py(i, self.temp_output)
-                    directory_info, call_graph = self.parse_inspect4py_output(self.temp_output)
+            for i in input_list:
+                with self.graph.get_transaction(graph.neo4j_name) as tx:
+                    try:
+                        self.call_inspect4py(i, self.temp_output)
+                        directory_info, call_graph = self.parse_inspect4py_output(
+                            self.temp_output
+                        )
 
-                    builder = RepographBuilder(
-                        self.summarization.summarize_function if self.summarization.active else None,  # noqa: 501
-                        self.temp_output,
-                        graph.neo4j_name,
-                        self.graph,
-                        tx
-                    )
+                        builder = RepographBuilder(
+                            self.summarization.summarize_function
+                            if self.summarization.active
+                            else None,  # noqa: 501
+                            self.temp_output,
+                            graph.neo4j_name,
+                            self.graph,
+                            tx,
+                        )
 
-                    builder.build(directory_info, call_graph)
+                        builder.build(directory_info, call_graph)
 
-                    log.info("Done!")
+                        log.info("Done!")
 
-                    success += 1
-                except subprocess.CalledProcessError as e:
-                    log.error("Error invoking inspect4py - %s", str(e))
-                    failure += 1
-                    raise e
-                except RepographBuildError as e:
-                    log.error("Error building repograph - %s", str(e))
-                    failure += 1
-                    raise e
-                finally:
-                    self.cleanup_inspect4py_output()
+                        success += 1
+                    except subprocess.CalledProcessError as e:
+                        log.error("Error invoking inspect4py - %s", str(e))
+                        failure += 1
+                        raise e
+                    except RepographBuildError as e:
+                        log.error("Error building repograph - %s", str(e))
+                        failure += 1
+                        raise e
+                    finally:
+                        self.cleanup_inspect4py_output()
+
+            if success == 0:
+                raise RepographBuildError()
 
         # Set graph status to created now that we are done
         self.metadata.set_graph_status_to_created(graph)
@@ -180,5 +194,5 @@ class BuildService:
             "Parsed %d repositories successfully with %d failures (%d total)",
             success,
             failure,
-            len(input_list)
+            len(input_list),
         )

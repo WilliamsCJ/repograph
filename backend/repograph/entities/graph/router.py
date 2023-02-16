@@ -17,17 +17,13 @@ class GraphRouter:
     def __init__(self, service: GraphService):
         self.service = service
 
-        self.router = APIRouter(
-            prefix="/graph",
-            tags=["Summary"],
-            responses={}
-        )
+        self.router = APIRouter(prefix="/graph", tags=["Summary"], responses={})
 
         self.router.add_api_route(
             "/{graph}/summary",
             self.summary,
             methods=["GET"],
-            status_code=status.HTTP_200_OK
+            status_code=status.HTTP_200_OK,
         )
 
         self.router.add_api_route(
@@ -36,7 +32,7 @@ class GraphRouter:
             methods=["GET"],
             status_code=status.HTTP_200_OK,
             response_model_by_alias=True,
-            response_model=CallGraph
+            response_model=CallGraph,
         )
 
     async def summary(self, graph: str):

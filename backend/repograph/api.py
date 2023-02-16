@@ -26,7 +26,7 @@ from repograph.utils.logging import configure_logging
 
 # Configure logging format
 configure_logging()
-log = logging.getLogger('repograph.api')
+log = logging.getLogger("repograph.api")
 
 
 @inject
@@ -34,7 +34,9 @@ def create_app(
     build_router: BuildRouter = Provide[ApplicationContainer.build.container.router],
     graph_router: GraphRouter = Provide[ApplicationContainer.graph.container.router],
     search_router: SearchRouter = Provide[ApplicationContainer.search.container.router],
-    metadata_router: MetadataRouter = Provide[ApplicationContainer.metadata.container.router]
+    metadata_router: MetadataRouter = Provide[
+        ApplicationContainer.metadata.container.router
+    ],
 ) -> FastAPI:
     """Creates FastAPI application.
 
@@ -65,7 +67,7 @@ def create_app(
         allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
-        allow_headers=["*"]
+        allow_headers=["*"],
     )
 
     # Add exception handlers

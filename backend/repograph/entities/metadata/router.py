@@ -14,17 +14,10 @@ class MetadataRouter:
     def __init__(self, service: MetadataService):
         self.service = service
 
-        self.router = APIRouter(
-            prefix="/metadata",
-            tags=["Summary"],
-            responses={}
-        )
+        self.router = APIRouter(prefix="/metadata", tags=["Summary"], responses={})
 
         self.router.add_api_route(
-            "/graphs",
-            self.get_all,
-            methods=["GET"],
-            status_code=status.HTTP_200_OK
+            "/graphs", self.get_all, methods=["GET"], status_code=status.HTTP_200_OK
         )
 
     async def get_all(self):

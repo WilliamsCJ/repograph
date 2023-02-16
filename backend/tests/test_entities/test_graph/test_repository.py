@@ -47,7 +47,7 @@ class TestGraphRepository(unittest.TestCase):
         self.graph.nodes.match.assert_called_with(label.__name__)
 
     def test_execute_query(self):
-        query = 'query'
+        query = "query"
         self.repository.execute_query(query, graph_name=GRAPH_NAME)
         self.neo4j.__getitem__.assert_called_with(GRAPH_NAME)
         self.graph.query.assert_called_with(query)

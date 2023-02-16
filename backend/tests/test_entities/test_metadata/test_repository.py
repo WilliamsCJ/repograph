@@ -27,15 +27,19 @@ class TestGraphRepository(unittest.TestCase):
             neo4j_name="test",
             name="test",
             description="description",
-            created=datetime.datetime.now()
+            created=datetime.datetime.now(),
         )
 
-        with mock.patch("sqlite3.connect") as connectMock:
-            connectionMock = MagicMock(auto_spec=sqlite3.Connection)
-            connectMock.return_value = connectionMock
-            self.repository.add_database(graph)
+        connectionMock = MagicMock(auto_spec=sqlite3.Connection)
+        self.repository.add_database(graph, connectionMock)
 
-            connectionMock.execute.assert_called_with(
-                "INSERT INTO graphs VALUES (?, ?, ?, ?, ?)",
-                (graph.neo4j_name, graph.name, graph.description, datetime_to_string(graph.created), graph.status)  # noqa: 501
-            )
+        connectionMock.execute.assert_called_with(
+            "INSERT INTO graphs VALUES (?, ?, ?, ?, ?)",
+            (
+                graph.neo4j_name,
+                graph.name,
+                graph.description,
+                datetime_to_string(graph.created),
+                graph.status,
+            ),  # noqa: 501
+        )

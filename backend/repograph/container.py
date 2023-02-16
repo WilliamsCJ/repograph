@@ -21,21 +21,18 @@ class ApplicationContainer(DeclarativeContainer):
     """Top-level container
     This container wires together all other containers to bring together the application.
     """
+
     # Configuration object
     config = Configuration()
 
     # Neo4j resource
     neo4j: Resource[GraphService] = Resource(
-        GraphService,
-        config.uri,
-        auth=("neo4j", "s3cr3t")
+        GraphService, config.uri, auth=("neo4j", "s3cr3t")
     )
 
     # Manual Neo4j driver
     driver: Resource[Driver] = Resource(
-        GraphDatabase.driver,
-        config.driver_uri,
-        auth=("neo4j", "s3cr3t")
+        GraphDatabase.driver, config.driver_uri, auth=("neo4j", "s3cr3t")
     )
 
     # Container for Metadata entity
@@ -49,13 +46,12 @@ class ApplicationContainer(DeclarativeContainer):
         GraphContainer,
         neo4j=neo4j.provided,
         driver=driver.provided,
-        metadata=metadata.container.service
+        metadata=metadata.container.service,
     )
 
     # Container for Summarization entity
     summarization: Container[SummarizationContainer] = Container(
-        SummarizationContainer,
-        config=config
+        SummarizationContainer, config=config
     )
 
     # Container for Build entity
@@ -64,12 +60,10 @@ class ApplicationContainer(DeclarativeContainer):
         graph=graph.container.service,
         summarization=summarization.container.service,
         config=config,
-        metadata=metadata.container.service
+        metadata=metadata.container.service,
     )
 
     # Container for Search entity
     search: Container[SearchContainer] = Container(
-        SearchContainer,
-        config=config,
-        graph=graph.container.service
+        SearchContainer, config=config, graph=graph.container.service
     )

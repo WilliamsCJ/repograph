@@ -1,16 +1,27 @@
 """
 Graph entity application logic.
 """
+# Base imports
 import contextlib
 import datetime
-# Base imports
 from logging import getLogger
-from py2neo import Transaction
+import re
+from sqlite3 import Connection
 from typing import Dict, List
+
+# pip imports
+from py2neo import Transaction
+from neo4j import Transaction as neo4jTransaction
 
 # Model imports
 from repograph.entities.graph.models.base import BaseSubgraph, Node, Relationship
-from repograph.entities.graph.models.nodes import Class, Function, Module, Package, Repository
+from repograph.entities.graph.models.nodes import (
+    Class,
+    Function,
+    Module,
+    Package,
+    Repository,
+)
 from repograph.entities.graph.models.graph import GraphSummary, CallGraph
 
 # Graph entity imports
@@ -20,14 +31,18 @@ from repograph.entities.graph.repository import GraphRepository
 from repograph.entities.metadata.models import Graph
 from repograph.entities.metadata.service import MetadataService
 
+# Exceptions
+from repograph.entities.graph.exceptions import InvalidGraphNameError
+
 # Configure logging
-log = getLogger('repograph.entities.graph.service')
+log = getLogger("repograph.entities.graph.service")
 
 
 class GraphService:
     """
     The GraphService class implements all application-logic related to the graph entity.
     """
+
     repository: GraphRepository
     metadata: MetadataService
 
@@ -41,16 +56,36 @@ class GraphService:
         self.repository = repository
         self.metadata = metadata
 
-    def create_graph(self, name: str, description: str):
+    def create_graph(
+        self,
+        name: str,
+        description: str,
+        system_tx: neo4jTransaction,
+        metadata_tx: Connection,
+    ) -> Graph:
+        """Create a new graph.
+
+        Args:
+            name:
+            description:
+            system_tx:
+            metadata_tx:
+
+        Returns:
+            Graph: Created Graph object
+        """
+        if not re.match(r"^[a-z,A-Z,0-9][a-z,A-Z,0-9]{2,63}$", name.lower()):
+            raise InvalidGraphNameError(name)
+
         graph = Graph(
             neo4j_name=name.lower(),
             name=name,
             description=description,
-            created=datetime.datetime.now()
+            created=datetime.datetime.now(),
         )
 
-        self.repository.create_graph(graph.neo4j_name)
-        self.metadata.register_graph(graph)
+        self.repository.create_graph(graph.neo4j_name, system_tx)
+        self.metadata.register_graph(graph, metadata_tx)
 
         return graph
 
@@ -70,6 +105,20 @@ class GraphService:
         except Exception as e:
             log.error("An error occurred. Rolling back graph transaction!\n" + str(e))
             tx.rollback()
+
+    @contextlib.contextmanager
+    def get_system_transaction(self):
+        tx = self.repository.get_driver_transaction()
+        metadata_tx = self.metadata.get_transaction()
+        try:
+            yield tx, metadata_tx
+        except Exception as e:
+            log.error(
+                "An error occurred. Rolling back system graph and metadata transactions!\n%s",
+                str(e),
+            )
+            tx.rollback()
+            metadata_tx.rollback()
             raise e
 
     def add(self, *args: BaseSubgraph, tx: Transaction = None, graph_name=None):
@@ -82,7 +131,9 @@ class GraphService:
         """
         self.repository.add(*args, tx=tx, graph_name=graph_name)
 
-    def bulk_add(self, nodes: List[Node], relationships: List[Relationship], graph_name: str):
+    def bulk_add(
+        self, nodes: List[Node], relationships: List[Relationship], graph_name: str
+    ):
         """Bulk add nodes and relationships.
 
         Args:
@@ -118,36 +169,34 @@ class GraphService:
         summary.relationships_total = relationships
 
         # Repositories
-        summary.repositories = len(self.repository.get_all_nodes_by_label(
-            Repository, graph_name=graph_name
-        ))
+        summary.repositories = len(
+            self.repository.get_all_nodes_by_label(Repository, graph_name=graph_name)
+        )
 
         # Packages
-        summary.packages = len(self.repository.get_all_nodes_by_label(
-            Package, graph_name=graph_name
-        ))
+        summary.packages = len(
+            self.repository.get_all_nodes_by_label(Package, graph_name=graph_name)
+        )
 
         # Modules
-        summary.modules = len(self.repository.get_all_nodes_by_label(
-            Module, graph_name=graph_name
-        ))
+        summary.modules = len(
+            self.repository.get_all_nodes_by_label(Module, graph_name=graph_name)
+        )
 
         # Classes
-        summary.classes = len(self.repository.get_all_nodes_by_label(
-            Class, graph_name=graph_name
-        ))
+        summary.classes = len(
+            self.repository.get_all_nodes_by_label(Class, graph_name=graph_name)
+        )
 
         # Functions
-        summary.functions = len(self.repository.get_all_nodes_by_label(
-            Function, graph_name=graph_name
-        ))
+        summary.functions = len(
+            self.repository.get_all_nodes_by_label(Function, graph_name=graph_name)
+        )
 
         return summary
 
     def get_function_summarizations(
-            self,
-            graph_name: str,
-            repository_name: str = None
+        self, graph_name: str, repository_name: str = None
     ) -> Dict[str, Function]:
         """Converts all Function nodes into a list of tuples.
 
@@ -160,7 +209,7 @@ class GraphService:
             List[Tuple[str, Function]
         """
         if not repository_name:
-            repository_name = '.*'
+            repository_name = ".*"
 
         nodes = self.repository.execute_query(
             f"""
@@ -168,10 +217,18 @@ class GraphService:
             AND f.repository =~ {repository_name}
             RETURN n.summarization as `summarization`, f as `function`
             """,
-            graph_name=graph_name
+            graph_name=graph_name,
         )
 
-        return dict(map(lambda x: (x['summarization'], Function(identity=x['function'].identity, **x['function'])), nodes))  # noqa: 501
+        return dict(
+            map(
+                lambda x: (
+                    x["summarization"],
+                    Function(identity=x["function"].identity, **x["function"]),
+                ),
+                nodes,
+            )
+        )  # noqa: 501
 
     def get_call_graph_by_id(self, node_id: int, graph_name: str) -> CallGraph:
         """Get the call graph for a Function node by its ID.
@@ -188,35 +245,61 @@ class GraphService:
             MATCH (c:Function)-[r:Calls*0..1]-(f:Function) WHERE ID(f) = {node_id}
             RETURN f as `function`, c as `call`, r as `relationship`
             """,
-            graph_name=graph_name
+            graph_name=graph_name,
         )
 
         call_graph = CallGraph()
 
-        call_graph.nodes.append(CallGraph.Function(
-            id=results[0]["function"].identity,
-            label=results[0]["function"]["canonical_name"],
-            title=results[0]["function"]["canonical_name"]
-        ))
+        call_graph.nodes.append(
+            CallGraph.Function(
+                id=results[0]["function"].identity,
+                label=results[0]["function"]["canonical_name"],
+                title=results[0]["function"]["canonical_name"],
+            )
+        )
 
         results = list(filter(lambda x: x["call"].identity != node_id, results))
         if len(results) == 0:
             return call_graph
 
-        call_graph.nodes.extend(list(map(lambda res: CallGraph.Function(
-            id=res["call"].identity,
-            label=(res["call"]["canonical_name"] if "canonical_name" in res else res["call"]["name"]),  # noqa: 501
-            title=(res["call"]["canonical_name"] if "canonical_name" in res else res["call"]["name"])  # noqa: 501
-        ), results)))
+        call_graph.nodes.extend(
+            list(
+                map(
+                    lambda res: CallGraph.Function(
+                        id=res["call"].identity,
+                        label=(
+                            res["call"]["canonical_name"]
+                            if "canonical_name" in res
+                            else res["call"]["name"]
+                        ),  # noqa: 501
+                        title=(
+                            res["call"]["canonical_name"]
+                            if "canonical_name" in res
+                            else res["call"]["name"]
+                        ),  # noqa: 501
+                    ),
+                    results,
+                )
+            )
+        )
 
         def parse_relationships(x):
-            return list(map(lambda y: CallGraph.Relationship(
-                from_id=y.start_node.identity,
-                to_id=y.end_node.identity,
-            ), x["relationship"]))
+            return list(
+                map(
+                    lambda y: CallGraph.Relationship(
+                        from_id=y.start_node.identity,
+                        to_id=y.end_node.identity,
+                    ),
+                    x["relationship"],
+                )
+            )
 
         call_graph.edges.extend(
-            [item for sublist in list(map(parse_relationships, results)) for item in sublist]
+            [
+                item
+                for sublist in list(map(parse_relationships, results))
+                for item in sublist
+            ]
         )
 
         return call_graph

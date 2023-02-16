@@ -14,7 +14,7 @@ from repograph.entities.search.service import SearchService
 from repograph.entities.search.models import SemanticSearchResultSet
 
 # Configure logging
-log = getLogger('repograph.entities.search.router')
+log = getLogger("repograph.entities.search.router")
 
 
 class SearchRouter:
@@ -32,12 +32,10 @@ class SearchRouter:
         )
 
     def semantic_search(
-            self,
-            graph: str,
-            query: str = None,
-            offset: int = 0,
-            limit: int = 0
+        self, graph: str, query: str = None, offset: int = 0, limit: int = 0
     ) -> SemanticSearchResultSet:
         """Semantic search endpoint."""
-        results = self.service.find_similar_functions_by_query(graph, query, offset, limit)
+        results = self.service.find_similar_functions_by_query(
+            graph, query, offset, limit
+        )
         return results

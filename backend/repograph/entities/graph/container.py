@@ -25,18 +25,11 @@ class GraphContainer(DeclarativeContainer):
     metadata: Dependency[MetadataService] = Dependency()
 
     repository: Singleton[GraphRepository] = Singleton(
-        GraphRepository,
-        graph=neo4j,
-        driver=driver
+        GraphRepository, graph=neo4j, driver=driver
     )
 
     service: Singleton[GraphService] = Singleton(
-        GraphService,
-        repository=repository,
-        metadata=metadata
+        GraphService, repository=repository, metadata=metadata
     )
 
-    router: Singleton[GraphRouter] = Singleton(
-        GraphRouter,
-        service=service
-    )
+    router: Singleton[GraphRouter] = Singleton(GraphRouter, service=service)

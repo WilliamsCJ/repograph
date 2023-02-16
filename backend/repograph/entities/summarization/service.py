@@ -20,7 +20,7 @@ from repograph.entities.summarization.utils import clean_source_code
 
 
 # Setup logging
-log = getLogger('repograph.entities.summarization.service')
+log = getLogger("repograph.entities.summarization.service")
 
 
 class SummarizationService:
@@ -38,8 +38,12 @@ class SummarizationService:
 
         if summarize:
             log.info("Initialising CodeT5 model...")
-            self.tokenizer = RobertaTokenizerFast.from_pretrained("Salesforce/codet5-base")
-            self.model = T5ForConditionalGeneration.from_pretrained("Salesforce/codet5-base-multi-sum")  # noqa: 501
+            self.tokenizer = RobertaTokenizerFast.from_pretrained(
+                "Salesforce/codet5-base"
+            )
+            self.model = T5ForConditionalGeneration.from_pretrained(
+                "Salesforce/codet5-base-multi-sum"
+            )  # noqa: 501
             log.info("Ready!")
         else:
             log.info("Summarization flag not set. Skipping setup.")
@@ -57,7 +61,7 @@ class SummarizationService:
             log.warning("No model or tokenizer initialised!")
             return ""
 
-        log.debug(f'Create Docstring node for function `{function.name}`...')
+        log.debug(f"Create Docstring node for function `{function.name}`...")
         source_code = clean_source_code(function.source_code)
         return self._summarize_code(source_code)
 

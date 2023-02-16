@@ -15,7 +15,7 @@ def datetime_to_string(dt: datetime.datetime) -> str:
     Returns:
         str
     """
-    return dt.isoformat(sep=' ', timespec='milliseconds')
+    return dt.isoformat(sep=" ", timespec="milliseconds")
 
 
 def string_to_datetime(string: str) -> datetime.datetime:

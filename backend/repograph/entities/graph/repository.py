@@ -7,7 +7,7 @@ from logging import getLogger
 
 # pip imports
 from py2neo import GraphService, NodeMatch, Transaction, Node as py2neoNode
-from neo4j import Driver
+from neo4j import Driver, Transaction as neo4jTransaction
 from neo4j.exceptions import ClientError
 
 # Models
@@ -17,13 +17,14 @@ from repograph.entities.graph.models.base import BaseSubgraph, Node
 from repograph.entities.graph.exceptions import GraphExistsError
 
 # Configure logging
-log = getLogger('repograph.entities.graph.repository')
+log = getLogger("repograph.entities.graph.repository")
 
 
 class GraphRepository:
     """
     Neo4j repository. Provides specific interface for Neo4j, using py2neo.
     """
+
     _graph_service: GraphService
 
     def __init__(self, graph: GraphService, driver: Driver) -> None:
@@ -36,21 +37,24 @@ class GraphRepository:
         self._driver = driver
         self._driver.verify_connectivity()
 
-    def create_graph(self, graph_name: str):
+    @classmethod
+    def create_graph(cls, graph_name: str, tx: neo4jTransaction):
         """Create a new Graph on the Neo4j server.
 
         Args:
             graph_name (str): The name of the graph database.
+            tx (Transaction): neo4j driver Transaction for system graph.
 
         Returns:
-            None
+            Transaction: So database creation can be rolled back.
 
         Raises:
             GraphExistsError: If graph name already exists.
         """
         try:
-            self._driver.execute_query(f"CREATE DATABASE {graph_name}")
+            tx.run(f"CREATE DATABASE {graph_name}")
         except ClientError:
+            tx.rollback()
             raise GraphExistsError(graph_name)
 
     def get_transaction(self, graph_name) -> Transaction:
@@ -64,7 +68,12 @@ class GraphRepository:
 
         return self._graph_service[graph_name].begin()
 
-    def add(self, *args: BaseSubgraph, graph_name: str = None, tx: Transaction = None) -> None:
+    def get_driver_transaction(self) -> neo4jTransaction:
+        return self._driver.session().begin_transaction()
+
+    def add(
+        self, *args: BaseSubgraph, graph_name: str = None, tx: Transaction = None
+    ) -> None:
         """Add nodes/relationships to the graph.
 
         Args:
@@ -99,7 +108,9 @@ class GraphRepository:
         """
         return self._graph_service[graph_name].nodes.match().count() != 0
 
-    def get_number_of_nodes_and_relationships(self, graph_name: str = None) -> Tuple[int, int]:
+    def get_number_of_nodes_and_relationships(
+        self, graph_name: str = None
+    ) -> Tuple[int, int]:
         """Retrieve the number of nodes and relationships in the graph.
 
         Args:
@@ -109,11 +120,14 @@ class GraphRepository:
             int: Number of nodes
             int: Number of relationships
         """
-        return \
-            self._graph_service[graph_name].nodes.match().count(), \
-            self._graph_service[graph_name].relationships.match().count()
+        return (
+            self._graph_service[graph_name].nodes.match().count(),
+            self._graph_service[graph_name].relationships.match().count(),
+        )
 
-    def get_all_nodes_by_label(self, node_label: type[Node], graph_name: str = None) -> List[Node]:
+    def get_all_nodes_by_label(
+        self, node_label: type[Node], graph_name: str = None
+    ) -> List[Node]:
         """Retrieve all nodes with a particular label.
 
         Args:
@@ -123,7 +137,9 @@ class GraphRepository:
         Return:
             List[Node]
         """
-        match: NodeMatch = self._graph_service[graph_name].nodes.match(node_label.__name__)
+        match: NodeMatch = self._graph_service[graph_name].nodes.match(
+            node_label.__name__
+        )
 
         def cast(node: py2neoNode):
             properties = dict(node)
@@ -159,6 +175,4 @@ class GraphRepository:
         Returns:
             None
         """
-        self._graph_service[graph_name].query(
-            f"""DROP DATABASE {graph_name}"""
-        )
+        self._graph_service[graph_name].query(f"""DROP DATABASE {graph_name}""")

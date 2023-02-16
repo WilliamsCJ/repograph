@@ -24,35 +24,43 @@ configure_logging()
 log = logging.getLogger("repograph.cli")
 
 # Command-line / config-file argument parsing
-p = configargparse.ArgParser(default_config_files=['../default_config.yaml'])
-p.add_argument('-c', '--config', is_config_file=True, help='Config file path.')
-p.add_argument('--uri', required=True, help='The URI of the Neo4J server.')
-p.add_argument('--username', required=True, help='The username to supply to the Neo4J server.')
-p.add_argument('--password', required=True, help='The password to supply to the Neo4J server.')
-p.add_argument('--database', required=False, default='neo4j', help="The database name to use.")
-p.add_argument('--input', required=True, action='append', help='The directory_info.json file.')
-p.add_argument('--name', required=True, help='The name of the graph.')
+p = configargparse.ArgParser(default_config_files=["../default_config.yaml"])
+p.add_argument("-c", "--config", is_config_file=True, help="Config file path.")
+p.add_argument("--uri", required=True, help="The URI of the Neo4J server.")
 p.add_argument(
-    '--prune',
-    required=False,
-    dest='prune',
-    action="store_true",
-    help='Prune any existing nodes and relationships from the database.'
+    "--username", required=True, help="The username to supply to the Neo4J server."
 )
 p.add_argument(
-    '--summarize',
-    required=False,
-    dest='summarize',
-    action="store_true",
-    help='"Whether to generate function summarization docstrings'
+    "--password", required=True, help="The password to supply to the Neo4J server."
 )
 p.add_argument(
-    '--skip_inspect4py',
+    "--database", required=False, default="neo4j", help="The database name to use."
+)
+p.add_argument(
+    "--input", required=True, action="append", help="The directory_info.json file."
+)
+p.add_argument("--name", required=True, help="The name of the graph.")
+p.add_argument(
+    "--prune",
     required=False,
-    dest='skip_inspect4py',
+    dest="prune",
     action="store_true",
-    help='Whether to skip running inspect4py. Use when the input directory '
-         'is already an inspect4py output directory.'
+    help="Prune any existing nodes and relationships from the database.",
+)
+p.add_argument(
+    "--summarize",
+    required=False,
+    dest="summarize",
+    action="store_true",
+    help='"Whether to generate function summarization docstrings',
+)
+p.add_argument(
+    "--skip_inspect4py",
+    required=False,
+    dest="skip_inspect4py",
+    action="store_true",
+    help="Whether to skip running inspect4py. Use when the input directory "
+    "is already an inspect4py output directory.",
 )
 
 
@@ -61,7 +69,7 @@ def main(
     input_list: List[str],
     name: str,
     build: BuildService = Provide[ApplicationContainer.build.container.service],
-    prune: bool = False
+    prune: bool = False,
 ) -> None:
     """Main function of CLI script.
 

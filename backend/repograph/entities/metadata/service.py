@@ -1,6 +1,8 @@
 """
 Metadata entity application logic.
 """
+import sqlite3
+
 # Base imports
 from typing import List
 
@@ -20,16 +22,20 @@ class MetadataService:
         """
         self.repository = repository
 
-    def register_graph(self, graph: Graph):
+    def get_transaction(self) -> sqlite3.Connection:
+        return self.repository.get_transaction()
+
+    def register_graph(self, graph: Graph, tx: sqlite3.Connection):
         """Register a new graph.
 
         Args:
             graph (Graph): Graph metadata.
+            tx (sqlite3.Connection): The transaction object.
 
         Returns:
             None
         """
-        self.repository.add_database(graph)
+        self.repository.add_database(graph, tx)
 
     def get_all_graph_listings(self) -> List[Graph]:
         """Get all graphs

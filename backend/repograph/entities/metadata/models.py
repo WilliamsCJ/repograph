@@ -12,6 +12,7 @@ class Graph(BaseModel):
     """
     Represents a Graph within Neo4j.
     """
+
     neo4j_name: str
     name: str
     description: str

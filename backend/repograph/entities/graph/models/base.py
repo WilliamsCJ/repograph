@@ -21,6 +21,7 @@ class BaseSubgraph(BaseModel):
     Attributes:
         _subgraph (py2neo.Subgraph): Py2neo Node representation.
     """
+
     _subgraph: py2neo.Subgraph = PrivateAttr()
     id: Optional[int]
     repository_name: str
@@ -33,7 +34,7 @@ class BaseSubgraph(BaseModel):
         subgraph: Union[py2neo.Node, py2neo.Relationship],
         repository_name: str,
         identity: Optional[int] = None,
-        **data: Any
+        **data: Any,
     ) -> None:
         """Constructor
 
@@ -44,11 +45,7 @@ class BaseSubgraph(BaseModel):
         """
         self._subgraph = subgraph
 
-        super().__init__(
-            id=identity,
-            repository_name=repository_name,
-            **data
-        )
+        super().__init__(id=identity, repository_name=repository_name, **data)
 
 
 class Node(BaseSubgraph):
@@ -58,10 +55,7 @@ class Node(BaseSubgraph):
     """
 
     def __init__(
-        self,
-        repository_name: str = None,
-        identity: Optional[int] = None,
-        **data: Any
+        self, repository_name: str = None, identity: Optional[int] = None, **data: Any
     ) -> None:
         """Constructor
 
@@ -76,13 +70,11 @@ class Node(BaseSubgraph):
         """
         super().__init__(
             py2neo.Node(
-                self.__class__.__name__,
-                repository_name=repository_name,
-                **data
+                self.__class__.__name__, repository_name=repository_name, **data
             ),
             repository_name,
             identity=identity,
-            **data
+            **data,
         )
 
 
@@ -90,6 +82,7 @@ class InvalidRelationshipException(TypeError):
     """Represent an invalid Relationship configuration,
     based on the parent and child types.
     """
+
     def __init__(self, parent: Node, child: Node, relationship: Relationship) -> None:
         """Constructor
 
@@ -117,17 +110,14 @@ class Relationship(BaseSubgraph):
     Raises:
         InvalidRelationshipException: _description_
     """
+
     parent: Node
     child: Node
 
     _allowed_types: Optional[Dict[Node, Set[Node]]] = None
 
     def __init__(
-            self,
-            parent: Node,
-            child: Node,
-            repository_name: str,
-            **data: Any
+        self, parent: Node, child: Node, repository_name: str, **data: Any
     ) -> None:
         """Constructor
 
@@ -139,7 +129,9 @@ class Relationship(BaseSubgraph):
             InvalidRelationshipException: If the types of the parent and child Nodes violate
                                           the mappings in _allowed_types.
         """
-        if self._allowed_types and (type(child) not in self._allowed_types.get(type(parent), set())):  # noqa: E501
+        if self._allowed_types and (
+            type(child) not in self._allowed_types.get(type(parent), set())
+        ):  # noqa: E501
             raise InvalidRelationshipException(parent, child, self)
 
         super().__init__(
@@ -148,10 +140,10 @@ class Relationship(BaseSubgraph):
                 self.__class__.__name__,
                 child._subgraph,
                 repository_name=repository_name,
-                **data
+                **data,
             ),
             repository_name,
             parent=parent,
             child=child,
-            **data
+            **data,
         )

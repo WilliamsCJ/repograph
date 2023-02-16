@@ -14,6 +14,5 @@ class SummarizationContainer(DeclarativeContainer):
     config: Configuration = Configuration()
 
     service: Singleton[SummarizationService] = Singleton(
-        SummarizationService,
-        summarize=config.summarize
+        SummarizationService, summarize=config.summarize
     )

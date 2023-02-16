@@ -7,7 +7,11 @@ from typing import Any, Optional
 
 from repograph.entities.graph.models.base import Node
 from repograph.utils.json import JSONDict
-from repograph.utils.paths import get_path_name, get_path_parent, get_package_parent_and_name
+from repograph.utils.paths import (
+    get_path_name,
+    get_path_parent,
+    get_package_parent_and_name,
+)
 
 
 PYTHON_EXTENSION = ".py"
@@ -20,8 +24,10 @@ class Repository(Node):
         name: The name of the repository.
         type: The inferred repository type.
     """
+
     class SoftwareType(Enum):
         """Enum for SoftwareType of Repository."""
+
         SERVICE = "service"
         SCRIPT_WITH_MAIN = "script with main"
         SCRIPT = "script"
@@ -112,13 +118,13 @@ class Repository(Node):
 
     @classmethod
     def create_from_metadata(
-            cls,
-            name: str,
-            metadata: JSONDict,
-            is_root_package: bool,
-            software_type: Optional[SoftwareType],
-            repository_name: str
-    ) -> 'Repository':
+        cls,
+        name: str,
+        metadata: JSONDict,
+        is_root_package: bool,
+        software_type: Optional[SoftwareType],
+        repository_name: str,
+    ) -> "Repository":
         """Create from metadata JSON.
 
         Args:
@@ -142,7 +148,7 @@ class Repository(Node):
             is_root_package=is_root_package,
             type=software_type,
             repository_name=repository_name,
-            **metadata
+            **metadata,
         )
 
 
@@ -153,6 +159,7 @@ class README(Node):
         path (str): The path of the README file.
         content (str): The content of the README file.
     """
+
     path: str
     content: str
 
@@ -165,6 +172,7 @@ class Directory(Node):
         path (str): The path of the directory.
         parent_path (str): The parent directory of the folder.
     """
+
     name: str
     path: str
     parent_path: str
@@ -179,25 +187,23 @@ class Directory(Node):
         name = get_path_name(path)
         parent = get_path_parent(path)
         super().__init__(
-            path=path,
-            name=name,
-            parent_path=parent,
-            repository_name=repository_name
+            path=path, name=name, parent_path=parent, repository_name=repository_name
         )
 
 
 class Package(Node):
     """Represents a Python package, either within the repository or external.
 
-     Attributes:
-        name (str): The name of the directory.
-        path (Optional[str]): The path of the directory.
-        parent_path (Optional[str]): The parent directory of the folder.
-        canonical_name (str): The full package name.
-        parent_package (str): The canonical name of the parent package.
-        external (bool): Whether this package is external to the parent repository
-                         (i.e. installed from PyPi).
+    Attributes:
+       name (str): The name of the directory.
+       path (Optional[str]): The path of the directory.
+       parent_path (Optional[str]): The parent directory of the folder.
+       canonical_name (str): The full package name.
+       parent_package (str): The canonical name of the parent package.
+       external (bool): Whether this package is external to the parent repository
+                        (i.e. installed from PyPi).
     """
+
     name: str
     canonical_name: str
     parent_package: str
@@ -207,10 +213,10 @@ class Package(Node):
 
     @classmethod
     def create_from_directory(
-            cls,
-            path: str,
-            canonical_name: str,
-            repository_name: str,
+        cls,
+        path: str,
+        canonical_name: str,
+        repository_name: str,
     ) -> "Package":
         """Creates a Package instance from a directory.
 
@@ -248,13 +254,7 @@ class Package(Node):
             Package: A Package instance.
         """
         parent, name = get_package_parent_and_name(package)
-        return Package(
-            name,
-            package,
-            parent,
-            repository_name,
-            external=True
-        )
+        return Package(name, package, parent, repository_name, external=True)
 
     def __init__(
         self,
@@ -288,7 +288,7 @@ class Package(Node):
             path=path,
             parent_path=parent_path,
             external=external,
-            repository_name=repository_name
+            repository_name=repository_name,
         )
 
 
@@ -301,6 +301,7 @@ class Module(Node):
        extension (str): The file extension.
        is_test (bool): Whether the file has been assessed to be a test file.
     """
+
     name: str
     canonical_name: Optional[str]
     path: Optional[str]
@@ -335,9 +336,7 @@ class Module(Node):
 
     @classmethod
     def create_init_module(
-        cls,
-        parent_canonical_name: str,
-        repository_name: str
+        cls, parent_canonical_name: str, repository_name: str
     ) -> "Module":
         """Create an __init__ module for a Package.
 
@@ -363,6 +362,7 @@ class Class(Node):
         min_line_number (Optional[int]): The first line of the class definition.
         max_line_number (Optional[int): The last line of the class definition.
     """
+
     name: str
     canonical_name: Optional[str]
     min_line_number: Optional[int]
@@ -381,11 +381,13 @@ class Function(Node):
         min_line_number (Optional[int]): The first line of the function definition.
         max_line_number (Optional[int]): The last line of the function definition.
     """
+
     class FunctionType(Enum):
         """Enum for FunctionType.
 
         Either Method or Function.
         """
+
         METHOD = "Method"
         FUNCTION = "Function"
 
@@ -406,18 +408,17 @@ class Variable(Node):
         name (str): The variable name
         type (str): The inferred type of the variable, usually from a type hint.
     """
+
     name: Optional[str]
     type: Optional[str] = "Any"
 
 
 class Argument(Variable):
-    """Node representing an argument to a function.
-    """
+    """Node representing an argument to a function."""
 
 
 class ReturnValue(Variable):
-    """Node representing a return value from a function.
-    """
+    """Node representing a return value from a function."""
 
 
 class Body(Node):
@@ -433,6 +434,7 @@ class License(Node):
         license_type (str): The suspected license type.
         confidence (float): The confidence that the specified type matches the extracted text.
     """
+
     text: str
     license_type: str
     confidence: float
@@ -446,6 +448,7 @@ class Docstring(Node):
         long_description (Optional[str]): The main body of the docstring.
         summarization (str): The generated text summary of whatever the docstring is documenting.
     """
+
     short_description: Optional[str]
     long_description: Optional[str]
     summarization: Optional[str]
@@ -461,6 +464,7 @@ class DocstringArgument(Argument):
         is_optional (bool): Whether the argument is optional.
         default (Optional[Any]): The default value of the argument, if it is optional.
     """
+
     description: Optional[str]
     is_optional: bool
     default: Optional[Any]
@@ -475,6 +479,7 @@ class DocstringReturnValue(ReturnValue):
         type (str): The inferred type of the variable, usually from a type hint.
         is_generator (bool): Whether the return value is a generator.
     """
+
     description: Optional[str]
     is_generator: bool
 
@@ -486,5 +491,6 @@ class DocstringRaises(Node):
         description (str): The description of the exception that may be raised.
         type (str): The inferred type of the exception, usually from a type hint.
     """
+
     description: str
     type: Optional[str]

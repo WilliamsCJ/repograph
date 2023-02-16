@@ -19,11 +19,12 @@ class SemanticSearchResult(BaseModel):
         summarization (str): The summarization of the function's source code.
         score (float): The cosine distance score.
     """
-    function: Function = Field(..., exclude={'ast'})
+
+    function: Function = Field(..., exclude={"ast"})
     summarization: str
     score: float
 
-    @validator('score')
+    @validator("score")
     def round_score(cls, v):
         """Round match score to 3 decimal places."""
         return round(v, 3)
