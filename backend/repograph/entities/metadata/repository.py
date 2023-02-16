@@ -30,7 +30,7 @@ class MetadataRepository:
         db.execute(
             """
             CREATE TABLE IF NOT EXISTS graphs
-            (neo4j_name TEXT, name TEXT, description TEXT, created TEXT, status TEXT)
+            (neo4j_name TEXT, name TEXT, description TEXT, created TEXT, status TEXT, PRIMARY KEY(neo4j_name));
         """
         )
 
@@ -91,7 +91,7 @@ class MetadataRepository:
             None
         """
         db = sqlite3.connect(self.db_path)
-        db.execute("DELETE FROM graphs WHERE neo4j_name = ?", name)
+        db.execute(f"DELETE FROM graphs WHERE neo4j_name = '{name}'")
         db.commit()
 
     def update_database(self, graph: Graph) -> None:

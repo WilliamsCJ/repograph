@@ -35,8 +35,18 @@ class GraphRouter:
             response_model=CallGraph,
         )
 
+        self.router.add_api_route(
+            "/{graph}",
+            self.delete_graph,
+            methods=["DELETE"],
+            status_code=status.HTTP_204_NO_CONTENT,
+        )
+
     async def summary(self, graph: str):
         return self.service.get_summary(graph)
 
     async def call_graph_by_id(self, graph: str, node_id: int) -> CallGraph:
         return self.service.get_call_graph_by_id(node_id, graph)
+
+    async def delete_graph(self, graph_name: str):
+        self.service.delete_graph(graph_name)
