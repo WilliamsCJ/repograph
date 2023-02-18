@@ -196,13 +196,14 @@ class Package(Node):
     """Represents a Python package, either within the repository or external.
 
     Attributes:
-       name (str): The name of the directory.
-       path (Optional[str]): The path of the directory.
-       parent_path (Optional[str]): The parent directory of the folder.
-       canonical_name (str): The full package name.
-       parent_package (str): The canonical name of the parent package.
-       external (bool): Whether this package is external to the parent repository
-                        (i.e. installed from PyPi).
+        name (str): The name of the directory.
+        path (Optional[str]): The path of the directory.
+        parent_path (Optional[str]): The parent directory of the folder.
+        canonical_name (str): The full package name.
+        parent_package (str): The canonical name of the parent package.
+        external (bool): Whether this package is external to the parent repository
+                         (i.e. installed from PyPi).
+        inferred (bool): This object was inferred when parsing dependencies or calls. Default False.
     """
 
     name: str
@@ -211,6 +212,7 @@ class Package(Node):
     path: Optional[str]
     parent_path: Optional[str]
     external: bool
+    inferred: bool = False
 
     @classmethod
     def create_from_directory(
@@ -267,6 +269,7 @@ class Package(Node):
         parent_path: Optional[str] = None,
         external: bool = False,
         identity: Optional[int] = None,
+        inferred: bool = False,
     ):
         """Constructor
 
@@ -290,6 +293,7 @@ class Package(Node):
             parent_path=parent_path,
             external=external,
             repository_name=repository_name,
+            inferred=inferred,
         )
 
 
@@ -297,10 +301,11 @@ class Module(Node):
     """Represents a Module within the repository.
 
     Attributes:
-       name (str): The file.
-       path (str): The file path within the repository.
-       extension (str): The file extension.
-       is_test (bool): Whether the file has been assessed to be a test file.
+        name (str): The file.
+        path (str): The file path within the repository.
+        extension (str): The file extension.
+        is_test (bool): Whether the file has been assessed to be a test file.
+        inferred (bool): This object was inferred when parsing dependencies or calls. Default False.
     """
 
     name: str
@@ -309,6 +314,7 @@ class Module(Node):
     parent_path: Optional[str]
     extension: str = PYTHON_EXTENSION
     is_test: bool = False
+    inferred: bool = False
 
     def __hash__(self):
         return hash((self.name, self.path))
@@ -333,6 +339,7 @@ class Module(Node):
             extension=self.extension,
             is_test=self.is_test,
             repository_name=self.repository_name,
+            inferred=self.inferred,
         )
 
     @classmethod
@@ -352,6 +359,7 @@ class Module(Node):
             name="__init__",
             canonical_name=f"{parent_canonical_name}.__init__",
             repository_name=repository_name,
+            inferred=True,
         )
 
 
@@ -362,12 +370,14 @@ class Class(Node):
         name (str): The class name.
         min_line_number (Optional[int]): The first line of the class definition.
         max_line_number (Optional[int): The last line of the class definition.
+        inferred (bool): This object was inferred when parsing dependencies or calls. Default False.
     """
 
     name: str
     canonical_name: Optional[str]
     min_line_number: Optional[int]
     max_line_number: Optional[int]
+    inferred: bool = False
 
 
 class Function(Node):
@@ -381,6 +391,7 @@ class Function(Node):
         ast (Optional[ast.AST]): Abstract Syntax Tree extracted from the source code.
         min_line_number (Optional[int]): The first line of the function definition.
         max_line_number (Optional[int]): The last line of the function definition.
+        inferred (bool): This object was inferred when parsing dependencies or calls. Default False.
     """
 
     class FunctionType(Enum):
@@ -400,6 +411,7 @@ class Function(Node):
     ast: Optional[Any]
     min_line_number: Optional[int]
     max_line_number: Optional[int]
+    inferred: bool = False
 
 
 class Variable(Node):
