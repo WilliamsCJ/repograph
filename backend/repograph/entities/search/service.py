@@ -129,8 +129,6 @@ class SearchService:
         low_scores = 0
 
         for summarization, docstring in pairs:
-            if not summarization or not docstring:
-                print(summarization, docstring)
             embedding_1 = self.model.encode(summarization)
             embedding_2 = self.model.encode([docstring, ""])
             score = util.dot_score(embedding_1, embedding_2)[0].cpu().tolist()[0]
