@@ -18,12 +18,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.9.12
+          python-version: 3.10.8
       - name: Install dependencies
-        run: pip3 install -r requirements.txt -r tests/requirements.txt
-      - name: Lint with flake8
+        run: pip3 install -r requirements.txt
+      - name: Lint with black
         run: |
-          flake8 repograph --count --max-complexity=10 --max-line-length=100 --statistics
+          black .
   
   test:
     runs-on: ubuntu-latest
@@ -36,9 +36,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.9.12
+          python-version: 3.10.8
+      - name: Clone test repos
+        run: |
+          cd ../demo && ./clone.sh
       - name: Install dependencies
-        run: pip3 install -r requirements.txt -r tests/requirements.txt
+        run: pip3 install -r requirements.txt
       - name: Test with unittest
         run: |
-          python3 -m unittest
+          coverage run  --source=repograph -m unittest && coverage xml
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

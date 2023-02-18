@@ -16,31 +16,36 @@ from repograph.entities.build.utils import read_json_from_file
 # Other service imports
 from repograph.entities.graph.service import GraphService
 from repograph.entities.summarization.service import SummarizationService
+from repograph.entities.metadata.service import MetadataService
 
 
 # Configure logging
-log = getLogger('repograph.entities.build.service')
+log = getLogger("repograph.entities.build.service")
 
 
 class BuildService:
     graph: GraphService
     summarization: SummarizationService
+    metadata: MetadataService
 
     temp_output = "./tmp"
 
     def __init__(
         self,
         graph: GraphService,
-        summarization: SummarizationService
+        summarization: SummarizationService,
+        metadata: MetadataService,
     ):
         """Constructor
 
         Args:
             graph (GraphService): The Graph Service.
             summarization (SummarizationService): The Summarization Service
+            metadata (MetadataService): The Metadata Service
         """
         self.graph = graph
         self.summarization = summarization
+        self.metadata = metadata
 
     @staticmethod
     def call_inspect4py(input_path: str, output_path: str) -> str:
@@ -53,23 +58,29 @@ class BuildService:
         Returns:
             output_path (str)
         """
-        log.info("Extracting information from %s using inspect4py...", input_path)
-
-        subprocess.check_call([
-            "inspect4py",
-            "-i",
+        log.info(
+            "Extracting information from %s using inspect4py to %s...",
             input_path,
-            "-o",
             output_path,
-            "-md",
-            "-rm",
-            "-si",
-            "-ld",
-            "-sc",
-            "-ast",
-            "-r",
-            "-cl"
-        ])
+        )
+
+        subprocess.check_call(
+            [
+                "inspect4py",
+                "-i",
+                input_path,
+                "-o",
+                output_path,
+                "-md",
+                "-rm",
+                "-si",
+                "-ld",
+                "-sc",
+                "-ast",
+                "-r",
+                "-cl",
+            ]
+        )
 
         log.info("Done!")
         return output_path
@@ -108,18 +119,22 @@ class BuildService:
             None
         """
         log.info("Cleaning up temporary directory...")
-        shutil.rmtree("./tmp")
+        shutil.rmtree("./tmp", ignore_errors=True)
         log.info("Done!")
 
     def build(
         self,
         input_list: List[str],
-        prune: bool = False
+        name: str,
+        description: str,
+        prune: bool = False,
     ) -> None:
         """Build a  graph using the input repositories.
 
         Args:
             input_list (List[str]): The list of paths to repositories to add the graph.
+            name (str): The name to assign to the graph.
+            description (str): The description to associate with the graph.
             prune (bool): Whether to prune existing nodes from the graph.
 
         Returns:
@@ -129,38 +144,54 @@ class BuildService:
         success = 0
 
         if prune:
-            log.info("Pruning existing nodes...")
-            self.graph.prune()
+            log.info("Pruning existing graph...")
+            self.graph.prune(name.lower())
+
+        with self.graph.get_system_transaction() as (system_tx, metadata_tx):
+            graph = self.graph.create_graph(name, description, system_tx, metadata_tx)
 
         for i in input_list:
-            try:
-                self.call_inspect4py(i, self.temp_output)
-                directory_info, call_graph = self.parse_inspect4py_output(self.temp_output)
+            with self.graph.get_transaction(graph.neo4j_name) as tx:
+                try:
+                    self.call_inspect4py(i, self.temp_output)
+                    directory_info, call_graph = self.parse_inspect4py_output(
+                        self.temp_output
+                    )
 
-                builder = RepographBuilder(
-                    summarize=self.summarization.summarize_function if self.summarization.active else None,  # noqa: 501
-                    base_path=self.temp_output
-                )
-                nodes, relationships = builder.build(directory_info, call_graph)
+                    builder = RepographBuilder(
+                        self.summarization.summarize_function
+                        if self.summarization.active
+                        else None,
+                        self.temp_output,
+                        graph.neo4j_name,
+                        self.graph,
+                        tx,
+                    )
 
-                log.info("Writing nodes and relationships to graph...")
-                self.graph.bulk_add(nodes, relationships)
-                log.info("Done!")
+                    builder.build(directory_info, call_graph)
 
-                success += 1
-            except subprocess.CalledProcessError as e:
-                log.error("Error invoking inspect4py - %s", str(e))
-                failure += 1
-            except RepographBuildError as e:
-                log.error("Error building repograph - %s", str(e))
-                failure += 1
-            finally:
-                self.cleanup_inspect4py_output()
-                pass
+                    log.info("Done!")
+
+                    success += 1
+                except subprocess.CalledProcessError as e:
+                    log.error("Error invoking inspect4py - %s", str(e))
+                    failure += 1
+                    raise e
+                except RepographBuildError as e:
+                    log.error("Error building repograph - %s", str(e))
+                    failure += 1
+                    raise e
+                finally:
+                    self.cleanup_inspect4py_output()
+
+        if success == 0:
+            self.graph.delete_graph(graph.neo4j_name)
+        else:
+            self.metadata.set_graph_status_to_created(graph)
 
         log.info(
             "Parsed %d repositories successfully with %d failures (%d total)",
             success,
             failure,
-            len(input_list)
+            len(input_list),
         )

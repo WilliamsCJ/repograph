@@ -1,17 +1,33 @@
 import React from "react";
 
+// Next
 import type { GetServerSideProps, NextPage } from "next";
+
+// Icons
 import { FolderPlusIcon, PlusIcon } from "@heroicons/react/24/outline";
 
-import { AccentLinkButton, LinkButton } from "../components/core/button";
+// Components
+import { AccentLinkButton } from "../components/core/button";
 import { DefaultLayout } from "../components/core/layout";
-import GraphList, { GraphEntry } from "../components/home/list";
-import { EmptyState } from "../components/core/empty";
+import GraphListingComponent from "../components/home/index";
 
+// Functions
+import { getGraphListings } from "../lib/home";
+
+// Types
+import { SWRConfig } from "swr";
+
+/**
+ * Page props.
+ */
 export type HomePageProps = {
-  graphs: GraphEntry[];
+  fallback: any;
 };
 
+/**
+ * New graph button
+ * @constructor
+ */
 const NewButton = () => (
   <AccentLinkButton
     icon={<FolderPlusIcon />}
@@ -21,33 +37,23 @@ const NewButton = () => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const graphs = await getGraphListings();
+
   return {
     props: {
-      graphs: [
-        { name: "fastapi", createdAt: "05-09-2023" },
-        { name: "pyLODE", createdAt: "05-10-2023" },
-      ],
+      fallback: {
+        "/metadata/graphs": graphs,
+      },
     },
   };
 };
 
-const Home: NextPage<HomePageProps> = ({ graphs }) => {
+const Home: NextPage<HomePageProps> = ({ fallback }) => {
   return (
-    <DefaultLayout
-      buttons={graphs.length === 0 ? [] : [<NewButton />]}
-      heading="Your Graphs"
-    >
-      {graphs.length === 0 ? (
-        <EmptyState
-          icon={<FolderPlusIcon />}
-          heading="No graphs"
-          description="Get started by uploading a repository"
-          buttonText="Upload"
-          buttonIcon={<PlusIcon />}
-        />
-      ) : (
-        <GraphList graphs={graphs} />
-      )}
+    <DefaultLayout buttons={[<NewButton />]} heading="Your Graphs">
+      <SWRConfig value={{ fallback }}>
+        <GraphListingComponent />
+      </SWRConfig>
     </DefaultLayout>
   );
 };

@@ -4,13 +4,15 @@ from repograph.utils.json import parse_min_max_line_numbers
 
 
 class TestJSONUtils(unittest.TestCase):
-    @parameterized.expand([
+    @parameterized.expand(
+        [
             [{"min_max_lineno": {"min_lineno": 0, "max_lineno": 1}}, 0, 1],
             [{"min_max_lineno": {"min_lineno": 0}}, 0, None],
             [{"min_max_lineno": {"max_lineno": 1}}, None, 1],
             [{"minmax_lineno": {"min_lineno": 0, "max_lineno": 1}}, None, None],
-            [{}, None, None]
-    ])
+            [{}, None, None],
+        ]
+    )
     def test_parse_min_max_line_numbers(self, json, min, max):
         """Test for parse_min_max_line_numbers.
 

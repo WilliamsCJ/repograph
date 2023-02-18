@@ -6,95 +6,137 @@ import logging
 import os
 from typing import Callable, Dict, Set, List, Optional, Tuple, Union
 
+from py2neo import Transaction
+
 # Build entity imports
 from repograph.entities.build.exceptions import RepographBuildError
+from repograph.entities.graph.service import GraphService
 
 # Models imports
-from repograph.models.base import Node, Relationship
-from repograph.models.nodes import Argument, Class, Docstring, DocstringArgument, \
-                                   DocstringRaises, DocstringReturnValue, Directory, Module, \
-                                   Function, License, Package, README, Repository, ReturnValue
-from repograph.models.relationships import Calls, Contains, Describes, Documents, HasArgument, \
-                                           HasFunction, HasMethod, Imports, LicensedBy, \
-                                           Returns, Requires
+from repograph.entities.graph.models.nodes import (
+    Argument,
+    Class,
+    Docstring,
+    DocstringArgument,
+    DocstringRaises,
+    DocstringReturnValue,
+    Directory,
+    Module,
+    Function,
+    License,
+    Package,
+    README,
+    Repository,
+    ReturnValue,
+)
+from repograph.entities.graph.models.relationships import (
+    Calls,
+    Contains,
+    Describes,
+    Documents,
+    HasArgument,
+    HasFunction,
+    HasMethod,
+    Imports,
+    LicensedBy,
+    Returns,
+    Requires,
+)
 
 # Utility imports
 from repograph.utils.builtin import PYTHON_BUILT_IN_FUNCTIONS
-from repograph.utils.json import JSONDict, convert_dependencies_map_to_set, \
-                                 parse_min_max_line_numbers, marshall_json_to_string
+from repograph.utils.json import (
+    JSONDict,
+    convert_dependencies_map_to_set,
+    parse_min_max_line_numbers,
+    marshall_json_to_string,
+)
 from repograph.utils.nodes import find_node_object_by_name
-from repograph.utils.paths import strip_file_path_prefix, is_root_folder, get_path_name, \
-                                  get_path_root, get_path_parent, get_package_parent_and_name, \
-                                  get_module_and_object_from_canonical_object_name
+from repograph.utils.paths import (
+    strip_file_path_prefix,
+    is_root_folder,
+    get_path_name,
+    get_path_root,
+    get_path_parent,
+    get_package_parent_and_name,
+    get_module_and_object_from_canonical_object_name,
+)
 
-ADDITIONAL_KEYS = [
-  "requirements",
-  "directory_tree",
-  "license",
-  "readme_files"
-]
+ADDITIONAL_KEYS = ["requirements", "directory_tree", "license", "readme_files"]
 
 INIT = "__init__"
 
-log = logging.getLogger('repograph.repograph_builder')
+log = logging.getLogger("repograph.repograph_builder")
 
 
 class RepographBuilder:
     """
     Generates a Repograph from inspect4py output.
     """
-    # Nodes
-    nodes: List[Node] = []
-
-    # Relationships
-    relationships: List[Relationship] = []
-
-    # The optional summarization function
-    summarize: Optional[Callable[[Function], str]]
-
-    # Mapping of paths to Directory (or the Repository) object
-    directories: Dict[str, Union[Repository, Directory]] = dict()
-
-    # Mapping of paths/pacakge names to modules
-    modules: Dict[str, Module] = dict()
-
-    # Mapping of Module objects to Classes/Function objects
-    module_objects: Dict[Module, List[Union[Class, Function]]] = dict()
-
-    # Mapping Module dependencies for retrospective parsing
-    dependencies: List[Tuple[List[JSONDict], Module]] = []
-
-    # The objects a given Module depends on/imports
-    module_dependencies: Dict[Module, List[Union[Module, Function]]] = dict()
-
-    # Module imports
-    module_imports: Dict[Module, Set[str]] = dict()
-
-    # Packages from requirements file
-    requirements: Dict[str, Package] = dict()
-
-    # Mapping of built-in functions that have been called in the repository
-    called_builtin_functions: Dict[str, Function] = dict()
 
     def __init__(
         self,
         summarize: Optional[Callable[[Function], str]],
-        base_path: str
+        base_path: str,
+        graph_name: str,
+        graph: GraphService,
+        tx: Transaction,
     ) -> None:
         """Constructor
 
         Args:
             summarize (Optional[Callable[[Function], str]]): The optional summarization method.
+            base_path (str): The base path directory
+            graph_name (str): The name of the graph nodes are being added to.
         """
-        self.summarize = summarize
+        # The base directory path used for normalizing paths
         self.base_path = base_path
 
+        # Name of the graph. Used for calls to the graph service
+        self.graph_name = graph_name
+
+        # The name of the repository
+        self.repository_name = ""
+
+        # Transaction to use for calls to the graph service
+        self.tx = tx
+
+        # Graph service
+        self.graph: GraphService = graph
+
+        # The optional summarization function
+        self.summarize: Optional[Callable[[Function], str]] = summarize
+
+        # Mapping of paths to Directory (or the Repository) object
+        self.directories: Dict[str, Union[Repository, Directory]] = dict()
+
+        # Mapping of paths/pacakge names to modules
+        self.modules: Dict[str, Module] = dict()
+
+        # Mapping of Module objects to Classes/Function objects
+        self.module_objects: Dict[Module, List[Union[Class, Function]]] = dict()
+
+        # Mapping Module dependencies for retrospective parsing
+        self.dependencies: List[Tuple[List[JSONDict], Module]] = []
+
+        # The objects a given Module depends on/imports
+        self.module_dependencies: Dict[Module, List[Union[Module, Function]]] = dict()
+
+        # Module imports
+        self.module_imports: Dict[Module, Set[str]] = dict()
+
+        # Packages from requirements file
+        self.requirements: Dict[str, Package] = dict()
+
+        # Mapping of built-in functions that have been called in the repository
+        self.called_builtin_functions: Dict[str, Function] = dict()
+
     def _parse_repository(
-            self,
-            path: str,
-            metadata: JSONDict = None,
-            software_type: str = None,
-            directory_info: List[JSONDict] = None
+        self,
+        path: str,
+        metadata: JSONDict = None,
+        software_type: str = None,
+        directory_info: List[JSONDict] = None,
     ) -> Repository:
         """Parses information about the repository, i.e. the root,
         itself.
@@ -115,30 +157,37 @@ class RepographBuilder:
             modules, is_package = self._parse_files_in_directory(directory_info)
 
         if metadata:
-            repository = Repository.create_from_metadata(path, metadata, is_package, software_type)
+            repository = Repository.create_from_metadata(
+                path, metadata, is_package, software_type, path
+            )
         else:
             repository = Repository(
                 name=path,
                 is_root_package=is_package,
-                type=software_type
+                type=software_type,
+                repository_name=path,
             )
 
-        self.nodes.append(repository)
+        self.repository_name = repository.name
+
+        self.graph.add(repository, tx=self.tx, graph_name=self.graph_name)
         self.directories[repository.name] = repository
 
         # Parse each extracted module
         for module, file_info in modules:
             # If repository root is a package, add the full canonical name as such
             if repository.is_root_package:
-                module = module.update_canonical_name(f"{repository.name}.{module.name}")
+                module = module.update_canonical_name(
+                    f"{repository.name}.{module.name}"
+                )
 
             # Now parse the contents of the  module
             self._parse_module_contents(module, file_info)
 
             # Create a relationship between the Repository and the Module
-            relationship = Contains(repository, module)
-            self.nodes.append(module)
-            self.relationships.append(relationship)
+            relationship = Contains(repository, module, self.repository_name)
+            self.graph.add(module, tx=self.tx, graph_name=self.graph_name)
+            self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
             # Finally add the module to the list of stored modules
             self.modules[module.canonical_name] = module
@@ -146,7 +195,9 @@ class RepographBuilder:
 
         return repository
 
-    def _parse_requirements(self, requirements: Optional[JSONDict], repository: Repository) -> None:
+    def _parse_requirements(
+        self, requirements: Optional[JSONDict], repository: Repository
+    ) -> None:
         """Parses information extracted from the requirements.txt file.
 
         Args:
@@ -160,13 +211,22 @@ class RepographBuilder:
         else:
             log.info("Parsing requirements information...")
             for requirement, version in requirements.items():
-                package = Package.create_from_external_dependency(requirement)
-                relationship = Requires(repository, package, version=version)
-                self.nodes.append(package)
-                self.relationships.append(relationship)
+                package = Package.create_from_external_dependency(
+                    requirement, self.repository_name
+                )
+                relationship = Requires(
+                    repository,
+                    package,
+                    self.repository_name,
+                    version=version,
+                )
+                self.graph.add(package, tx=self.tx, graph_name=self.graph_name)
+                self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
                 self.requirements[requirement] = package
 
-    def _parse_license(self, licenses: Optional[JSONDict], repository: Repository) -> None:
+    def _parse_license(
+        self, licenses: Optional[JSONDict], repository: Repository
+    ) -> None:
         """Parses extracted license information.
 
         Args:
@@ -189,11 +249,15 @@ class RepographBuilder:
                     license_node = License(
                         text=licenses.get("extracted_text", None),
                         license_type=detected_type,
-                        confidence=(float(confidence.strip('%')) / 100)
+                        confidence=(float(confidence.strip("%")) / 100),
+                        graph_name=self.graph_name,
+                        repository_name=self.repository_name,
                     )
-                    relationship = LicensedBy(repository, license_node)
-                    self.nodes.append(license_node)
-                    self.relationships.append(relationship)
+                    relationship = LicensedBy(
+                        repository, license_node, self.repository_name
+                    )
+                    self.graph.add(license_node, tx=self.tx, graph_name=self.graph_name)
+                    self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
     def _parse_readme(self, info: JSONDict):
         """Parse README files in the repository
@@ -215,20 +279,25 @@ class RepographBuilder:
 
         for path, content in info.items():
             path = str(Path(path).relative_to(self.base_path))
-            readme = README(path=path, content=content)
+            readme = README(
+                path=path,
+                content=content,
+                graph_name=self.graph_name,
+                repository_name=self.repository_name,
+            )
             readmes.append(readme)
 
             parent_path = get_path_parent(path)
             parent = self.directories.get(parent_path, None)
 
             if parent:
-                relationship = Contains(parent, readme)
+                relationship = Contains(parent, readme, self.repository_name)
                 relationships.append(relationship)
             else:
                 log.error("Couldn't find parent for README at path: %s", path)
 
-        self.nodes.extend(readmes)
-        self.relationships.extend(relationships)
+        self.graph.add(*readmes, tx=self.tx, graph_name=self.graph_name)
+        self.graph.add(*relationships, tx=self.tx, graph_name=self.graph_name)
 
     def _get_parent_directory(self, parent_path: str) -> Directory:
         """Retrieves the parent directory for supplied path.
@@ -241,6 +310,7 @@ class RepographBuilder:
         Returns:
             Type[Directory]: The parent Directory.
         """
+
         def add_parents_recursively(child: Directory) -> None:
             """Recursively adds further missing parent directories
 
@@ -254,16 +324,18 @@ class RepographBuilder:
             parent = self.directories.get(child.parent_path, None)
 
             if not parent:
-                parent = Directory(child.parent_path)
-                relationship = Contains(parent, child)
-                self.nodes.append(parent)
-                self.relationships.append(relationship)
+                parent = Directory(self.repository_name, child.parent_path)
+                relationship = Contains(parent, child, self.repository_name)
+                self.graph.add(parent, tx=self.tx, graph_name=self.graph_name)
+                self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
                 self.directories[parent.path] = parent
                 return add_parents_recursively(parent)
             else:
-                parent_relationship = Contains(parent, child)
-                self.nodes.append(child)
-                self.relationships.append(parent_relationship)
+                parent_relationship = Contains(parent, child, self.repository_name)
+                self.graph.add(child, tx=self.tx, graph_name=self.graph_name)
+                self.graph.add(
+                    parent_relationship, tx=self.tx, graph_name=self.graph_name
+                )
                 return
 
         # Attempt to get the parent directory from the list of created directories.
@@ -272,8 +344,8 @@ class RepographBuilder:
             return existing_parent
 
         # If it doesn't exist create a new Directory and then call the recursive function.
-        new_parent = Directory(parent_path)
-        self.nodes.append(new_parent)
+        new_parent = Directory(self.repository_name, parent_path)
+        self.graph.add(new_parent, tx=self.tx, graph_name=self.graph_name)
         self.directories[new_parent.path] = new_parent
         add_parents_recursively(new_parent)
 
@@ -294,7 +366,9 @@ class RepographBuilder:
         while parent != "":
             parent_node = self.directories.get(parent, None)
 
-            if isinstance(parent_node, Package) or (isinstance(parent_node, Repository) and parent_node.is_root_package):  # noqa: 501
+            if isinstance(parent_node, Package) or (
+                isinstance(parent_node, Repository) and parent_node.is_root_package
+            ):
                 parts = [get_path_name(parent)] + parts
                 parent = get_path_parent(parent)
             else:
@@ -307,7 +381,7 @@ class RepographBuilder:
         directory_name: str,
         directory_info: List[JSONDict],
         index: int,
-        total: int
+        total: int,
     ) -> None:
         """Parse a directory
 
@@ -332,37 +406,43 @@ class RepographBuilder:
         # otherwise create a Directory node.
         if is_package:
             canonical_name = self._create_canonical_package_name(directory_path)
-            directory = Package.create_from_directory(directory_path, canonical_name)
+            directory = Package.create_from_directory(
+                directory_path, canonical_name, self.repository_name
+            )
         else:
-            directory = Directory(directory_path)
+            directory = Directory(self.repository_name, directory_path)
 
         # Add the list of created directories, the directory node,
         # and the relationship to its parent, to the Repograph.
         self.directories[directory.path] = directory
-        relationship = Contains(parent, directory)
-        self.nodes.append(parent)
-        self.relationships.append(relationship)
+        relationship = Contains(parent, directory, self.repository_name)
+        self.graph.add(parent, tx=self.tx, graph_name=self.graph_name)
+        self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
         # Parse each extracted module
         for module, file_info in modules:
             # If parent is a package, add the full canonical path name and add to modules.
             if isinstance(directory, Package):
-                module = module.update_canonical_name(f"{directory.canonical_name}.{module.name}")
+                module = module.update_canonical_name(
+                    f"{directory.canonical_name}.{module.name}"
+                )
                 self.modules[module.canonical_name] = module
 
             # Now parse the contents of the module.
             self._parse_module_contents(module, file_info)
 
             # Create a relationship between the Directory and the Module.
-            relationship = Contains(directory, module)
-            self.nodes.append(module)
-            self.relationships.append(relationship)
+            relationship = Contains(directory, module, self.repository_name)
+            self.graph.add(module, tx=self.tx, graph_name=self.graph_name)
+            self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
             # Finally add the module to the list of stored modules.
             self.modules[module.path] = module
             self.modules[module.canonical_name] = module
 
-    def _parse_files_in_directory(self, directory_info: List[JSONDict]) -> Tuple[List[Tuple[Module, JSONDict]], bool]:  # noqa: 501
+    def _parse_files_in_directory(
+        self, directory_info: List[JSONDict]
+    ) -> Tuple[List[Tuple[Module, JSONDict]], bool]:
         """Parses files within a directory into Python Module nodes.
 
         Args:
@@ -376,14 +456,13 @@ class RepographBuilder:
         modules = []
 
         for file_index, file_info in enumerate(directory_info):
-            module = RepographBuilder._parse_module(file_info, file_index, len(directory_info))
+            module = self._parse_module(file_info, file_index, len(directory_info))
             is_package = is_package or module.name == INIT
             modules.append((module, file_info))
 
         return modules, is_package
 
-    @staticmethod
-    def _parse_module(file_info: JSONDict, index: int, total: int) -> Module:
+    def _parse_module(self, file_info: JSONDict, index: int, total: int) -> Module:
         """Parses a Python module with a parent directory.
 
         Args:
@@ -398,7 +477,7 @@ class RepographBuilder:
             "--> Parsing file `%s` (%d/%d)",
             file_info["file"]["fileNameBase"],
             index + 1,
-            total
+            total,
         )
 
         module = Module(
@@ -407,7 +486,8 @@ class RepographBuilder:
             path=file_info["file"]["path"],
             parent_path=get_path_parent(file_info["file"]["path"]),
             extension=file_info["file"]["extension"],
-            is_test=file_info.get("is_test", False)
+            is_test=file_info.get("is_test", False),
+            repository_name=self.repository_name,
         )
 
         return module
@@ -430,13 +510,15 @@ class RepographBuilder:
 
         if "dependencies" in file_info:
             self.dependencies.append((file_info["dependencies"], module))
-            self.module_imports[module] = convert_dependencies_map_to_set(file_info["dependencies"])
+            self.module_imports[module] = convert_dependencies_map_to_set(
+                file_info["dependencies"]
+            )
 
     def _parse_functions_and_methods(
-            self,
-            functions_info: JSONDict,
-            parent: Union[Module, Class],
-            methods: bool = False
+        self,
+        functions_info: JSONDict,
+        parent: Union[Module, Class],
+        methods: bool = False,
     ) -> None:
         """Parses function/method information into Function/Method nodes and adds links
         to the parent File/Class node.
@@ -480,38 +562,39 @@ class RepographBuilder:
                 source_code=source_code,
                 ast=ast_string,
                 min_line_number=min_lineno,
-                max_line_number=max_lineno
+                max_line_number=max_lineno,
+                repository_name=self.repository_name,
             )
 
             # Add to graph
-            self.nodes.append(function)
+            self.graph.add(function, tx=self.tx, graph_name=self.graph_name)
 
             # Parse the docstring for the function
             self._parse_docstring(info.get("doc", {}), function)
 
             # Create HasFunction Relationship
             if methods:
-                relationship = HasMethod(parent, function)
+                relationship = HasMethod(parent, function, self.repository_name)
             else:
-                relationship = HasFunction(parent, function)
-            self.relationships.append(relationship)
+                relationship = HasFunction(parent, function, self.repository_name)
+            self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
             # If parent is a module, add to the module_objects set
             if isinstance(parent, Module):
-                self.module_objects[parent] = self.module_objects.get(parent, []) + [function]
+                self.module_objects[parent] = self.module_objects.get(parent, []) + [
+                    function
+                ]
 
             # Parse arguments and create Argument nodes
             self._parse_arguments(
-                info.get("args", []),
-                info.get("annotated_arg_types", {}),
-                function
+                info.get("args", []), info.get("annotated_arg_types", {}), function
             )
 
             # Parse return values and create ReturnValue nodes
             self._parse_return_values(
                 info.get("returns", []),
                 info.get("annotated_return_type", "Any"),
-                function
+                function,
             )
 
     def _parse_classes(self, class_info: Dict, parent: Module) -> None:
@@ -529,16 +612,19 @@ class RepographBuilder:
                 canonical_name=f"{parent.canonical_name}.{name}",
                 min_line_number=min_lineno,
                 max_line_number=max_lineno,
+                repository_name=self.repository_name,
             )
-            relationship = Contains(parent, class_node)
-            self.nodes.append(class_node)
-            self.relationships.append(relationship)
+            relationship = Contains(parent, class_node, self.repository_name)
+            self.graph.add(class_node, tx=self.tx, graph_name=self.graph_name)
+            self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
             # Add to module objects set
-            self.module_objects[parent] = self.module_objects.get(parent, []) + [class_node]
+            self.module_objects[parent] = self.module_objects.get(parent, []) + [
+                class_node
+            ]
 
             # Parse extends
-            self._parse_extends(info.get("extend", []), class_node)
+            # self._parse_extends(info.get("extend", []), class_node)
 
             # Parse docstring
             self._parse_docstring(info.get("doc", {}), class_node)
@@ -546,13 +632,15 @@ class RepographBuilder:
             # Parse method info inside class if available
             methods_info = info.get("methods", None)
             if methods_info:
-                self._parse_functions_and_methods(methods_info, class_node, methods=True)
+                self._parse_functions_and_methods(
+                    methods_info, class_node, methods=True
+                )
 
     def _parse_arguments(
         self,
         args_list: List[str],
         annotated_arg_types: Dict[str, str],
-        parent: Function
+        parent: Function,
     ) -> None:
         """Parse arguments from method information.
 
@@ -568,16 +656,15 @@ class RepographBuilder:
             else:
                 arg_type = "Any"
 
-            argument = Argument(name=arg, type=arg_type)
-            relationship = HasArgument(parent, argument)
-            self.nodes.append(argument)
-            self.relationships.append(relationship)
+            argument = Argument(
+                name=arg, type=arg_type, repository_name=self.repository_name
+            )
+            relationship = HasArgument(parent, argument, self.repository_name)
+            self.graph.add(argument, tx=self.tx, graph_name=self.graph_name)
+            self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
     def _parse_return_values(
-        self,
-        return_values: List[List[str]],
-        annotated_type: str,
-        parent: Function
+        self, return_values: List[List[str]], annotated_type: str, parent: Function
     ) -> None:
         """Parse return values from function/method information.
 
@@ -588,7 +675,6 @@ class RepographBuilder:
         """
         if len(return_values) > 1:
             return_type = "Any"
-            # TODO: SH-16 Regex extraction?
         elif len(return_values) == 1:
             return_type = annotated_type
         else:
@@ -599,23 +685,25 @@ class RepographBuilder:
                 if isinstance(value, list):
                     parse(value)
                 elif isinstance(value, str):
-                    return_value = ReturnValue(name=value, type=return_type)
-                    relationship = Returns(parent, return_value)
-                    self.nodes.append(return_value)
-                    self.relationships.append(relationship)
+                    return_value = ReturnValue(
+                        name=value,
+                        type=return_type,
+                        repository_name=self.repository_name,
+                    )
+                    relationship = Returns(parent, return_value, self.repository_name)
+                    self.graph.add(return_value, tx=self.tx, graph_name=self.graph_name)
+                    self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
                 else:
                     log.error(
                         "Unexpected return value type `%s` for function `%s`",
                         type(value),
-                        parent.name
+                        parent.name,
                     )
 
         parse(return_values)
 
     def _parse_docstring(
-        self,
-        docstring_info: Optional[JSONDict],
-        parent: Union[Function, Class]
+        self, docstring_info: Optional[JSONDict], parent: Union[Function, Class]
     ) -> None:
         """Parse docstring information for function or class
 
@@ -654,9 +742,10 @@ class RepographBuilder:
         docstring = Docstring(
             summarization=summary,
             short_description=docstring_info.get("short_description", None),
-            long_description=docstring_info.get("long_description", None)
+            long_description=docstring_info.get("long_description", None),
+            repository_name=self.repository_name,
         )
-        relationship = Documents(docstring, parent)
+        relationship = Documents(docstring, parent, self.repository_name)
         nodes.append(docstring)
         relationships.append(relationship)
 
@@ -668,9 +757,10 @@ class RepographBuilder:
                     type=arg_info.get("type_name", None),
                     description=arg_info.get("description", None),
                     is_optional=arg_info.get("is_optional", False),
-                    default=arg_info.get("default", None)
+                    default=arg_info.get("default", None),
+                    repository_name=self.repository_name,
                 )
-                relationship = Describes(docstring, docstring_arg)
+                relationship = Describes(docstring, docstring_arg, self.repository_name)
                 nodes.append(docstring_arg)
                 relationships.append(relationship)
 
@@ -681,9 +771,12 @@ class RepographBuilder:
                     name=returns_info.get("return_name", None),
                     description=returns_info.get("description", None),
                     type=returns_info.get("type_name", None),
-                    is_generator=returns_info.get("is_generator", False)
+                    is_generator=returns_info.get("is_generator", False),
+                    repository_name=self.repository_name,
                 )
-                relationship = Describes(docstring, docstring_return_value)
+                relationship = Describes(
+                    docstring, docstring_return_value, self.repository_name
+                )
                 nodes.append(docstring_return_value)
                 relationships.append(relationship)
 
@@ -691,15 +784,18 @@ class RepographBuilder:
             for raises in docstring_info.get("raises", []):
                 docstring_raises = DocstringRaises(
                     description=raises.get("description", None),
-                    type=raises.get("type_name", None)
+                    type=raises.get("type_name", None),
+                    repository_name=self.repository_name,
                 )
-                relationship = Describes(docstring, docstring_raises)
+                relationship = Describes(
+                    docstring, docstring_raises, self.repository_name
+                )
                 nodes.append(docstring_raises)
                 relationships.append(relationship)
 
         # Add nodes and relationships to graph
-        self.nodes.extend(nodes)
-        self.relationships.extend(relationships)
+        self.graph.add(*nodes, tx=self.tx, graph_name=self.graph_name)
+        self.graph.add(*relationships, tx=self.tx, graph_name=self.graph_name)
 
     def _parse_dependencies(self) -> None:  # noqa: C901
         """Parse the dependencies between Modules.
@@ -731,8 +827,7 @@ class RepographBuilder:
                 # Find the module
                 if dependency["type"] == "internal":
                     imported_module = self.modules.get(
-                        f"{module.parent_path}/{source_module}.py",
-                        None
+                        f"{module.parent_path}/{source_module}.py", None
                     )
                 else:
                     imported_module = self.modules.get(source_module, None)
@@ -741,23 +836,27 @@ class RepographBuilder:
                 if imports_module:
                     # ...and it already exists create the relationship
                     if imported_module:
-                        self.relationships.append(Imports(module, imported_module))
+                        self.graph.add(
+                            Imports(module, imported_module, self.graph_name),
+                            tx=self.tx,
+                            graph_name=self.graph_name,
+                        )
                         self.module_dependencies[module].append(imported_module)
                     # ...and if it doesn't recursively create it
                     else:
-                        source_module, missing = self._calculate_missing_packages(source_module)
+                        source_module, missing = self._calculate_missing_packages(
+                            source_module
+                        )
 
                         if source_module == "":
                             child = self._create_missing_nodes(missing)
                         elif source_module in self.requirements:
                             child = self._create_missing_nodes(
-                                missing,
-                                parent=self.requirements[source_module]
+                                missing, parent=self.requirements[source_module]
                             )
                         else:
                             child = self._create_missing_nodes(
-                                missing,
-                                parent=self.modules[source_module]
+                                missing, parent=self.modules[source_module]
                             )
 
                         self.module_dependencies[module].append(child)
@@ -774,7 +873,9 @@ class RepographBuilder:
                             continue
 
                         # Filter the module objects for only those with the imported name
-                        matching_objects = [obj for obj in module_objects if obj.name == imported_object]  # noqa: 501
+                        matching_objects = [
+                            obj for obj in module_objects if obj.name == imported_object
+                        ]
 
                         # If no matches, log an error and move onto the next dependency
                         if len(matching_objects) == 0:
@@ -789,23 +890,30 @@ class RepographBuilder:
                             log.warning("More than 1 matching object found in import.")
 
                         for match in matching_objects:
-                            self.relationships.append(Imports(module, match))
+                            self.graph.add(
+                                Imports(module, match, self.repository_name),
+                                tx=self.tx,
+                            )
                             self.module_dependencies[module].append(match)
                     # ...and if it doesn't recursively create it
                     else:
                         if imported_object[0].isupper():
                             imported_object = Class(
                                 name=imported_object,
-                                canonical_name=f"{dependency['from_module']}.{dependency['import']}"
+                                canonical_name=f"{dependency['from_module']}.{dependency['import']}",
+                                repository_name=self.repository_name,
                             )
                         else:
                             imported_object = Function(
                                 name=imported_object,
-                                canonical_name=f"{dependency['from_module']}.{dependency['import']}",  # noqa: 501
-                                type=str(Function.FunctionType.FUNCTION.value)
+                                canonical_name=f"{dependency['from_module']}.{dependency['import']}",
+                                type=str(Function.FunctionType.FUNCTION.value),
+                                repository_name=self.repository_name,
                             )
 
-                        source_module, missing = self._calculate_missing_packages(source_module)
+                        source_module, missing = self._calculate_missing_packages(
+                            source_module
+                        )
 
                         if source_module == "":
                             self._create_missing_nodes(missing)
@@ -813,34 +921,43 @@ class RepographBuilder:
                             self._create_missing_nodes(
                                 missing,
                                 parent=self.requirements[source_module],
-                                import_object=imported_object
+                                import_object=imported_object,
                             )
                         else:
                             self._create_missing_nodes(
                                 missing,
                                 parent=self.modules[source_module],
-                                import_object=imported_object
+                                import_object=imported_object,
                             )
 
-                        self.relationships.append(Imports(module, imported_object))
+                        self.graph.add(
+                            Imports(module, imported_object, self.repository_name),
+                            tx=self.tx,
+                        )
                         self.module_dependencies[module].append(imported_object)
 
         # Second pass on unresolved dependencies that are likely to be imports of other modules.
         remaining = []
-        for module, imported_module, imported_object, dependency in unresolved_dependencies:
+        for (
+            module,
+            imported_module,
+            imported_object,
+            dependency,
+        ) in unresolved_dependencies:
             module_imports = self.module_dependencies.get(imported_module)
             if not module_imports:
                 remaining.append(dependency)
                 continue
 
-            matching_objects = [obj for obj in module_imports if
-                                obj.name == imported_object]
+            matching_objects = [
+                obj for obj in module_imports if obj.name == imported_object
+            ]
 
             if len(matching_objects) == 0:
                 remaining.append(dependency)
 
             for match in matching_objects:
-                self.relationships.append(Imports(module, match))
+                self.graph.add(Imports(module, match, self.repository_name), tx=self.tx)
                 self.module_dependencies[module].append(match)
 
         if len(remaining) > 0:
@@ -859,7 +976,11 @@ class RepographBuilder:
             List[str]: Missing packages/modules.
         """
         missing = []
-        while source_module not in self.modules and source_module not in self.requirements and source_module != "":  # noqa: 501
+        while (
+            source_module not in self.modules
+            and source_module not in self.requirements
+            and source_module != ""
+        ):
             parent, child = get_package_parent_and_name(source_module)
             missing.append(child)
             source_module = parent
@@ -867,10 +988,10 @@ class RepographBuilder:
         return source_module, missing
 
     def _create_missing_nodes(
-            self,
-            missing: List[str],
-            parent: Package = None,
-            import_object: Union[Class, Function] = None
+        self,
+        missing: List[str],
+        parent: Package = None,
+        import_object: Union[Class, Function] = None,
     ) -> Union[Module, Function]:
         """Create missing nodes.
 
@@ -888,18 +1009,19 @@ class RepographBuilder:
 
         for index, m in enumerate(missing):
             if index == len(missing) - 1:
-                new = Module(name=m)
+                new = Module(name=m, repository_name=self.repository_name)
                 child = new
             else:
                 new = Package(
                     name=m,
                     canonical_name=f"{parent.canonical_name}.{m}" if parent else m,
                     parent_package=parent.canonical_name if parent else "",
-                    external=True
+                    external=True,
+                    repository_name=self.repository_name,
                 )
 
             if parent:
-                relationships.append(Contains(parent, new))
+                relationships.append(Contains(parent, new, self.repository_name))
 
             parent = new
             nodes.append(new)
@@ -907,18 +1029,18 @@ class RepographBuilder:
         # If we have an import_object, but the parent is a Package, create an __init__ Module
         # as this is actually where the import_object is being imported from.
         if import_object and parent and isinstance(parent, Package):
-            new = Module.create_init_module(parent.canonical_name)
-            relationships.append(Contains(parent, new))
+            new = Module.create_init_module(parent.canonical_name, self.repository_name)
+            relationships.append(Contains(parent, new, self.repository_name))
             parent = new
 
         # If we have an import object, create a Contains relationship with the parent module.
         if import_object:
-            relationships.append(Contains(parent, import_object))
+            relationships.append(Contains(parent, import_object, self.repository_name))
             child = import_object
 
         # Add the created nodes and relationships to the Repograph.
-        self.nodes.extend(nodes)
-        self.relationships.extend(relationships)
+        self.graph.add(*nodes, tx=self.tx, graph_name=self.graph_name)
+        self.graph.add(*relationships, tx=self.tx, graph_name=self.graph_name)
 
         return child
 
@@ -933,12 +1055,14 @@ class RepographBuilder:
             None
         """
         if len(extends_info) == 0:
-            log.debug("Class `%s` doesn't not extend any other classes", class_node.name)
+            log.debug(
+                "Class `%s` doesn't not extend any other classes", class_node.name
+            )
             return
 
         # for extends in extends_info:
-        #     super_class = Class(name=extends)
-        #     relationship = Extends(class_node, super_class)
+        #     super_class = Class(name=extends, graph_name=self.graph_name)
+        #     relationship = Extends(class_node, super_class, self.graph_name)
         #     self.repograph.add(super_class, relationship)
 
     def _parse_call_graph(self, call_graph: Optional[JSONDict]) -> None:
@@ -971,11 +1095,13 @@ class RepographBuilder:
                     file_info.get("body", {}),
                     module_objects,
                     module_imports,
-                    module_dependencies
+                    module_dependencies,
                 )
 
                 # For each function described in the call graph, parse these calls
-                for function_name, function_calls in file_info.get("functions", {}).items():
+                for function_name, function_calls in file_info.get(
+                    "functions", {}
+                ).items():
                     function = find_node_object_by_name(module_objects, function_name)
                     self._parse_calls(
                         module,
@@ -983,20 +1109,24 @@ class RepographBuilder:
                         module_objects,
                         module_imports,
                         module_dependencies,
-                        caller=function
+                        caller=function,
                     )
 
         # Add called builtin functions to the graph
-        self.nodes.extend(self.called_builtin_functions.values())
+        self.graph.add(
+            *self.called_builtin_functions.values(),
+            tx=self.tx,
+            graph_name=self.graph_name,
+        )
 
     def _parse_calls(
-            self,
-            parent_module: Module,
-            call_info: Optional[JSONDict],
-            module_objects: List[any],
-            module_imports: Set[str],
-            module_dependencies: List[any],
-            caller: Optional[Function] = None
+        self,
+        parent_module: Module,
+        call_info: Optional[JSONDict],
+        module_objects: List[any],
+        module_imports: Set[str],
+        module_dependencies: List[any],
+        caller: Optional[Function] = None,
     ) -> None:
         """Parse the call graph for a particular module.
 
@@ -1012,12 +1142,20 @@ class RepographBuilder:
 
         for call in call_info.get("local", []):
             module, function = get_module_and_object_from_canonical_object_name(call)
-            matching_objects_in_module = find_node_object_by_name(module_objects, function)
+            matching_objects_in_module = find_node_object_by_name(
+                module_objects, function
+            )
 
             # If the call is to an imported function...
             if call in module_imports:
-                matching_imports = find_node_object_by_name(module_dependencies, call, canonical=True)  # noqa: 501
-                relationship = Calls(caller if caller else parent_module, matching_imports)
+                matching_imports = find_node_object_by_name(
+                    module_dependencies, call, canonical=True
+                )
+                relationship = Calls(
+                    caller if caller else parent_module,
+                    matching_imports,
+                    self.repository_name,
+                )
             # ...or if the call is to a built-in function...
             elif call in PYTHON_BUILT_IN_FUNCTIONS:
                 if function in self.called_builtin_functions:
@@ -1026,30 +1164,36 @@ class RepographBuilder:
                     function_node = Function(
                         name=function,
                         type=str(Function.FunctionType.FUNCTION.value),
-                        builtin=True
+                        builtin=True,
+                        repository_name=self.repository_name,
                     )
                     self.called_builtin_functions[function] = function_node
 
                 # Create the relationship between the caller and the new function_node
-                relationship = Calls(caller if caller else parent_module, function_node)
+                relationship = Calls(
+                    caller if caller else parent_module,
+                    function_node,
+                    self.repository_name,
+                )
 
             # ...or if the call is to a function defined in the module
             elif matching_objects_in_module:
                 relationship = Calls(
                     caller if caller else parent_module,
-                    matching_objects_in_module
+                    matching_objects_in_module,
+                    self.repository_name,
                 )
             else:
                 log.debug("Call to some other variable (%s). Ignoring.", call)
                 relationship = None
 
-            self.relationships.append(relationship)
+            self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
     def build(
-            self,
-            directory_info: Optional[JSONDict],
-            call_graph: Optional[JSONDict],
-    ) -> Tuple[List[Node], List[Relationship]]:
+        self,
+        directory_info: Optional[JSONDict],
+        call_graph: Optional[JSONDict],
+    ) -> None:
         """Build a repograph from directory_info JSON.
 
         Args:
@@ -1083,24 +1227,25 @@ class RepographBuilder:
         log.info("Sorting directories with hierarchical ordering...")
         directories = sorted(
             list(directory_info.keys()),
-            key=lambda file: (os.path.dirname(file), os.path.basename(file)))
+            key=lambda file: (os.path.dirname(file), os.path.basename(file)),
+        )
 
         # Parse repository root folder if it exists, otherwise manually create
         # the repository node.
         path = strip_file_path_prefix(directories[0])
+        self.repository_name = path
+
         if is_root_folder(path):
             directory = directories.pop(0)
             repository = self._parse_repository(
                 path,
                 directory_info=directory_info[directory],
                 metadata=metadata,
-                software_type=software_type
+                software_type=software_type,
             )
         else:
             repository = self._parse_repository(
-                get_path_root(path),
-                metadata=metadata,
-                software_type=software_type
+                get_path_root(path), metadata=metadata, software_type=software_type
             )
 
         # Parse requirements
@@ -1112,7 +1257,9 @@ class RepographBuilder:
         # Parse each directory
         log.info("Extracting information from directories...")
         for index, directory in enumerate(directories):
-            self._parse_directory(directory, directory_info[directory], index, len(directories))
+            self._parse_directory(
+                directory, directory_info[directory], index, len(directories)
+            )
 
         # Retrospectively parse module dependencies
         log.info("Parsing module dependencies...")
@@ -1126,4 +1273,3 @@ class RepographBuilder:
         self._parse_readme(readmes)
 
         log.info("Successfully built a Repograph!")
-        return self.nodes, self.relationships
