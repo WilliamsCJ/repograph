@@ -824,11 +824,27 @@ class RepographBuilder:
                 imported_object = dependency["import"]
                 source_module = dependency.get("from_module", imported_object)
 
+                # TODO: Move to util function
+                # if not source_module.startswith(module.canonical_name.replace(".__init__", "")):
+                #     source_module = f"{module.canonical_name.replace('.__init__', '')}.{source_module}"
+                #     print("HERE: ", source_module)
+
                 # Find the module
                 if dependency["type"] == "internal":
-                    imported_module = self.modules.get(
-                        f"{module.parent_path}/{source_module}.py", None
-                    )
+                    # imported_module = self.modules.get(
+                    #     f"{module.parent_path}/{source_module}.py", None
+                    # )
+                    imported_module = self.modules.get(source_module, None)
+                    if not imported_module:
+                        added = []
+                        for part in module.canonical_name.split("."):
+                            added.append(part)
+                            imported_module = self.modules.get(
+                                ".".join(added + [source_module]), None
+                            )
+                            if imported_module:
+                                break
+
                 else:
                     imported_module = self.modules.get(source_module, None)
 
@@ -1009,6 +1025,10 @@ class RepographBuilder:
         relationships = []
         child = None
 
+        print(type(parent), " ", parent)
+        print(missing)
+        print(type(import_object), " ", import_object)
+
         for index, m in enumerate(missing):
             if index == len(missing) - 1:
                 new = Module(
@@ -1025,6 +1045,7 @@ class RepographBuilder:
                     inferred=True,
                 )
 
+            print(new)
             if parent:
                 relationships.append(Contains(parent, new, self.repository_name))
 

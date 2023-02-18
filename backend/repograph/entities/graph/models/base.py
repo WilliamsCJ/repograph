@@ -1,9 +1,12 @@
 """
 """
+# Base imports
 from __future__ import annotations
+from typing import Any, Dict, Optional, Set, Union
+
+# pip imports
 import py2neo
 from pydantic import BaseModel, PrivateAttr
-from typing import Any, Dict, Optional, Set, Union
 
 
 class BaseSubgraph(BaseModel):
@@ -93,7 +96,7 @@ class InvalidRelationshipException(TypeError):
         """
         message = f"""
           {type(parent)} -> {type(child)} is not a valid
-          pairing for relationship of type: {type(Relationship)}
+          pairing for relationship of type: {type(relationship)}
           """
         super().__init__(message)
 
