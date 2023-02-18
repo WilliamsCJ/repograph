@@ -6,7 +6,7 @@ import { DefaultLayout } from "../../../components/core/layout";
 
 // Types
 import { GetServerSideProps, NextPage } from "next";
-import { getCyclicalDependencies } from "../../../lib/issues";
+import { getCyclicalDependencies, getMissingDependencies } from "../../../lib/issues";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // @ts-ignore
@@ -15,12 +15,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       cyclicalDependencies: await getCyclicalDependencies(name),
+      missingDependencies: await getMissingDependencies(name)
     },
   };
 };
 
 export type GraphIssuesPageProps = {
   cyclicalDependencies: number;
+  missingDependencies: number;
 };
 
 const GraphIssues: NextPage<GraphIssuesPageProps> = (props) => {

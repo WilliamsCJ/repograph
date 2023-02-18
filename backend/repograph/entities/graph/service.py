@@ -342,7 +342,21 @@ class GraphService:
         return len(cycles)
 
     def get_missing_dependencies(self, graph: str) -> int:
-        return "MATCH (n:Package) WHERE (n.inferred) = true AND  NOT (n)-[*]->(:Repository) RETURN DISTINCT n"
+        """Get the number of dependencies that are missing from the requirements.
+
+        Args:
+            graph (str): The name of the graph to check.
+
+        Returns:
+            int: The number of unique packages (inferred) that have no relationship to
+                 the Repository node(s).
+        """
+        result = self.repository.execute_query(
+            "MATCH (n:Package) WHERE (n.inferred) = true AND  NOT (n)-[*]->(:Repository) RETURN DISTINCT n",
+            graph_name=graph,
+        )
+
+        return len(result)
 
     def prune(self, graph_name: str):
         """Delete all nodes and relationships from the graph.

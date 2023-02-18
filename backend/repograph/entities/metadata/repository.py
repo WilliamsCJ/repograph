@@ -25,7 +25,7 @@ class MetadataRepository:
         """
         Constructor
         """
-        self.db_path = "./test.db"  # TODO: Change back.
+        self.db_path = db_path
         db = sqlite3.connect(self.db_path)
         db.execute(
             """

@@ -22,6 +22,7 @@ import { StatsCardProps } from "./summary";
  */
 export type IssuesProps = {
   cyclicalDependencies: number;
+  missingDependencies: number;
 };
 
 /**
@@ -77,7 +78,7 @@ const Issues: React.FC<IssuesProps> = (props) => {
           title="Circular Dependencies"
           value={props.cyclicalDependencies}
         />
-        <IssueCard title="Missing Imports" value={1} />
+        <IssueCard title="Missing Dependencies" value={props.missingDependencies} />
       </dl>
     </>
   );
