@@ -60,6 +60,7 @@ def create_app(
     application.include_router(search_router.router)
     application.include_router(build_router.router)
     application.include_router(metadata_router.router)
+    application.include_router(search_router.graphRouter)
 
     # Configure CORS, https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
     application.add_middleware(

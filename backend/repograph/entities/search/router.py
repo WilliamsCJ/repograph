@@ -31,6 +31,13 @@ class SearchRouter:
             response_model_exclude={"ast"},
         )
 
+        self.graphRouter = APIRouter(tags=["Graph"], prefix="/graph/{graph}")
+        self.graphRouter.add_api_route(
+            "/incorrect-and-missing-docstrings",
+            self.incorrect_docstrings,
+            methods=["GET"],
+        )
+
     def semantic_search(
         self, graph: str, query: str = None, offset: int = 0, limit: int = 0
     ) -> SemanticSearchResultSet:
@@ -39,3 +46,7 @@ class SearchRouter:
             graph, query, offset, limit
         )
         return results
+
+    async def incorrect_docstrings(self, graph: str):
+        incorrect, missing = self.service.find_possible_incorrect_docstrings(graph)
+        return [incorrect, missing]
