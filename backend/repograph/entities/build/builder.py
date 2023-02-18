@@ -902,6 +902,7 @@ class RepographBuilder:
                                 name=imported_object,
                                 canonical_name=f"{dependency['from_module']}.{dependency['import']}",
                                 repository_name=self.repository_name,
+                                inferred=True,
                             )
                         else:
                             imported_object = Function(
@@ -909,6 +910,7 @@ class RepographBuilder:
                                 canonical_name=f"{dependency['from_module']}.{dependency['import']}",
                                 type=str(Function.FunctionType.FUNCTION.value),
                                 repository_name=self.repository_name,
+                                inferred=True,
                             )
 
                         source_module, missing = self._calculate_missing_packages(
@@ -1009,7 +1011,9 @@ class RepographBuilder:
 
         for index, m in enumerate(missing):
             if index == len(missing) - 1:
-                new = Module(name=m, repository_name=self.repository_name)
+                new = Module(
+                    name=m, repository_name=self.repository_name, inferred=True
+                )
                 child = new
             else:
                 new = Package(
@@ -1018,6 +1022,7 @@ class RepographBuilder:
                     parent_package=parent.canonical_name if parent else "",
                     external=True,
                     repository_name=self.repository_name,
+                    inferred=True,
                 )
 
             if parent:
@@ -1026,12 +1031,20 @@ class RepographBuilder:
             parent = new
             nodes.append(new)
 
-        # If we have an import_object, but the parent is a Package, create an __init__ Module
-        # as this is actually where the import_object is being imported from.
+        # If we have an import_object, but the parent is a Package, we check to see if an __init__
+        # module exists for the package. If not, we create an __init__ Module as this is actually
+        # where the import_object is being imported from.
         if import_object and parent and isinstance(parent, Package):
-            new = Module.create_init_module(parent.canonical_name, self.repository_name)
-            relationships.append(Contains(parent, new, self.repository_name))
-            parent = new
+            init_name = f"{parent.canonical_name}.__init__"
+            if init_name in self.modules:
+                parent = self.modules[init_name]
+            else:
+                new = Module.create_init_module(
+                    parent.canonical_name, self.repository_name
+                )
+                relationships.append(Contains(parent, new, self.repository_name))
+                self.modules[init_name] = new
+                parent = new
 
         # If we have an import object, create a Contains relationship with the parent module.
         if import_object:
@@ -1166,6 +1179,7 @@ class RepographBuilder:
                         type=str(Function.FunctionType.FUNCTION.value),
                         builtin=True,
                         repository_name=self.repository_name,
+                        inferred=True,
                     )
                     self.called_builtin_functions[function] = function_node
 
