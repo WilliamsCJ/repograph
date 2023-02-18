@@ -23,11 +23,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-export type SearchPageProps = {
+export type GraphSearchPageProps = {
   graph: string;
 };
 
-const Search: NextPage<SearchPageProps> = ({ graph }) => {
+const GraphSearch: NextPage<GraphSearchPageProps> = ({ graph }) => {
   const topRef = useRef(null);
 
   let options = ["Natural", "Favourites", "Manual"];
@@ -44,4 +44,4 @@ const Search: NextPage<SearchPageProps> = ({ graph }) => {
   );
 };
 
-export default Search;
+export default GraphSearch;

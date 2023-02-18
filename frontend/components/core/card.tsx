@@ -2,7 +2,14 @@ import React from "react";
 
 /* External dependencies */
 import tw, { TwStyle } from "twin.macro";
-import { Background, Border } from "./constants";
+import {
+  Background,
+  Border,
+  GreenBackground,
+  GreenBorder,
+  RedBackground,
+  RedBorder,
+} from "./constants";
 
 /**
  * Props for all Card components.
@@ -26,22 +33,34 @@ type DefaultCardProps = CardProps & {
  * @param children
  * @param props
  */
-const Card: React.FC<DefaultCardProps> = ({ children, ...props }) => (
+export const Card: React.FC<DefaultCardProps> = ({ children, ...props }) => (
   <div ref={props.ref} css={[Background, Border, props.size]}>
     {children}
   </div>
 );
 
 /**
- * Full-width card that covers whole width of the container
+ * Green card for success.
+ * @constructor
  * @param children
  * @param props
- * @constructor
  */
-const FullWidthCard: React.FC<CardProps> = ({ children, ...props }) => (
-  <Card {...props} size={tw`w-full`}>
+const GreenCard: React.FC<DefaultCardProps> = ({ children, ...props }) => (
+  <div ref={props.ref} css={[GreenBackground, GreenBorder, props.size]}>
     {children}
-  </Card>
+  </div>
 );
 
-export { FullWidthCard, Card };
+/**
+ * Red card for errors
+ * @constructor
+ * @param children
+ * @param props
+ */
+const RedCard: React.FC<DefaultCardProps> = ({ children, ...props }) => (
+  <div ref={props.ref} css={[RedBackground, RedBorder, props.size]}>
+    {children}
+  </div>
+);
+
+export { GreenCard, RedCard };

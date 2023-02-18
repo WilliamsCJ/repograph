@@ -29,7 +29,7 @@ export type GraphHomePageProps = {
   summary: GraphSummary;
 };
 
-const RepositoryHome: NextPage<GraphHomePageProps> = ({ summary }) => {
+const GraphHome: NextPage<GraphHomePageProps> = ({ summary }) => {
   return (
     <DefaultLayout buttons={[<ExportButton />]} heading="Summary">
       <Summary summary={summary} />
@@ -37,4 +37,4 @@ const RepositoryHome: NextPage<GraphHomePageProps> = ({ summary }) => {
   );
 };
 
-export default RepositoryHome;
+export default GraphHome;

@@ -37,7 +37,7 @@ from repograph.entities.graph.models.relationships import (
     HasArgument,
     HasFunction,
     HasMethod,
-    ImportedBy,
+    Imports,
     LicensedBy,
     Returns,
     Requires,
@@ -269,6 +269,9 @@ class RepographBuilder:
             None
         """
         log.info("Parsing README files...")
+        if not info:
+            log.warning("No READMEs found!")
+            return
 
         readmes = []
         relationships = []
@@ -321,9 +324,6 @@ class RepographBuilder:
             parent = self.directories.get(child.parent_path, None)
 
             if not parent:
-                # print(parent)
-                # print(child)
-                # print(self.repository_name)
                 parent = Directory(self.repository_name, child.parent_path)
                 relationship = Contains(parent, child, self.repository_name)
                 self.graph.add(parent, tx=self.tx, graph_name=self.graph_name)
@@ -624,7 +624,7 @@ class RepographBuilder:
             ]
 
             # Parse extends
-            self._parse_extends(info.get("extend", []), class_node)
+            # self._parse_extends(info.get("extend", []), class_node)
 
             # Parse docstring
             self._parse_docstring(info.get("doc", {}), class_node)
@@ -837,7 +837,7 @@ class RepographBuilder:
                     # ...and it already exists create the relationship
                     if imported_module:
                         self.graph.add(
-                            ImportedBy(imported_module, module, self.graph_name),
+                            Imports(module, imported_module, self.graph_name),
                             tx=self.tx,
                             graph_name=self.graph_name,
                         )
@@ -891,7 +891,7 @@ class RepographBuilder:
 
                         for match in matching_objects:
                             self.graph.add(
-                                ImportedBy(match, module, self.repository_name),
+                                Imports(module, match, self.repository_name),
                                 tx=self.tx,
                             )
                             self.module_dependencies[module].append(match)
@@ -931,7 +931,7 @@ class RepographBuilder:
                             )
 
                         self.graph.add(
-                            ImportedBy(imported_object, module, self.repository_name),
+                            Imports(module, imported_object, self.repository_name),
                             tx=self.tx,
                         )
                         self.module_dependencies[module].append(imported_object)
@@ -957,9 +957,7 @@ class RepographBuilder:
                 remaining.append(dependency)
 
             for match in matching_objects:
-                self.graph.add(
-                    ImportedBy(match, module, self.repository_name), tx=self.tx
-                )
+                self.graph.add(Imports(module, match, self.repository_name), tx=self.tx)
                 self.module_dependencies[module].append(match)
 
         if len(remaining) > 0:

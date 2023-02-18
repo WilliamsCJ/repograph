@@ -30,6 +30,7 @@ class Repository(Node):
 
         SERVICE = "service"
         SCRIPT_WITH_MAIN = "script with main"
+        SCRIPT_WITHOUT_MAIN = "script without main"
         SCRIPT = "script"
         PACKAGE = "package"
 

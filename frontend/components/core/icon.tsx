@@ -5,10 +5,9 @@ import React from "react";
 import tw, { TwStyle } from "twin.macro";
 
 // Icon styling
-export const StrongIcon = tw`stroke-zinc-900 dark:stroke-zinc-100`;
-export const NormalIcon = tw`stroke-zinc-800 dark:stroke-zinc-200`;
-export const DetailIcon = tw`stroke-zinc-700 dark:stroke-zinc-300`;
-
+export const StrongIcon = tw`text-zinc-900 dark:text-zinc-100`;
+export const NormalIcon = tw`text-zinc-800 dark:text-zinc-200`;
+export const DetailIcon = tw`text-zinc-700 dark:text-zinc-300`;
 /**
  * Props for IconWrapper component
  */

@@ -42,8 +42,18 @@ class GraphRouter:
             status_code=status.HTTP_204_NO_CONTENT,
         )
 
+        self.router.add_api_route(
+            "/{graph}/cylical-dependencies",
+            self.cyclical_dependencies,
+            methods=["GET"],
+            status_code=status.HTTP_200_OK,
+        )
+
     async def summary(self, graph: str):
         return self.service.get_summary(graph)
+
+    async def cyclical_dependencies(self, graph: str):
+        return self.service.get_cyclical_dependencies(graph)
 
     async def call_graph_by_id(self, graph: str, node_id: int) -> CallGraph:
         return self.service.get_call_graph_by_id(node_id, graph)

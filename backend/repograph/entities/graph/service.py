@@ -124,6 +124,8 @@ class GraphService:
         metadata_tx = self.metadata.get_transaction()
         try:
             yield tx, metadata_tx
+            tx.commit()
+            metadata_tx.commit()
         except Exception as e:
             log.error(
                 "An error occurred. Rolling back system graph and metadata transactions!\n%s",
@@ -315,6 +317,27 @@ class GraphService:
         )
 
         return call_graph
+
+    def get_cyclical_dependencies(self, graph: str) -> int:
+        """Get the number of cyclical dependencies in the specified graph.
+
+        Args:
+            graph (str): The name of the graph to check.
+
+        Returns:
+            int: The number of unique cyclical dependencies.
+        """
+        result = self.repository.execute_query(
+            "MATCH p=(n)-[:Imports|Calls*]->(n) RETURN nodes(p) as `nodes`",
+            graph_name=graph,
+        )
+
+        cycles = set()
+
+        for cycle in result:
+            cycles.add(frozenset(map(lambda x: x.identity, cycle.get("nodes"))))
+
+        return len(cycles)
 
     def prune(self, graph_name: str):
         """Delete all nodes and relationships from the graph.
