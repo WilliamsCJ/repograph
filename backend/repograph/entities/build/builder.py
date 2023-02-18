@@ -824,17 +824,11 @@ class RepographBuilder:
                 imported_object = dependency["import"]
                 source_module = dependency.get("from_module", imported_object)
 
-                # TODO: Move to util function
-                # if not source_module.startswith(module.canonical_name.replace(".__init__", "")):
-                #     source_module = f"{module.canonical_name.replace('.__init__', '')}.{source_module}"
-                #     print("HERE: ", source_module)
-
                 # Find the module
                 if dependency["type"] == "internal":
-                    # imported_module = self.modules.get(
-                    #     f"{module.parent_path}/{source_module}.py", None
-                    # )
                     imported_module = self.modules.get(source_module, None)
+                    # If we can't find the module, it could be a relative import so use the package
+                    # components if the importing module's canonical name.
                     if not imported_module:
                         added = []
                         for part in module.canonical_name.split("."):
@@ -844,9 +838,19 @@ class RepographBuilder:
                             )
                             if imported_module:
                                 break
+                    # Finally if we still haven't found the imported module, it may be the case that
+                    # the object is being imported from the __init__ of a package.
+                    if not imported_module:
+                        imported_module = self.modules.get(
+                            f"{source_module}.__init__", None
+                        )
 
                 else:
                     imported_module = self.modules.get(source_module, None)
+                    if not imported_module:
+                        imported_module = self.modules.get(
+                            f"{source_module}.__init__", None
+                        )
 
                 # If importing a module directly....
                 if imports_module:
@@ -1025,10 +1029,6 @@ class RepographBuilder:
         relationships = []
         child = None
 
-        print(type(parent), " ", parent)
-        print(missing)
-        print(type(import_object), " ", import_object)
-
         for index, m in enumerate(missing):
             if index == len(missing) - 1:
                 new = Module(
@@ -1045,7 +1045,11 @@ class RepographBuilder:
                     inferred=True,
                 )
 
-            print(new)
+                if new.canonical_name == "profiles":
+                    print(missing)
+                    print(parent)
+                    print(import_object)
+
             if parent:
                 relationships.append(Contains(parent, new, self.repository_name))
 
@@ -1302,7 +1306,7 @@ class RepographBuilder:
 
         # Parse the call list, now that most Nodes should be added to the graph
         log.info("Parsing call graph...")
-        self._parse_call_graph(call_graph)
+        # self._parse_call_graph(call_graph)
 
         # Parse READMEs
         self._parse_readme(readmes)
