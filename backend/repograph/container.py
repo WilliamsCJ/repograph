@@ -25,25 +25,17 @@ class ApplicationContainer(DeclarativeContainer):
     # Configuration object
     config = Configuration()
 
-    print(config.uri)
-
     # Neo4j resource
     neo4j: Resource[GraphService] = Resource(
-        # GraphService,
-        # config.uri,
-        # auth=("neo4j", "s3cr3t"),
         GraphService,
-        "bolt://localhost:7687",
+        config.uri,
         auth=("neo4j", "s3cr3t"),
     )
 
     # Manual Neo4j driver
     driver: Resource[Driver] = Resource(
-        # GraphDatabase.driver,
-        # config.driver_uri,
-        # auth=("neo4j", "s3cr3t")
         GraphDatabase.driver,
-        "bolt://localhost:7687",
+        config.driver_uri,
         auth=("neo4j", "s3cr3t"),
     )
 
