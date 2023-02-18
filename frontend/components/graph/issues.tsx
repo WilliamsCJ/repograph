@@ -1,12 +1,32 @@
 import React from "react";
-import { Card, GreenCard, RedCard } from "../core/card";
+
+// Styling
 import tw from "twin.macro";
+
+// Components
+import { GreenCard, RedCard } from "../core/card";
 import { NumericalValue, Text } from "../core/text";
-import { GraphSummary } from "../../types/graph";
-import { StatsCardProps } from "./summary";
-import { ShieldCheckIcon, ShieldExclamationIcon } from "@heroicons/react/24/outline";
 import IconWrapper from "../core/icon";
 
+// Icons
+import { ShieldCheckIcon, ShieldExclamationIcon } from "@heroicons/react/24/outline";
+
+// Types
+import { StatsCardProps } from "./summary";
+
+/**
+ * Props for Issues component.
+ */
+export type IssuesProps = {
+  cyclicalDependencies: number;
+}
+
+/**
+ * IssueCard component makes up a single issue metric within the Issues component.
+ * @param title
+ * @param value
+ * @constructor
+ */
 const IssueCard: React.FC<StatsCardProps> = ({ title, value }) => {
   if (value === 0) {
     return (
@@ -43,14 +63,14 @@ const IssueCard: React.FC<StatsCardProps> = ({ title, value }) => {
 
 /**
  * Summary component contains an array of StatsCards
- * @param summary {GraphSummary}: The Summary details
  * @constructor
+ * @param props
  */
-const Issues = () => {
+const Issues: React.FC<IssuesProps> = (props) => {
   return (
     <>
       <dl tw="grid grid-cols-2 gap-4">
-        <IssueCard title="Circular Dependencies" value={0} />
+        <IssueCard title="Circular Dependencies" value={props.cyclicalDependencies} />
         <IssueCard title="Missing Imports" value={1} />
       </dl>
     </>
