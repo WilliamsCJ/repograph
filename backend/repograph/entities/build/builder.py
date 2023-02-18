@@ -28,6 +28,7 @@ from repograph.entities.graph.models.nodes import (
     README,
     Repository,
     ReturnValue,
+    Variable
 )
 from repograph.entities.graph.models.relationships import (
     Calls,
@@ -490,6 +491,8 @@ class RepographBuilder:
             repository_name=self.repository_name,
         )
 
+        self.module_objects[module] = []
+
         return module
 
     def _parse_module_contents(self, module: Module, file_info: JSONDict) -> None:
@@ -581,9 +584,7 @@ class RepographBuilder:
 
             # If parent is a module, add to the module_objects set
             if isinstance(parent, Module):
-                self.module_objects[parent] = self.module_objects.get(parent, []) + [
-                    function
-                ]
+                self.module_objects[parent].append(function)
 
             # Parse arguments and create Argument nodes
             self._parse_arguments(
@@ -619,9 +620,7 @@ class RepographBuilder:
             self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
             # Add to module objects set
-            self.module_objects[parent] = self.module_objects.get(parent, []) + [
-                class_node
-            ]
+            self.module_objects[parent].append(class_node)
 
             # Parse extends
             # self._parse_extends(info.get("extend", []), class_node)
@@ -917,7 +916,7 @@ class RepographBuilder:
                             self.module_dependencies[module].append(imported_object)
                         else:
                             module_objects = self.module_objects.get(
-                                imported_module, None
+                                imported_module, []
                             )
                             if not module_objects:
                                 unresolved_dependencies.append(
@@ -1002,36 +1001,88 @@ class RepographBuilder:
                         self.graph.add(
                             Imports(module, imported_object, self.repository_name),
                             tx=self.tx,
+                            graph_name=self.graph_name
                         )
                         self.module_dependencies[module].append(imported_object)
 
         # Second pass on unresolved dependencies that are likely to be imports of other modules.
-        remaining = []
+        unresolved = unresolved_dependencies
+        while len(unresolved) != 0:
+            remaining = []
+            for (
+                module,
+                imported_module,
+                imported_object,
+                dependency,
+            ) in unresolved:
+                # Check the module objects of the imported module first
+                module_objects = self.module_objects.get(imported_module, [])
+                matching_objects = [
+                    obj for obj in module_objects if obj.name == imported_object
+                ]
+                if len(matching_objects) > 0:
+                    for match in matching_objects:
+                        self.graph.add(Imports(module, match, self.repository_name), tx=self.tx)
+                        self.module_dependencies[module].append(match)
+                    continue
+
+                # Then check the module imports of the imported module
+                module_imports = self.module_dependencies.get(imported_module, [])
+                matching_objects = [
+                    obj for obj in module_imports if obj.name == imported_object
+                ]
+                if len(matching_objects) > 0:
+                    for match in matching_objects:
+                        self.graph.add(Imports(module, match, self.repository_name), tx=self.tx)
+                        self.module_dependencies[module].append(match)
+                    continue
+
+                remaining.append((module, imported_module, imported_object, dependency))
+
+            if len(remaining) == len(unresolved):
+                unresolved = remaining
+                break
+            else:
+                unresolved = remaining
+
+        # Finally, infer any remaining objects
         for (
             module,
             imported_module,
             imported_object,
             dependency,
-        ) in unresolved_dependencies:
-            module_imports = self.module_dependencies.get(imported_module)
-            if not module_imports:
-                remaining.append(dependency)
-                continue
+        ) in unresolved:
+            if imported_object.isupper() or imported_object.startswith("__"):
+                imported_object = Variable(
+                    name=imported_object,
+                    canonical_name=f"{dependency['from_module']}.{dependency['import']}",
+                    inferred=True,
+                    repository_name=self.repository_name
+                )
+            elif imported_object[0].isupper():
+                imported_object = Class(
+                    name=imported_object,
+                    canonical_name=f"{dependency['from_module']}.{dependency['import']}",
+                    repository_name=self.repository_name,
+                    inferred=True,
+                )
+            else:
+                imported_object = Function(
+                    name=imported_object,
+                    canonical_name=f"{dependency['from_module']}.{dependency['import']}",
+                    type=str(Function.FunctionType.FUNCTION.value),
+                    repository_name=self.repository_name,
+                    inferred=True,
+                )
 
-            matching_objects = [
-                obj for obj in module_imports if obj.name == imported_object
-            ]
-
-            if len(matching_objects) == 0:
-                remaining.append(dependency)
-
-            for match in matching_objects:
-                self.graph.add(Imports(module, match, self.repository_name), tx=self.tx)
-                self.module_dependencies[module].append(match)
-
-        if len(remaining) > 0:
-            log.warning("Unable to resolve %d dependencies...", len(remaining))
-            log.warning(remaining)
+            self.graph.add(
+                Contains(imported_module, imported_object, self.repository_name),
+                Imports(module, imported_object, self.repository_name),
+                tx=self.tx,
+                graph_name=self.graph_name
+            )
+            self.module_objects[imported_module].append(imported_object)
+            self.module_dependencies[module].append(imported_object)
 
     def _calculate_missing_packages(self, source_module: str) -> Tuple[str, List[str]]:
         """Calculates missing packages for a given import source Module.

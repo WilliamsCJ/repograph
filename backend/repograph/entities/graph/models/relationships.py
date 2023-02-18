@@ -20,6 +20,7 @@ from repograph.entities.graph.models.nodes import (
     ReturnValue,
     Package,
     License,
+    Variable
 )
 
 
@@ -50,7 +51,7 @@ class Contains(Relationship):
         Repository: {Directory, Module, Package, README},
         Directory: {Directory, Module, Package, README},
         Package: {Directory, Module, Package, README},
-        Module: {Function, Class, Body},
+        Module: {Function, Class, Body, Variable},
     }
 
 
@@ -62,7 +63,7 @@ class Imports(Relationship):
     """
 
     _allowed_types = {
-        Module: {Module, Package, Class, Function},
+        Module: {Module, Package, Class, Function, Variable},
     }
 
     alias: Optional[str]

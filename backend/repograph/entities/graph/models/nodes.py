@@ -420,19 +420,34 @@ class Variable(Node):
     Attributes:
         name (str): The variable name
         type (str): The inferred type of the variable, usually from a type hint.
+        inferred (bool): This object was inferred when parsing dependencies or calls. Default False.
     """
+    name: str
+    canonical_name: str
+    type: Optional[str] = "Any"
+    inferred: bool = False
 
+
+class Argument(Node):
+    """Node representing an argument to a function.
+
+    Attributes:
+        name (str): The variable name
+        type (str): The inferred type of the variable, usually from a type hint.
+    """
     name: Optional[str]
     type: Optional[str] = "Any"
 
 
-class Argument(Variable):
-    """Node representing an argument to a function."""
+class ReturnValue(Node):
+    """Node representing a return value from a function.
 
-
-class ReturnValue(Variable):
-    """Node representing a return value from a function."""
-
+    Attributes:
+        name (str): The variable name
+        type (str): The inferred type of the variable, usually from a type hint.
+    """
+    name: Optional[str]
+    type: Optional[str] = "Any"
 
 class Body(Node):
     pass
