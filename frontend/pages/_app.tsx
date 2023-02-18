@@ -2,7 +2,8 @@ import type { AppProps } from "next/app";
 import NavigationBar, { NavigationRoute } from "../components/core/navigation";
 import {
   HomeIcon,
-  MagnifyingGlassIcon, ShieldExclamationIcon,
+  MagnifyingGlassIcon,
+  ShieldExclamationIcon,
 } from "@heroicons/react/24/outline";
 import { ApplicationShell, MainContainer } from "../components/core/layout";
 import GlobalStyles from "../styles/GlobalStyles";
