@@ -9,7 +9,10 @@ import { NumericalValue, Text } from "../core/text";
 import IconWrapper from "../core/icon";
 
 // Icons
-import { ShieldCheckIcon, ShieldExclamationIcon } from "@heroicons/react/24/outline";
+import {
+  ShieldCheckIcon,
+  ShieldExclamationIcon,
+} from "@heroicons/react/24/outline";
 
 // Types
 import { StatsCardProps } from "./summary";
@@ -19,7 +22,7 @@ import { StatsCardProps } from "./summary";
  */
 export type IssuesProps = {
   cyclicalDependencies: number;
-}
+};
 
 /**
  * IssueCard component makes up a single issue metric within the Issues component.
@@ -70,7 +73,10 @@ const Issues: React.FC<IssuesProps> = (props) => {
   return (
     <>
       <dl tw="grid grid-cols-2 gap-4">
-        <IssueCard title="Circular Dependencies" value={props.cyclicalDependencies} />
+        <IssueCard
+          title="Circular Dependencies"
+          value={props.cyclicalDependencies}
+        />
         <IssueCard title="Missing Imports" value={1} />
       </dl>
     </>
