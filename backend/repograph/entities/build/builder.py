@@ -28,7 +28,7 @@ from repograph.entities.graph.models.nodes import (
     README,
     Repository,
     ReturnValue,
-    Variable
+    Variable,
 )
 from repograph.entities.graph.models.relationships import (
     Calls,
@@ -1001,7 +1001,7 @@ class RepographBuilder:
                         self.graph.add(
                             Imports(module, imported_object, self.repository_name),
                             tx=self.tx,
-                            graph_name=self.graph_name
+                            graph_name=self.graph_name,
                         )
                         self.module_dependencies[module].append(imported_object)
 
@@ -1022,7 +1022,9 @@ class RepographBuilder:
                 ]
                 if len(matching_objects) > 0:
                     for match in matching_objects:
-                        self.graph.add(Imports(module, match, self.repository_name), tx=self.tx)
+                        self.graph.add(
+                            Imports(module, match, self.repository_name), tx=self.tx
+                        )
                         self.module_dependencies[module].append(match)
                     continue
 
@@ -1033,7 +1035,9 @@ class RepographBuilder:
                 ]
                 if len(matching_objects) > 0:
                     for match in matching_objects:
-                        self.graph.add(Imports(module, match, self.repository_name), tx=self.tx)
+                        self.graph.add(
+                            Imports(module, match, self.repository_name), tx=self.tx
+                        )
                         self.module_dependencies[module].append(match)
                     continue
 
@@ -1057,7 +1061,7 @@ class RepographBuilder:
                     name=imported_object,
                     canonical_name=f"{dependency['from_module']}.{dependency['import']}",
                     inferred=True,
-                    repository_name=self.repository_name
+                    repository_name=self.repository_name,
                 )
             elif imported_object[0].isupper():
                 imported_object = Class(
@@ -1079,7 +1083,7 @@ class RepographBuilder:
                 Contains(imported_module, imported_object, self.repository_name),
                 Imports(module, imported_object, self.repository_name),
                 tx=self.tx,
-                graph_name=self.graph_name
+                graph_name=self.graph_name,
             )
             self.module_objects[imported_module].append(imported_object)
             self.module_dependencies[module].append(imported_object)
@@ -1286,15 +1290,7 @@ class RepographBuilder:
 
             # If the call is to an imported function...
             if call in module_imports:
-                matching_imports = find_node_object_by_name(
-                    module_dependencies, call, canonical=True
-                )
-                print("HERE")
-                print(matching_imports)
-                print(module_imports)
-                print(module_dependencies)
-                print(call)
-                print(parent_module)
+                matching_imports = find_node_object_by_name(module_dependencies, call)
                 relationship = Calls(
                     caller if caller else parent_module,
                     matching_imports,
