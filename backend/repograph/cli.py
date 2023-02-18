@@ -87,7 +87,7 @@ def main(
     Returns:
         None
     """
-    build.build(input_list, name, prune=prune)
+    build.build(input_list, name, "", prune=prune)  # TODO: Add description flag
 
 
 if __name__ == "__main__":

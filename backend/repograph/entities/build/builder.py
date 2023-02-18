@@ -28,6 +28,7 @@ from repograph.entities.graph.models.nodes import (
     README,
     Repository,
     ReturnValue,
+    Variable,
 )
 from repograph.entities.graph.models.relationships import (
     Calls,
@@ -490,6 +491,8 @@ class RepographBuilder:
             repository_name=self.repository_name,
         )
 
+        self.module_objects[module] = []
+
         return module
 
     def _parse_module_contents(self, module: Module, file_info: JSONDict) -> None:
@@ -581,9 +584,7 @@ class RepographBuilder:
 
             # If parent is a module, add to the module_objects set
             if isinstance(parent, Module):
-                self.module_objects[parent] = self.module_objects.get(parent, []) + [
-                    function
-                ]
+                self.module_objects[parent].append(function)
 
             # Parse arguments and create Argument nodes
             self._parse_arguments(
@@ -619,9 +620,7 @@ class RepographBuilder:
             self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
             # Add to module objects set
-            self.module_objects[parent] = self.module_objects.get(parent, []) + [
-                class_node
-            ]
+            self.module_objects[parent].append(class_node)
 
             # Parse extends
             # self._parse_extends(info.get("extend", []), class_node)
@@ -826,11 +825,31 @@ class RepographBuilder:
 
                 # Find the module
                 if dependency["type"] == "internal":
-                    imported_module = self.modules.get(
-                        f"{module.parent_path}/{source_module}.py", None
-                    )
+                    imported_module = self.modules.get(source_module, None)
+                    # If we can't find the module, it could be a relative import so use the package
+                    # components if the importing module's canonical name.
+                    if not imported_module:
+                        added = []
+                        for part in module.canonical_name.split("."):
+                            added.append(part)
+                            imported_module = self.modules.get(
+                                ".".join(added + [source_module]), None
+                            )
+                            if imported_module:
+                                break
+                    # Finally if we still haven't found the imported module, it may be the case that
+                    # the object is being imported from the __init__ of a package.
+                    if not imported_module:
+                        imported_module = self.modules.get(
+                            f"{source_module}.__init__", None
+                        )
+
                 else:
                     imported_module = self.modules.get(source_module, None)
+                    if not imported_module:
+                        imported_module = self.modules.get(
+                            f"{source_module}.__init__", None
+                        )
 
                 # If importing a module directly....
                 if imports_module:
@@ -863,38 +882,85 @@ class RepographBuilder:
 
                 # If importing a class, function, etc...
                 else:
-                    # ...and it already exists create the relationship
+                    # ...or it already exists then create the relationship
                     if imported_module:
-                        module_objects = self.module_objects.get(imported_module, None)
-                        if not module_objects:
-                            unresolved_dependencies.append(
-                                (module, imported_module, imported_object, dependency)
-                            )
-                            continue
+                        if imported_module.inferred:
+                            if imported_object[0].isupper():
+                                imported_object = Class(
+                                    name=imported_object,
+                                    canonical_name=f"{dependency['from_module']}.{dependency['import']}",
+                                    repository_name=self.repository_name,
+                                    inferred=True,
+                                )
+                            else:
+                                imported_object = Function(
+                                    name=imported_object,
+                                    canonical_name=f"{dependency['from_module']}.{dependency['import']}",
+                                    type=str(Function.FunctionType.FUNCTION.value),
+                                    repository_name=self.repository_name,
+                                    inferred=True,
+                                )
 
-                        # Filter the module objects for only those with the imported name
-                        matching_objects = [
-                            obj for obj in module_objects if obj.name == imported_object
-                        ]
-
-                        # If no matches, log an error and move onto the next dependency
-                        if len(matching_objects) == 0:
-                            unresolved_dependencies.append(
-                                (module, imported_module, imported_object, dependency)
-                            )
-                            continue
-
-                        # If more than one match we log this inconsistency,
-                        # but add all import relationships
-                        if len(matching_objects) > 1:
-                            log.warning("More than 1 matching object found in import.")
-
-                        for match in matching_objects:
                             self.graph.add(
-                                Imports(module, match, self.repository_name),
+                                Imports(module, imported_object, self.graph_name),
+                                Imports(
+                                    imported_module, imported_object, self.graph_name
+                                ),
                                 tx=self.tx,
+                                graph_name=self.graph_name,
                             )
-                            self.module_dependencies[module].append(match)
+
+                            self.module_dependencies[imported_module].append(
+                                imported_object
+                            )
+                            self.module_dependencies[module].append(imported_object)
+                        else:
+                            module_objects = self.module_objects.get(
+                                imported_module, []
+                            )
+                            if not module_objects:
+                                unresolved_dependencies.append(
+                                    (
+                                        module,
+                                        imported_module,
+                                        imported_object,
+                                        dependency,
+                                    )
+                                )
+                                continue
+
+                            # Filter the module objects for only those with the imported name
+                            matching_objects = [
+                                obj
+                                for obj in module_objects
+                                if obj.name == imported_object
+                            ]
+
+                            # If no matches, log an error and move onto the next dependency
+                            if len(matching_objects) == 0:
+                                unresolved_dependencies.append(
+                                    (
+                                        module,
+                                        imported_module,
+                                        imported_object,
+                                        dependency,
+                                    )
+                                )
+                                continue
+
+                            # If more than one match we log this inconsistency,
+                            # but add all import relationships
+                            if len(matching_objects) > 1:
+                                log.warning(
+                                    "More than 1 matching object found in import."
+                                )
+
+                            for match in matching_objects:
+                                self.graph.add(
+                                    Imports(module, match, self.repository_name),
+                                    tx=self.tx,
+                                )
+                                self.module_dependencies[module].append(match)
                     # ...and if it doesn't recursively create it
                     else:
                         if imported_object[0].isupper():
@@ -902,6 +968,7 @@ class RepographBuilder:
                                 name=imported_object,
                                 canonical_name=f"{dependency['from_module']}.{dependency['import']}",
                                 repository_name=self.repository_name,
+                                inferred=True,
                             )
                         else:
                             imported_object = Function(
@@ -909,6 +976,7 @@ class RepographBuilder:
                                 canonical_name=f"{dependency['from_module']}.{dependency['import']}",
                                 type=str(Function.FunctionType.FUNCTION.value),
                                 repository_name=self.repository_name,
+                                inferred=True,
                             )
 
                         source_module, missing = self._calculate_missing_packages(
@@ -933,35 +1001,92 @@ class RepographBuilder:
                         self.graph.add(
                             Imports(module, imported_object, self.repository_name),
                             tx=self.tx,
+                            graph_name=self.graph_name,
                         )
                         self.module_dependencies[module].append(imported_object)
 
         # Second pass on unresolved dependencies that are likely to be imports of other modules.
-        remaining = []
+        unresolved = unresolved_dependencies
+        while len(unresolved) != 0:
+            remaining = []
+            for (
+                module,
+                imported_module,
+                imported_object,
+                dependency,
+            ) in unresolved:
+                # Check the module objects of the imported module first
+                module_objects = self.module_objects.get(imported_module, [])
+                matching_objects = [
+                    obj for obj in module_objects if obj.name == imported_object
+                ]
+                if len(matching_objects) > 0:
+                    for match in matching_objects:
+                        self.graph.add(
+                            Imports(module, match, self.repository_name), tx=self.tx
+                        )
+                        self.module_dependencies[module].append(match)
+                    continue
+
+                # Then check the module imports of the imported module
+                module_imports = self.module_dependencies.get(imported_module, [])
+                matching_objects = [
+                    obj for obj in module_imports if obj.name == imported_object
+                ]
+                if len(matching_objects) > 0:
+                    for match in matching_objects:
+                        self.graph.add(
+                            Imports(module, match, self.repository_name), tx=self.tx
+                        )
+                        self.module_dependencies[module].append(match)
+                    continue
+
+                remaining.append((module, imported_module, imported_object, dependency))
+
+            if len(remaining) == len(unresolved):
+                unresolved = remaining
+                break
+            else:
+                unresolved = remaining
+
+        # Finally, infer any remaining objects
         for (
             module,
             imported_module,
             imported_object,
             dependency,
-        ) in unresolved_dependencies:
-            module_imports = self.module_dependencies.get(imported_module)
-            if not module_imports:
-                remaining.append(dependency)
-                continue
+        ) in unresolved:
+            if imported_object.isupper() or imported_object.startswith("__"):
+                imported_object = Variable(
+                    name=imported_object,
+                    canonical_name=f"{dependency['from_module']}.{dependency['import']}",
+                    inferred=True,
+                    repository_name=self.repository_name,
+                )
+            elif imported_object[0].isupper():
+                imported_object = Class(
+                    name=imported_object,
+                    canonical_name=f"{dependency['from_module']}.{dependency['import']}",
+                    repository_name=self.repository_name,
+                    inferred=True,
+                )
+            else:
+                imported_object = Function(
+                    name=imported_object,
+                    canonical_name=f"{dependency['from_module']}.{dependency['import']}",
+                    type=str(Function.FunctionType.FUNCTION.value),
+                    repository_name=self.repository_name,
+                    inferred=True,
+                )
 
-            matching_objects = [
-                obj for obj in module_imports if obj.name == imported_object
-            ]
-
-            if len(matching_objects) == 0:
-                remaining.append(dependency)
-
-            for match in matching_objects:
-                self.graph.add(Imports(module, match, self.repository_name), tx=self.tx)
-                self.module_dependencies[module].append(match)
-
-        if len(remaining) > 0:
-            log.warning("Unable to resolve %d dependencies...", len(remaining))
+            self.graph.add(
+                Contains(imported_module, imported_object, self.repository_name),
+                Imports(module, imported_object, self.repository_name),
+                tx=self.tx,
+                graph_name=self.graph_name,
+            )
+            self.module_objects[imported_module].append(imported_object)
+            self.module_dependencies[module].append(imported_object)
 
     def _calculate_missing_packages(self, source_module: str) -> Tuple[str, List[str]]:
         """Calculates missing packages for a given import source Module.
@@ -1009,7 +1134,9 @@ class RepographBuilder:
 
         for index, m in enumerate(missing):
             if index == len(missing) - 1:
-                new = Module(name=m, repository_name=self.repository_name)
+                new = Module(
+                    name=m, repository_name=self.repository_name, inferred=True
+                )
                 child = new
             else:
                 new = Package(
@@ -1018,7 +1145,13 @@ class RepographBuilder:
                     parent_package=parent.canonical_name if parent else "",
                     external=True,
                     repository_name=self.repository_name,
+                    inferred=True,
                 )
+
+                if new.canonical_name == "profiles":
+                    print(missing)
+                    print(parent)
+                    print(import_object)
 
             if parent:
                 relationships.append(Contains(parent, new, self.repository_name))
@@ -1026,12 +1159,21 @@ class RepographBuilder:
             parent = new
             nodes.append(new)
 
-        # If we have an import_object, but the parent is a Package, create an __init__ Module
-        # as this is actually where the import_object is being imported from.
+        # If we have an import_object, but the parent is a Package, we check to see if an __init__
+        # module exists for the package. If not, we create an __init__ Module as this is actually
+        # where the import_object is being imported from.
         if import_object and parent and isinstance(parent, Package):
-            new = Module.create_init_module(parent.canonical_name, self.repository_name)
-            relationships.append(Contains(parent, new, self.repository_name))
-            parent = new
+            init_name = f"{parent.canonical_name}.__init__"
+            if init_name in self.modules:
+                parent = self.modules[init_name]
+            else:
+                new = Module.create_init_module(
+                    parent.canonical_name, self.repository_name
+                )
+                relationships.append(Contains(parent, new, self.repository_name))
+                self.modules[init_name] = new
+                self.module_dependencies[new] = []
+                parent = new
 
         # If we have an import object, create a Contains relationship with the parent module.
         if import_object:
@@ -1148,9 +1290,7 @@ class RepographBuilder:
 
             # If the call is to an imported function...
             if call in module_imports:
-                matching_imports = find_node_object_by_name(
-                    module_dependencies, call, canonical=True
-                )
+                matching_imports = find_node_object_by_name(module_dependencies, call)
                 relationship = Calls(
                     caller if caller else parent_module,
                     matching_imports,
@@ -1166,6 +1306,7 @@ class RepographBuilder:
                         type=str(Function.FunctionType.FUNCTION.value),
                         builtin=True,
                         repository_name=self.repository_name,
+                        inferred=True,
                     )
                     self.called_builtin_functions[function] = function_node
 

@@ -4,6 +4,7 @@ Graph entity application logic.
 # Base imports
 import contextlib
 import datetime
+import traceback
 from logging import getLogger
 import re
 from sqlite3 import Connection
@@ -116,6 +117,7 @@ class GraphService:
             log.info("Done!")
         except Exception as e:
             log.error("An error occurred. Rolling back graph transaction!\n" + str(e))
+            traceback.print_exc()
             tx.rollback()
 
     @contextlib.contextmanager
@@ -338,6 +340,9 @@ class GraphService:
             cycles.add(frozenset(map(lambda x: x.identity, cycle.get("nodes"))))
 
         return len(cycles)
+
+    def get_missing_dependencies(self, graph: str) -> int:
+        return "MATCH (n:Package) WHERE (n.inferred) = true AND  NOT (n)-[*]->(:Repository) RETURN DISTINCT n"
 
     def prune(self, graph_name: str):
         """Delete all nodes and relationships from the graph.

@@ -25,8 +25,8 @@ class MetadataRepository:
         """
         Constructor
         """
-        self.db_path = db_path
-        db = sqlite3.connect(db_path)
+        self.db_path = "./test.db"  # TODO: Change back.
+        db = sqlite3.connect(self.db_path)
         db.execute(
             """
             CREATE TABLE IF NOT EXISTS graphs
