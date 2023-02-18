@@ -24,8 +24,8 @@ export async function getIncorrectAndMissingDocstrings(
   graphName: string
 ): Promise<number[]> {
   const res = await fetch(
-  process.env.NEXT_PUBLIC_BACKEND_URL +
-  `/graph/${graphName}/incorrect-and-missing-docstrings`
+    process.env.NEXT_PUBLIC_BACKEND_URL +
+      `/graph/${graphName}/incorrect-and-missing-docstrings`
   );
 
   return (await res.json()) as number[];

@@ -84,7 +84,10 @@ const Issues: React.FC<IssuesProps> = (props) => {
           title="Missing Dependencies"
           value={props.missingDependencies}
         />
-        <IssueCard title="Possible Incorrect Docstrings" value={props.incorrectDocstrings} />
+        <IssueCard
+          title="Possible Incorrect Docstrings"
+          value={props.incorrectDocstrings}
+        />
         <IssueCard title="Missing Docstrings" value={props.missingDocstrings} />
       </dl>
     </>

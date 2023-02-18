@@ -7,7 +7,8 @@ import { DefaultLayout } from "../../../components/core/layout";
 // Types
 import { GetServerSideProps, NextPage } from "next";
 import {
-  getCyclicalDependencies, getIncorrectAndMissingDocstrings,
+  getCyclicalDependencies,
+  getIncorrectAndMissingDocstrings,
   getMissingDependencies,
 } from "../../../lib/issues";
 
@@ -16,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { name } = context.params;
 
   const docstrings = await getIncorrectAndMissingDocstrings(name);
-  console.log(docstrings)
+  console.log(docstrings);
 
   return {
     props: {
@@ -24,7 +25,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       missingDependencies: await getMissingDependencies(name),
       incorrectDocstrings: docstrings[0],
       missingDocstrings: docstrings[1],
-
     },
   };
 };
