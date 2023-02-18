@@ -78,7 +78,10 @@ const Issues: React.FC<IssuesProps> = (props) => {
           title="Circular Dependencies"
           value={props.cyclicalDependencies}
         />
-        <IssueCard title="Missing Dependencies" value={props.missingDependencies} />
+        <IssueCard
+          title="Missing Dependencies"
+          value={props.missingDependencies}
+        />
       </dl>
     </>
   );

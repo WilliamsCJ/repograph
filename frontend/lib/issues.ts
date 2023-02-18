@@ -10,11 +10,11 @@ export async function getCyclicalDependencies(
 }
 
 export async function getMissingDependencies(
-graphName: string
+  graphName: string
 ): Promise<number> {
   const res = await fetch(
-  process.env.NEXT_PUBLIC_BACKEND_URL +
-  `/graph/${graphName}/missing-dependencies`
+    process.env.NEXT_PUBLIC_BACKEND_URL +
+      `/graph/${graphName}/missing-dependencies`
   );
 
   return (await res.json()) as number;
