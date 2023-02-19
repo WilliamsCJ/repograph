@@ -1,17 +1,18 @@
 import React from "react";
-import type { GetServerSideProps, NextPage } from "next";
-import { CloudArrowDownIcon } from "@heroicons/react/24/outline";
 
-import { Button } from "../../../components/core/button";
+// Next.js
+import type { GetServerSideProps, NextPage } from "next";
+
+// Components
 import { DefaultLayout } from "../../../components/core/layout";
 import Summary from "../../../components/graph/summary";
+import DeleteGraphButton from "../../../components/graph/delete";
 
+// Functions
 import { getSummary } from "../../../lib/summary";
-import { GraphSummary } from "../../../types/graph";
 
-const ExportButton = () => (
-  <Button icon={<CloudArrowDownIcon />} text="Delete" />
-);
+// Types
+import { GraphSummary } from "../../../types/graph";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // @ts-ignore
@@ -20,18 +21,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
+      name: name,
       summary: summary,
     },
   };
 };
 
 export type GraphHomePageProps = {
+  name: string;
   summary: GraphSummary;
 };
 
-const GraphHome: NextPage<GraphHomePageProps> = ({ summary }) => {
+const GraphHome: NextPage<GraphHomePageProps> = ({ name, summary }) => {
   return (
-    <DefaultLayout buttons={[<ExportButton />]} heading="Summary">
+    <DefaultLayout
+      buttons={[<DeleteGraphButton graphName={name} />]}
+      heading="Summary"
+    >
       <Summary summary={summary} />
     </DefaultLayout>
   );

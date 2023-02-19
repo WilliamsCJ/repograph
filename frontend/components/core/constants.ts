@@ -25,3 +25,5 @@ export const GreenBackground = tw`bg-emerald-400/25`;
 export const GreenBorder = tw`border rounded-lg border-emerald-400 dark:border-emerald-700`;
 export const RedBackground = tw`bg-rose-400/25`;
 export const RedBorder = tw`border rounded-lg border-rose-400 dark:border-rose-700`;
+export const RedText = tw`text-sm font-semibold text-rose-800 dark:text-rose-200`;
+export const RedHover = tw`hover:bg-rose-500/50 dark:hover:bg-rose-300/50 hover:text-rose-700 dark:hover:text-rose-400 hover:transition hover:ease-in-out hover:duration-300`;
