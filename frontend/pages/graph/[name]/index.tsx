@@ -14,7 +14,6 @@ import { getSummary } from "../../../lib/summary";
 // Types
 import { GraphSummary } from "../../../types/graph";
 
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // @ts-ignore
   const { name } = context.params;
@@ -29,13 +28,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export type GraphHomePageProps = {
-  name: string
+  name: string;
   summary: GraphSummary;
 };
 
 const GraphHome: NextPage<GraphHomePageProps> = ({ name, summary }) => {
   return (
-    <DefaultLayout buttons={[<DeleteGraphButton  graphName={name} />]} heading="Summary">
+    <DefaultLayout
+      buttons={[<DeleteGraphButton graphName={name} />]}
+      heading="Summary"
+    >
       <Summary summary={summary} />
     </DefaultLayout>
   );

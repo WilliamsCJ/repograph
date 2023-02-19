@@ -1,10 +1,10 @@
-import React, {  SetStateAction, Dispatch } from "react";
+import React, { SetStateAction, Dispatch } from "react";
 
 // Styling
-import 'twin.macro';
+import "twin.macro";
 
 // Dependencies
-import {  Dialog } from '@headlessui/react';
+import { Dialog } from "@headlessui/react";
 import { Card } from "./card";
 import tw from "twin.macro";
 import { DetailText, Heading } from "./text";
@@ -13,13 +13,13 @@ import { DetailText, Heading } from "./text";
  * Props for Modal component.
  */
 export type ModalProps = {
-  open: boolean
-  setOpen: Dispatch<SetStateAction<boolean>>
-  children: JSX.Element
-  cancelButtonRef: React.MutableRefObject<null>
-  title: string
-  description: string
-}
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  children: JSX.Element;
+  cancelButtonRef: React.MutableRefObject<null>;
+  title: string;
+  description: string;
+};
 
 /**
  * Generic modal component
@@ -37,7 +37,7 @@ const Modal: React.FC<ModalProps> = ({
   children,
   cancelButtonRef,
   title,
-  description
+  description,
 }) => {
   return (
     <Dialog
@@ -59,7 +59,7 @@ const Modal: React.FC<ModalProps> = ({
         </Dialog.Panel>
       </div>
     </Dialog>
-  )
-}
+  );
+};
 
 export default Modal;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // Styling
 import tw from "twin.macro";
@@ -15,7 +15,11 @@ import {
   Background,
   Border,
   ButtonText,
-  Hover, RedBackground, RedBorder, RedHover, RedText,
+  Hover,
+  RedBackground,
+  RedBorder,
+  RedHover,
+  RedText,
 } from "./constants";
 const ButtonStyles = tw`relative inline-flex items-center px-4 py-2.5`;
 
@@ -59,7 +63,13 @@ export const Button = ({ icon, text, type, onClick, ref }: ButtonProps) => (
  * @param type
  * @constructor
  */
-export const AccentButton = ({ icon, text, type, onClick, ref }: ButtonProps) => (
+export const AccentButton = ({
+  icon,
+  text,
+  type,
+  onClick,
+  ref,
+}: ButtonProps) => (
   <button
     css={[
       AccentBackground,
@@ -78,20 +88,14 @@ export const AccentButton = ({ icon, text, type, onClick, ref }: ButtonProps) =>
 
 export const RedButton = ({ icon, text, type, onClick, ref }: ButtonProps) => (
   <button
-    css={[
-      RedBackground,
-      RedText,
-      RedBorder,
-      ButtonStyles,
-      RedHover,
-    ]}
+    css={[RedBackground, RedText, RedBorder, ButtonStyles, RedHover]}
     type={type}
     onClick={onClick}
     ref={ref}
   >
     <span>{text}</span>
   </button>
-)
+);
 
 // Link Button
 
