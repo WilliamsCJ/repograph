@@ -23,6 +23,8 @@ import { StatsCardProps } from "./summary";
 export type IssuesProps = {
   cyclicalDependencies: number;
   missingDependencies: number;
+  incorrectDocstrings: number;
+  missingDocstrings: number;
 };
 
 /**
@@ -82,6 +84,11 @@ const Issues: React.FC<IssuesProps> = (props) => {
           title="Missing Dependencies"
           value={props.missingDependencies}
         />
+        <IssueCard
+          title="Possible Incorrect Docstrings"
+          value={props.incorrectDocstrings}
+        />
+        <IssueCard title="Missing Docstrings" value={props.missingDocstrings} />
       </dl>
     </>
   );

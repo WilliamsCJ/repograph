@@ -8,7 +8,7 @@ Typical usage:
 """
 # Base imports
 from logging import getLogger
-from typing import Optional
+from typing import Optional, Tuple
 
 # pip imports
 from sentence_transformers import SentenceTransformer, util
@@ -89,3 +89,51 @@ class SearchService:
         return SemanticSearchResultSet(
             total=len(score_pairs), limit=limit, offset=offset, results=results
         )
+
+    def find_possible_incorrect_docstrings(self, graph: str) -> Tuple[int, int]:
+        """Find the number of possibly incorrect docstrings.
+
+        Cosine similarity between docstring and generated summarization is less than 0.5
+
+        Args:
+            graph (str): The graph name.
+
+        Returns:
+            int: The number of low scores
+            int: The number of functions that were missing docstrings to compare against
+        """
+        docstrings = self.graph.get_docstrings(graph)
+        docstrings_with_summarizations = list(
+            filter(lambda x: x.summarization is not None, docstrings)
+        )
+        total = len(docstrings_with_summarizations)
+
+        docstrings_with_original = list(
+            filter(
+                lambda x: x.short_description is not None
+                or x.long_description is not None,
+                docstrings_with_summarizations,
+            )
+        )
+        missing_docstring = total - len(docstrings_with_original)
+
+        pairs = list(
+            map(
+                lambda x: (
+                    x.summarization,
+                    str(x.short_description or "") + str(x.long_description or ""),
+                ),
+                docstrings_with_original,
+            )
+        )
+        low_scores = 0
+
+        for summarization, docstring in pairs:
+            embedding_1 = self.model.encode(summarization)
+            embedding_2 = self.model.encode([docstring, ""])
+            score = util.dot_score(embedding_1, embedding_2)[0].cpu().tolist()[0]
+
+            if score < 0.5:
+                low_scores += 1
+
+        return low_scores, missing_docstring

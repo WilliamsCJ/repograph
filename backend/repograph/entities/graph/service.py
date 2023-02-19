@@ -18,6 +18,7 @@ from neo4j import Transaction as neo4jTransaction
 from repograph.entities.graph.models.base import BaseSubgraph, Node, Relationship
 from repograph.entities.graph.models.nodes import (
     Class,
+    Docstring,
     Function,
     Module,
     Package,
@@ -210,6 +211,9 @@ class GraphService:
         )
 
         return summary
+
+    def get_docstrings(self, graph: str):
+        return self.repository.get_all_nodes_by_label(Docstring, graph_name=graph)
 
     def get_function_summarizations(
         self, graph_name: str, repository_name: str = None
