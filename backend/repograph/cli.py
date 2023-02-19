@@ -28,6 +28,9 @@ p = configargparse.ArgParser(default_config_files=["../default_config.yaml"])
 p.add_argument("-c", "--config", is_config_file=True, help="Config file path.")
 p.add_argument("--uri", required=True, help="The URI of the Neo4J server.")
 p.add_argument(
+    "--driver_uri", required=True, help="Alternative URI of the Neo4J server."
+)
+p.add_argument(
     "--username", required=True, help="The username to supply to the Neo4J server."
 )
 p.add_argument(
@@ -35,6 +38,9 @@ p.add_argument(
 )
 p.add_argument(
     "--database", required=False, default="neo4j", help="The database name to use."
+)
+p.add_argument(
+    "--metadata_db", required=False, help="The path of the SQLite3 metadata DB to use."
 )
 p.add_argument(
     "--input", required=True, action="append", help="The directory_info.json file."

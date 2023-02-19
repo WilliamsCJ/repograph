@@ -361,14 +361,3 @@ class GraphService:
         )
 
         return len(result)
-
-    def prune(self, graph_name: str):
-        """Delete all nodes and relationships from the graph.
-
-        Also free up the name for reuse.
-
-        Args:
-            graph_name (str): The name of the graph to delete.
-
-        """
-        self.repository.delete_graph(graph_name)

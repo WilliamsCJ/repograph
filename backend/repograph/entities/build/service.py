@@ -145,7 +145,7 @@ class BuildService:
 
         if prune:
             log.info("Pruning existing graph...")
-            self.graph.prune(name.lower())
+            self.graph.delete_graph(name.lower())
 
         with self.graph.get_system_transaction() as (system_tx, metadata_tx):
             graph = self.graph.create_graph(name, description, system_tx, metadata_tx)
