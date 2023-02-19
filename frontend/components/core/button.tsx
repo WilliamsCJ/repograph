@@ -1,6 +1,12 @@
+import React from 'react';
+
+// Styling
 import tw from "twin.macro";
 
+// Next.js
 import Link from "next/link";
+
+// Components
 import {
   AccentBackground,
   AccentBorder,
@@ -9,10 +15,8 @@ import {
   Background,
   Border,
   ButtonText,
-  Hover,
+  Hover, RedBackground, RedBorder, RedHover, RedText,
 } from "./constants";
-import { DetailText } from "./text";
-
 const ButtonStyles = tw`relative inline-flex items-center px-4 py-2.5`;
 
 // Button
@@ -24,6 +28,8 @@ export type ButtonProps = {
   icon?: any;
   text: string;
   type?: "submit" | "button";
+  onClick?: () => void;
+  ref?: React.MutableRefObject<null>;
 };
 
 /**
@@ -34,10 +40,12 @@ export type ButtonProps = {
  * @param type
  * @constructor
  */
-export const Button = ({ icon, text, type }: ButtonProps) => (
+export const Button = ({ icon, text, type, onClick, ref }: ButtonProps) => (
   <button
     css={[Background, ButtonText, Border, ButtonStyles, Hover]}
     type={type}
+    onClick={onClick}
+    ref={ref}
   >
     <span>{text}</span>
   </button>
@@ -51,7 +59,7 @@ export const Button = ({ icon, text, type }: ButtonProps) => (
  * @param type
  * @constructor
  */
-export const AccentButton = ({ icon, text, type }: ButtonProps) => (
+export const AccentButton = ({ icon, text, type, onClick, ref }: ButtonProps) => (
   <button
     css={[
       AccentBackground,
@@ -61,10 +69,29 @@ export const AccentButton = ({ icon, text, type }: ButtonProps) => (
       AccentHover,
     ]}
     type={type}
+    onClick={onClick}
+    ref={ref}
   >
     <span>{text}</span>
   </button>
 );
+
+export const RedButton = ({ icon, text, type, onClick, ref }: ButtonProps) => (
+  <button
+    css={[
+      RedBackground,
+      RedText,
+      RedBorder,
+      ButtonStyles,
+      RedHover,
+    ]}
+    type={type}
+    onClick={onClick}
+    ref={ref}
+  >
+    <span>{text}</span>
+  </button>
+)
 
 // Link Button
 

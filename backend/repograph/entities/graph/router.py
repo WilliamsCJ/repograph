@@ -68,5 +68,5 @@ class GraphRouter:
     async def call_graph_by_id(self, graph: str, node_id: int) -> CallGraph:
         return self.service.get_call_graph_by_id(node_id, graph)
 
-    async def delete_graph(self, graph_name: str):
-        self.service.delete_graph(graph_name)
+    async def delete_graph(self, graph: str):
+        self.service.delete_graph(graph)
