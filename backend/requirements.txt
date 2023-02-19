@@ -23,7 +23,7 @@ distro==1.7.0
 docker==6.0.1
 docstring-parser==0.7
 english==2020.7.0
-fastapi==0.89.1
+fastapi==0.92
 fastjsonschema==2.16.2
 filelock==3.9.0
 flake8==6.0.0
