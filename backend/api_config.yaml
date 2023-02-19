@@ -4,5 +4,5 @@ username: neo4j
 password: s3cr3t
 database: neo4j
 search: True
-summarize: True
+summarize: False
 metadata_db: /code/sqlite/graphs.db

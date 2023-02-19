@@ -28,16 +28,18 @@ class ApplicationContainer(DeclarativeContainer):
     # Neo4j resource
     neo4j: Resource[GraphService] = Resource(
         GraphService,
-        config.uri,
+        "bolt://localhost:7687",
         auth=("neo4j", "s3cr3t"),
     )
 
     # Manual Neo4j driver
     driver: Resource[Driver] = Resource(
         GraphDatabase.driver,
-        config.driver_uri,
+        "bolt://localhost:7687",
         auth=("neo4j", "s3cr3t"),
     )
+
+    print(config.driver_uri)
 
     # Container for Metadata entity
     metadata: Container[MetadataContainer] = Container(

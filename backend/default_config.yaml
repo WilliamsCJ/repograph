@@ -3,4 +3,4 @@ driver_uri: bolt://localhost:7687
 username: neo4j
 password: s3cr3t
 database: neo4j
-metadata_db: ../.sqlite/graphs.db
+metadata_db: ../../.sqlite/graphs.db
