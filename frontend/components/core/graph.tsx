@@ -51,8 +51,6 @@ const GraphCard: React.FC<GraphCardProps> = ({
   const [ref, { height, width }] = useDimensions();
   const dark = useTheme();
 
-  console.log(data)
-
   const nodeIcon = (n: CallGraphFunction) => {
     if (n.type === "Method") return 'Me';
     if (n.type === "Class") return 'C';
@@ -114,7 +112,7 @@ const GraphCard: React.FC<GraphCardProps> = ({
           {error ? (
             <div>
               <IconWrapper
-                color="dark"
+                color="strong"
                 icon={<ExclamationCircleIcon />}
                 size="md"
               />
