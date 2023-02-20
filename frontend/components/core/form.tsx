@@ -9,7 +9,8 @@ import {
 } from "@heroicons/react/24/outline";
 import {
   Background,
-  Border, BorderError,
+  Border,
+  BorderError,
   Focus,
   FocusError,
   Placeholder,
@@ -42,12 +43,16 @@ const InputSection: React.FC<InputProps> = (props) => {
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
           <BoldDetailText>{props.label}</BoldDetailText>
           <div tw="sm:col-span-2 sm:mt-0">
-            <Input placeholder={props.placeholder} {...field} error={meta.touched && meta.error !== undefined} />
-            {meta.touched && meta.error ?
+            <Input
+              placeholder={props.placeholder}
+              {...field}
+              error={meta.touched && meta.error !== undefined}
+            />
+            {meta.touched && meta.error ? (
               <ErrorText>{meta.error}</ErrorText>
-            :
+            ) : (
               <HelpText>{props.helpMessage}</HelpText>
-            }
+            )}
           </div>
         </div>
       )}
@@ -80,12 +85,17 @@ const TextAreaSection: React.FC<TextAreaProps> = (props) => {
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
           <BoldDetailText>{props.label}</BoldDetailText>
           <div tw="sm:col-span-2 sm:mt-0">
-            <TextArea placeholder={props.placeholder} {...field} rows={3} error={meta.touched && meta.error !== undefined} />
-            {meta.touched && meta.error ?
+            <TextArea
+              placeholder={props.placeholder}
+              {...field}
+              rows={3}
+              error={meta.touched && meta.error !== undefined}
+            />
+            {meta.touched && meta.error ? (
               <ErrorText>{meta.error}</ErrorText>
-            :
+            ) : (
               <HelpText>{props.helpMessage}</HelpText>
-            }
+            )}
           </div>
         </div>
       )}
@@ -204,7 +214,9 @@ const SearchBarInputSection: React.FC<SearchBarInputSectionProps> = (props) => {
 /**
  * TextArea component.
  */
-const TextArea = (props: React.HTMLProps<HTMLTextAreaElement> & { error: boolean }) => (
+const TextArea = (
+  props: React.HTMLProps<HTMLTextAreaElement> & { error: boolean }
+) => (
   <textarea
     css={[
       tw`block w-full min-w-0 resize-none`,
@@ -236,7 +248,9 @@ const ErrorTextArea = (props: React.HTMLProps<HTMLTextAreaElement>) => (
 /**
  * Input component
  */
-const Input = (props: React.HTMLProps<HTMLInputElement> & { error: boolean }) => (
+const Input = (
+  props: React.HTMLProps<HTMLInputElement> & { error: boolean }
+) => (
   <input
     css={[
       tw`block w-full min-w-0 resize-none p-2`,
