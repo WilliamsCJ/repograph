@@ -39,8 +39,6 @@ class ApplicationContainer(DeclarativeContainer):
         auth=("neo4j", "s3cr3t"),
     )
 
-    print(config.driver_uri)
-
     # Container for Metadata entity
     metadata: Container[MetadataContainer] = Container(
         MetadataContainer,

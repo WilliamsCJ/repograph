@@ -70,8 +70,6 @@ class SearchService:
         )
         summarizations = summarizations_map.keys()
 
-        print(summarizations_map)
-        print(summarizations)
         summarization_embeddings = self.model.encode(summarizations_extended)
 
         scores = (

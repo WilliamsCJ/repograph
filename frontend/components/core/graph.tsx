@@ -5,13 +5,12 @@ import dynamic from "next/dynamic";
 
 // Styling
 import tw, { TwStyle } from "twin.macro";
-import colors from "tailwindcss/colors";
 
 /* External dependencies */
 import ClipLoader from "react-spinners/ClipLoader";
-const Graph = dynamic(() => import("./force-graph"), {
-  ssr: false,
-});
+// const Graph = dynamic(() => import("./force-graph"), {
+//   ssr: false,
+// });
 
 /* Components */
 import { Border, InteriorBorder } from "./constants";
@@ -21,6 +20,11 @@ import IconWrapper from "./icon";
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { BoldDetailText, DetailText } from "./text";
 import Script from "next/script";
+import { VisGraph, VisSingleContainer } from "@unovis/react";
+import useDimensions from "react-use-dimensions";
+import { CallGraph, CallGraphFunction } from "../../types/graph";
+import { useTheme } from "next-themes";
+const colors = require('tailwindcss/colors')
 
 /**
  * GraphCard props
@@ -45,52 +49,50 @@ const GraphCard: React.FC<GraphCardProps> = ({
   error,
   root_id,
 }) => {
-  const [network, setNetwork] = useState<Network | null>(null);
+  // @ts-ignore
+  const [ref, { height, width }] = useDimensions();
+  const dark = useTheme();
 
-  // Options
-  const options = {
-    layout: {
-      hierarchical: false,
-    },
-    edges: {
-      color: "#000000",
-      smooth: {
-        enabled: true,
-      },
-    },
-  };
+  const nodeIcon = (n: CallGraphFunction) => {
+    if (n.type === "METHOD") return 'Me';
+    if (n.type === "CLASS") return 'C';
+    if (n.type === "MODULE") return 'Mo';
+    return 'F';
+  }
 
-  // Events
-  // const events = {
-  //   doubleClick: function() {
-  //     if (network !== null) network.fit();
-  //   },
-  //   select: function(event: NetworkEvents) {
-  //     var { nodes, edges } = event;
-  //   },
-  //   stabilized: () => {
-  //     if (network) { // Network will be set using getNetwork event from the Graph component
-  //       network.fit();
-  //     }
-  //   }
-  // };
+  const nodeFill = (n: CallGraphFunction) => {
+    if (n.type === "METHOD") return dark ? colors.purple[400] : colors.purple[100];
+    if (n.type === "CLASS") return dark ? colors.yellow[400] : colors.yellow[100];
+    if (n.type === "MODULE") return dark ? colors.green[400] : colors.green[100];
+    return dark ? colors.blue[400] : colors.blue[100];
+  }
+
+  const nodeStroke = (n: CallGraphFunction) => {
+    if (n.type === "METHOD") return dark ? colors.purple[300] : colors.purple[800];
+    if (n.type === "CLASS") return dark ? colors.yellow[300] : colors.yellow[800];
+    if (n.type === "MODULE") return dark ? colors.green[300] : colors.green[800];
+    return dark ? colors.blue[300] : colors.blue[800];
+  }
+
+  const nodeLabel = (n: CallGraphFunction) => n.label;
+
 
   return (
-    <div css={[styles, tw`flex max-h-full`, InteriorBorder]}>
+    <div ref={ref} css={[styles, tw`flex max-h-full`, InteriorBorder]}>
       <Script
         type="text/javascript"
         src="ttps://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"
       />
       {data ? (
-        <Graph
-          autoResize={true}
-          graph={data}
-          options={options}
-          css={tw`max-h-full bg-red-100`}
-          // getNetwork={network => {
-          //   setNetwork(network);
-          // }}
-        />
+        <VisSingleContainer data={data} height={height} width={width}>
+          <VisGraph
+            nodeIcon={nodeIcon}
+            nodeFill={nodeFill}
+            nodeStroke={nodeStroke}
+            nodeStrokeWidth={1}
+            nodeLabel={nodeLabel}
+          />
+        </VisSingleContainer>
       ) : (
         <Center>
           {error ? (

@@ -36,13 +36,13 @@ class GraphSummary(BaseModel):
 
 class CallGraph(BaseModel):
     class Function(BaseModel):
-        id: int
+        id: str
         label: str
         title: str
 
     class Relationship(BaseModel):
-        from_id: int = Field(..., alias="from")
-        to_id: int = Field(..., alias="to")
+        from_id: str = Field(..., alias="source")
+        to_id: str = Field(..., alias="target")
 
         class Config:
             allow_population_by_field_name = True
@@ -51,4 +51,4 @@ class CallGraph(BaseModel):
         allow_population_by_field_name = True
 
     nodes: List[Function] = []
-    edges: List[Relationship] = []
+    links: List[Relationship] = []

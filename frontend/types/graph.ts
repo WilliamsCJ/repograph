@@ -13,6 +13,7 @@ export type CallGraphFunction = {
   id: number;
   label: string;
   title: string;
+  type: string;
 };
 
 export type CallGraphRelationship = {

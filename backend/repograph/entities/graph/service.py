@@ -282,21 +282,20 @@ class GraphService:
         if len(results) == 0:
             return call_graph
 
+        print(results[0].keys())
+
         call_graph.nodes.extend(
             list(
                 map(
                     lambda res: CallGraph.Function(
                         id=res["call"].identity,
-                        label=(
-                            res["call"]["canonical_name"]
-                            if "canonical_name" in res
-                            else res["call"]["name"]
-                        ),
+                        label=(res["call"]["name"]),
                         title=(
                             res["call"]["canonical_name"]
                             if "canonical_name" in res
                             else res["call"]["name"]
                         ),
+                        type="FUNCTION",
                     ),
                     results,
                 )
@@ -314,7 +313,7 @@ class GraphService:
                 )
             )
 
-        call_graph.edges.extend(
+        call_graph.links.extend(
             [
                 item
                 for sublist in list(map(parse_relationships, results))
