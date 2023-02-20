@@ -96,6 +96,7 @@ export type SearchResultCardProps = {
  * Card containing a single Semantic Search result.
  * @param result
  * @param index
+ * @param graph
  * @constructor
  */
 const SearchResultCard: React.FC<SearchResultCardProps> = ({
@@ -109,7 +110,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   return (
     <div tw="w-full">
       <JustifiedRow tw="mb-1 mx-2">
-        <BoldDetailText>{`${result.repository} > ${result.function.canonical_name}`}</BoldDetailText>
+        <BoldDetailText>{`${result.function.repository_name} > ${result.function.canonical_name}`}</BoldDetailText>
         <BoldDetailText>{`#${index + 1} (${result.score})`}</BoldDetailText>
       </JustifiedRow>
       <Card size={tw`w-full h-48`}>

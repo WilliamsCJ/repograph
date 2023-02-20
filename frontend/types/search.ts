@@ -3,6 +3,7 @@ export type Function = {
   name: string;
   type: string; // TODO: Enum
   builtin: boolean;
+  repository_name: string;
   canonical_name?: string;
   source_code?: string;
   min_line_number?: number;
