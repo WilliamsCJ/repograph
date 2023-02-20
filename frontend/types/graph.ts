@@ -19,6 +19,7 @@ export type CallGraphFunction = {
 export type CallGraphRelationship = {
   from: number;
   to: number;
+  type: string;
 };
 
 export type CallGraph = {

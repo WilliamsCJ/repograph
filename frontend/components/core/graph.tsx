@@ -21,13 +21,13 @@ import IconWrapper from "./icon";
 import { BoldDetailText } from "./text";
 
 /* Types */
-import { CallGraphFunction, CallGraphRelationship } from "../../types/graph";
+import { CallGraph, CallGraphFunction, CallGraphRelationship } from "../../types/graph";
 
 /**
  * GraphCard props
  */
 type GraphCardProps = {
-  data: any;
+  data: CallGraph;
   error: boolean;
   styles?: TwStyle;
   root_id: number;
@@ -51,18 +51,20 @@ const GraphCard: React.FC<GraphCardProps> = ({
   const [ref, { height, width }] = useDimensions();
   const dark = useTheme();
 
+  console.log(data)
+
   const nodeIcon = (n: CallGraphFunction) => {
-    if (n.type === "METHOD") return 'Me';
-    if (n.type === "CLASS") return 'C';
-    if (n.type === "MODULE") return 'Mo';
+    if (n.type === "Method") return 'Me';
+    if (n.type === "Class") return 'C';
+    if (n.type === "Module") return 'Mo';
     return 'F';
   }
 
   const nodeFill = (n: CallGraphFunction) => {
     if (n.id == root_id) {
-      if (n.type === "METHOD") return dark ? colors.purple[400] : colors.purple[100];
-      if (n.type === "CLASS") return dark ? colors.yellow[400] : colors.yellow[100];
-      if (n.type === "MODULE") return dark ? colors.green[400] : colors.green[100];
+      if (n.type === "Method") return dark ? colors.purple[400] : colors.purple[100];
+      if (n.type === "Class") return dark ? colors.yellow[400] : colors.yellow[100];
+      if (n.type === "Module") return dark ? colors.green[400] : colors.green[100];
       return dark ? colors.blue[400] : colors.blue[100];
     } else {
       return colors.zinc[200]
@@ -70,14 +72,14 @@ const GraphCard: React.FC<GraphCardProps> = ({
   }
 
   const nodeStroke = (n: CallGraphFunction) => {
-    if (n.type === "METHOD") return dark ? colors.purple[300] : colors.purple[800];
-    if (n.type === "CLASS") return dark ? colors.yellow[300] : colors.yellow[800];
-    if (n.type === "MODULE") return dark ? colors.green[300] : colors.green[800];
+    if (n.type === "Method") return dark ? colors.purple[300] : colors.purple[800];
+    if (n.type === "Class") return dark ? colors.yellow[300] : colors.yellow[800];
+    if (n.type === "Module") return dark ? colors.green[300] : colors.green[800];
     return dark ? colors.blue[300] : colors.blue[800];
   }
 
   const linkLabel = (l: CallGraphRelationship) => ({
-    text: 'Calls'
+    text: l.type
   })
 
 
