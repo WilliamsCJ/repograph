@@ -37,8 +37,8 @@ class GraphSummary(BaseModel):
 class CallGraph(BaseModel):
     class Function(BaseModel):
         id: str
-        label: str
-        title: str
+        name: str
+        canonical_name: str
 
     class Relationship(BaseModel):
         from_id: str = Field(..., alias="source")

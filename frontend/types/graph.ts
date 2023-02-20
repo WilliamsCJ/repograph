@@ -11,8 +11,8 @@ export type GraphSummary = {
 
 export type CallGraphFunction = {
   id: number;
-  label: string;
-  title: string;
+  name: string;
+  canonical_name: string;
   type: string;
 };
 

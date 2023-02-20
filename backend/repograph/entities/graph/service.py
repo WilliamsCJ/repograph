@@ -273,8 +273,8 @@ class GraphService:
         call_graph.nodes.append(
             CallGraph.Function(
                 id=results[0]["function"].identity,
-                label=results[0]["function"]["canonical_name"],
-                title=results[0]["function"]["canonical_name"],
+                name=results[0]["function"]["name"],
+                canonical_name=results[0]["function"]["canonical_name"],
             )
         )
 
@@ -289,8 +289,8 @@ class GraphService:
                 map(
                     lambda res: CallGraph.Function(
                         id=res["call"].identity,
-                        label=(res["call"]["name"]),
-                        title=(
+                        name=(res["call"]["name"]),
+                        canonical_name=(
                             res["call"]["canonical_name"]
                             if "canonical_name" in res
                             else res["call"]["name"]

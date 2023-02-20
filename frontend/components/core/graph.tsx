@@ -1,30 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 
 /* Next */
-import dynamic from "next/dynamic";
+import Script from "next/script";
 
-// Styling
+/* Styling */
 import tw, { TwStyle } from "twin.macro";
+const colors = require('tailwindcss/colors')
 
 /* External dependencies */
 import ClipLoader from "react-spinners/ClipLoader";
-// const Graph = dynamic(() => import("./force-graph"), {
-//   ssr: false,
-// });
+import useDimensions from "react-use-dimensions";
+import { VisGraph, VisSingleContainer } from "@unovis/react";
+import { useTheme } from "next-themes";
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 
 /* Components */
-import { Border, InteriorBorder } from "./constants";
-import { Network, NetworkEvents } from "vis";
+import { InteriorBorder } from "./constants";
 import { Center } from "./layout";
 import IconWrapper from "./icon";
-import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
-import { BoldDetailText, DetailText } from "./text";
-import Script from "next/script";
-import { VisGraph, VisSingleContainer } from "@unovis/react";
-import useDimensions from "react-use-dimensions";
-import { CallGraph, CallGraphFunction } from "../../types/graph";
-import { useTheme } from "next-themes";
-const colors = require('tailwindcss/colors')
+import { BoldDetailText } from "./text";
+
+/* Types */
+import { CallGraphFunction, CallGraphRelationship } from "../../types/graph";
 
 /**
  * GraphCard props
@@ -41,6 +38,7 @@ type GraphCardProps = {
  * @param data
  * @param styles
  * @param error
+ * @param root_id
  * @constructor
  */
 const GraphCard: React.FC<GraphCardProps> = ({
@@ -61,10 +59,14 @@ const GraphCard: React.FC<GraphCardProps> = ({
   }
 
   const nodeFill = (n: CallGraphFunction) => {
-    if (n.type === "METHOD") return dark ? colors.purple[400] : colors.purple[100];
-    if (n.type === "CLASS") return dark ? colors.yellow[400] : colors.yellow[100];
-    if (n.type === "MODULE") return dark ? colors.green[400] : colors.green[100];
-    return dark ? colors.blue[400] : colors.blue[100];
+    if (n.id == root_id) {
+      if (n.type === "METHOD") return dark ? colors.purple[400] : colors.purple[100];
+      if (n.type === "CLASS") return dark ? colors.yellow[400] : colors.yellow[100];
+      if (n.type === "MODULE") return dark ? colors.green[400] : colors.green[100];
+      return dark ? colors.blue[400] : colors.blue[100];
+    } else {
+      return colors.zinc[200]
+    }
   }
 
   const nodeStroke = (n: CallGraphFunction) => {
@@ -74,11 +76,17 @@ const GraphCard: React.FC<GraphCardProps> = ({
     return dark ? colors.blue[300] : colors.blue[800];
   }
 
-  const nodeLabel = (n: CallGraphFunction) => n.label;
+  const linkLabel = (l: CallGraphRelationship) => ({
+    text: 'Calls'
+  })
 
+
+  const nodeLabel = (n: CallGraphFunction) => n.name;
+
+  console.log(data)
 
   return (
-    <div ref={ref} css={[styles, tw`flex max-h-full`, InteriorBorder]}>
+    <div ref={ref} css={[styles, tw`flex h-14`, InteriorBorder]}>
       <Script
         type="text/javascript"
         src="ttps://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"
@@ -91,6 +99,12 @@ const GraphCard: React.FC<GraphCardProps> = ({
             nodeStroke={nodeStroke}
             nodeStrokeWidth={1}
             nodeLabel={nodeLabel}
+            linkFlow={true}
+            linkFlowParticleSize={3}
+            linkFlowAnimDuration={10000}
+            // @ts-ignore
+            linkLabel={linkLabel}
+            linkWidth={2}
           />
         </VisSingleContainer>
       ) : (
