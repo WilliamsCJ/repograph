@@ -14,6 +14,7 @@ export const Focus = tw`focus:outline-none focus:border-accent-400 focus:ring-ac
 export const FocusError = tw`focus:outline-none focus:border-red-400 focus:ring-red-600 focus:ring-2 focus:ring-offset-2`;
 export const Placeholder = tw`text-zinc-700 dark:text-zinc-300`;
 export const PlaceholderError = tw`text-red-700 dark:text-red-300`;
+export const BorderError = tw`border border-2 dark:border-red-700/75 border-red-300 rounded-lg`;
 export const SelectedTab = tw`ui-selected:(
   bg-accent-400/25 
   border rounded-lg border-accent-400 dark:border-accent-700 dark:hover:border-accent-200
