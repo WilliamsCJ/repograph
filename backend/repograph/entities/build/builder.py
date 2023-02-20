@@ -1148,11 +1148,6 @@ class RepographBuilder:
                     inferred=True,
                 )
 
-                if new.canonical_name == "profiles":
-                    print(missing)
-                    print(parent)
-                    print(import_object)
-
             if parent:
                 relationships.append(Contains(parent, new, self.repository_name))
 

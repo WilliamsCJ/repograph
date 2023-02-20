@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 // Styling
 import tw from "twin.macro";
@@ -15,9 +15,15 @@ import { CodeBlock } from "../../core/code";
 import { BuiltInBadge, FunctionBadge, MethodBadge } from "../../core/badge";
 import GraphCard from "../../core/graph";
 import { Card } from "../../core/card";
-import { BoldDetailText, DetailText, SmallHeading } from "../../core/text";
+import {
+  AccentText,
+  BoldDetailText,
+  DetailText,
+  SmallHeading,
+} from "../../core/text";
 import fetcher from "../../../utils/fetcher";
 import { Divide } from "../../core/constants";
+import CodeViewModal from "./code-view";
 
 /**
  * Props for SearchResultCardSection
@@ -96,6 +102,7 @@ export type SearchResultCardProps = {
  * Card containing a single Semantic Search result.
  * @param result
  * @param index
+ * @param graph
  * @constructor
  */
 const SearchResultCard: React.FC<SearchResultCardProps> = ({
@@ -105,11 +112,12 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
 }) => {
   const url = `/graph/${graph}/node/${result.function.id}/call_graph`;
   const { data, error } = useSWR(url, fetcher);
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <div tw="w-full">
       <JustifiedRow tw="mb-1 mx-2">
-        <BoldDetailText>{`${result.repository} > ${result.function.canonical_name}`}</BoldDetailText>
+        <BoldDetailText>{`${result.function.repository_name} > ${result.function.canonical_name}`}</BoldDetailText>
         <BoldDetailText>{`#${index + 1} (${result.score})`}</BoldDetailText>
       </JustifiedRow>
       <Card size={tw`w-full h-48`}>
@@ -140,13 +148,21 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
           {/* Source Code Section*/}
           <SearchResultCardSection
             heading="Source Code"
-            link={<DetailText>Expand</DetailText>}
+            link={
+              <AccentText
+                tw="text-sm hover:cursor-pointer"
+                onClick={() => setOpenModal(true)}
+              >
+                Expand
+              </AccentText>
+            }
           >
             <>
               {result.function.source_code && (
                 <CodeBlock
                   source_code={result.function.source_code}
                   styles={tw`grow`}
+                  hideScrollBar={true}
                 />
               )}
             </>
@@ -163,6 +179,13 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
           </SearchResultCardSection>
         </div>
       </Card>
+      {result.function.source_code && (
+        <CodeViewModal
+          source_code={result.function.source_code}
+          open={openModal}
+          setOpen={setOpenModal}
+        />
+      )}
     </div>
   );
 };

@@ -69,6 +69,7 @@ class SearchService:
             [f"{v.canonical_name} k" for k, v in summarizations_map.items()]
         )
         summarizations = summarizations_map.keys()
+
         summarization_embeddings = self.model.encode(summarizations_extended)
 
         scores = (

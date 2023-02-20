@@ -234,7 +234,7 @@ class GraphService:
         nodes = self.repository.execute_query(
             f"""
             MATCH (n:Docstring)-[:Documents]-(f:Function) WHERE n.summarization IS NOT NULL
-            AND f.repository =~ {repository_name}
+            AND f.repository_name =~ '{repository_name}'
             RETURN n.summarization as `summarization`, f as `function`
             """,
             graph_name=graph_name,
@@ -262,19 +262,42 @@ class GraphService:
         """
         results = self.repository.execute_query(
             f"""
-            MATCH (c:Function)-[r:Calls*0..1]-(f:Function) WHERE ID(f) = {node_id}
-            RETURN f as `function`, c as `call`, r as `relationship`
+            MATCH (c:Function)-[r:Calls*0..1]-(f:Function)-[h:HasMethod|HasFunction]-(p)
+            WHERE ID(f) = {node_id} RETURN f as `function`, c as `call`,
+            r as `relationship`, p as `parent`, h as `has`, labels(p) as `parent_type`,
+            labels(c) as `call_type`, type(h) as `has_type`
             """,
             graph_name=graph_name,
         )
 
+        if not results:
+            return CallGraph()
+
         call_graph = CallGraph()
 
         call_graph.nodes.append(
-            CallGraph.Function(
+            CallGraph.Node(
                 id=results[0]["function"].identity,
-                label=results[0]["function"]["canonical_name"],
-                title=results[0]["function"]["canonical_name"],
+                name=results[0]["function"]["name"],
+                canonical_name=results[0]["function"]["canonical_name"],
+                type=results[0]["function"]["type"],
+            )
+        )
+
+        call_graph.nodes.append(
+            CallGraph.Node(
+                id=results[0]["parent"].identity,
+                name=results[0]["parent"]["name"],
+                canonical_name=results[0]["parent"]["canonical_name"],
+                type=results[0]["parent_type"][0],
+            )
+        )
+
+        call_graph.links.append(
+            CallGraph.Relationship(
+                from_id=results[0]["parent"].identity,
+                to_id=results[0]["function"].identity,
+                type=results[0]["has_type"],
             )
         )
 
@@ -285,18 +308,15 @@ class GraphService:
         call_graph.nodes.extend(
             list(
                 map(
-                    lambda res: CallGraph.Function(
+                    lambda res: CallGraph.Node(
                         id=res["call"].identity,
-                        label=(
+                        name=(res["call"]["name"]),
+                        canonical_name=(
                             res["call"]["canonical_name"]
                             if "canonical_name" in res
                             else res["call"]["name"]
                         ),
-                        title=(
-                            res["call"]["canonical_name"]
-                            if "canonical_name" in res
-                            else res["call"]["name"]
-                        ),
+                        type=res["call_type"][0],
                     ),
                     results,
                 )
@@ -309,12 +329,13 @@ class GraphService:
                     lambda y: CallGraph.Relationship(
                         from_id=y.start_node.identity,
                         to_id=y.end_node.identity,
+                        type="Calls",
                     ),
                     x["relationship"],
                 )
             )
 
-        call_graph.edges.extend(
+        call_graph.links.extend(
             [
                 item
                 for sublist in list(map(parse_relationships, results))

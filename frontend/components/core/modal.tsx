@@ -18,7 +18,7 @@ export type ModalProps = {
   children: JSX.Element;
   cancelButtonRef: React.MutableRefObject<null>;
   title: string;
-  description: string;
+  description?: string;
 };
 
 /**
@@ -43,19 +43,25 @@ const Modal: React.FC<ModalProps> = ({
     <Dialog
       open={open}
       onClose={() => setOpen(false)}
-      tw="relative z-50"
+      tw="relative z-50 px-6"
       initialFocus={cancelButtonRef}
     >
       <div tw="fixed inset-0 bg-gray-800 bg-opacity-25 transition-opacity" />
       <div tw="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel>
-          <Card size={tw`h-full w-full flex flex-col space-y-4 px-6 py-4`}>
-            {/* @ts-ignore*/}
-            <Heading as={Dialog.Title}>{title}</Heading>
-            {/* @ts-ignore*/}
-            <DetailText as={Dialog.Description}>{description}</DetailText>
-            {children}
-          </Card>
+          <div tw="px-12 py-6 max-h-screen w-screen flex items-center justify-center">
+            <Card
+              size={tw`max-h-screen w-full flex flex-col space-y-4 px-6 py-4`}
+            >
+              {/* @ts-ignore*/}
+              <Heading as={Dialog.Title}>{title}</Heading>
+              {/* @ts-ignore*/}
+              {description && (
+                <DetailText as={Dialog.Description}>{description}</DetailText>
+              )}
+              {children}
+            </Card>
+          </div>
         </Dialog.Panel>
       </div>
     </Dialog>

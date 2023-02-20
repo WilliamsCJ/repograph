@@ -9,7 +9,7 @@ const FunctionBadge = () => (
   </Badge>
 );
 const MethodBadge = () => (
-  <Badge tw="mt-2 bg-purple-100 text-orange-800 dark:(bg-purple-400/25 text-purple-300)">
+  <Badge tw="mt-2 bg-purple-100 text-purple-800 dark:(bg-purple-400/25 text-purple-300)">
     Method
   </Badge>
 );
