@@ -5,7 +5,7 @@ import Script from "next/script";
 
 /* Styling */
 import tw, { TwStyle } from "twin.macro";
-const colors = require('tailwindcss/colors')
+const colors = require("tailwindcss/colors");
 
 /* External dependencies */
 import ClipLoader from "react-spinners/ClipLoader";
@@ -21,7 +21,11 @@ import IconWrapper from "./icon";
 import { BoldDetailText } from "./text";
 
 /* Types */
-import { CallGraph, CallGraphFunction, CallGraphRelationship } from "../../types/graph";
+import {
+  CallGraph,
+  CallGraphFunction,
+  CallGraphRelationship,
+} from "../../types/graph";
 
 /**
  * GraphCard props
@@ -52,38 +56,43 @@ const GraphCard: React.FC<GraphCardProps> = ({
   const dark = useTheme();
 
   const nodeIcon = (n: CallGraphFunction) => {
-    if (n.type === "Method") return 'Me';
-    if (n.type === "Class") return 'C';
-    if (n.type === "Module") return 'Mo';
-    return 'F';
-  }
+    if (n.type === "Method") return "Me";
+    if (n.type === "Class") return "C";
+    if (n.type === "Module") return "Mo";
+    return "F";
+  };
 
   const nodeFill = (n: CallGraphFunction) => {
     if (n.id == root_id) {
-      if (n.type === "Method") return dark ? colors.purple[400] : colors.purple[100];
-      if (n.type === "Class") return dark ? colors.yellow[400] : colors.yellow[100];
-      if (n.type === "Module") return dark ? colors.green[400] : colors.green[100];
+      if (n.type === "Method")
+        return dark ? colors.purple[400] : colors.purple[100];
+      if (n.type === "Class")
+        return dark ? colors.yellow[400] : colors.yellow[100];
+      if (n.type === "Module")
+        return dark ? colors.green[400] : colors.green[100];
       return dark ? colors.blue[400] : colors.blue[100];
     } else {
-      return colors.zinc[200]
+      return colors.zinc[200];
     }
-  }
+  };
 
   const nodeStroke = (n: CallGraphFunction) => {
-    if (n.type === "Method") return dark ? colors.purple[300] : colors.purple[800];
-    if (n.type === "Class") return dark ? colors.yellow[300] : colors.yellow[800];
-    if (n.type === "Module") return dark ? colors.green[300] : colors.green[800];
+    if (n.type === "Method")
+      return dark ? colors.purple[300] : colors.purple[800];
+    if (n.type === "Class")
+      return dark ? colors.yellow[300] : colors.yellow[800];
+    if (n.type === "Module")
+      return dark ? colors.green[300] : colors.green[800];
     return dark ? colors.blue[300] : colors.blue[800];
-  }
+  };
 
   const linkLabel = (l: CallGraphRelationship) => ({
-    text: l.type
-  })
-
+    text: l.type,
+  });
 
   const nodeLabel = (n: CallGraphFunction) => n.name;
 
-  console.log(data)
+  console.log(data);
 
   return (
     <div ref={ref} css={[styles, tw`flex h-14`, InteriorBorder]}>

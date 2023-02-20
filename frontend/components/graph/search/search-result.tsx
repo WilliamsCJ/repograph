@@ -15,7 +15,12 @@ import { CodeBlock } from "../../core/code";
 import { BuiltInBadge, FunctionBadge, MethodBadge } from "../../core/badge";
 import GraphCard from "../../core/graph";
 import { Card } from "../../core/card";
-import { AccentText, BoldDetailText, DetailText, SmallHeading } from "../../core/text";
+import {
+  AccentText,
+  BoldDetailText,
+  DetailText,
+  SmallHeading,
+} from "../../core/text";
 import fetcher from "../../../utils/fetcher";
 import { Divide } from "../../core/constants";
 import CodeViewModal from "./code-view";
@@ -107,7 +112,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
 }) => {
   const url = `/graph/${graph}/node/${result.function.id}/call_graph`;
   const { data, error } = useSWR(url, fetcher);
-  const [ openModal, setOpenModal ] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <div tw="w-full">
@@ -143,7 +148,14 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
           {/* Source Code Section*/}
           <SearchResultCardSection
             heading="Source Code"
-            link={<AccentText tw="text-sm hover:cursor-pointer" onClick={() => setOpenModal(true)}>Expand</AccentText>}
+            link={
+              <AccentText
+                tw="text-sm hover:cursor-pointer"
+                onClick={() => setOpenModal(true)}
+              >
+                Expand
+              </AccentText>
+            }
           >
             <>
               {result.function.source_code && (
@@ -167,9 +179,13 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
           </SearchResultCardSection>
         </div>
       </Card>
-      {result.function.source_code &&
-        <CodeViewModal source_code={result.function.source_code} open={openModal} setOpen={setOpenModal} />
-      }
+      {result.function.source_code && (
+        <CodeViewModal
+          source_code={result.function.source_code}
+          open={openModal}
+          setOpen={setOpenModal}
+        />
+      )}
     </div>
   );
 };

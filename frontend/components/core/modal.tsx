@@ -50,11 +50,15 @@ const Modal: React.FC<ModalProps> = ({
       <div tw="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel>
           <div tw="px-12 py-6 max-h-screen w-screen flex items-center justify-center">
-            <Card size={tw`max-h-screen w-full flex flex-col space-y-4 px-6 py-4`}>
+            <Card
+              size={tw`max-h-screen w-full flex flex-col space-y-4 px-6 py-4`}
+            >
               {/* @ts-ignore*/}
               <Heading as={Dialog.Title}>{title}</Heading>
               {/* @ts-ignore*/}
-              {description && <DetailText as={Dialog.Description}>{description}</DetailText>}
+              {description && (
+                <DetailText as={Dialog.Description}>{description}</DetailText>
+              )}
               {children}
             </Card>
           </div>

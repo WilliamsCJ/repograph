@@ -16,7 +16,7 @@ import { InteriorBorder } from "./constants";
  */
 export type CodeBlockProps = {
   source_code: string;
-  hideScrollBar: boolean
+  hideScrollBar: boolean;
   styles?: TwStyle;
 };
 
@@ -27,7 +27,11 @@ export type CodeBlockProps = {
  * @param hideScrollBar
  * @constructor
  */
-const CodeBlock: React.FC<CodeBlockProps> = ({ source_code, styles, hideScrollBar }) => {
+const CodeBlock: React.FC<CodeBlockProps> = ({
+  source_code,
+  styles,
+  hideScrollBar,
+}) => {
   const code = hljs.highlight(source_code, { language: "python" }).value;
 
   return (
