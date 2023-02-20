@@ -234,7 +234,7 @@ class GraphService:
         nodes = self.repository.execute_query(
             f"""
             MATCH (n:Docstring)-[:Documents]-(f:Function) WHERE n.summarization IS NOT NULL
-            AND f.repository =~ {repository_name}
+            AND f.repository_name =~ '{repository_name}'
             RETURN n.summarization as `summarization`, f as `function`
             """,
             graph_name=graph_name,
