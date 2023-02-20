@@ -10,6 +10,7 @@ import {
 import {
   Background,
   Border,
+  BorderError,
   Focus,
   FocusError,
   Placeholder,
@@ -40,23 +41,19 @@ const InputSection: React.FC<InputProps> = (props) => {
     <Field id={props.id} name={props.name}>
       {({ field, meta }: FieldProps) => (
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
-          {meta.touched && meta.error ? (
-            <>
-              <BoldDetailText>{props.label}</BoldDetailText>
-              <div tw="sm:col-span-2 sm:mt-0">
-                <ErrorInput placeholder={props.placeholder} {...field} />
-                <ErrorText>{meta.error}</ErrorText>
-              </div>
-            </>
-          ) : (
-            <>
-              <BoldDetailText>{props.label}</BoldDetailText>
-              <div tw="sm:col-span-2 sm:mt-0">
-                <Input placeholder={props.placeholder} {...field} />
-                <HelpText>{props.helpMessage}</HelpText>
-              </div>
-            </>
-          )}
+          <BoldDetailText>{props.label}</BoldDetailText>
+          <div tw="sm:col-span-2 sm:mt-0">
+            <Input
+              placeholder={props.placeholder}
+              {...field}
+              error={meta.touched && meta.error !== undefined}
+            />
+            {meta.touched && meta.error ? (
+              <ErrorText>{meta.error}</ErrorText>
+            ) : (
+              <HelpText>{props.helpMessage}</HelpText>
+            )}
+          </div>
         </div>
       )}
     </Field>
@@ -86,27 +83,20 @@ const TextAreaSection: React.FC<TextAreaProps> = (props) => {
     <Field name={props.name} id={props.id}>
       {({ field, form, meta }: FieldProps) => (
         <div tw="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-6">
-          {meta.touched && meta.error ? (
-            <>
-              <BoldDetailText>{props.label}</BoldDetailText>
-              <div tw="sm:col-span-2 sm:mt-0">
-                <ErrorTextArea
-                  rows={3}
-                  placeholder={props.placeholder}
-                  {...field}
-                />
-                <ErrorText>{meta.error}</ErrorText>
-              </div>
-            </>
-          ) : (
-            <>
-              <BoldDetailText>{props.label}</BoldDetailText>
-              <div tw="sm:col-span-2 sm:mt-0">
-                <TextArea placeholder={props.placeholder} {...field} />
-                <HelpText>{props.helpMessage}</HelpText>
-              </div>
-            </>
-          )}
+          <BoldDetailText>{props.label}</BoldDetailText>
+          <div tw="sm:col-span-2 sm:mt-0">
+            <TextArea
+              placeholder={props.placeholder}
+              {...field}
+              rows={3}
+              error={meta.touched && meta.error !== undefined}
+            />
+            {meta.touched && meta.error ? (
+              <ErrorText>{meta.error}</ErrorText>
+            ) : (
+              <HelpText>{props.helpMessage}</HelpText>
+            )}
+          </div>
         </div>
       )}
     </Field>
@@ -165,7 +155,6 @@ const FileUploadSection: React.FC<FileUploadProps> = (props) => {
                 />
                 <DetailText as="span"> or drag and drop</DetailText>
               </label>
-              {/* // TODO: Light */}
               <HelpText>{props.helpMessage}</HelpText>
             </div>
             <div tw="mt-1">
@@ -225,14 +214,16 @@ const SearchBarInputSection: React.FC<SearchBarInputSectionProps> = (props) => {
 /**
  * TextArea component.
  */
-const TextArea = (props: React.HTMLProps<HTMLTextAreaElement>) => (
+const TextArea = (
+  props: React.HTMLProps<HTMLTextAreaElement> & { error: boolean }
+) => (
   <textarea
     css={[
       tw`block w-full min-w-0 resize-none`,
-      Border,
+      props.error ? BorderError : Border,
       Background,
-      Focus,
-      Placeholder,
+      props.error ? FocusError : Focus,
+      props.error ? PlaceholderError : Placeholder,
     ]}
     {...props}
   />
@@ -257,30 +248,16 @@ const ErrorTextArea = (props: React.HTMLProps<HTMLTextAreaElement>) => (
 /**
  * Input component
  */
-const Input = (props: React.HTMLProps<HTMLInputElement>) => (
+const Input = (
+  props: React.HTMLProps<HTMLInputElement> & { error: boolean }
+) => (
   <input
     css={[
       tw`block w-full min-w-0 resize-none p-2`,
-      Border,
+      props.error ? BorderError : Border,
       Background,
-      Focus,
-      Placeholder,
-    ]}
-    {...props}
-  />
-);
-
-/**
- * Error version of Input component
- */
-const ErrorInput = (props: React.HTMLProps<HTMLInputElement>) => (
-  <input
-    css={[
-      tw`block w-full min-w-0 resize-none p-2`,
-      Border,
-      Background,
-      FocusError,
-      PlaceholderError,
+      props.error ? FocusError : Focus,
+      props.error ? PlaceholderError : Placeholder,
     ]}
     {...props}
   />
