@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 
 // Next.js
 import { GetServerSideProps, NextPage } from "next";
@@ -11,6 +11,7 @@ import { TabGroup } from "../../../components/core/tabs";
 import { SemanticSearch } from "../../../components/graph/search/semantic-search";
 import { getSummary } from "../../../lib/summary";
 import { GraphSummary } from "../../../types/graph";
+import CypherSearch from "../../../components/graph/search/cypher-search";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // @ts-ignore
@@ -30,10 +31,10 @@ export type GraphSearchPageProps = {
 const GraphSearch: NextPage<GraphSearchPageProps> = ({ graph }) => {
   const topRef = useRef(null);
 
-  let options = ["Natural", "Favourites", "Manual"];
+  let options = ["Natural", "Favourites"];
   let panels = [
     <SemanticSearch key={"Natural"} topRef={topRef} graph={graph} />,
-    // <SemanticSearch key={"Favourites"} />,
+    <CypherSearch key={"Favourites"} topRef={topRef} graph={graph} />,
     // <SemanticSearch key={"Manual"} />,
   ];
 
