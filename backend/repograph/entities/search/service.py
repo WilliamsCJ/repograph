@@ -8,13 +8,14 @@ Typical usage:
 """
 # Base imports
 from logging import getLogger
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 
 # pip imports
 from sentence_transformers import SentenceTransformer, util
 
 # Model imports
 from repograph.entities.search.models import (
+    AvailableSearchQuery,
     SemanticSearchResult,
     SemanticSearchResultSet,
 )
@@ -138,3 +139,30 @@ class SearchService:
                 low_scores += 1
 
         return low_scores, missing_docstring
+
+    def get_available_search_queries(self) -> List[AvailableSearchQuery]:
+        available = [
+            AvailableSearchQuery(
+                id=0, name="Search requirements", function=self.search_requirements
+            ),
+            AvailableSearchQuery(
+                id=1, name="Search README files", function=self.search_readmes
+            ),
+            AvailableSearchQuery(
+                id=2, name="Search license files", function=self.search_licenses
+            ),
+            AvailableSearchQuery(id=3, name="Search files", function=self.search_files),
+        ]
+        return available
+
+    def search_requirements(self, graph_name: str, repository: Optional[str] = None):
+        pass
+
+    def search_readmes(self, graph_name: str, repository: Optional[str] = None):
+        pass
+
+    def search_licenses(self, graph_name: str, repository: Optional[str] = None):
+        pass
+
+    def search_files(self, graph_name: str, repository: Optional[str] = None):
+        pass

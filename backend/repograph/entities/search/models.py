@@ -2,7 +2,7 @@
 Search entity-related models.
 """
 # Base imports
-from typing import List
+from typing import Callable, List
 
 # pip imports
 from pydantic import BaseModel, Field, validator
@@ -35,3 +35,9 @@ class SemanticSearchResultSet(BaseModel):
     offset: int
     limit: int
     total: int
+
+
+class AvailableSearchQuery(BaseModel):
+    id: str
+    name: str
+    function: Callable

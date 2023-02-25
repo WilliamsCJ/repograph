@@ -1,43 +1,51 @@
-import React, { Fragment, useState } from 'react';
-import { SearchBarProps } from "./searchbar";
+import React, { useState } from 'react';
+
+// Styling
 import"twin.macro";
+
+// Components
 import { ComboSearchBarInputSection } from "../../core/form";
 import { Button } from "../../core/button";
+
+// Forms
 import { Form, Formik } from "formik";
 
+// Types
+import { AvailableSearchQuery } from "../../../types/search";
+import { SearchBarProps } from "./searchbar";
+
+/**
+ * Props for ComboSearchBar component.
+ */
 export type ComboSearchBarProps = {
-  options?: string[]
+  available: AvailableSearchQuery[]
 } & SearchBarProps;
 
+/**
+ * Formik form values
+ */
 type ComboSearchBarValues = {
   query: string;
 };
 
+/**
+ * Formik form errors
+ */
 type ComboSearchBarErrors = {
   query?: string;
 };
 
-const people = [
-  'Durward Reynolds',
-  'Kenton Towne',
-  'Therese Wunsch',
-  'Benedict Kessler',
-  'Katelyn Rohan',
-]
-
+/**
+ * Combobox-style search bar for choosing from a list of available queries.
+ * @param props
+ * @constructor
+ */
 const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
   const initialValues: ComboSearchBarValues = {
     query: "",
   };
 
   const [query, setQuery] = useState('')
-
-  const filteredQueries =
-    query === ''
-      ? people
-      : people.filter((person) => {
-        return person.toLowerCase().includes(query.toLowerCase())
-  })
 
   return (
     <Formik
@@ -65,7 +73,7 @@ const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
           name="query"
           label={props.label}
           placeholder={props.placeholder}
-          options={people}
+          options={props.available}
           />
           <div tw="col-span-1 mt-1">
             <Button text="Search" />

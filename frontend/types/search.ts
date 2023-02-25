@@ -23,3 +23,8 @@ export type SearchResultSet = {
   limit: number;
   total: number;
 };
+
+export type AvailableSearchQuery = {
+  id: number;
+  name: string;
+}

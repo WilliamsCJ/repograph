@@ -1,17 +1,21 @@
 import React, { MutableRefObject, useEffect, useState } from 'react';
 import { SearchBar } from "./searchbar";
 import "twin.macro";
-import { SearchResultSet } from "../../../types/search";
+import { AvailableSearchQuery, SearchResultSet } from "../../../types/search";
 import toast from "react-hot-toast";
 import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "../../core/table";
 import ComboSearchBar from "./combo-searchbar";
 
+// TODO: Tidy above
+
 const CypherSearch = ({
   topRef,
   graph,
+  available
 }: {
   topRef: MutableRefObject<any>;
   graph: string;
+  available: AvailableSearchQuery[]
 }) => {
   // Query state
   const [query, setQuery] = useState<string | null>(null);
@@ -50,6 +54,7 @@ const CypherSearch = ({
       label="Search"
       placeholder="MATCH..."
       executeQuery={() => alert('hi')}
+      available={available}
     />
     {/*<div tw="mt-6">*/}
     {/*  <Table>*/}

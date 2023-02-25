@@ -18,6 +18,7 @@ import {
 } from "./constants";
 import { AccentText, BoldDetailText, DetailText } from "./text";
 import { Combobox } from "@headlessui/react";
+import { number } from "prop-types";
 
 /**
  * InputProps type for InputSection component.
@@ -212,12 +213,17 @@ const SearchBarInputSection: React.FC<SearchBarInputSectionProps> = (props) => {
   );
 };
 
+export interface ComboOption {
+  id: number;
+  name: string;
+}
+
 export type ComboSearchBarInputSectionProps = {
   name: string
   id: string
   placeholder: string
   label: string
-  options: string[]
+  options: ComboOption[]
 }
 
 /**
@@ -228,11 +234,14 @@ export type ComboSearchBarInputSectionProps = {
 const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (props) => {
   const [query, setQuery] = useState('')
 
+  // Filter the queries
+  // Modified from:
+  // https://headlessui.com/react/combobox
   const filteredQueries =
   query === ''
   ? props.options
-  : props.options.filter((person) => {
-    return person.toLowerCase().includes(query.toLowerCase())
+  : props.options.filter((option: ComboOption) => {
+    return option.name.toLowerCase().includes(query.toLowerCase())
   })
 
   return (
