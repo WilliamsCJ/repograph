@@ -75,7 +75,7 @@ const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
           placeholder={props.placeholder}
           options={props.available}
           />
-          <div tw="col-span-1 mt-1">
+          <div tw="col-span-1">
             <Button text="Search" />
           </div>
         </div>

@@ -4,7 +4,7 @@ import tw from "twin.macro";
 import { Field, FieldProps } from "formik";
 import IconWrapper, { SearchBarIcon } from "./icon";
 import {
-  ArrowUpTrayIcon,
+  ArrowUpTrayIcon, CheckIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import {
@@ -20,6 +20,7 @@ import { AccentText, BoldDetailText, DetailText } from "./text";
 import { Combobox } from "@headlessui/react";
 import { Relative } from "./layout";
 import { AvailableSearchQuery } from "../../types/search";
+import { useTheme } from "next-themes";
 
 /**
  * InputProps type for InputSection component.
@@ -204,10 +205,10 @@ const SearchBarInputSection: React.FC<SearchBarInputSectionProps> = (props) => {
     <Field name={props.name} id={props.id}>
       {({ field, form: { setFieldValue }, meta }: FieldProps) => (
         <div tw="relative col-span-4 sm:col-span-5 md:col-span-7">
-          <div tw="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-            <MagnifyingGlassIcon tw="h-6 w-6" />
-          </div>
-          <SearchBarInput required placeholder={props.placeholder} {...field} />
+          <Relative>
+            <SearchBarIcon />
+            <SearchBarInput required placeholder={props.placeholder} {...field} />
+          </Relative>
         </div>
       )}
     </Field>
@@ -233,6 +234,7 @@ export type ComboSearchBarInputSectionProps = {
  * @constructor
  */
 const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (props) => {
+  const [selectedQuery, setSelectedQuery] = useState(null)
   const [query, setQuery] = useState('')
 
   // Filter the queries
@@ -246,8 +248,8 @@ const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (p
   })
 
   return (
-    <Field name={props.name} id={props.id}>
-      {({ field, form: { setFieldValue }, meta }: FieldProps) => (
+    // <Field name={props.name} id={props.id}>
+    //   {({ field, form: { setFieldValue }, meta }: FieldProps) => (
         <div css={[
           tw`w-full transform divide-y overflow-hidden transition-all`,
           tw`relative col-span-4 sm:col-span-5 md:col-span-7`,
@@ -258,38 +260,39 @@ const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (p
         ]}
         >
           <Combobox
-            value={field.value}
-            // @ts-ignore
-            onChange={(value: string) => {
-              field.onChange({ target: { value, name } });
-            }}
+            value={selectedQuery}
+            onChange={setSelectedQuery}
           >
             <Relative>
               <SearchBarIcon />
               <ComboSearchBarInput
                 placeholder={props.placeholder}
-                displayValue={(query: AvailableSearchQuery) => query.name}
+                displayValue={(query: AvailableSearchQuery) => query ? query.name: null}
                 // @ts-ignore
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setQuery(event.target.value)}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {setQuery(event.target.value)}}
               />
             </Relative>
 
-            {/*// TODO: max-h-72 scroll-py-2 overflow-y-auto py-2 pl-11 text-sm text-gray-800*/}
-            <Combobox.Options>
+            <Combobox.Options tw="scroll-py-2 overflow-y-auto">
               {filteredQueries.length === 0 && query !== '' ? (
-                <BoldDetailText>No matching queries.</BoldDetailText>
+                <div tw="relative py-2 pl-11 pr-4">
+                  <BoldDetailText>No matching queries.</BoldDetailText>
+                </div>
               ) : (
                 filteredQueries.map((query: AvailableSearchQuery) => (
                 <Combobox.Option key={query.id} value={query}>
-                  {props => <ComboSearchBarOption label={query.name} {...props} />}
+                  {/* @ts-ignore */}
+                  {({active, selected }) =>
+                    <ComboSearchBarOption label={query.name} active={active} selected={selected} />
+                  }
                 </Combobox.Option>
                 ))
               )}
             </Combobox.Options>
           </Combobox>
         </div>
-      )}
-    </Field>
+    //   )}
+    // </Field>
   )
 }
 
@@ -351,7 +354,7 @@ const Input = (
 const SearchBarInput = (props: React.HTMLProps<HTMLInputElement>) => (
   <input
     css={[
-      tw`block w-full px-4 py-2 pl-12`,
+      tw`py-2 w-full bg-transparent border-0 pl-11 pr-4 focus:ring-0`,
       Background,
       Border,
       Placeholder,
@@ -366,11 +369,19 @@ const SearchBarInput = (props: React.HTMLProps<HTMLInputElement>) => (
  * ComboSearchBar input component
  * @param placeholder
  * @param onChange
+ * @param displayValue
  * @constructor
  */
-const ComboSearchBarInput = ({ placeholder, onChange}: { placeholder: string, onChange: (event: React.ChangeEvent<HTMLInputElement>) => void}) => (
+const ComboSearchBarInput = (
+  { placeholder, onChange, displayValue }:
+  { placeholder: string, onChange: (event: React.ChangeEvent<HTMLInputElement>) => void, displayValue: any}
+) => (
   <Combobox.Input
-    tw="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-800 placeholder-gray-400 focus:ring-0 sm:text-sm"  // TODO: Reuse values
+    css={[
+      tw`py-2 w-full bg-transparent border-0 pl-11 pr-4 focus:ring-0`,
+      Placeholder,
+    ]}
+    displayValue={displayValue}
     placeholder={placeholder}
     // @ts-ignore
     onChange={onChange}
@@ -378,32 +389,28 @@ const ComboSearchBarInput = ({ placeholder, onChange}: { placeholder: string, on
 )
 
 
-const ComboSearchBarOption = React.forwardRef(
-(
-    { label, active, selected, ...rest }: { label: string, active: boolean, selected: boolean },
-    ref: React.ForwardedRef<HTMLDivElement>,
-  ) => {
-    return (
-      <div
-        css={[
-          tw`cursor-default select-none relative py-2 pl-10 pr-4`,
-          active ? tw`text-amber-900 bg-amber-100` : tw`text-gray-900`,
-        ]}
-        ref={ref}
-      >
-        <span
-        css={[
-          tw`block truncate`,
-          selected ? tw`font-medium` : tw`font-normal`,
-        ]}
-        >
-          {label}
-        </span>
+const ComboSearchBarOption = ({ active, selected, label}: { active: boolean, selected: boolean, label: string}) => {
+  const { theme } = useTheme();
 
-      </div>
-    )
-  },
-)
+  return (
+    <div
+    css={[
+      tw`cursor-pointer relative py-2 pl-11 pr-4`,
+      active ? tw`bg-accent-400/25` : (theme === 'light' ? tw`bg-white` : tw`bg-zinc-800/50`),
+    ]}
+    >
+      {selected && <CheckIcon
+        css={[
+          tw`pointer-events-none absolute top-2 left-4 h-5 w-5 text-zinc-700`,
+          active && tw`text-accent-800`
+        ]}
+        aria-hidden="true"
+      />
+      }
+      {selected ? <BoldDetailText>{label}</BoldDetailText> : <DetailText>{label}</DetailText>}
+    </div>
+  )
+}
 
 
 /**

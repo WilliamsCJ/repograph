@@ -53,7 +53,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
       }}
     >
       <Form>
-        <div tw="flex flex-row grid grid-cols-8 gap-4 items-center mt-6 justify-between">
+        <div tw="flex flex-row grid grid-cols-8 gap-4 items-start mt-6 justify-between">
           <SearchBarInputSection
             id="query"
             name="query"
