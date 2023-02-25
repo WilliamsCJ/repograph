@@ -144,15 +144,36 @@ class SearchService:
     def get_available_search_queries(self) -> List[AvailableSearchQuery]:
         available = [
             AvailableSearchQuery(
-                id=0, name="Search requirements", function=self.search_requirements
+                id=0,
+                name="Search repository requirements",
+                function=self.search_requirements,
             ),
             AvailableSearchQuery(
                 id=1, name="Search README files", function=self.search_readmes
             ),
             AvailableSearchQuery(
-                id=2, name="Search license files", function=self.search_licenses
+                id=2,
+                name="Search license files and types",
+                function=self.search_licenses,
             ),
-            AvailableSearchQuery(id=3, name="Search files", function=self.search_files),
+            AvailableSearchQuery(
+                id=3, name="Search file names", function=self.search_files
+            ),
+            AvailableSearchQuery(
+                id=4,
+                name="Search extracted docstrings",
+                function=self.search_docstrings,
+            ),
+            AvailableSearchQuery(
+                id=5,
+                name="Search function summarizations",
+                function=self.search_summarizations,
+            ),
+            AvailableSearchQuery(
+                id=6,
+                name="Search function and classes",
+                function=self.search_functions_and_classes,
+            ),
         ]
         return available
 
