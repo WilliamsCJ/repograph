@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import tw from "twin.macro";
 import { Field, FieldProps } from "formik";
@@ -10,13 +10,14 @@ import {
 import {
   Background,
   Border,
-  BorderError,
+  BorderError, Divide,
   Focus,
   FocusError,
   Placeholder,
   PlaceholderError,
 } from "./constants";
 import { AccentText, BoldDetailText, DetailText } from "./text";
+import { Combobox } from "@headlessui/react";
 
 /**
  * InputProps type for InputSection component.
@@ -211,6 +212,85 @@ const SearchBarInputSection: React.FC<SearchBarInputSectionProps> = (props) => {
   );
 };
 
+export type ComboSearchBarInputSectionProps = {
+  name: string
+  id: string
+  placeholder: string
+  label: string
+  options: string[]
+}
+
+/**
+ *
+ * @param props
+ * @constructor
+ */
+const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (props) => {
+  const [query, setQuery] = useState('')
+
+  const filteredQueries =
+  query === ''
+  ? props.options
+  : props.options.filter((person) => {
+    return person.toLowerCase().includes(query.toLowerCase())
+  })
+
+  return (
+    <Field name={props.name} id={props.id}>
+      {({ field, form: { setFieldValue }, meta }: FieldProps) => (
+        <div css={[
+          tw`w-full transform divide-y overflow-hidden transition-all`,
+          tw`relative col-span-4 sm:col-span-5 md:col-span-7`,
+          Border,
+          Background,
+          Divide,
+          Focus,
+        ]}
+        >
+          <Combobox
+            value={field.value}
+            onChange={(value: string) => {
+              field.onChange({ target: { value, name } });
+            }}
+          >
+            <div tw="relative">
+              <MagnifyingGlassIcon
+              tw="pointer-events-none absolute top-3.5 left-4 h-5 w-5 text-gray-400"
+              aria-hidden="true"
+              />
+              <Combobox.Input
+              tw="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-800 placeholder-gray-400 focus:ring-0 sm:text-sm"
+              placeholder="Search..."
+              onChange={(event) => setQuery(event.target.value)}
+              />
+            </div>
+
+            {filteredQueries.length > 0 && (
+            <Combobox.Options static tw="max-h-72 scroll-py-2 overflow-y-auto py-2 text-sm text-gray-800">
+              {filteredQueries.map((person, index) => (
+              <Combobox.Option
+              key={index}
+              value={person}
+              css={[
+                tw`cursor-default select-none px-4 py-2`,
+              ]}
+              >
+                {person}
+              </Combobox.Option>
+              ))}
+            </Combobox.Options>
+            )}
+
+            {query !== '' && filteredQueries.length === 0 && (
+            <p tw="p-4 text-sm text-gray-500">No people found.</p>
+            )}
+          </Combobox>
+        </div>
+      )}
+    </Field>
+  )
+}
+
 /**
  * TextArea component.
  */
@@ -279,6 +359,7 @@ const SearchBarInput = (props: React.HTMLProps<HTMLInputElement>) => (
   />
 );
 
+
 /**
  * Form help/hint text.
  */
@@ -294,4 +375,5 @@ export {
   TextAreaSection,
   FileUploadSection,
   SearchBarInputSection,
+  ComboSearchBarInputSection,
 };

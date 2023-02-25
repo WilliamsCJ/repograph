@@ -4,6 +4,7 @@ import "twin.macro";
 import { SearchResultSet } from "../../../types/search";
 import toast from "react-hot-toast";
 import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "../../core/table";
+import ComboSearchBar from "./combo-searchbar";
 
 const CypherSearch = ({
   topRef,
@@ -45,32 +46,32 @@ const CypherSearch = ({
 
   return (
   <>
-    <SearchBar
-    label="Search"
-    placeholder="Change me"
-    executeQuery={executeQuery}
+    <ComboSearchBar
+      label="Search"
+      placeholder="MATCH..."
+      executeQuery={() => alert('hi')}
     />
-    <div tw="mt-6">
-      <Table>
-        <TableHeader>
-          <TableHeaderCell>1</TableHeaderCell>
-          <TableHeaderCell>2</TableHeaderCell>
-          <TableHeaderCell>3</TableHeaderCell>
-        </TableHeader>
-        <TableBody>
-          <TableRow key={1}>
-            <TableCell>a</TableCell>
-            <TableCell>b</TableCell>
-            <TableCell>c</TableCell>
-          </TableRow>
-          <TableRow key={1}>
-            <TableCell>a</TableCell>
-            <TableCell>b</TableCell>
-            <TableCell>c</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </div>
+    {/*<div tw="mt-6">*/}
+    {/*  <Table>*/}
+    {/*    <TableHeader>*/}
+    {/*      <TableHeaderCell>1</TableHeaderCell>*/}
+    {/*      <TableHeaderCell>2</TableHeaderCell>*/}
+    {/*      <TableHeaderCell>3</TableHeaderCell>*/}
+    {/*    </TableHeader>*/}
+    {/*    <TableBody>*/}
+    {/*      <TableRow key={1}>*/}
+    {/*        <TableCell>a</TableCell>*/}
+    {/*        <TableCell>b</TableCell>*/}
+    {/*        <TableCell>c</TableCell>*/}
+    {/*      </TableRow>*/}
+    {/*      <TableRow key={1}>*/}
+    {/*        <TableCell>a</TableCell>*/}
+    {/*        <TableCell>b</TableCell>*/}
+    {/*        <TableCell>c</TableCell>*/}
+    {/*      </TableRow>*/}
+    {/*    </TableBody>*/}
+    {/*  </Table>*/}
+    {/*</div>*/}
     {/*{results && (*/}
     {/*<>*/}
     {/*  <div css={tw`mt-6 flex flex-col space-y-8`}>*/}
