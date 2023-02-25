@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, validator
 
 # Model imports
 from repograph.entities.graph.models.nodes import Function
+from repograph.utils.json import JSONDict
 
 
 class SemanticSearchResult(BaseModel):
@@ -41,3 +42,9 @@ class AvailableSearchQuery(BaseModel):
     id: int
     name: str
     function: Callable
+
+
+class SearchQueryResult(BaseModel):
+    columns: List[str]
+    data: List[JSONDict]
+    size: int

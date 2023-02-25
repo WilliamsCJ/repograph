@@ -1,4 +1,4 @@
-import { AvailableSearchQuery, SearchResultSet } from "../types/search";
+import { AvailableSearchQuery, SearchQueryResult, SearchResultSet } from "../types/search";
 import { CallGraph } from "../types/graph";
 
 export async function getSemanticSearchQuery(
@@ -51,7 +51,7 @@ export async function getAvailableSearchQueries(graph: string): Promise<Availabl
   return (await res.json()) as AvailableSearchQuery[];
 }
 
-export async function getSearchQuery(graph: string, queryID: number, limit: number, offset: number): Promise<null> {
+export async function getSearchQuery(graph: string, queryID: number, limit: number, offset: number): Promise<SearchQueryResult> {
   const url = new URL(
   `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/search/query/${queryID}`
   )
@@ -64,5 +64,5 @@ export async function getSearchQuery(graph: string, queryID: number, limit: numb
   url.search = new URLSearchParams(params).toString();
 
   const res = await fetch(url);
-  return null;
+  return (await res.json()) as SearchQueryResult;
 }

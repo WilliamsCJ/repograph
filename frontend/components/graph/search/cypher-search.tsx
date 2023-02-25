@@ -1,7 +1,7 @@
 import React, { MutableRefObject, useEffect, useState } from 'react';
 import { SearchBar } from "./searchbar";
 import "twin.macro";
-import { AvailableSearchQuery, SearchResultSet } from "../../../types/search";
+import { AvailableSearchQuery, SearchQueryResult, SearchResultSet } from "../../../types/search";
 import toast from "react-hot-toast";
 import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "../../core/table";
 import ComboSearchBar from "./combo-searchbar";
@@ -21,7 +21,7 @@ const CypherSearch = ({
   // Query state
   const [query, setQuery] = useState<AvailableSearchQuery | null>(null);
   // Results state
-  const [results, setResults] = useState<SearchResultSet | undefined>(
+  const [results, setResults] = useState<SearchQueryResult | undefined>(
   undefined
   );
 
@@ -56,42 +56,26 @@ const CypherSearch = ({
       executeQuery={executeQuery}
       available={available}
     />
-    {/*<div tw="mt-6">*/}
-    {/*  <Table>*/}
-    {/*    <TableHeader>*/}
-    {/*      <TableHeaderCell>1</TableHeaderCell>*/}
-    {/*      <TableHeaderCell>2</TableHeaderCell>*/}
-    {/*      <TableHeaderCell>3</TableHeaderCell>*/}
-    {/*    </TableHeader>*/}
-    {/*    <TableBody>*/}
-    {/*      <TableRow key={1}>*/}
-    {/*        <TableCell>a</TableCell>*/}
-    {/*        <TableCell>b</TableCell>*/}
-    {/*        <TableCell>c</TableCell>*/}
-    {/*      </TableRow>*/}
-    {/*      <TableRow key={1}>*/}
-    {/*        <TableCell>a</TableCell>*/}
-    {/*        <TableCell>b</TableCell>*/}
-    {/*        <TableCell>c</TableCell>*/}
-    {/*      </TableRow>*/}
-    {/*    </TableBody>*/}
-    {/*  </Table>*/}
-    {/*</div>*/}
-    {/*{results && (*/}
-    {/*<>*/}
-    {/*  <div css={tw`mt-6 flex flex-col space-y-8`}>*/}
-    {/*    {results.results.map((result, index) => (*/}
-    {/*    <SearchResultCard result={result} index={index} graph={graph} />*/}
-    {/*    ))}*/}
-    {/*  </div>*/}
-    {/*  <Pagination*/}
-    {/*  offset={offset}*/}
-    {/*  setOffset={setOffset}*/}
-    {/*  limit={limit}*/}
-    {/*  total={results.total}*/}
-    {/*  />*/}
-    {/*</>*/}
-    {/*)}*/}
+    <div tw="mt-6">
+      {results &&
+      <Table>
+        <TableHeader>
+          {results.columns.map((column: string) => (
+            <TableHeaderCell>{column}</TableHeaderCell>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {results.data.map((row: any, index: number) => (
+            <TableRow key={index}>
+              {Object.values(row).map(item => (
+                <TableCell>{item as string}</TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      }
+    </div>
   </>
   )
 }

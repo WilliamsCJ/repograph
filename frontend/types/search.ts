@@ -28,3 +28,9 @@ export type AvailableSearchQuery = {
   id: number;
   name: string;
 }
+
+export type SearchQueryResult = {
+  columns: string[];
+  data: any;
+  size: number;
+}
