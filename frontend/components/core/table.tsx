@@ -7,14 +7,14 @@ import { Divide } from "./constants";
 
 export const Table = ({ children }: { children: JSX.Element[] | JSX.Element }) => (
   <Card size={tw`w-full rounded-lg`}>
-    <table tw="table-auto min-w-full rounded-lg overflow-hidden">
+    <table tw="table-fixed w-full rounded-lg overflow-hidden">
       {children}
     </table>
   </Card>
 )
 
 export const TableHeader= ({ children }: { children: JSX.Element[] | JSX.Element }) => (
-  <thead tw="min-w-full rounded-t-lg">
+  <thead tw="w-full rounded-t-lg">
     <tr tw="min-w-full rounded-t-lg bg-zinc-200/75 ">
       {children}
     </tr>
@@ -34,13 +34,13 @@ export const TableBody = ({ children }: { children: JSX.Element[] | JSX.Element 
 )
 
 export const TableRow = ({ children, key }: { children: JSX.Element[] | JSX.Element, key: number}) => (
-  <tr key={key}>
+  <tr key={key} tw="w-full text-clip">
     {children}
   </tr>
 )
 
 export const TableCell = ({ children }: { children: string }) => (
-  <td tw="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+  <td tw="text-clip overflow-hidden px-3 py-4 text-sm text-gray-500 text-clip">
     {children}
   </td>
 )

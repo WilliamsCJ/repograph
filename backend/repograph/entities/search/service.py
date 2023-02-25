@@ -207,7 +207,7 @@ class SearchService:
         Returns:
             SearchQueryResult
         """
-        results = self.graph.get_requirements(graph_name)
+        results = self.graph.get_readme_files(graph_name)
 
         return SearchQueryResult(
             columns=["Repository", "File", "Contents"], data=results, size=len(results)
@@ -262,7 +262,7 @@ class SearchService:
         results = self.graph.get_summarizations(graph_name)
 
         return SearchQueryResult(
-            columns=["Repository", "Function", "Summarization", "Source Code"],
+            columns=["Repository", "Function", "Summarization"],
             data=results,
             size=len(results),
         )

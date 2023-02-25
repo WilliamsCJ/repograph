@@ -501,7 +501,7 @@ class GraphService:
             MATCH (n:Docstring)-[:Documents]-(f)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository)
             WHERE n.summarization IS NOT NULL AND r.name =~ '{repository}'
             RETURN r.name as `Repository`, f.name as `Function`,
-            n.summarization as `Summarization`, f.source_code as `Source Code`
+            n.summarization as `Summarization`
             """,
             graph_name=graph,
         )

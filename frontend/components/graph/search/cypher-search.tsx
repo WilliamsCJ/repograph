@@ -62,7 +62,7 @@ const CypherSearch = ({
   <>
     <ComboSearchBar
       label="Search"
-      placeholder="MATCH..."
+      placeholder="Search..."
       executeQuery={executeQuery}
       available={available}
     />
