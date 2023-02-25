@@ -48,12 +48,14 @@ const Pagination: React.FC<PaginationProps> = ({
           onClick={() => {
             if (offset !== 0) setOffset(offset - limit);
           }}
+          disable={offset === 0}
         />
         <Button
           text="Next"
           onClick={() => {
             if (offset + limit <= total) setOffset(offset + limit);
           }}
+          disable={offset + limit > total}
         >
           Next
         </Button>

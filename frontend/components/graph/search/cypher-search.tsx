@@ -1,13 +1,23 @@
 import React, { MutableRefObject, useEffect, useState } from 'react';
-import { SearchBar } from "./searchbar";
+
+// Styling
 import "twin.macro";
-import { AvailableSearchQuery, SearchQueryResult, SearchResultSet } from "../../../types/search";
-import toast from "react-hot-toast";
-import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "../../core/table";
-import ComboSearchBar from "./combo-searchbar";
+
+// Functions
 import { getSearchQuery } from "../../../lib/search";
 
-// TODO: Tidy above
+// Types
+import { AvailableSearchQuery, SearchQueryResult, SearchResultSet } from "../../../types/search";
+
+// Toast
+import toast from "react-hot-toast";
+
+// Components
+import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "../../core/table";
+import ComboSearchBar from "./combo-searchbar";
+import { Pagination } from "./pagination";
+
+
 
 const CypherSearch = ({
   topRef,
@@ -27,7 +37,7 @@ const CypherSearch = ({
 
   // Pagination state
   const [offset, setOffset] = useState(0);
-  const limit = 5;
+  const limit = 10;
 
   // Query executor
   const executeQuery = async (query: AvailableSearchQuery) => {
@@ -58,22 +68,32 @@ const CypherSearch = ({
     />
     <div tw="mt-6">
       {results &&
-      <Table>
-        <TableHeader>
-          {results.columns.map((column: string) => (
-            <TableHeaderCell>{column}</TableHeaderCell>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {results.data.map((row: any, index: number) => (
-            <TableRow key={index}>
-              {Object.values(row).map(item => (
-                <TableCell>{item as string}</TableCell>
+        <>
+          <Table>
+            <TableHeader>
+              {results.columns.map((column: string) => (
+                <TableHeaderCell>{column}</TableHeaderCell>
               ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+            </TableHeader>
+            <TableBody>
+              {results.data.slice(offset, offset + limit).map((row: any, index: number) => (
+                <TableRow key={index}>
+                  {Object.values(row).map(item => (
+                    <TableCell>{item as string}</TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {results.data.length > limit &&
+            <Pagination
+              offset={offset}
+              setOffset={setOffset}
+              limit={limit}
+              total={results.size}
+            />
+          }
+        </>
       }
     </div>
   </>
