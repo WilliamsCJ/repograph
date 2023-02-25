@@ -204,7 +204,7 @@ const SearchBarInputSection: React.FC<SearchBarInputSectionProps> = (props) => {
   return (
     <Field name={props.name} id={props.id}>
       {({ field, form: { setFieldValue }, meta }: FieldProps) => (
-        <div tw="relative col-span-4 sm:col-span-5 md:col-span-7">
+        <div tw="relative grow col-span-4 sm:col-span-5 md:col-span-7">
           <Relative>
             <SearchBarIcon />
             <SearchBarInput required placeholder={props.placeholder} {...field} />
@@ -251,8 +251,7 @@ const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (p
     <Field name={props.name} id={props.id}>
       {({ field, form: { setFieldValue }, meta }: FieldProps) => (
         <div css={[
-          tw`w-full transform divide-y overflow-hidden transition-all`,
-          tw`relative col-span-4 sm:col-span-5 md:col-span-7`,
+          tw`relative w-full grow transform divide-y overflow-hidden transition-all`,
           Border,
           Background,
           Divide,
