@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 // Styling
 import"twin.macro";
@@ -25,14 +25,7 @@ export type ComboSearchBarProps = {
  * Formik form values
  */
 type ComboSearchBarValues = {
-  query: string;
-};
-
-/**
- * Formik form errors
- */
-type ComboSearchBarErrors = {
-  query?: string;
+  query: AvailableSearchQuery | null;
 };
 
 /**
@@ -42,10 +35,8 @@ type ComboSearchBarErrors = {
  */
 const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
   const initialValues: ComboSearchBarValues = {
-    query: "",
+    query: null,
   };
-
-  const [query, setQuery] = useState('')
 
   return (
     <Formik
@@ -53,17 +44,9 @@ const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
       initialValues={initialValues}
       // @ts-ignore
       onSubmit={async (values, actions) => {
-        alert("hello")
-        // props.executeQuery(values.query);
-      }}
-      validate={(values) => {
-        const errors: ComboSearchBarErrors = {};
+        alert(JSON.stringify(values))
 
-        if (!values.query) {
-          errors.query = "Please enter a query";
-        }
-
-        return errors;
+        props.executeQuery(values.query);
       }}
     >
       <Form>

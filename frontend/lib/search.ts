@@ -38,6 +38,10 @@ export async function getFunctionCallGraph(
   return (await res.json()) as CallGraph;
 }
 
+/**
+ * GET available search queries for query-based search.
+ * @param graph
+ */
 export async function getAvailableSearchQueries(graph: string): Promise<AvailableSearchQuery[]> {
   const url = new URL(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/search/query/available`
@@ -45,4 +49,20 @@ export async function getAvailableSearchQueries(graph: string): Promise<Availabl
 
   const res = await fetch(url);
   return (await res.json()) as AvailableSearchQuery[];
+}
+
+export async function getSearchQuery(graph: string, queryID: number, limit: number, offset: number): Promise<null> {
+  const url = new URL(
+  `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/search/query/${queryID}`
+  )
+
+  const params = {
+    limit: limit,
+    offset: offset,
+  };
+  // @ts-ignore
+  url.search = new URLSearchParams(params).toString();
+
+  const res = await fetch(url);
+  return null;
 }

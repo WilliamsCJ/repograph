@@ -248,8 +248,8 @@ const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (p
   })
 
   return (
-    // <Field name={props.name} id={props.id}>
-    //   {({ field, form: { setFieldValue }, meta }: FieldProps) => (
+    <Field name={props.name} id={props.id}>
+      {({ field, form: { setFieldValue }, meta }: FieldProps) => (
         <div css={[
           tw`w-full transform divide-y overflow-hidden transition-all`,
           tw`relative col-span-4 sm:col-span-5 md:col-span-7`,
@@ -260,8 +260,8 @@ const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (p
         ]}
         >
           <Combobox
-            value={selectedQuery}
-            onChange={setSelectedQuery}
+            value={field.value}
+            onChange={(e) => setFieldValue(field.name, e, false)}
           >
             <Relative>
               <SearchBarIcon />
@@ -291,8 +291,8 @@ const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (p
             </Combobox.Options>
           </Combobox>
         </div>
-    //   )}
-    // </Field>
+      )}
+    </Field>
   )
 }
 

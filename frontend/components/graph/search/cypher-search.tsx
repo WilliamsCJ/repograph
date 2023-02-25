@@ -5,6 +5,7 @@ import { AvailableSearchQuery, SearchResultSet } from "../../../types/search";
 import toast from "react-hot-toast";
 import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "../../core/table";
 import ComboSearchBar from "./combo-searchbar";
+import { getSearchQuery } from "../../../lib/search";
 
 // TODO: Tidy above
 
@@ -18,7 +19,7 @@ const CypherSearch = ({
   available: AvailableSearchQuery[]
 }) => {
   // Query state
-  const [query, setQuery] = useState<string | null>(null);
+  const [query, setQuery] = useState<AvailableSearchQuery | null>(null);
   // Results state
   const [results, setResults] = useState<SearchResultSet | undefined>(
   undefined
@@ -29,11 +30,10 @@ const CypherSearch = ({
   const limit = 5;
 
   // Query executor
-  const executeQuery = async (query: string) => {
-    setQuery(query);
+  const executeQuery = async (query: AvailableSearchQuery) => {
     try {
-      // TODO: Replace
-      // const res = await getSemanticSearchQuery(graph, query, limit, offset);
+      setQuery(query)
+      const res = await getSearchQuery(graph, query.id, limit, offset);
       setResults(res);
     } catch (e) {
       toast.error("An error occurred!", { duration: 6000 });
@@ -53,7 +53,7 @@ const CypherSearch = ({
     <ComboSearchBar
       label="Search"
       placeholder="MATCH..."
-      executeQuery={() => alert('hi')}
+      executeQuery={executeQuery}
       available={available}
     />
     {/*<div tw="mt-6">*/}

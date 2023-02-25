@@ -38,6 +38,6 @@ class SemanticSearchResultSet(BaseModel):
 
 
 class AvailableSearchQuery(BaseModel):
-    id: str
+    id: int
     name: str
     function: Callable
