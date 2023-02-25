@@ -53,7 +53,7 @@ const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
       initialValues={initialValues}
       // @ts-ignore
       onSubmit={async (values, actions) => {
-        alert(values)
+        alert("hello")
         // props.executeQuery(values.query);
       }}
       validate={(values) => {

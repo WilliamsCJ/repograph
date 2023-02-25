@@ -72,6 +72,11 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
 const FullContainer = tw.div`flex h-full w-full`;
 
 /**
+ * Relative div
+ */
+const Relative = tw.div`relative`;
+
+/**
  * HeadingRow is used for displaying the top row of a page
  */
 const HeadingRow = tw.div`flex w-full flex-row justify-between mb-4`;
@@ -117,4 +122,5 @@ export {
   MainContainer,
   SideBar,
   JustifiedRow,
+  Relative
 };

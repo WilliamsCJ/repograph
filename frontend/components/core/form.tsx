@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 
 import tw from "twin.macro";
 import { Field, FieldProps } from "formik";
-import IconWrapper from "./icon";
+import IconWrapper, { SearchBarIcon } from "./icon";
 import {
   ArrowUpTrayIcon,
   MagnifyingGlassIcon,
@@ -18,7 +18,8 @@ import {
 } from "./constants";
 import { AccentText, BoldDetailText, DetailText } from "./text";
 import { Combobox } from "@headlessui/react";
-import { number } from "prop-types";
+import { Relative } from "./layout";
+import { AvailableSearchQuery } from "../../types/search";
 
 /**
  * InputProps type for InputSection component.
@@ -258,41 +259,33 @@ const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (p
         >
           <Combobox
             value={field.value}
+            // @ts-ignore
             onChange={(value: string) => {
               field.onChange({ target: { value, name } });
             }}
           >
-            <div tw="relative">
-              <MagnifyingGlassIcon
-              tw="pointer-events-none absolute top-3.5 left-4 h-5 w-5 text-gray-400"
-              aria-hidden="true"
+            <Relative>
+              <SearchBarIcon />
+              <ComboSearchBarInput
+                placeholder={props.placeholder}
+                displayValue={(query: AvailableSearchQuery) => query.name}
+                // @ts-ignore
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setQuery(event.target.value)}
               />
-              <Combobox.Input
-              tw="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-800 placeholder-gray-400 focus:ring-0 sm:text-sm"
-              placeholder="Search..."
-              onChange={(event) => setQuery(event.target.value)}
-              />
-            </div>
+            </Relative>
 
-            {filteredQueries.length > 0 && (
-            <Combobox.Options static tw="max-h-72 scroll-py-2 overflow-y-auto py-2 text-sm text-gray-800">
-              {filteredQueries.map((person, index) => (
-              <Combobox.Option
-              key={index}
-              value={person}
-              css={[
-                tw`cursor-default select-none px-4 py-2`,
-              ]}
-              >
-                {person}
-              </Combobox.Option>
-              ))}
+            {/*// TODO: max-h-72 scroll-py-2 overflow-y-auto py-2 pl-11 text-sm text-gray-800*/}
+            <Combobox.Options>
+              {filteredQueries.length === 0 && query !== '' ? (
+                <BoldDetailText>No matching queries.</BoldDetailText>
+              ) : (
+                filteredQueries.map((query: AvailableSearchQuery) => (
+                <Combobox.Option key={query.id} value={query}>
+                  {props => <ComboSearchBarOption label={query.name} {...props} />}
+                </Combobox.Option>
+                ))
+              )}
             </Combobox.Options>
-            )}
-
-            {query !== '' && filteredQueries.length === 0 && (
-            <p tw="p-4 text-sm text-gray-500">No people found.</p>
-            )}
           </Combobox>
         </div>
       )}
@@ -367,6 +360,50 @@ const SearchBarInput = (props: React.HTMLProps<HTMLInputElement>) => (
     {...props}
   />
 );
+
+
+/**
+ * ComboSearchBar input component
+ * @param placeholder
+ * @param onChange
+ * @constructor
+ */
+const ComboSearchBarInput = ({ placeholder, onChange}: { placeholder: string, onChange: (event: React.ChangeEvent<HTMLInputElement>) => void}) => (
+  <Combobox.Input
+    tw="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-800 placeholder-gray-400 focus:ring-0 sm:text-sm"  // TODO: Reuse values
+    placeholder={placeholder}
+    // @ts-ignore
+    onChange={onChange}
+  />
+)
+
+
+const ComboSearchBarOption = React.forwardRef(
+(
+    { label, active, selected, ...rest }: { label: string, active: boolean, selected: boolean },
+    ref: React.ForwardedRef<HTMLDivElement>,
+  ) => {
+    return (
+      <div
+        css={[
+          tw`cursor-default select-none relative py-2 pl-10 pr-4`,
+          active ? tw`text-amber-900 bg-amber-100` : tw`text-gray-900`,
+        ]}
+        ref={ref}
+      >
+        <span
+        css={[
+          tw`block truncate`,
+          selected ? tw`font-medium` : tw`font-normal`,
+        ]}
+        >
+          {label}
+        </span>
+
+      </div>
+    )
+  },
+)
 
 
 /**
