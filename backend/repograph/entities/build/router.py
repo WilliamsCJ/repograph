@@ -1,3 +1,5 @@
+# pragma: no cover
+# TODO: Maybe some unit tests?
 """
 Routing for build entity.
 """
@@ -49,16 +51,15 @@ class BuildRouter:
                     repository.extractall(path=outer_path)
 
                     if len(os.listdir(outer_path)) == 1:
-                        paths.append(str(os.path.join(outer_path, os.listdir(outer_path)[0])))
+                        paths.append(
+                            str(os.path.join(outer_path, os.listdir(outer_path)[0]))
+                        )
                     else:
                         paths.append(outer_path)
 
                     cleanup_inputs.append(outer_path)
         except RepographException as e:
-            background_tasks.add_task(
-                self._cleanup_inputs,
-                cleanup_inputs
-            )
+            background_tasks.add_task(self._cleanup_inputs, cleanup_inputs)
             raise e
 
         background_tasks.add_task(
@@ -68,9 +69,6 @@ class BuildRouter:
             description,
         )
 
-        background_tasks.add_task(
-            self._cleanup_inputs,
-            cleanup_inputs
-        )
+        background_tasks.add_task(self._cleanup_inputs, cleanup_inputs)
 
         return {"status": "pending"}

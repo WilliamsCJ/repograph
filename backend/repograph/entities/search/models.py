@@ -2,13 +2,14 @@
 Search entity-related models.
 """
 # Base imports
-from typing import List
+from typing import Callable, List
 
 # pip imports
 from pydantic import BaseModel, Field, validator
 
 # Model imports
 from repograph.entities.graph.models.nodes import Function
+from repograph.utils.json import JSONDict
 
 
 class SemanticSearchResult(BaseModel):
@@ -35,3 +36,15 @@ class SemanticSearchResultSet(BaseModel):
     offset: int
     limit: int
     total: int
+
+
+class AvailableSearchQuery(BaseModel):
+    id: int
+    name: str
+    function: Callable
+
+
+class SearchQueryResult(BaseModel):
+    columns: List[str]
+    data: List[JSONDict]
+    size: int

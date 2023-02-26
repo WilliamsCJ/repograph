@@ -1,22 +1,29 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
 
 import tw from "twin.macro";
 import { Field, FieldProps } from "formik";
-import IconWrapper from "./icon";
+import IconWrapper, { SearchBarIcon } from "./icon";
 import {
   ArrowUpTrayIcon,
+  CheckIcon,
+  ChevronUpDownIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import {
   Background,
   Border,
   BorderError,
+  Divide,
   Focus,
   FocusError,
   Placeholder,
   PlaceholderError,
 } from "./constants";
 import { AccentText, BoldDetailText, DetailText } from "./text";
+import { Combobox, Listbox } from "@headlessui/react";
+import { Relative } from "./layout";
+import { AvailableSearchQuery } from "../../types/search";
+import { useTheme } from "next-themes";
 
 /**
  * InputProps type for InputSection component.
@@ -200,11 +207,167 @@ const SearchBarInputSection: React.FC<SearchBarInputSectionProps> = (props) => {
   return (
     <Field name={props.name} id={props.id}>
       {({ field, form: { setFieldValue }, meta }: FieldProps) => (
-        <div tw="relative col-span-4 sm:col-span-5 md:col-span-7">
-          <div tw="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-            <MagnifyingGlassIcon tw="h-6 w-6" />
-          </div>
-          <SearchBarInput required placeholder={props.placeholder} {...field} />
+        <div tw="relative grow col-span-4 sm:col-span-5 md:col-span-7">
+          <Relative>
+            <SearchBarIcon />
+            <SearchBarInput
+              required
+              placeholder={props.placeholder}
+              {...field}
+            />
+          </Relative>
+        </div>
+      )}
+    </Field>
+  );
+};
+
+export interface ComboOption {
+  id: number;
+  name: string;
+}
+
+export type ComboSearchBarInputSectionProps = {
+  name: string;
+  id: string;
+  placeholder: string;
+  label: string;
+  options: ComboOption[];
+};
+
+/**
+ *
+ * @param props
+ * @constructor
+ */
+const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (
+  props
+) => {
+  const [selectedQuery, setSelectedQuery] = useState(null);
+  const [query, setQuery] = useState("");
+
+  // Filter the queries
+  // Modified from:
+  // https://headlessui.com/react/combobox
+  const filteredQueries =
+    query === ""
+      ? props.options
+      : props.options.filter((option: ComboOption) => {
+          return option.name.toLowerCase().includes(query.toLowerCase());
+        });
+
+  return (
+    <Field name={props.name} id={props.id}>
+      {({ field, form: { setFieldValue }, meta }: FieldProps) => (
+        <div
+          css={[
+            tw`relative w-full grow transform divide-y overflow-hidden transition-all`,
+            Border,
+            Background,
+            Divide,
+            Focus,
+          ]}
+        >
+          <Combobox
+            value={field.value}
+            onChange={(e) => setFieldValue(field.name, e, false)}
+          >
+            <Relative>
+              <SearchBarIcon />
+              <ComboSearchBarInput
+                placeholder={props.placeholder}
+                displayValue={(query: AvailableSearchQuery) =>
+                  query ? query.name : null
+                }
+                // @ts-ignore
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setQuery(event.target.value);
+                }}
+              />
+            </Relative>
+
+            <Combobox.Options tw="scroll-py-2 overflow-y-auto">
+              {filteredQueries.length === 0 && query !== "" ? (
+                <div tw="relative py-2 pl-11 pr-4">
+                  <BoldDetailText>No matching queries.</BoldDetailText>
+                </div>
+              ) : (
+                filteredQueries.map((query: AvailableSearchQuery) => (
+                  <Combobox.Option key={query.id} value={query}>
+                    {/* @ts-ignore */}
+                    {({ active, selected }) => (
+                      <Option
+                        label={query.name}
+                        active={active}
+                        selected={selected}
+                        leftAlign
+                      />
+                    )}
+                  </Combobox.Option>
+                ))
+              )}
+            </Combobox.Options>
+          </Combobox>
+        </div>
+      )}
+    </Field>
+  );
+};
+
+export type SelectSectionProps = {
+  name: string;
+  id: string;
+  placeholder: string;
+  label: string;
+  options: string[];
+};
+
+const SelectInputSection: React.FC<SelectSectionProps> = (props) => {
+  return (
+    <Field name={props.name} id={props.id}>
+      {({ field, form: { setFieldValue }, meta }: FieldProps) => (
+        <div
+          css={[
+            tw`relative w-48 transform divide-y overflow-hidden transition-all text-left`,
+            Border,
+            Background,
+            Divide,
+            Focus,
+          ]}
+        >
+          <Listbox
+            value={field.value}
+            onChange={(e) => setFieldValue(field.name, e, false)}
+          >
+            <Listbox.Button
+              css={[
+                tw`relative py-2 px-4 w-full bg-transparent border-0 focus:ring-0 text-left`,
+                Placeholder,
+              ]}
+            >
+              <span>{field.value ? field.value : "All"}</span>
+              <span tw="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <ChevronUpDownIcon
+                  tw="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+              </span>
+            </Listbox.Button>
+            <Listbox.Options>
+              {props.options.map((option: string, index: number) => (
+                <Listbox.Option key={index} value={option}>
+                  {/* @ts-ignore */}
+                  {({ active, selected }) => (
+                    <Option
+                      label={option}
+                      active={active}
+                      selected={selected}
+                    />
+                  )}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          </Listbox>
         </div>
       )}
     </Field>
@@ -269,7 +432,7 @@ const Input = (
 const SearchBarInput = (props: React.HTMLProps<HTMLInputElement>) => (
   <input
     css={[
-      tw`block w-full px-4 py-2 pl-12`,
+      tw`py-2 w-full bg-transparent border-0 pl-11 pr-4 focus:ring-0`,
       Background,
       Border,
       Placeholder,
@@ -278,6 +441,77 @@ const SearchBarInput = (props: React.HTMLProps<HTMLInputElement>) => (
     {...props}
   />
 );
+
+/**
+ * ComboSearchBar input component
+ * @param placeholder
+ * @param onChange
+ * @param displayValue
+ * @constructor
+ */
+const ComboSearchBarInput = ({
+  placeholder,
+  onChange,
+  displayValue,
+}: {
+  placeholder: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  displayValue: any;
+}) => (
+  <Combobox.Input
+    css={[
+      tw`py-2 w-full bg-transparent border-0 pl-11 pr-4 focus:ring-0`,
+      Placeholder,
+    ]}
+    displayValue={displayValue}
+    placeholder={placeholder}
+    // @ts-ignore
+    onChange={onChange}
+  />
+);
+
+const Option = ({
+  active,
+  selected,
+  label,
+  leftAlign,
+}: {
+  active: boolean;
+  selected: boolean;
+  label: string;
+  leftAlign?: boolean;
+}) => {
+  const { theme } = useTheme();
+
+  return (
+    <div
+      css={[
+        tw`cursor-pointer relative py-2 px-4`,
+        leftAlign && tw`pl-11 pr-4`,
+        active
+          ? tw`bg-accent-400/25`
+          : theme === "light"
+          ? tw`bg-white`
+          : tw`bg-zinc-800/50`,
+      ]}
+    >
+      {selected && (
+        <CheckIcon
+          css={[
+            tw`pointer-events-none absolute top-2 left-4 h-5 w-5 text-zinc-700`,
+            active && tw`text-accent-800`,
+          ]}
+          aria-hidden="true"
+        />
+      )}
+      {selected ? (
+        <BoldDetailText>{label}</BoldDetailText>
+      ) : (
+        <DetailText>{label}</DetailText>
+      )}
+    </div>
+  );
+};
 
 /**
  * Form help/hint text.
@@ -294,4 +528,6 @@ export {
   TextAreaSection,
   FileUploadSection,
   SearchBarInputSection,
+  ComboSearchBarInputSection,
+  SelectInputSection,
 };

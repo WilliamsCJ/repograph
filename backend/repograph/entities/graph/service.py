@@ -8,7 +8,7 @@ import traceback
 from logging import getLogger
 import re
 from sqlite3 import Connection
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 # pip imports
 from py2neo import Transaction
@@ -35,6 +35,7 @@ from repograph.entities.metadata.service import MetadataService
 
 # Exceptions
 from repograph.entities.graph.exceptions import InvalidGraphNameError
+from repograph.utils.json import JSONDict
 
 # Configure logging
 log = getLogger("repograph.entities.graph.service")
@@ -382,3 +383,188 @@ class GraphService:
         )
 
         return len(result)
+
+    def get_readme_files(
+        self, graph: str, repository: Optional[str] = None
+    ) -> List[JSONDict]:
+        """Get README files for the given graph
+
+        Args:
+            graph (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            List[JSONDict]
+        """
+        if not repository:
+            repository = ".*"
+
+        result = self.repository.execute_query(
+            f"""
+            MATCH (n:README)-[:Contains*1..]-(r:Repository) WHERE r.name =~ '{repository}'
+            RETURN r.name as `Repository`, n.path as `File`, n.content as `Contents`
+            """,
+            graph_name=graph,
+        )
+
+        return result
+
+    def get_requirements(
+        self, graph: str, repository: Optional[str] = None
+    ) -> List[JSONDict]:
+        """Get the requirements for the given graph.
+
+        Args:
+            graph (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            List[JSONDict]
+        """
+        if not repository:
+            repository = ".*"
+
+        return self.repository.execute_query(
+            f"""
+            MATCH (r:Repository)-[s:Requires]->(d) WHERE r.name =~ '{repository}'
+            RETURN r.name as `Repository`, d.name as `Dependency`, s.version as `Version`
+            """,
+            graph_name=graph,
+        )
+
+    def get_licenses(
+        self, graph: str, repository: Optional[str] = None
+    ) -> List[JSONDict]:
+        """Get the licenses for the given graph.
+
+        Args:
+            graph (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            List[JSONDict]
+        """
+        if not repository:
+            repository = ".*"
+
+        return self.repository.execute_query(
+            f"""
+            MATCH (n:License)-[]-(r:Repository) WHERE r.name =~ '{repository}'
+            RETURN r.name as `Repository`, n.license_type as `License`,
+            n.confidence as `Confidence`, n.text as `Content`
+            """,
+            graph_name=graph,
+        )
+
+    def get_docstrings_full(
+        self, graph: str, repository: Optional[str] = None
+    ) -> List[JSONDict]:
+        """Get the docstrings and functions for the given graph.
+
+        Args:
+            graph (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            List[JSONDict]
+        """
+        if not repository:
+            repository = ".*"
+
+        return self.repository.execute_query(
+            f"""
+            MATCH (n:Docstring)-[Documents]-(f:Function)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository)
+            WHERE (n.short_description IS NOT NULL OR n.long_description IS NOT NULL)
+            AND r.name =~ '{repository}' RETURN r.name as `Repository`, f.name as `Function Name`,
+            n.short_description as `Docstring Summary`, n.long_description as `Doctring Body`
+            """,
+            graph_name=graph,
+        )
+
+    def get_summarizations(
+        self, graph: str, repository: Optional[str] = None
+    ) -> List[JSONDict]:
+        """Get the summarizations and functions for the given graph.
+
+        Args:
+            graph (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            List[JSONDict]
+        """
+        if not repository:
+            repository = ".*"
+
+        return self.repository.execute_query(
+            f"""
+            MATCH (n:Docstring)-[:Documents]-(f)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository)
+            WHERE n.summarization IS NOT NULL AND r.name =~ '{repository}'
+            RETURN r.name as `Repository`, f.name as `Function`,
+            n.summarization as `Summarization`
+            """,
+            graph_name=graph,
+        )
+
+    def get_files(self, graph: str, repository: Optional[str] = None) -> List[JSONDict]:
+        """Get the file names for the given graph.
+
+        Args:
+            graph (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            List[JSONDict]
+        """
+        if not repository:
+            repository = ".*"
+
+        return self.repository.execute_query(
+            f"""
+            MATCH (m:Module)-[:Contains*1..]-(r:Repository) WHERE r.name =~ '{repository}'
+            RETURN m.name + '.' + m.extension as `Filename`, r.name as `Repository`
+            """,
+            graph_name=graph,
+        )
+
+    def get_functions_and_classes(
+        self, graph: str, repository: Optional[str] = None
+    ) -> List[JSONDict]:
+        """Get the function and class names for the given graph.
+
+        Args:
+            graph (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            List[JSONDict]
+        """
+        if not repository:
+            repository = ".*"
+
+        return self.repository.execute_query(
+            f"""
+            MATCH (n:Class|Function)-[:HasFunction|HasMethod*0..]-()-[:Contains*1..]-(r:Repository)
+            WHERE r.name =~ '{repository}' RETURN r.name as `Repository`, n.name as `Name`, labels(n) as `Type`
+            """,
+            graph_name=graph,
+        )
+
+    def get_repository_names(self, graph: str) -> List[str]:
+        """Get the names of repositories in the graph.
+
+        Args:
+            graph (str): The graph to query
+
+        Returns:
+            List[str]
+        """
+        result = self.repository.execute_query(
+            """
+            MATCH (n:Repository) RETURN COLLECT(n.name) as `Repositories`
+            """,
+            graph_name=graph,
+        )
+        return list(
+            set([item for sublist in result for item in sublist["Repositories"]])
+        )

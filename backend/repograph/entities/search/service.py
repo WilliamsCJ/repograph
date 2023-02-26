@@ -8,15 +8,17 @@ Typical usage:
 """
 # Base imports
 from logging import getLogger
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 
 # pip imports
 from sentence_transformers import SentenceTransformer, util
 
 # Model imports
 from repograph.entities.search.models import (
+    AvailableSearchQuery,
     SemanticSearchResult,
     SemanticSearchResultSet,
+    SearchQueryResult,
 )
 
 # Graph entity imports
@@ -138,3 +140,165 @@ class SearchService:
                 low_scores += 1
 
         return low_scores, missing_docstring
+
+    def get_available_search_queries(self) -> List[AvailableSearchQuery]:
+        available = [
+            AvailableSearchQuery(
+                id=0,
+                name="Search repository requirements",
+                function=self.search_requirements,
+            ),
+            AvailableSearchQuery(
+                id=1, name="Search README files", function=self.search_readmes
+            ),
+            AvailableSearchQuery(
+                id=2,
+                name="Search license files and types",
+                function=self.search_licenses,
+            ),
+            AvailableSearchQuery(
+                id=3, name="Search file names", function=self.search_files
+            ),
+            AvailableSearchQuery(
+                id=4,
+                name="Search extracted docstrings",
+                function=self.search_docstrings,
+            ),
+            AvailableSearchQuery(
+                id=5,
+                name="Search function summarizations",
+                function=self.search_summarizations,
+            ),
+            AvailableSearchQuery(
+                id=6,
+                name="Search function and classes",
+                function=self.search_functions_and_classes,
+            ),
+        ]
+        return available
+
+    def search_requirements(
+        self, graph_name: str, repository: Optional[str] = None
+    ) -> SearchQueryResult:
+        """Construct the results for the requirements query.
+
+        Args:
+            graph_name (str): The graph to search.
+            repository (str, optional): Repository to filter by.
+
+        Returns:
+            SearchQueryResult
+        """
+        results = self.graph.get_requirements(graph_name, repository=repository)
+
+        return SearchQueryResult(
+            columns=["Repository", "Dependency", "Version"],
+            data=results,
+            size=len(results),
+        )
+
+    def search_readmes(self, graph_name: str, repository: Optional[str] = None):
+        """Construct the results for the READMEs query.
+
+        Args:
+            graph_name (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            SearchQueryResult
+        """
+        results = self.graph.get_readme_files(graph_name, repository=repository)
+
+        return SearchQueryResult(
+            columns=["Repository", "File", "Contents"], data=results, size=len(results)
+        )
+
+    def search_licenses(self, graph_name: str, repository: Optional[str] = None):
+        """Construct the results for the licenses query.
+
+        Args:
+            graph_name (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            SearchQueryResult
+        """
+        results = self.graph.get_licenses(graph_name, repository=repository)
+
+        return SearchQueryResult(
+            columns=["Repository", "License", "Confidence", "Content"],
+            data=results,
+            size=len(results),
+        )
+
+    def search_docstrings(self, graph_name: str, repository: Optional[str] = None):
+        """Construct the results for the docstrings query.
+
+        Args:
+            graph_name (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            SearchQueryResult
+        """
+        results = self.graph.get_docstrings_full(graph_name, repository=repository)
+
+        return SearchQueryResult(
+            columns=["Repository", "Function", "Docstring Summary", "Docstring Body"],
+            data=results,
+            size=len(results),
+        )
+
+    def search_summarizations(self, graph_name: str, repository: Optional[str] = None):
+        """Construct the results for the summarizations query.
+
+        Args:
+            graph_name (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            SearchQueryResult
+        """
+        results = self.graph.get_summarizations(graph_name, repository=repository)
+
+        return SearchQueryResult(
+            columns=["Repository", "Function", "Summarization"],
+            data=results,
+            size=len(results),
+        )
+
+    def search_files(self, graph_name: str, repository: Optional[str] = None):
+        """Construct the results for the files query.
+
+        Args:
+            graph_name (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            SearchQueryResult
+        """
+        results = self.graph.get_files(graph_name, repository=repository)
+
+        return SearchQueryResult(
+            columns=["Filename", "Repository"], data=results, size=len(results)
+        )
+
+    def search_functions_and_classes(
+        self, graph_name: str, repository: Optional[str] = None
+    ):
+        """Construct the results for the functions and classes query.
+
+        Args:
+            graph_name (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            SearchQueryResult
+        """
+        results = self.graph.get_functions_and_classes(
+            graph_name, repository=repository
+        )
+
+        return SearchQueryResult(
+            columns=["Repository", "Name", "Type"], data=results, size=len(results)
+        )
