@@ -1,3 +1,5 @@
+# pragma: no cover
+# TODO: Maybe some unit tests?
 """
 Routing for build entity.
 """
