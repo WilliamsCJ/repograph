@@ -1,10 +1,13 @@
-import React from 'react';
+import React from "react";
 
 // Styling
-import"twin.macro";
+import "twin.macro";
 
 // Components
-import { ComboSearchBarInputSection, SelectInputSection } from "../../core/form";
+import {
+  ComboSearchBarInputSection,
+  SelectInputSection,
+} from "../../core/form";
 import { Button } from "../../core/button";
 
 // Forms
@@ -19,8 +22,8 @@ import { Listbox } from "@headlessui/react";
  * Props for ComboSearchBar component.
  */
 export type ComboSearchBarProps = {
-  available: AvailableSearchQuery[]
-  repositories: string[]
+  available: AvailableSearchQuery[];
+  repositories: string[];
 } & SearchBarProps;
 
 /**
@@ -39,7 +42,7 @@ type ComboSearchBarValues = {
 const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
   const initialValues: ComboSearchBarValues = {
     query: null,
-    repository: null
+    repository: null,
   };
 
   return (
@@ -54,11 +57,11 @@ const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
       <Form>
         <div tw="flex flex-row w-full gap-4 items-start mt-6">
           <ComboSearchBarInputSection
-          id="query"
-          name="query"
-          label={props.label}
-          placeholder={props.placeholder}
-          options={props.available}
+            id="query"
+            name="query"
+            label={props.label}
+            placeholder={props.placeholder}
+            options={props.available}
           />
           <SelectInputSection
             name="repository"
@@ -71,7 +74,7 @@ const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
         </div>
       </Form>
     </Formik>
-  )
-}
+  );
+};
 
 export default ComboSearchBar;

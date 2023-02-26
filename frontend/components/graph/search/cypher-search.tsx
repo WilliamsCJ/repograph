@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useState } from 'react';
+import React, { MutableRefObject, useEffect, useState } from "react";
 
 // Styling
 import "twin.macro";
@@ -7,34 +7,43 @@ import "twin.macro";
 import { getSearchQuery } from "../../../lib/search";
 
 // Types
-import { AvailableSearchQuery, SearchQueryResult, SearchResultSet } from "../../../types/search";
+import {
+  AvailableSearchQuery,
+  SearchQueryResult,
+  SearchResultSet,
+} from "../../../types/search";
 
 // Toast
 import toast from "react-hot-toast";
 
 // Components
-import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "../../core/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "../../core/table";
 import ComboSearchBar from "./combo-searchbar";
 import { Pagination } from "./pagination";
-
-
 
 const CypherSearch = ({
   topRef,
   graph,
   available,
-  repositories
+  repositories,
 }: {
   topRef: MutableRefObject<any>;
   graph: string;
   available: AvailableSearchQuery[];
-  repositories: string[]
+  repositories: string[];
 }) => {
   // Query state
   const [query, setQuery] = useState<AvailableSearchQuery | null>(null);
   // Results state
   const [results, setResults] = useState<SearchQueryResult | undefined>(
-  undefined
+    undefined
   );
 
   // Pagination state
@@ -42,10 +51,19 @@ const CypherSearch = ({
   const limit = 10;
 
   // Query executor
-  const executeQuery = async (query: AvailableSearchQuery, repository: string) => {
+  const executeQuery = async (
+    query: AvailableSearchQuery,
+    repository: string
+  ) => {
     try {
-      setQuery(query)
-      const res = await getSearchQuery(graph, repository, query.id, limit, offset);
+      setQuery(query);
+      const res = await getSearchQuery(
+        graph,
+        repository,
+        query.id,
+        limit,
+        offset
+      );
       setResults(res);
     } catch (e) {
       toast.error("An error occurred!", { duration: 6000 });
@@ -61,46 +79,48 @@ const CypherSearch = ({
   }, [offset]);
 
   return (
-  <>
-    <ComboSearchBar
-      label="Search"
-      placeholder="Search..."
-      executeQuery={executeQuery}
-      available={available}
-      repositories={repositories}
-    />
-    <div tw="mt-6">
-      {results &&
-        <>
-          <Table>
-            <TableHeader>
-              {results.columns.map((column: string) => (
-                <TableHeaderCell>{column}</TableHeaderCell>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {results.data.slice(offset, offset + limit).map((row: any, index: number) => (
-                <TableRow key={index}>
-                  {Object.values(row).map(item => (
-                    <TableCell>{item as string}</TableCell>
+    <>
+      <ComboSearchBar
+        label="Search"
+        placeholder="Search..."
+        executeQuery={executeQuery}
+        available={available}
+        repositories={repositories}
+      />
+      <div tw="mt-6">
+        {results && (
+          <>
+            <Table>
+              <TableHeader>
+                {results.columns.map((column: string) => (
+                  <TableHeaderCell>{column}</TableHeaderCell>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {results.data
+                  .slice(offset, offset + limit)
+                  .map((row: any, index: number) => (
+                    <TableRow key={index}>
+                      {Object.values(row).map((item) => (
+                        <TableCell>{item as string}</TableCell>
+                      ))}
+                    </TableRow>
                   ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {results.data.length > limit &&
-            <Pagination
-              offset={offset}
-              setOffset={setOffset}
-              limit={limit}
-              total={results.size}
-            />
-          }
-        </>
-      }
-    </div>
-  </>
-  )
-}
+              </TableBody>
+            </Table>
+            {results.data.length > limit && (
+              <Pagination
+                offset={offset}
+                setOffset={setOffset}
+                limit={limit}
+                total={results.size}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </>
+  );
+};
 
 export default CypherSearch;

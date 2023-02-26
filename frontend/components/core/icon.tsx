@@ -55,6 +55,6 @@ export const SearchBarIcon = () => (
     tw="pointer-events-none absolute top-2.5 left-4 h-5 w-5 text-gray-400"
     aria-hidden="true"
   />
-)
+);
 
 export default IconWrapper;

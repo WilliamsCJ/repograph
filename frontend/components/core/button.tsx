@@ -45,9 +45,23 @@ export type ButtonProps = {
  * @param type
  * @constructor
  */
-export const Button = ({ icon, text, type, onClick, ref, disable }: ButtonProps) => (
+export const Button = ({
+  icon,
+  text,
+  type,
+  onClick,
+  ref,
+  disable,
+}: ButtonProps) => (
   <button
-    css={[Background, ButtonText, Border, ButtonStyles, !disable && Hover, disable && tw`cursor-not-allowed`]}
+    css={[
+      Background,
+      ButtonText,
+      Border,
+      ButtonStyles,
+      !disable && Hover,
+      disable && tw`cursor-not-allowed`,
+    ]}
     type={type}
     onClick={onClick}
     ref={ref}
