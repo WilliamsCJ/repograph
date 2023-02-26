@@ -122,5 +122,5 @@ export {
   MainContainer,
   SideBar,
   JustifiedRow,
-  Relative
+  Relative,
 };

@@ -1,4 +1,8 @@
-import { AvailableSearchQuery, SearchQueryResult, SearchResultSet } from "../types/search";
+import {
+  AvailableSearchQuery,
+  SearchQueryResult,
+  SearchResultSet,
+} from "../types/search";
 import { CallGraph } from "../types/graph";
 
 export async function getSemanticSearchQuery(
@@ -42,22 +46,30 @@ export async function getFunctionCallGraph(
  * GET available search queries for query-based search.
  * @param graph
  */
-export async function getAvailableSearchQueries(graph: string): Promise<AvailableSearchQuery[]> {
+export async function getAvailableSearchQueries(
+  graph: string
+): Promise<AvailableSearchQuery[]> {
   const url = new URL(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/search/query/available`
-  )
+  );
 
   const res = await fetch(url);
   return (await res.json()) as AvailableSearchQuery[];
 }
 
-export async function getSearchQuery(graph: string, repository: string, queryID: number, limit: number, offset: number): Promise<SearchQueryResult> {
+export async function getSearchQuery(
+  graph: string,
+  repository: string,
+  queryID: number,
+  limit: number,
+  offset: number
+): Promise<SearchQueryResult> {
   const url = new URL(
-  `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/search/query/${queryID}`
-  )
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/search/query/${queryID}`
+  );
 
   const params = {
-    repository: repository
+    repository: repository,
   };
   // @ts-ignore
   url.search = new URLSearchParams(params).toString();
@@ -68,8 +80,8 @@ export async function getSearchQuery(graph: string, repository: string, queryID:
 
 export async function getRepositories(graph: string): Promise<string[]> {
   const url = new URL(
-  `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/repositories`
-  )
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/repositories`
+  );
 
   const res = await fetch(url);
   return (await res.json()) as string[];
