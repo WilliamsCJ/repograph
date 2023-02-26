@@ -1,6 +1,9 @@
 """
 Routing for build entity.
 """
+# Base imports
+from typing import List
+
 # pip imports
 from fastapi import APIRouter, status
 
@@ -56,6 +59,10 @@ class GraphRouter:
             status_code=status.HTTP_200_OK,
         )
 
+        self.router.add_api_route(
+            "/{graph}/repositories", self.get_repositories, methods=["GET"]
+        )
+
     async def summary(self, graph: str):
         return self.service.get_summary(graph)
 
@@ -67,6 +74,9 @@ class GraphRouter:
 
     async def call_graph_by_id(self, graph: str, node_id: int) -> CallGraph:
         return self.service.get_call_graph_by_id(node_id, graph)
+
+    async def get_repositories(self, graph: str) -> List[str]:
+        return self.service.get_repository_names(graph)
 
     async def delete_graph(self, graph: str):
         self.service.delete_graph(graph)

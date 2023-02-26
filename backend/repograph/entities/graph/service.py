@@ -549,3 +549,22 @@ class GraphService:
             """,
             graph_name=graph,
         )
+
+    def get_repository_names(self, graph: str) -> List[str]:
+        """Get the names of repositories in the graph.
+
+        Args:
+            graph (str): The graph to query
+
+        Returns:
+            List[str]
+        """
+        result = self.repository.execute_query(
+            """
+            MATCH (n:Repository) RETURN COLLECT(n.name) as `Repositories`
+            """,
+            graph_name=graph,
+        )
+        return list(
+            set([item for sublist in result for item in sublist["Repositories"]])
+        )

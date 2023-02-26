@@ -4,7 +4,7 @@ import React from 'react';
 import"twin.macro";
 
 // Components
-import { ComboSearchBarInputSection } from "../../core/form";
+import { ComboSearchBarInputSection, SelectInputSection } from "../../core/form";
 import { Button } from "../../core/button";
 
 // Forms
@@ -13,12 +13,14 @@ import { Form, Formik } from "formik";
 // Types
 import { AvailableSearchQuery } from "../../../types/search";
 import { SearchBarProps } from "./searchbar";
+import { Listbox } from "@headlessui/react";
 
 /**
  * Props for ComboSearchBar component.
  */
 export type ComboSearchBarProps = {
   available: AvailableSearchQuery[]
+  repositories: string[]
 } & SearchBarProps;
 
 /**
@@ -26,6 +28,7 @@ export type ComboSearchBarProps = {
  */
 type ComboSearchBarValues = {
   query: AvailableSearchQuery | null;
+  repository: string | null;
 };
 
 /**
@@ -36,6 +39,7 @@ type ComboSearchBarValues = {
 const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
   const initialValues: ComboSearchBarValues = {
     query: null,
+    repository: null
   };
 
   return (
@@ -44,9 +48,7 @@ const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
       initialValues={initialValues}
       // @ts-ignore
       onSubmit={async (values, actions) => {
-        alert(JSON.stringify(values))
-
-        props.executeQuery(values.query);
+        props.executeQuery(values.query, values.repository);
       }}
     >
       <Form>
@@ -57,6 +59,13 @@ const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
           label={props.label}
           placeholder={props.placeholder}
           options={props.available}
+          />
+          <SelectInputSection
+            name="repository"
+            id="repository"
+            placeholder="All"
+            label="Repository"
+            options={props.repositories}
           />
           <Button text="Search" />
         </div>

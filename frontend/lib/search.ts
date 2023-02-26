@@ -51,18 +51,26 @@ export async function getAvailableSearchQueries(graph: string): Promise<Availabl
   return (await res.json()) as AvailableSearchQuery[];
 }
 
-export async function getSearchQuery(graph: string, queryID: number, limit: number, offset: number): Promise<SearchQueryResult> {
+export async function getSearchQuery(graph: string, repository: string, queryID: number, limit: number, offset: number): Promise<SearchQueryResult> {
   const url = new URL(
   `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/search/query/${queryID}`
   )
 
   const params = {
-    limit: limit,
-    offset: offset,
+    repository: repository
   };
   // @ts-ignore
   url.search = new URLSearchParams(params).toString();
 
   const res = await fetch(url);
   return (await res.json()) as SearchQueryResult;
+}
+
+export async function getRepositories(graph: string): Promise<string[]> {
+  const url = new URL(
+  `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/repositories`
+  )
+
+  const res = await fetch(url);
+  return (await res.json()) as string[];
 }

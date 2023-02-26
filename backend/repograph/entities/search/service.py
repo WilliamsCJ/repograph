@@ -189,7 +189,7 @@ class SearchService:
         Returns:
             SearchQueryResult
         """
-        results = self.graph.get_requirements(graph_name)
+        results = self.graph.get_requirements(graph_name, repository=repository)
 
         return SearchQueryResult(
             columns=["Repository", "Dependency", "Version"],
@@ -207,7 +207,7 @@ class SearchService:
         Returns:
             SearchQueryResult
         """
-        results = self.graph.get_readme_files(graph_name)
+        results = self.graph.get_readme_files(graph_name, repository=repository)
 
         return SearchQueryResult(
             columns=["Repository", "File", "Contents"], data=results, size=len(results)
@@ -223,7 +223,7 @@ class SearchService:
         Returns:
             SearchQueryResult
         """
-        results = self.graph.get_licenses(graph_name)
+        results = self.graph.get_licenses(graph_name, repository=repository)
 
         return SearchQueryResult(
             columns=["Repository", "License", "Confidence", "Content"],
@@ -241,7 +241,7 @@ class SearchService:
         Returns:
             SearchQueryResult
         """
-        results = self.graph.get_docstrings_full(graph_name)
+        results = self.graph.get_docstrings_full(graph_name, repository=repository)
 
         return SearchQueryResult(
             columns=["Repository", "Function", "Docstring Summary", "Docstring Body"],
@@ -259,7 +259,7 @@ class SearchService:
         Returns:
             SearchQueryResult
         """
-        results = self.graph.get_summarizations(graph_name)
+        results = self.graph.get_summarizations(graph_name, repository=repository)
 
         return SearchQueryResult(
             columns=["Repository", "Function", "Summarization"],
@@ -277,7 +277,7 @@ class SearchService:
         Returns:
             SearchQueryResult
         """
-        results = self.graph.get_files(graph_name)
+        results = self.graph.get_files(graph_name, repository=repository)
 
         return SearchQueryResult(
             columns=["Filename", "Repository"], data=results, size=len(results)
@@ -295,7 +295,9 @@ class SearchService:
         Returns:
             SearchQueryResult
         """
-        results = self.graph.get_functions_and_classes(graph_name)
+        results = self.graph.get_functions_and_classes(
+            graph_name, repository=repository
+        )
 
         return SearchQueryResult(
             columns=["Repository", "Name", "Type"], data=results, size=len(results)

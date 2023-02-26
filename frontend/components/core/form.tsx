@@ -4,7 +4,7 @@ import tw from "twin.macro";
 import { Field, FieldProps } from "formik";
 import IconWrapper, { SearchBarIcon } from "./icon";
 import {
-  ArrowUpTrayIcon, CheckIcon,
+  ArrowUpTrayIcon, CheckIcon, ChevronUpDownIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import {
@@ -17,7 +17,7 @@ import {
   PlaceholderError,
 } from "./constants";
 import { AccentText, BoldDetailText, DetailText } from "./text";
-import { Combobox } from "@headlessui/react";
+import { Combobox, Listbox } from "@headlessui/react";
 import { Relative } from "./layout";
 import { AvailableSearchQuery } from "../../types/search";
 import { useTheme } from "next-themes";
@@ -282,13 +282,71 @@ const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (p
                 <Combobox.Option key={query.id} value={query}>
                   {/* @ts-ignore */}
                   {({active, selected }) =>
-                    <ComboSearchBarOption label={query.name} active={active} selected={selected} />
+                    <Option label={query.name} active={active} selected={selected} leftAlign />
                   }
                 </Combobox.Option>
                 ))
               )}
             </Combobox.Options>
           </Combobox>
+        </div>
+      )}
+    </Field>
+  )
+}
+
+export type SelectSectionProps = {
+  name: string
+  id: string
+  placeholder: string
+  label: string
+  options: string[]
+}
+
+const SelectInputSection: React.FC<SelectSectionProps> = (props) => {
+  return (
+    <Field name={props.name} id={props.id}>
+      {({ field, form: { setFieldValue }, meta }: FieldProps) => (
+        <div css={[
+          tw`relative w-48 transform divide-y overflow-hidden transition-all text-left`,
+          Border,
+          Background,
+          Divide,
+          Focus,
+        ]}
+        >
+          <Listbox
+            value={field.value}
+            onChange={(e) => setFieldValue(field.name, e, false)}
+          >
+            <Listbox.Button
+              css={[
+                tw`relative py-2 px-4 w-full bg-transparent border-0 focus:ring-0 text-left`,
+                Placeholder,
+              ]}
+            >
+              <span>{field.value ? field.value : "All"}</span>
+              <span tw="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <ChevronUpDownIcon
+                tw="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+                />
+              </span>
+            </Listbox.Button>
+            <Listbox.Options>
+              {props.options.map((option: string, index: number) => (
+                <Listbox.Option
+                  key={index}
+                  value={option}
+                >
+                  {/* @ts-ignore */}
+                  {({active, selected }) =>
+                    <Option label={option} active={active} selected={selected} />
+                  }
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          </Listbox>
         </div>
       )}
     </Field>
@@ -388,13 +446,14 @@ const ComboSearchBarInput = (
 )
 
 
-const ComboSearchBarOption = ({ active, selected, label}: { active: boolean, selected: boolean, label: string}) => {
+const Option = ({ active, selected, label, leftAlign }: { active: boolean, selected: boolean, label: string, leftAlign?: boolean}) => {
   const { theme } = useTheme();
 
   return (
     <div
     css={[
-      tw`cursor-pointer relative py-2 pl-11 pr-4`,
+      tw`cursor-pointer relative py-2 px-4`,
+      leftAlign && tw`pl-11 pr-4`,
       active ? tw`bg-accent-400/25` : (theme === 'light' ? tw`bg-white` : tw`bg-zinc-800/50`),
     ]}
     >
@@ -428,4 +487,5 @@ export {
   FileUploadSection,
   SearchBarInputSection,
   ComboSearchBarInputSection,
+  SelectInputSection
 };

@@ -70,14 +70,12 @@ class SearchRouter:
     async def available_queries(self):
         return self.service.get_available_search_queries()
 
-    async def query_search(
-        self, graph: str, query_id: int, offset: int = 0, limit: int = 0
-    ):
+    async def query_search(self, graph: str, query_id: int, repository: str):
         query_map = {x.id: x for x in self.service.get_available_search_queries()}
 
         query = query_map.get(query_id, None)
         if not query:
             raise RepographException
 
-        result = query.function(graph)
+        result = query.function(graph, repository=repository)
         return result

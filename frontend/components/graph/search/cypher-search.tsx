@@ -22,11 +22,13 @@ import { Pagination } from "./pagination";
 const CypherSearch = ({
   topRef,
   graph,
-  available
+  available,
+  repositories
 }: {
   topRef: MutableRefObject<any>;
   graph: string;
-  available: AvailableSearchQuery[]
+  available: AvailableSearchQuery[];
+  repositories: string[]
 }) => {
   // Query state
   const [query, setQuery] = useState<AvailableSearchQuery | null>(null);
@@ -40,10 +42,10 @@ const CypherSearch = ({
   const limit = 10;
 
   // Query executor
-  const executeQuery = async (query: AvailableSearchQuery) => {
+  const executeQuery = async (query: AvailableSearchQuery, repository: string) => {
     try {
       setQuery(query)
-      const res = await getSearchQuery(graph, query.id, limit, offset);
+      const res = await getSearchQuery(graph, repository, query.id, limit, offset);
       setResults(res);
     } catch (e) {
       toast.error("An error occurred!", { duration: 6000 });
@@ -65,6 +67,7 @@ const CypherSearch = ({
       placeholder="Search..."
       executeQuery={executeQuery}
       available={available}
+      repositories={repositories}
     />
     <div tw="mt-6">
       {results &&
