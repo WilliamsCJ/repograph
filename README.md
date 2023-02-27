@@ -1,4 +1,4 @@
-# repograph
+# RepoGraph
 
 ![Workflow](https://github.com/WilliamsCJ/repograph/actions/workflows/python.yaml/badge.svg)
 [![codecov](https://codecov.io/gh/WilliamsCJ/repograph/branch/main/graph/badge.svg?token=1WYUIBCMQF)](https://codecov.io/gh/WilliamsCJ/repograph)
