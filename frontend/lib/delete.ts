@@ -4,7 +4,7 @@
  */
 export async function deleteGraph(graphName: string): Promise<void> {
   const res = await fetch(
-    process.env.NEXT_PUBLIC_BACKEND_URL + `/graph/${graphName}`,
+    `http://localhost:3000/graph/${graphName}`,
     { method: "DELETE" }
   );
 

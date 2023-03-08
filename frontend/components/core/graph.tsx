@@ -92,8 +92,6 @@ const GraphCard: React.FC<GraphCardProps> = ({
 
   const nodeLabel = (n: CallGraphFunction) => n.name;
 
-  console.log(data);
-
   return (
     <div ref={ref} css={[styles, tw`flex h-14`, InteriorBorder]}>
       <Script

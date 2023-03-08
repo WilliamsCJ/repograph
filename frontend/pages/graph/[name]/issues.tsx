@@ -17,7 +17,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { name } = context.params;
 
   const docstrings = await getIncorrectAndMissingDocstrings(name);
-  console.log(docstrings);
 
   return {
     props: {

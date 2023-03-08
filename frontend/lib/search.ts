@@ -12,7 +12,7 @@ export async function getSemanticSearchQuery(
   offset: number
 ): Promise<SearchResultSet> {
   const url = new URL(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/search/semantic`
+    `http://localhost:3000/graph/${graph}/search/semantic`
   );
   const params = {
     query: query,
@@ -35,7 +35,7 @@ export async function getFunctionCallGraph(
   id: string
 ): Promise<CallGraph> {
   const url = new URL(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/node/${id}/call_graph`
+    `http://localhost:3000/graph/${graph}/node/${id}/call_graph`
   );
 
   const res = await fetch(url);
@@ -50,7 +50,7 @@ export async function getAvailableSearchQueries(
   graph: string
 ): Promise<AvailableSearchQuery[]> {
   const url = new URL(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/search/query/available`
+    `http://repograph-backend:3000/graph/${graph}/search/query/available`
   );
 
   const res = await fetch(url);
@@ -65,7 +65,7 @@ export async function getSearchQuery(
   offset: number
 ): Promise<SearchQueryResult> {
   const url = new URL(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/search/query/${queryID}`
+    `http://localhost:3000/graph/${graph}/search/query/${queryID}`
   );
 
   const params = {
@@ -80,7 +80,7 @@ export async function getSearchQuery(
 
 export async function getRepositories(graph: string): Promise<string[]> {
   const url = new URL(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/${graph}/repositories`
+    `http://repograph-backend:3000/graph/${graph}/repositories`
   );
 
   const res = await fetch(url);

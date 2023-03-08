@@ -3,7 +3,7 @@ export async function postNewGraph(
   description: string,
   files: File[]
 ): Promise<void> {
-  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}/graph/build`);
+  const url = new URL(`http://localhost:3000/graph/build`);
 
   let formData = new FormData();
   formData.append("name", name);
