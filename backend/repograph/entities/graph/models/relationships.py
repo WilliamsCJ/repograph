@@ -20,7 +20,7 @@ from repograph.entities.graph.models.nodes import (
     ReturnValue,
     Package,
     License,
-    Variable
+    Variable,
 )
 
 
@@ -148,8 +148,8 @@ class Describes(Relationship):
 class Calls(Relationship):
     """Calls relationship.
 
-    Module -> Function
-    Function -> Function
+    Module -> Function, Class
+    Function -> Function, Class
     """
 
-    _allowed_types = {Module: {Function, Class}, Function: {Function, Class}}
+    _allowed_types = {Module: {Function, Class}, Function: {Function, Class, Module}}
