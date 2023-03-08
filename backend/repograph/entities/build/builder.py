@@ -52,7 +52,7 @@ from repograph.utils.json import (
     parse_min_max_line_numbers,
     marshall_json_to_string,
 )
-from repograph.utils.nodes import find_node_object_by_name
+from repograph.entities.build.utils import find_node_object_by_name
 from repograph.utils.paths import (
     strip_file_path_prefix,
     is_root_folder,
@@ -933,7 +933,7 @@ class RepographBuilder:
                             matching_objects = [
                                 obj
                                 for obj in module_objects
-                                if obj.name == imported_object
+                                if obj is not None and obj.name == imported_object
                             ]
 
                             # If no matches, log an error and move onto the next dependency
@@ -1018,7 +1018,9 @@ class RepographBuilder:
                 # Check the module objects of the imported module first
                 module_objects = self.module_objects.get(imported_module, [])
                 matching_objects = [
-                    obj for obj in module_objects if obj.name == imported_object
+                    obj
+                    for obj in module_objects
+                    if obj is not None and obj.name == imported_object
                 ]
                 if len(matching_objects) > 0:
                     for match in matching_objects:
@@ -1031,7 +1033,9 @@ class RepographBuilder:
                 # Then check the module imports of the imported module
                 module_imports = self.module_dependencies.get(imported_module, [])
                 matching_objects = [
-                    obj for obj in module_imports if obj.name == imported_object
+                    obj
+                    for obj in module_imports
+                    if obj is not None and obj.name == imported_object
                 ]
                 if len(matching_objects) > 0:
                     for match in matching_objects:
