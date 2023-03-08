@@ -11,9 +11,7 @@ export async function getSemanticSearchQuery(
   limit: number,
   offset: number
 ): Promise<SearchResultSet> {
-  const url = new URL(
-    `http://localhost:3000/graph/${graph}/search/semantic`
-  );
+  const url = new URL(`http://localhost:3000/graph/${graph}/search/semantic`);
   const params = {
     query: query,
     limit: limit,
