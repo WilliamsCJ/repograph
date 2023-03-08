@@ -1060,7 +1060,6 @@ class RepographBuilder:
             imported_object,
             dependency,
         ) in unresolved:
-            print(len(unresolved))
             if imported_object.isupper() or imported_object.startswith("__"):
                 imported_object = Variable(
                     name=imported_object,

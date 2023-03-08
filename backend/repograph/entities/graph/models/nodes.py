@@ -33,6 +33,7 @@ class Repository(Node):
         SCRIPT_WITHOUT_MAIN = "script without main"
         SCRIPT = "script"
         PACKAGE = "package"
+        LIBRARY = "library"
 
     # Core
     name: str
@@ -422,6 +423,7 @@ class Variable(Node):
         type (str): The inferred type of the variable, usually from a type hint.
         inferred (bool): This object was inferred when parsing dependencies or calls. Default False.
     """
+
     name: str
     canonical_name: str
     type: Optional[str] = "Any"
@@ -435,6 +437,7 @@ class Argument(Node):
         name (str): The variable name
         type (str): The inferred type of the variable, usually from a type hint.
     """
+
     name: Optional[str]
     type: Optional[str] = "Any"
 
@@ -446,8 +449,10 @@ class ReturnValue(Node):
         name (str): The variable name
         type (str): The inferred type of the variable, usually from a type hint.
     """
+
     name: Optional[str]
     type: Optional[str] = "Any"
+
 
 class Body(Node):
     pass
