@@ -58,8 +58,6 @@ export const SemanticSearch = ({
     }
   }, [offset]);
 
-  console.log(results);
-
   return (
     <>
       <SearchBar

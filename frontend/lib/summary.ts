@@ -6,7 +6,7 @@ import { GraphSummary } from "../types/graph";
  */
 export async function getSummary(graphName: string): Promise<GraphSummary> {
   const res = await fetch(
-    process.env.NEXT_PUBLIC_BACKEND_URL + `/graph/${graphName}/summary`
+    `http://repograph-backend:3000/graph/${graphName}/summary`
   );
   return (await res.json()) as GraphSummary;
 }

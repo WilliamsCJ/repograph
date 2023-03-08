@@ -34,10 +34,6 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
     <Formik
       // @ts-ignore
       initialValues={initialValues}
-      onChange={async (event) => {
-        console.log("hi");
-        console.log(event);
-      }}
       // @ts-ignore
       onSubmit={async (values, actions) => {
         props.executeQuery(values.query);
