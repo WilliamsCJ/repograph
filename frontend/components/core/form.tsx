@@ -357,11 +357,7 @@ const SelectInputSection: React.FC<SelectSectionProps> = (props) => {
               <Listbox.Option key={0} value={null}>
                 {/* @ts-ignore */}
                 {({ active, selected }) => (
-                  <Option
-                  label={"All"}
-                  active={active}
-                  selected={selected}
-                  />
+                  <Option label={"All"} active={active} selected={selected} />
                 )}
               </Listbox.Option>
               {props.options.map((option: string, index: number) => (
@@ -505,7 +501,7 @@ const Option = ({
       css={[
         tw`cursor-pointer relative py-2 px-4`,
         leftAlign && tw`pl-11 pr-4`,
-        bg
+        bg,
       ]}
     >
       {selected && (
