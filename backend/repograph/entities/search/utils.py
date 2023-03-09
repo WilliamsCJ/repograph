@@ -10,8 +10,8 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
 # nltk initialisation
-nltk.download("stopwords")
-nltk.download("punkt")
+nltk.download("stopwords", quiet=True)
+nltk.download("punkt", quiet=True)
 
 
 def clean_source_code(source_code: str) -> str:

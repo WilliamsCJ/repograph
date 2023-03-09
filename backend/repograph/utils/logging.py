@@ -5,7 +5,7 @@ import logging
 import sys
 
 
-def configure_logging():
+def configure_logging(level):
     """Configures logging for repograph.
 
     Modified code from: https://docs.python.org/3/howto/logging-cookbook.html
@@ -15,11 +15,11 @@ def configure_logging():
     """
     # Configure root logger
     logger = logging.getLogger("repograph")
-    logger.setLevel(logging.INFO)
+    logger.setLevel(level)
 
     # Create stream handler to display logs to stdout
     ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
+    ch.setLevel(level)
     ch.setStream(stream=sys.stdout)
 
     # Format logs

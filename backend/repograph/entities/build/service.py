@@ -64,7 +64,7 @@ class BuildService:
             output_path,
         )
 
-        subprocess.check_call(
+        subprocess.check_output(
             [
                 "inspect4py",
                 "-i",

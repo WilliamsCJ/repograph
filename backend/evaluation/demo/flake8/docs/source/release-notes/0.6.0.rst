@@ -1,4 +1,0 @@
-0.6 - 2010-02-15
-----------------
-
-- Fix the McCabe metric on some loops
