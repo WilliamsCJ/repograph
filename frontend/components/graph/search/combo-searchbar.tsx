@@ -55,7 +55,7 @@ const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
       }}
     >
       <Form>
-        <div tw="flex flex-row w-full gap-4 items-start mt-6">
+        <div tw="flex flex-col sm:flex-row w-full gap-4 items-start mt-6">
           <ComboSearchBarInputSection
             id="query"
             name="query"

@@ -72,7 +72,7 @@ class SearchRouter:
     async def available_queries(self):
         return self.service.get_available_search_queries()
 
-    async def query_search(self, graph: str, query_id: int, repository: str):
+    async def query_search(self, graph: str, query_id: int, repository: str = None):
         query_map = {x.id: x for x in self.service.get_available_search_queries()}
 
         query = query_map.get(query_id, None)
