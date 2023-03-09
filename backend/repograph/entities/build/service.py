@@ -64,23 +64,26 @@ class BuildService:
             output_path,
         )
 
-        subprocess.check_call(
-            [
-                "inspect4py",
-                "-i",
-                input_path,
-                "-o",
-                output_path,
-                "-md",
-                "-rm",
-                "-si",
-                "-ld",
-                "-sc",
-                "-ast",
-                "-r",
-                "-cl",
-            ]
-        )
+        try:
+            subprocess.check_output(
+                [
+                    "inspect4py",
+                    "-i",
+                    input_path,
+                    "-o",
+                    output_path,
+                    "-md",
+                    "-rm",
+                    "-si",
+                    "-ld",
+                    "-sc",
+                    "-ast",
+                    "-cl",
+                ]
+            )
+        except subprocess.CalledProcessError as e:
+            log.critical(e)
+            raise e
 
         log.info("Done!")
         return output_path

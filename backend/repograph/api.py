@@ -25,7 +25,7 @@ from repograph.utils.exception_handlers import generic_exception_handler
 from repograph.utils.logging import configure_logging
 
 # Configure logging format
-configure_logging()
+configure_logging(logging.INFO)
 log = logging.getLogger("repograph.api")
 
 

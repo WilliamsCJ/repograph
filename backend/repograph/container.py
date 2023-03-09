@@ -2,12 +2,14 @@
 """
 Application-level Container for dependency injection.
 """
+# base imports
+import warnings
+
 # pip imports
 from dependency_injector.containers import DeclarativeContainer
 from dependency_injector.providers import Container, Configuration, Resource
 from py2neo import GraphService
-from neo4j import GraphDatabase, Driver
-
+from neo4j import GraphDatabase, Driver, ExperimentalWarning
 
 # Containers
 from repograph.entities.build.container import BuildContainer
@@ -21,6 +23,8 @@ class ApplicationContainer(DeclarativeContainer):
     """Top-level container
     This container wires together all other containers to bring together the application.
     """
+
+    warnings.filterwarnings("ignore", category=ExperimentalWarning)
 
     # Configuration object
     config = Configuration()

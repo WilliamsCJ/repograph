@@ -20,7 +20,7 @@ from repograph.entities.build.service import BuildService
 from repograph.utils.logging import configure_logging
 
 # Configure logging format
-configure_logging()
+configure_logging(logging.INFO)
 log = logging.getLogger("repograph.cli")
 
 # Command-line / config-file argument parsing

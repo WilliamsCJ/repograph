@@ -10,7 +10,7 @@ Typical usage:
 from logging import getLogger
 
 # pip imports
-from transformers import RobertaTokenizerFast, T5ForConditionalGeneration
+from transformers import RobertaTokenizer, T5ForConditionalGeneration
 
 # Model imports
 from repograph.entities.graph.models.nodes import Function
@@ -38,9 +38,7 @@ class SummarizationService:
 
         if summarize:
             log.info("Initialising CodeT5 model...")
-            self.tokenizer = RobertaTokenizerFast.from_pretrained(
-                "Salesforce/codet5-base"
-            )
+            self.tokenizer = RobertaTokenizer.from_pretrained("Salesforce/codet5-base")
             self.model = T5ForConditionalGeneration.from_pretrained(
                 "Salesforce/codet5-base-multi-sum"
             )
