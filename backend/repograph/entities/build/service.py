@@ -11,7 +11,7 @@ from typing import Any, List, Tuple
 # Build entity imports
 from repograph.entities.build.builder import RepographBuilder
 from repograph.entities.build.exceptions import RepographBuildError
-from repograph.entities.build.utils import read_json_from_file
+from repograph.entities.build.utils import read_json_from_file, find_requirements
 
 # Other service imports
 from repograph.entities.graph.service import GraphService
@@ -162,6 +162,8 @@ class BuildService:
                         self.temp_output
                     )
 
+                    requirements = find_requirements(i)
+
                     builder = RepographBuilder(
                         self.summarization.summarize_function
                         if self.summarization.active
@@ -172,7 +174,7 @@ class BuildService:
                         tx,
                     )
 
-                    builder.build(directory_info, call_graph)
+                    builder.build(directory_info, call_graph, requirements=requirements)
 
                     log.info("Done!")
 

@@ -3,8 +3,14 @@ Utility functions for the build entity.
 """
 # Base imports
 import json
+import os
 from typing import Any, Dict, List, Union, Optional
 from logging import getLogger
+from pathlib import Path
+
+# pip imports
+from requirements import parse
+from requirements.requirement import Requirement
 
 # Entity imports
 from repograph.entities.graph.models.nodes import Class, Function, Module
@@ -78,3 +84,21 @@ def find_node_object_by_name(
         log.warning("More than one result found! Returning first.")
 
     return filtered[0]
+
+
+def find_requirements(path: str) -> List[Requirement]:
+    """Find any Python requirements files at the or below the path provided
+
+    Args:
+        path (str): Path to start search at
+
+    Returns:
+        List[Requirement]
+    """
+    found = []
+
+    for path in Path(path).rglob("requirements*.txt"):
+        with open(path, "r") as fd:
+            found.extend(parse(fd))
+
+    return found

@@ -435,7 +435,7 @@ class GraphService:
         return self.repository.execute_query(
             f"""
             MATCH (r:Repository)-[s:Requires]->(d) WHERE r.name =~ '{repository}'
-            RETURN r.name as `Repository`, d.name as `Dependency`, s.version as `Version`
+            RETURN r.name as `Repository`, d.name as `Dependency`, s.specifications as `Specifications`
             """,
             graph_name=graph,
         )

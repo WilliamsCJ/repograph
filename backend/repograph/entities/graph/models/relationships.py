@@ -1,7 +1,7 @@
 """
 Relationships between Nodes.
 """
-from typing import Optional
+from typing import List, Optional, Tuple
 
 from repograph.entities.graph.models.base import Relationship
 from repograph.entities.graph.models.nodes import (
@@ -36,7 +36,7 @@ class Requires(Relationship):
 
     _allowed_types = {Repository: {Package}}
 
-    version: str
+    specifications: List[Tuple[str, str]]
 
 
 class Contains(Relationship):

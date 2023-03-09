@@ -192,7 +192,7 @@ class SearchService:
         results = self.graph.get_requirements(graph_name, repository=repository)
 
         return SearchQueryResult(
-            columns=["Repository", "Dependency", "Version"],
+            columns=["Repository", "Dependency", "Specifications"],
             data=results,
             size=len(results),
         )
