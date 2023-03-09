@@ -1443,6 +1443,10 @@ class RepographBuilder:
         log.info("Parsing call graph...")
         self._parse_call_graph(call_graph)
 
+        # Parse extends relationships
+        log.info("Parsing extends relationships...")
+        self._parse_extends()
+
         # Parse READMEs
         self._parse_readme(readmes)
 
