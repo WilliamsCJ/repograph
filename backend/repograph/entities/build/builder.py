@@ -6,7 +6,9 @@ import logging
 import os
 from typing import Callable, Dict, Set, List, Optional, Tuple, Union
 
+# Pip imports
 from py2neo import Transaction
+from requirements.requirement import Requirement
 
 # Build entity imports
 from repograph.entities.build.exceptions import RepographBuildError
@@ -197,7 +199,7 @@ class RepographBuilder:
         return repository
 
     def _parse_requirements(
-        self, requirements: Optional[JSONDict], repository: Repository
+        self, requirements: List[Requirement], repository: Repository
     ) -> None:
         """Parses information extracted from the requirements.txt file.
 
@@ -211,19 +213,19 @@ class RepographBuilder:
             log.warning("No requirements information found.")
         else:
             log.info("Parsing requirements information...")
-            for requirement, version in requirements.items():
+            for requirement in requirements:
                 package = Package.create_from_external_dependency(
-                    requirement, self.repository_name
+                    requirement.name, self.repository_name
                 )
                 relationship = Requires(
                     repository,
                     package,
                     self.repository_name,
-                    version=version,
+                    specifications=requirement.specs,
                 )
                 self.graph.add(package, tx=self.tx, graph_name=self.graph_name)
                 self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
-                self.requirements[requirement] = package
+                self.requirements[requirement.name] = package
 
     def _parse_license(
         self, licenses: Optional[JSONDict], repository: Repository
@@ -984,7 +986,7 @@ class RepographBuilder:
                         )
 
                         if source_module == "":
-                            self._create_missing_nodes(missing)
+                            self._create_missing_nodes(missing, import_object=imported_object)
                         elif source_module in self.requirements:
                             self._create_missing_nodes(
                                 missing,
@@ -1137,7 +1139,7 @@ class RepographBuilder:
         child = None
 
         for index, m in enumerate(missing):
-            if index == len(missing) - 1:
+            if index == len(missing) - 1 and len(missing) > 1:
                 new = Module(
                     name=m, repository_name=self.repository_name, inferred=True
                 )
@@ -1333,6 +1335,7 @@ class RepographBuilder:
         self,
         directory_info: Optional[JSONDict],
         call_graph: Optional[JSONDict],
+        requirements: List[Requirement] = [],
     ) -> None:
         """Build a repograph from directory_info JSON.
 
@@ -1353,7 +1356,7 @@ class RepographBuilder:
             raise RepographBuildError("Directory info is empty")
 
         # Pop off non-directory entries from the JSON, for parsing later
-        requirements = directory_info.pop("requirements", None)
+        _ = directory_info.pop("requirements", None)
         _ = directory_info.pop("directory_tree", None)
         licenses = directory_info.pop("license", None)
         readmes = directory_info.pop("readme_files", None)
