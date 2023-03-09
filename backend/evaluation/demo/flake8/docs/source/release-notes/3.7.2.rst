@@ -1,0 +1,20 @@
+3.7.2 -- 2019-01-30
+-------------------
+
+You can view the `3.7.2 milestone`_ on GitHub for more details.
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Fix broken ``flake8 --diff`` (regressed in 3.7.0) (See also :issue:`919`,
+  :issue:`667`)
+
+- Fix typo in plugin exception reporting (See also :issue:`908`,
+  :issue:`668`)
+
+- Fix ``AttributeError`` while attempting to use the legacy api (regressed in
+  3.7.0) (See also :issue:`1198`, :issue:`673`)
+
+.. all links
+.. _3.7.2 milestone:
+    https://github.com/pycqa/flake8/milestone/24

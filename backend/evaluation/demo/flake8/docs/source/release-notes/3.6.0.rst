@@ -1,0 +1,61 @@
+3.6.0 -- 2018-10-23
+-------------------
+
+You can view the `3.6.0 milestone`_ on GitHub for more details.
+
+New Dependency Information
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- pycodestyle has been updated to >= 2.4.0, < 2.5.0 (See also :issue:`1068`,
+  :issue:`652`, :issue:`869`, :issue:`881`, :issue:`1239`)
+
+- Pyflakes has been updated to >= 2.0.0, < 2.1.0 (See also :issue:`655`,
+  :issue:`883`)
+
+- flake8 requires python 2.x >= 2.7 or python 3.x >= 3.4 (See also
+  :issue:`876`)
+
+Features
+~~~~~~~~
+
+- Add ``paths`` to allow local plugins to exist outside of ``sys.path`` (See
+  also :issue:`1067`, :issue:`1237`)
+
+- Copy ``setup.cfg`` files to the temporary git hook execution directory (See
+  also :issue:`1299`)
+
+- Only skip a file if ``# flake8: noqa`` is on a line by itself (See also
+  :issue:`259`, :issue:`873`)
+
+- Provide a better user experience for broken plugins (See also :issue:`1178`)
+
+- Report ``E902`` when a file passed on the command line does not exist (See
+  also :issue:`645`, :issue:`878`)
+
+- Add ``--extend-ignore`` for extending the default ``ignore`` instead of
+  overriding it (See also :issue:`1061`, :issue:`1180`)
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Respect a formatter's newline setting when printing (See also :issue:`1238`)
+
+- Fix leaking of processes in the legacy api (See also :issue:`650`,
+  :issue:`879`)
+
+- Fix a ``SyntaxWarning`` for an invalid escape sequence (See also
+  :issue:`1186`)
+
+- Fix ``DeprecationWarning`` due to import of ``abc`` classes from the
+  ``collections`` module (See also :issue:`887`)
+
+- Defer ``setuptools`` import to improve flake8 startup time (See also
+  :issue:`1190`)
+
+- Fix inconsistent line endings in ``FileProcessor.lines`` when running under
+  python 3.x (See also :issue:`263`, :issue:`889`)
+
+
+.. all links
+.. _3.6.0 milestone:
+    https://github.com/pycqa/flake8/milestone/20

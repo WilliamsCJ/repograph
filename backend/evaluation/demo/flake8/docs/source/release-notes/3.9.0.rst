@@ -1,0 +1,33 @@
+3.9.0 -- 2021-03-14
+-------------------
+
+You can view the `3.9.0 milestone`_ on GitHub for more details.
+
+New Dependency Information
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Pyflakes has been updated to >= 2.3.0, < 2.4.0 (See also :issue:`1006`)
+
+- pycodestyle has been updated to >= 2.7.0, < 2.8.0 (See also :issue:`1007`)
+
+Deprecations
+~~~~~~~~~~~~
+
+- Drop support for python 3.4 (See also :issue:`1283`)
+
+Features
+~~~~~~~~
+
+- Add ``--no-show-source`` option to disable ``--show-source`` (See also
+  :issue:`995`)
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Fix handling of ``crlf`` line endings when linting stdin (See also
+  :issue:`1002`)
+
+
+.. all links
+.. _3.9.0 milestone:
+    https://github.com/pycqa/flake8/milestone/37

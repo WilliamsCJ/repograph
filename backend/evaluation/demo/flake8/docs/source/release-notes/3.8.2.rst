@@ -1,0 +1,22 @@
+3.8.2 -- 2020-05-22
+-------------------
+
+You can view the `3.8.2 milestone`_ on GitHub for more details.
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Improve performance by eliminating unnecessary sort (See also :issue:`991`)
+
+- Improve messaging of ``--jobs`` argument by utilizing ``argparse`` (See also
+  :issue:`1269`, :issue:`1110`)
+
+- Fix file configuration options to be relative to the config passed on the
+  command line (See also :issue:`442`, :issue:`736`)
+
+- Fix incorrect handling of ``--extend-exclude`` by treating its values as
+  files (See also :issue:`1271`, :issue:`738`)
+
+.. all links
+.. _3.8.2 milestone:
+    https://github.com/pycqa/flake8/milestone/34

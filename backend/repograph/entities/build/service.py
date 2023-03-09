@@ -77,7 +77,6 @@ class BuildService:
                 "-ld",
                 "-sc",
                 "-ast",
-                "-r",
                 "-cl",
             ]
         )

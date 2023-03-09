@@ -1,0 +1,23 @@
+3.7.3 -- 2019-01-30
+-------------------
+
+You can view the `3.7.3 milestone`_ on GitHub for more details.
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Fix imports of ``typing`` in python 3.5.0 / 3.5.1 (See also :issue:`1199`,
+  :issue:`674`)
+
+- Fix ``flake8 --statistics`` (See also :issue:`920`, :issue:`675`)
+
+- Gracefully ignore ``flake8-per-file-ignores`` plugin if installed (See also
+  :issue:`1201`, :issue:`671`)
+
+- Improve error message for malformed ``per-file-ignores`` (See also
+  :issue:`921`, :issue:`288`)
+
+
+.. all links
+.. _3.7.3 milestone:
+    https://github.com/pycqa/flake8/milestone/25

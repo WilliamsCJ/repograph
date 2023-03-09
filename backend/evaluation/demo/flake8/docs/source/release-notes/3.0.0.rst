@@ -1,0 +1,63 @@
+3.0.0 -- 2016-07-25
+-------------------
+
+- Rewrite our documentation from scratch! (https://flake8.pycqa.org)
+
+- Drop explicit support for Pythons 2.6, 3.2, and 3.3.
+
+- Remove dependence on pep8/pycodestyle for file processing, plugin
+  dispatching, and more. We now control all of this while keeping backwards
+  compatibility.
+
+- ``--select`` and ``--ignore`` can now both be specified and try to find the
+  most specific rule from each. For example, if you do ``--select E --ignore
+  E123`` then we will report everything that starts with ``E`` except for
+  ``E123``. Previously, you would have had to do ``--ignore E123,F,W`` which
+  will also still work, but the former should be far more intuitive.
+
+- Add support for in-line ``# noqa`` comments to specify **only** the error
+  codes to be ignored, e.g., ``# noqa: E123,W503``
+
+- Add entry-point for formatters as well as a base class that new formatters
+  can inherit from. See the documentation for more details.
+
+- Add detailed verbose output using the standard library logging module.
+
+- Enhance our usage of optparse for plugin developers by adding new parameters
+  to the ``add_option`` that plugins use to register new options.
+
+- Update ``--install-hook`` to require the name of version control system hook
+  you wish to install a Flake8.
+
+- Stop checking sub-directories more than once via the setuptools command
+
+- When passing a file on standard-in, allow the caller to specify
+  ``--stdin-display-name`` so the output is properly formatted
+
+- The Git hook now uses ``sys.executable`` to format the shebang line.
+  This allows Flake8 to install a hook script from a virtualenv that points to
+  that virtualenv's Flake8 as opposed to a global one (without the virtualenv
+  being sourced).
+
+- Print results in a deterministic and consistent ordering when used with
+  multiprocessing
+
+- When using ``--count``, the output is no longer written to stderr.
+
+- AST plugins can either be functions or classes and all plugins can now
+  register options so long as there are callable attributes named as we
+  expect.
+
+- Stop forcibly re-adding ``.tox``, ``.eggs``, and ``*.eggs`` to
+  ``--exclude``. Flake8 2.x started always appending those three patterns
+  to any exclude list (including the default and any user supplied list).
+  Flake8 3 has stopped adding these in, so you may see errors when upgrading
+  due to these patterns no longer being forcibly excluded by default if you
+  have your own exclude patterns specified.
+
+  To fix this, add the appropriate patterns to your exclude patterns list.
+
+  .. note::
+
+      This item was added in November of 2016, as a result of a bug
+      report.

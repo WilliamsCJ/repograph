@@ -1,0 +1,9 @@
+2.5.1 - 2015-12-08
+------------------
+
+- **Bug** Properly look for ``.flake8`` in current working directory
+  (:issue:`458`)
+
+- **Bug** Monkey-patch ``pep8.stdin_get_value`` to cache the actual value in
+  stdin. This helps plugins relying on the function when run with
+  multiprocessing. (:issue:`460`, :issue:`462`)

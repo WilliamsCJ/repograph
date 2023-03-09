@@ -1,0 +1,15 @@
+3.7.5 -- 2019-02-04
+-------------------
+
+You can view the `3.7.5 milestone`_ on GitHub for more details.
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Fix reporting of pyflakes "referenced before assignment" error (See also
+  :issue:`923`, :issue:`679`)
+
+
+.. all links
+.. _3.7.5 milestone:
+    https://github.com/pycqa/flake8/milestone/27

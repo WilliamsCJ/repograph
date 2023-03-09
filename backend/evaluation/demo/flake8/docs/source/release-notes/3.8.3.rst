@@ -1,0 +1,17 @@
+3.8.3 -- 2020-06-08
+-------------------
+
+You can view the `3.8.3 milestone`_ on GitHub for more details.
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Also catch ``SyntaxError`` when tokenizing (See also :issue:`992`,
+  :issue:`747`)
+
+- Fix ``--jobs`` default display in ``flake8 --help`` (See also :issue:`1272`,
+  :issue:`750`)
+
+.. all links
+.. _3.8.3 milestone:
+    https://github.com/pycqa/flake8/milestone/35

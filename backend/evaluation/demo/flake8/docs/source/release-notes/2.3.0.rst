@@ -1,0 +1,8 @@
+2.3.0 - 2015-01-04
+------------------
+
+- **Feature**: Add ``--output-file`` option to specify a file to write to
+  instead of ``stdout``.
+
+- **Bug** Fix interleaving of output while using multiprocessing
+  (:issue:`60`)

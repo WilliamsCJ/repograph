@@ -1,0 +1,17 @@
+3.7.6 -- 2019-02-18
+-------------------
+
+You can view the `3.7.6 milestone`_ on GitHub for more details.
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Fix ``--per-file-ignores`` for multi-letter error codes (See also
+  :issue:`1203`, :issue:`683`)
+
+- Improve flake8 speed when only 1 filename is passed (See also :issue:`1204`)
+
+
+.. all links
+.. _3.7.6 milestone:
+    https://github.com/pycqa/flake8/milestone/28

@@ -1,0 +1,32 @@
+3.5.0 -- 2017-10-23
+-------------------
+
+You can view the `3.5.0 milestone`_ on GitHub for more details.
+
+New Dependency Information
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Allow for PyFlakes 1.6.0 (See also :issue:`1058`)
+
+- Start using new PyCodestyle checks for bare excepts and ambiguous identifier
+  (See also :issue:`611`)
+
+Features
+~~~~~~~~
+
+- Print out information about configuring VCS hooks (See also :issue:`586`)
+
+- Allow users to develop plugins "local" to a repository without using
+  setuptools. See our documentation on local plugins for more information.
+  (See also :issue:`608`)
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Catch and helpfully report ``UnicodeDecodeError``\ s when parsing
+  configuration files. (See also :issue:`609`)
+
+
+.. all links
+.. _3.5.0 milestone:
+    https://github.com/pycqa/flake8/milestone/19

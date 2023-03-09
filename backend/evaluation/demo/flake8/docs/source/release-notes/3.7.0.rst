@@ -1,0 +1,45 @@
+3.7.0 -- 2019-01-29
+-------------------
+
+You can view the `3.7.0 milestone`_ on GitHub for more details.
+
+New Dependency Information
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Add dependency on ``entrypoints`` >= 0.3, < 0.4 (See also :issue:`897`,
+  :issue:`1197`)
+
+- Pyflakes has been updated to >= 2.1.0, < 2.2.0 (See also :issue:`912`,
+  :issue:`913`)
+
+- pycodestyle has been updated to >= 2.5.0, < 2.6.0 (See also :issue:`915`)
+
+Features
+~~~~~~~~
+
+- Add support for ``per-file-ignores`` (See also :issue:`892`, :issue:`511`,
+  :issue:`911`, :issue:`277`)
+
+- Enable use of ``float`` and ``complex`` option types (See also :issue:`894`,
+  :issue:`258`)
+
+- Improve startup performance by switching from ``pkg_resources`` to
+  ``entrypoints`` (See also :issue:`897`)
+
+- Add metadata for use through the `pre-commit`_ git hooks framework (See also
+  :issue:`901`, :issue:`1196`)
+
+- Allow physical line checks to return more than one result (See also
+  :issue:`902`)
+
+- Allow ``# noqa:X123`` comments without space between the colon and codes
+  list (See also :issue:`906`, :issue:`276`)
+
+- Remove broken and unused ``flake8.listen`` plugin type (See also
+  :issue:`907`, :issue:`663`)
+
+.. all links
+.. _3.7.0 milestone:
+    https://github.com/pycqa/flake8/milestone/22
+.. _pre-commit:
+    https://pre-commit.com/

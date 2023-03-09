@@ -1,0 +1,139 @@
+3.8.0 -- 2020-05-11
+-------------------
+
+You can view the `3.8.0 milestone`_ on GitHub for more details.
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Fix logical checks which report positions out of bounds (See also
+  :issue:`987`, :issue:`723`)
+
+- Fix ``--exclude=.*`` accidentally matching ``.`` and ``..`` (See also
+  :issue:`441`, :issue:`360`)
+
+Deprecations
+~~~~~~~~~~~~
+
+- Add deprecation message for vcs hooks (See also :issue:`985`,
+  :issue:`296`)
+
+
+3.8.0a2 -- 2020-04-24
+---------------------
+
+You can view the `3.8.0 milestone`_ on GitHub for more details.
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Fix ``type="str"`` optparse options (See also :issue:`984`)
+
+
+3.8.0a1 -- 2020-04-24
+---------------------
+
+You can view the `3.8.0 milestone`_ on GitHub for more details.
+
+New Dependency Information
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Remove dependency on ``entrypoints`` and add dependency on
+  ``importlib-metadata`` (only for ``python<3.8``) (See also :issue:`1297`,
+  :issue:`297`)
+
+- Pyflakes has been updated to >= 2.2.0, < 2.3.0 (See also :issue:`982`)
+
+- pycodestyle has been updated to >= 2.6.0a1, < 2.7.0 (See also :issue:`983`)
+
+Features
+~~~~~~~~
+
+- Add ``--extend-exclude`` option to add to ``--exclude`` without overwriting
+  (See also :issue:`1211`, :issue:`1091`)
+
+- Move argument parsing from ``optparse`` to ``argparse`` (See also
+  :issue:`939`
+
+- Group plugin options in ``--help`` (See also :issue:`1219`, :issue:`294`)
+
+- Remove parsing of ``verbose`` from configuration files as it was not
+  consistently applied (See also :issue:`1245`, :issue:`245`)
+
+- Remove parsing of ``output_file`` from configuration files as it was not
+  consistently applied (See also :issue:`1246`)
+
+- Resolve configuration files relative to ``cwd`` instead of common prefix of
+  passed filenames.  You may need to change ``flake8 subproject`` to
+  ``cd subproject && flake8 .`` (See also :issue:`952`)
+
+- Officially support python3.8 (See also :issue:`963`)
+
+- ``--disable-noqa`` now also disables ``# flake8: noqa`` (See also
+  :issue:`1296`, :issue:`318`)
+
+- Ensure that a missing file produces a ``E902`` error (See also :issue:`1262`,
+  :issue:`328`)
+
+- ``# noqa`` comments now apply to all of the lines in an explicit ``\``
+  continuation or in a line continued by a multi-line string (See also
+  :issue:`1266`, :issue:`621`)
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Fix ``--exclude=./t.py`` to only match ``t.py`` at the top level (See also
+  :issue:`1208`, :issue:`628`)
+
+- Fix ``--show-source`` when a file is indented with tabs (See also
+  :issue:`1218`, :issue:`719`)
+
+- Fix crash when ``--max-line-length`` is given a non-integer (See also
+  :issue:`939`, :issue:`704`)
+
+- Prevent flip-flopping of ``indent_char`` causing extra ``E101`` errors (See
+  also :issue:`949`, `pycodestyle#886`_)
+
+- Only enable multiprocessing when the method is ``fork`` fixing issues
+  on macos with python3.8+ (See also :issue:`955`, :issue:`315`) (note: this
+  fix also landed in 3.7.9)
+
+- ``noqa`` is now only handled by flake8 fixing specific-noqa.  Plugins
+  requesting this parameter will always receive ``False`` (See also
+  :issue:`1214`, :issue:`1104`)
+
+- Fix duplicate loading of plugins when invoked via ``python -m flake8`` (See
+  also :issue:`1297`)
+
+- Fix early exit when ``--exit-zero`` and ``--diff`` are provided and the diff
+  is empty (See also :issue:`970`)
+
+- Consistently split lines when ``\f`` is present when reading from stdin (See
+  also :issue:`976`, :issue:`202`)
+
+Deprecations
+~~~~~~~~~~~~
+
+- ``python setup.py flake8`` (setuptools integration) is now deprecated and
+  will be removed in a future version (See also :issue:`935`, :issue:`1098`)
+
+- ``type='string'`` (optparse) types are deprecated, use
+  ``type=callable`` (argparse) instead.  Support for ``type='string'`` will
+  be removed in a future version (See also :issue:`939`)
+
+- ``%default`` in plugin option help text is deprecated, use ``%(default)s``
+  instead.  Support for ``%default`` will be removed in a future version (See
+  also :issue:`939`)
+
+- optparse-style ``action='callback'`` setting for options is deprecated, use
+  argparse action classes instead.  This will be removed in a future version
+  (See also :issue:`939`)
+
+
+.. all links
+.. _3.8.0 milestone:
+    https://github.com/pycqa/flake8/milestone/31
+
+.. issue links
+.. _pycodestyle#886:
+   https://github.com/PyCQA/pycodestyle/issues/886

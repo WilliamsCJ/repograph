@@ -1,0 +1,25 @@
+3.4.0 -- 2017-07-27
+-------------------
+
+You can view the `3.4.0 milestone`_ on GitHub for more details.
+
+- Refine logic around ``--select`` and ``--ignore`` when combined with the
+  default values for each. (See also :issue:`572`)
+
+- Handle spaces as an alternate separate for error codes, e.g.,
+  ``--ignore 'E123 E234'``. (See also :issue:`580`)
+
+- Filter out empty select and ignore codes, e.g., ``--ignore E123,,E234``.
+  (See also :issue:`581`)
+
+- Specify dependencies appropriately in ``setup.py`` (See also :issue:`592`)
+
+- Fix bug in parsing ``--quiet`` and ``--verbose`` from config files.
+  (See also :issue:`1169`)
+
+- Remove unused import of ``os`` in the git hook template (See also
+  :issue:`1170`)
+
+.. all links
+.. _3.4.0 milestone:
+    https://github.com/pycqa/flake8/milestone/17

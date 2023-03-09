@@ -1,0 +1,12 @@
+3.0.1 -- 2016-07-25
+-------------------
+
+- Fix regression in handling of ``# noqa`` for multiline strings.
+  (See also :issue:`1024`)
+
+- Fix regression in handling of ``--output-file`` when not also using
+  ``--verbose``. (See also :issue:`1026`)
+
+- Fix regression in handling of ``--quiet``. (See also :issue:`1026`)
+
+- Fix regression in handling of ``--statistics``. (See also :issue:`1026`)

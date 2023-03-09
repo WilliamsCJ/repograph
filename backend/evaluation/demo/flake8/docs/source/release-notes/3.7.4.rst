@@ -1,0 +1,15 @@
+3.7.4 -- 2019-01-31
+-------------------
+
+You can view the `3.7.4 milestone`_ on GitHub for more details.
+
+Bugs Fixed
+~~~~~~~~~~
+
+- Fix performance regression with lots of ``per-file-ignores`` and errors
+  (See also :issue:`922`, :issue:`677`)
+
+
+.. all links
+.. _3.7.4 milestone:
+    https://github.com/pycqa/flake8/milestone/26

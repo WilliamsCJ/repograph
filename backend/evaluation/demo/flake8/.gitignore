@@ -1,0 +1,15 @@
+*.egg
+*.egg-info
+*.log
+*.pyc
+*.sw*
+*.zip
+.cache
+.coverage
+.coverage.*
+.eggs
+.tox
+/.mypy_cache
+build
+dist
+docs/build/html/*

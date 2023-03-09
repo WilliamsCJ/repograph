@@ -1,0 +1,32 @@
+3.0.3 -- 2016-07-30
+-------------------
+
+- Disable ``--jobs`` for any version of Python on Windows.
+  (See also `this Python bug report`_)
+
+- Raise exception when entry_point in plugin not callable.
+  This raises an informative error when a plugin fails to load because its
+  entry_point is not callable, which can happen with a plugin which is buggy or
+  not updated for the current version of flake8. This is nicer than raising a
+  `PicklingError` about failing to pickle a module (See also :issue:`1014`)
+
+- Fix ``# noqa`` comments followed by a ``:`` and explanation broken by
+  3.0.0 (See also :issue:`1025`)
+
+- Always open our output file in append mode so we do not overwrite log
+  messages. (See also :issue:`535`)
+
+- When normalizing path values read from configuration, keep in context the
+  directory where the configuration was found so that relative paths work.
+  (See also :issue:`1036`)
+
+- Fix issue where users were unable to ignore plugin errors that were on
+  by default. (See also :issue:`1037`)
+
+- Fix our legacy API StyleGuide's ``init_report`` method to actually override
+  the previous formatter. (See also :issue:`136`)
+
+
+.. links
+.. _this Python bug report:
+    https://bugs.python.org/issue27649

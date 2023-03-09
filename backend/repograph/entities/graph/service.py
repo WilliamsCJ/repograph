@@ -213,7 +213,15 @@ class GraphService:
 
         return summary
 
-    def get_docstrings(self, graph: str):
+    def get_docstrings(self, graph: str) -> List[Node]:
+        """Get Docstring nodes.
+
+        Args:
+            graph (str): Graph name to query.
+
+        Returns:
+            List[Node]
+        """
         return self.repository.get_all_nodes_by_label(Docstring, graph_name=graph)
 
     def get_function_summarizations(

@@ -1,0 +1,11 @@
+3.0.4 -- 2016-08-08
+-------------------
+
+- Side-step a Pickling Error when using Flake8 with multiprocessing on Unix
+  systems. (See also :issue:`1014`)
+
+- Fix an Attribute Error raised when dealing with Invalid Syntax. (See also
+  :issue:`539`)
+
+- Fix an unhandled Syntax Error when tokenizing files. (See also
+  :issue:`540`)
