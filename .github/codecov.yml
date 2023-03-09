@@ -1,4 +1,12 @@
 coverage:
+  ignore:
+    - "frontend"
+    - "backend/tests"
+    - "backend/evaluation"
+    - "**/container.py"
+    - "**/router.py"
+    - "**/api.py"
+    - "**/cli.py"
   status:
     project:
       default:

@@ -43,7 +43,7 @@ from repograph.entities.graph.models.relationships import (
     Imports,
     LicensedBy,
     Returns,
-    Requires,
+    Requires, Extends,
 )
 
 # Utility imports
@@ -122,8 +122,11 @@ class RepographBuilder:
         # Mapping Module dependencies for retrospective parsing
         self.dependencies: List[Tuple[List[JSONDict], Module]] = []
 
+        # Mapping Class extends for retrospective parsing
+        self.extends: List[Tuple[Class, Module, JSONDict]] = []
+
         # The objects a given Module depends on/imports
-        self.module_dependencies: Dict[Module, List[Union[Module, Function]]] = dict()
+        self.module_dependencies: Dict[Module, List[Union[Class, Module, Function]]] = dict()
 
         # Module imports
         self.module_imports: Dict[Module, Set[str]] = dict()
@@ -624,8 +627,8 @@ class RepographBuilder:
             # Add to module objects set
             self.module_objects[parent].append(class_node)
 
-            # Parse extends
-            # self._parse_extends(info.get("extend", []), class_node)
+            # Save extends info for retrospective parsing
+            self.extends.append((class_node, parent, info.get("extend", [])))
 
             # Parse docstring
             self._parse_docstring(info.get("doc", {}), class_node)
@@ -1187,27 +1190,6 @@ class RepographBuilder:
 
         return child
 
-    def _parse_extends(self, extends_info: List[str], class_node: Class) -> None:
-        """Parse extends/super class information for a Class node.
-
-        Args:
-            extends_info (List[str]): The names of Classes that the Class node extends.
-            class_node (Class): The Class node itself.
-
-        Returns:
-            None
-        """
-        if len(extends_info) == 0:
-            log.debug(
-                "Class `%s` doesn't not extend any other classes", class_node.name
-            )
-            return
-
-        # for extends in extends_info:
-        #     super_class = Class(name=extends, graph_name=self.graph_name)
-        #     relationship = Extends(class_node, super_class, self.graph_name)
-        #     self.repograph.add(super_class, relationship)
-
     def _parse_call_graph(self, call_graph: Optional[JSONDict]) -> None:
         """Parse the call graph extracted by inspect4py.
 
@@ -1331,17 +1313,66 @@ class RepographBuilder:
 
             self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
 
+    def _parse_extends(self) -> None:
+        """Parse extends/super class information.
+
+        Returns:
+            None
+        """
+        for class_node, module, extends_info in self.extends:
+            for extends in extends_info:
+                # Check first if the extended class is defined in the module
+                matching_objects = [
+                    obj
+                    for obj in self.module_objects[module]
+                    if
+                    obj is not None and
+                    (obj.name == extends or obj.canonical_name == extends) and
+                    isinstance(obj, Class)
+                ]
+
+                if matching_objects:
+                    for obj in matching_objects:
+                        self.graph.add(
+                            Extends(class_node, obj, self.graph_name),
+                            tx=self.tx,
+                            graph_name=self.graph_name
+                        )
+                    continue
+
+                # Check if it's in the module imports
+                matching_objects = [
+                    obj
+                    for obj in self.module_dependencies[module]
+                    if
+                    obj is not None and
+                    (obj.name == extends or obj.canonical_name == extends) and
+                    isinstance(obj, Class)
+                ]
+
+                if matching_objects:
+                    for obj in matching_objects:
+                        self.graph.add(
+                            Extends(class_node, obj, self.graph_name),
+                            tx=self.tx,
+                            graph_name=self.graph_name
+                        )
+                    continue
+
+                log.warning("Unable to find extends match")
+
     def build(
         self,
         directory_info: Optional[JSONDict],
         call_graph: Optional[JSONDict],
-        requirements: List[Requirement] = [],
+        requirements: List[Requirement] = None,
     ) -> None:
         """Build a repograph from directory_info JSON.
 
         Args:
             directory_info (JSONDict): Directory info JSON.
             call_graph (Optional[JSONDict]): The call graph JSON.
+            requirements (List[Requirement], optional): Requirements to pass.
 
         Returns:
             Repograph
@@ -1411,6 +1442,10 @@ class RepographBuilder:
         # Parse the call list, now that most Nodes should be added to the graph
         log.info("Parsing call graph...")
         self._parse_call_graph(call_graph)
+
+        # Parse extends relationships
+        log.info("Parsing extends relationships...")
+        self._parse_extends()
 
         # Parse READMEs
         self._parse_readme(readmes)
