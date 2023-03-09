@@ -2,7 +2,7 @@ export async function getCyclicalDependencies(
   graphName: string
 ): Promise<number> {
   const res = await fetch(
-    `http://repograph-backend:3000/graph/${graphName}/cylical-dependencies`
+    `http://${process.env.NODE_ENV == "development" ? 'localhost' : 'repograph-backend'}:3000/graph/${graphName}/cylical-dependencies`
   );
 
   return (await res.json()) as number;
@@ -12,7 +12,7 @@ export async function getMissingDependencies(
   graphName: string
 ): Promise<number> {
   const res = await fetch(
-    `http://repograph-backend:3000/graph/${graphName}/missing-dependencies`
+    `http://${process.env.NODE_ENV == "development" ? 'localhost' : 'repograph-backend'}:3000/graph/${graphName}/missing-dependencies`
   );
 
   return (await res.json()) as number;
@@ -22,7 +22,7 @@ export async function getIncorrectAndMissingDocstrings(
   graphName: string
 ): Promise<number[]> {
   const res = await fetch(
-    `http://repograph-backend:3000/graph/${graphName}/incorrect-and-missing-docstrings`
+    `http://${process.env.NODE_ENV == "development" ? 'localhost' : 'repograph-backend'}:3000/graph/${graphName}/incorrect-and-missing-docstrings`
   );
 
   return (await res.json()) as number[];

@@ -328,7 +328,7 @@ const SelectInputSection: React.FC<SelectSectionProps> = (props) => {
       {({ field, form: { setFieldValue }, meta }: FieldProps) => (
         <div
           css={[
-            tw`relative w-48 transform divide-y overflow-hidden transition-all text-left`,
+            tw`relative w-96 transform divide-y overflow-hidden transition-all text-left`,
             Border,
             Background,
             Divide,
@@ -354,8 +354,18 @@ const SelectInputSection: React.FC<SelectSectionProps> = (props) => {
               </span>
             </Listbox.Button>
             <Listbox.Options>
+              <Listbox.Option key={0} value={null}>
+                {/* @ts-ignore */}
+                {({ active, selected }) => (
+                  <Option
+                  label={"All"}
+                  active={active}
+                  selected={selected}
+                  />
+                )}
+              </Listbox.Option>
               {props.options.map((option: string, index: number) => (
-                <Listbox.Option key={index} value={option}>
+                <Listbox.Option key={index + 1} value={option}>
                   {/* @ts-ignore */}
                   {({ active, selected }) => (
                     <Option
@@ -483,22 +493,25 @@ const Option = ({
 }) => {
   const { theme } = useTheme();
 
+  let bg;
+  if (active) {
+    bg = tw`bg-accent-400/25`;
+  } else {
+    bg = tw`bg-white dark:bg-zinc-800/50`;
+  }
+
   return (
     <div
       css={[
         tw`cursor-pointer relative py-2 px-4`,
         leftAlign && tw`pl-11 pr-4`,
-        active
-          ? tw`bg-accent-400/25`
-          : theme === "light"
-          ? tw`bg-white`
-          : tw`bg-zinc-800/50`,
+        bg
       ]}
     >
       {selected && (
         <CheckIcon
           css={[
-            tw`pointer-events-none absolute top-2 left-4 h-5 w-5 text-zinc-700`,
+            tw`pointer-events-none absolute top-2 right-2 h-5 w-5 text-zinc-700`,
             active && tw`text-accent-800`,
           ]}
           aria-hidden="true"

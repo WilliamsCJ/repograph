@@ -48,7 +48,7 @@ export async function getAvailableSearchQueries(
   graph: string
 ): Promise<AvailableSearchQuery[]> {
   const url = new URL(
-    `http://repograph-backend:3000/graph/${graph}/search/query/available`
+    `http://${process.env.NODE_ENV == "development" ? 'localhost' : 'repograph-backend'}:3000/graph/${graph}/search/query/available`
   );
 
   const res = await fetch(url);
@@ -81,7 +81,7 @@ export async function getSearchQuery(
 
 export async function getRepositories(graph: string): Promise<string[]> {
   const url = new URL(
-    `http://repograph-backend:3000/graph/${graph}/repositories`
+    `http://${process.env.NODE_ENV == "development" ? 'localhost' : 'repograph-backend'}:3000/graph/${graph}/repositories`
   );
 
   const res = await fetch(url);
