@@ -14,6 +14,8 @@
 demo/*
 !demo/clone.sh
 !demo/README.md
+!demo/circular_dependency
+!demo/missing_dependency
 **/test.db
 
 # Byte-compiled / optimized / DLL files

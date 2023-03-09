@@ -986,7 +986,7 @@ class RepographBuilder:
                         )
 
                         if source_module == "":
-                            self._create_missing_nodes(missing)
+                            self._create_missing_nodes(missing, import_object=imported_object)
                         elif source_module in self.requirements:
                             self._create_missing_nodes(
                                 missing,
@@ -1139,7 +1139,7 @@ class RepographBuilder:
         child = None
 
         for index, m in enumerate(missing):
-            if index == len(missing) - 1:
+            if index == len(missing) - 1 and len(missing) > 1:
                 new = Module(
                     name=m, repository_name=self.repository_name, inferred=True
                 )
