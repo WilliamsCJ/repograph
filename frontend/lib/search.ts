@@ -66,11 +66,14 @@ export async function getSearchQuery(
     `http://localhost:3000/graph/${graph}/search/query/${queryID}`
   );
 
-  const params = {
-    repository: repository,
-  };
-  // @ts-ignore
-  url.search = new URLSearchParams(params).toString();
+  if (repository !== null) {
+    const params = {
+      repository: repository,
+    };
+
+    // @ts-ignore
+    url.search = new URLSearchParams(params).toString();
+  }
 
   const res = await fetch(url);
   return (await res.json()) as SearchQueryResult;
