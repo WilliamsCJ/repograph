@@ -1189,7 +1189,8 @@ class RepographBuilder:
         if import_object:
             relationships.append(Contains(parent, import_object, self.repository_name))
             child = import_object
-        else:
+
+        if child == None and parent:
             child = parent
 
         # Add the created nodes and relationships to the Repograph.
