@@ -880,6 +880,12 @@ class RepographBuilder:
                                 missing, parent=self.modules[source_module]
                             )
 
+                        # TODO: If not NONE?
+                        self.graph.add(
+                            Imports(module, child, self.repository_name),
+                            tx=self.tx,
+                            graph_name=self.graph_name,
+                        )
                         self.module_dependencies[module].append(child)
 
                 # If importing a class, function, etc...
@@ -1154,6 +1160,9 @@ class RepographBuilder:
                     inferred=True,
                 )
 
+                if index == len(missing) - 1:
+                    child = new
+
             if parent:
                 relationships.append(Contains(parent, new, self.repository_name))
 
@@ -1180,6 +1189,8 @@ class RepographBuilder:
         if import_object:
             relationships.append(Contains(parent, import_object, self.repository_name))
             child = import_object
+        else:
+            child = parent
 
         # Add the created nodes and relationships to the Repograph.
         self.graph.add(*nodes, tx=self.tx, graph_name=self.graph_name)
