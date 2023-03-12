@@ -94,7 +94,7 @@ const MainContainer = tw.div`flex h-screen w-full flex-col space-y-20 overflow-y
 /**
 RowLayout displays an array of components with consistent spacing
  */
-const RowLayout = tw.div`flex h-full w-full flex-col space-y-4`;
+const RowLayout = tw.div`flex h-full w-full flex-col space-y-4 mb-6`;
 
 /**
 Fixed sidebar for navigation

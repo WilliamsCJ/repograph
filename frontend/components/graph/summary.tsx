@@ -54,6 +54,7 @@ const Summary = ({ summary }: { summary: GraphSummary }) => {
         <StatsCard title="Modules" value={summary.modules} />
         <StatsCard title="Functions" value={summary.functions} />
         <StatsCard title="Classes" value={summary.classes} />
+        <StatsCard title="READMEs" value={summary.readme} />
       </dl>
     </>
   );
