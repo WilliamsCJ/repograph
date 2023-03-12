@@ -7,7 +7,7 @@ export type GraphSummary = {
   functions: number;
   modules: number;
   packages: number;
-  readme: number;
+  readmes: number;
 };
 
 export type CallGraphFunction = {
