@@ -28,7 +28,6 @@ import {
 
 import stringToColor from "../../utils/color-hash";
 
-
 /**
  * GraphCard props
  */
@@ -54,7 +53,7 @@ const GraphCard: React.FC<GraphCardProps> = ({
   styles,
   error,
   root_id,
-  border
+  border,
 }) => {
   // @ts-ignore
   const [ref, { height, width }] = useDimensions();
@@ -75,10 +74,10 @@ const GraphCard: React.FC<GraphCardProps> = ({
     for (let i = 0; i < n.type.length; i++) {
       hash = n.type.charCodeAt(i) + ((hash << 5) - hash);
     }
-    let colour = '#';
+    let colour = "#";
     for (let i = 0; i < 3; i++) {
-      let value = (hash >> (i * 8)) & 0xFF;
-      colour += ('00' + value.toString(16)).substr(-2);
+      let value = (hash >> (i * 8)) & 0xff;
+      colour += ("00" + value.toString(16)).substr(-2);
     }
     return colour;
   };

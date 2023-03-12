@@ -16,7 +16,7 @@ import { CallGraph, GraphSummary } from "../../../types/graph";
 import GraphCard from "../../../components/core/graph";
 import { Card } from "../../../components/core/card";
 
-import tw from 'twin.macro';
+import tw from "twin.macro";
 import useSWR from "swr";
 import fetcher from "../../../utils/fetcher";
 
@@ -39,7 +39,7 @@ export type GraphHomePageProps = {
 };
 
 const GraphHome: NextPage<GraphHomePageProps> = ({ name, summary }) => {
-  const { data, error } = useSWR(`/graph/${name}`, fetcher)
+  const { data, error } = useSWR(`/graph/${name}`, fetcher);
 
   return (
     <DefaultLayout
@@ -48,7 +48,12 @@ const GraphHome: NextPage<GraphHomePageProps> = ({ name, summary }) => {
     >
       <Summary summary={summary} />
       <Card size={tw`h-full`}>
-        <GraphCard data={data} error={error} root_id={0} styles={tw`min-h-full`}/>
+        <GraphCard
+          data={data}
+          error={error}
+          root_id={0}
+          styles={tw`min-h-full`}
+        />
       </Card>
     </DefaultLayout>
   );

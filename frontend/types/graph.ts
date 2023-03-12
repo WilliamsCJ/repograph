@@ -42,6 +42,6 @@ export type GraphListing = {
 };
 
 export type GraphInfo = {
-  summary: GraphSummary,
-  graph: CallGraph
-}
+  summary: GraphSummary;
+  graph: CallGraph;
+};
