@@ -175,6 +175,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
               styles={tw`grow`}
               error={error}
               root_id={result.function.id}
+              border={true}
             />
           </SearchResultCardSection>
         </div>

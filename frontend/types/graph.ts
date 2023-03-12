@@ -7,6 +7,7 @@ export type GraphSummary = {
   functions: number;
   modules: number;
   packages: number;
+  readmes: number;
 };
 
 export type CallGraphFunction = {
@@ -38,4 +39,9 @@ export type GraphListing = {
   description: string;
   created: string;
   status: GraphListingStatus;
+};
+
+export type GraphInfo = {
+  summary: GraphSummary;
+  graph: CallGraph;
 };

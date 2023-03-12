@@ -9,7 +9,7 @@ from typing import List
 from fastapi import APIRouter, status
 
 # Model imports
-from repograph.entities.graph.models.graph import CallGraph
+from repograph.entities.graph.models.graph import CallGraph, GraphInfo
 
 # Graph entity imports
 from repograph.entities.graph.service import GraphService
@@ -26,6 +26,13 @@ class GraphRouter:
         self.router.add_api_route(
             "/{graph}/summary",
             self.summary,
+            methods=["GET"],
+            status_code=status.HTTP_200_OK,
+        )
+
+        self.router.add_api_route(
+            "/{graph}",
+            self.get_all,
             methods=["GET"],
             status_code=status.HTTP_200_OK,
         )
@@ -66,6 +73,9 @@ class GraphRouter:
 
     async def summary(self, graph: str):
         return self.service.get_summary(graph)
+
+    async def get_all(self, graph: str) -> CallGraph:
+        return self.service.get_graph(graph)
 
     async def cyclical_dependencies(self, graph: str):
         return self.service.get_cyclical_dependencies(graph)

@@ -35,16 +35,17 @@ class SearchService:
     graph: GraphService
     model: Optional[SentenceTransformer] = None
 
-    def __init__(self, graph: GraphService):
+    def __init__(self, graph: GraphService, active: bool = True):
         """Constructor
 
         Args:
         """
         self.graph = graph
         log.info("Initialising model...")
-        self.model = SentenceTransformer(
-            "sentence-transformers/multi-qa-distilbert-cos-v1"
-        )
+        if active:
+            self.model = SentenceTransformer(
+                "sentence-transformers/multi-qa-distilbert-cos-v1"
+            )
 
     def find_similar_functions_by_query(
         self,

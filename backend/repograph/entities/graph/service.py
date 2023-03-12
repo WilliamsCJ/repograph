@@ -23,6 +23,7 @@ from repograph.entities.graph.models.nodes import (
     Module,
     Package,
     Repository,
+    README
 )
 from repograph.entities.graph.models.graph import GraphSummary, CallGraph
 
@@ -209,6 +210,11 @@ class GraphService:
         # Functions
         summary.functions = len(
             self.repository.get_all_nodes_by_label(Function, graph_name=graph_name)
+        )
+
+        # README
+        summary.readmes = len(
+            self.repository.get_all_nodes_by_label(README, graph_name=graph_name)
         )
 
         return summary
@@ -576,3 +582,59 @@ class GraphService:
         return list(
             set([item for sublist in result for item in sublist["Repositories"]])
         )
+
+    def get_graph(self, graph: str) -> CallGraph:
+        """
+
+        Args:
+            graph:
+
+        Returns:
+
+        """
+        call_graph = CallGraph()
+
+        relationships = self.repository.execute_query(
+            """
+            MATCH ()-[r]-() RETURN DISTINCT r as `relationship`, type(r) as `type`
+            """,
+            graph_name=graph
+        )
+
+        nodes = self.repository.execute_query(
+            """
+            MATCH (n) RETURN DISTINCT id(n) as `identity`, 
+            COALESCE(n.name, n.path, n.summarization, n.short_description, n.long_description, n.license_type) as `name`,
+            labels(n) as `type`
+            """,
+            graph_name=graph
+        )
+
+        call_graph.links.extend(
+            list(
+                map(
+                    lambda rel: CallGraph.Relationship(
+                        from_id=rel['relationship'].start_node.identity,
+                        to_id=rel['relationship'].end_node.identity,
+                        type=rel['type']
+                    ),
+                    relationships
+                )
+            )
+        )
+
+        call_graph.nodes.extend(
+            list(
+                map(
+                    lambda node: CallGraph.Node(
+                        id=node['identity'],
+                        name=node['name'],
+                        canonical_name="",
+                        type=node['type'][0]
+                    ),
+                    nodes
+                )
+            )
+        )
+
+        return call_graph

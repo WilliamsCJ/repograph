@@ -21,7 +21,7 @@ class GraphSummary(BaseModel):
         functions (int): Number of functions contained in the graph.
         modules (int): Number of modules contained in the graph.
         packages (int): Number of packages contained in the graph.
-
+        readmes (int): Number of README files contained in the graph.
     """
 
     is_empty: bool = True
@@ -32,6 +32,7 @@ class GraphSummary(BaseModel):
     functions: int = 0
     modules: int = 0
     packages: int = 0
+    readmes: int = 0
 
 
 class CallGraph(BaseModel):
@@ -54,3 +55,11 @@ class CallGraph(BaseModel):
 
     nodes: List[Node] = []
     links: List[Relationship] = []
+
+
+class GraphInfo(BaseModel):
+    summary: GraphSummary
+    graph: CallGraph
+
+    class Config:
+        allow_population_by_field_name = True
