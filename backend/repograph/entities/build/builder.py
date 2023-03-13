@@ -220,12 +220,14 @@ class RepographBuilder:
                 package = Package.create_from_external_dependency(
                     requirement.name, self.repository_name
                 )
+
                 relationship = Requires(
                     repository,
                     package,
                     self.repository_name,
-                    specifications=requirement.specs,
+                    specifications=list(map(lambda spec: " ".join(spec), requirement.specs)),
                 )
+                
                 self.graph.add(package, tx=self.tx, graph_name=self.graph_name)
                 self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
                 self.requirements[requirement.name] = package
