@@ -227,7 +227,7 @@ class RepographBuilder:
                     self.repository_name,
                     specifications=list(map(lambda spec: " ".join(spec), requirement.specs)),
                 )
-                
+
                 self.graph.add(package, tx=self.tx, graph_name=self.graph_name)
                 self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
                 self.requirements[requirement.name] = package
@@ -1338,7 +1338,7 @@ class RepographBuilder:
                 # Check first if the extended class is defined in the module
                 matching_objects = [
                     obj
-                    for obj in self.module_objects[module]
+                    for obj in self.module_objects.get(module, [])
                     if
                     obj is not None and
                     (obj.name == extends or obj.canonical_name == extends) and
@@ -1357,7 +1357,7 @@ class RepographBuilder:
                 # Check if it's in the module imports
                 matching_objects = [
                     obj
-                    for obj in self.module_dependencies[module]
+                    for obj in self.module_dependencies.get(module, [])
                     if
                     obj is not None and
                     (obj.name == extends or obj.canonical_name == extends) and
