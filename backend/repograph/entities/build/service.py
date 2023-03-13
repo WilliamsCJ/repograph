@@ -161,7 +161,12 @@ class BuildService:
                         self.temp_output
                     )
 
-                    requirements = find_requirements(i)
+                    # Attempt to parse requirements
+                    try:
+                        requirements = find_requirements(i)
+                    except Exception as e:
+                        log.error("Error passing requirements: %s", e)
+                        requirements = []
 
                     builder = RepographBuilder(
                         self.summarization.summarize_function

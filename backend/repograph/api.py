@@ -77,8 +77,9 @@ def create_app(
     return application
 
 
-container = ApplicationContainer()
-container.config.from_yaml("../config.yaml", loader=UnsafeLoader)
-container.wire(modules=[__name__])
+if __name__ == "__main__":
+    container = ApplicationContainer()
+    container.config.from_yaml("../config.yaml", loader=UnsafeLoader)
+    container.wire(modules=[__name__])
 
-app = create_app()
+    app = create_app()

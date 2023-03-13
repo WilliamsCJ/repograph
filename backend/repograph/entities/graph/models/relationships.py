@@ -36,7 +36,7 @@ class Requires(Relationship):
 
     _allowed_types = {Repository: {Package}}
 
-    specifications: List[Tuple[str, str]]
+    specifications: List[str]
 
 
 class Contains(Relationship):

@@ -1,0 +1,31 @@
+name: Repograph Documentation Workflow
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10.8
+      - name: Install dependencies
+        run: pip3 install -r requirements.txt
+      - name: Install pdoc
+        run: pip install pdoc3
+      - name: Generate docs with pdoc
+        run: pdoc repograph --html -f -o ../docs
+      - name: commit
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Generated backend documentation

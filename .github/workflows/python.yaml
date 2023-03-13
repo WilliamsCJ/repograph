@@ -24,6 +24,10 @@ jobs:
       - name: Lint with black
         run: |
           black .
+      - name: commit
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Python linting
   
   test:
     runs-on: ubuntu-latest
