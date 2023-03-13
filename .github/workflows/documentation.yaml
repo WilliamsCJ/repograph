@@ -24,5 +24,4 @@ jobs:
       - name: Install pdoc
         run: pip install pdoc3
       - name: Generate docs with pdoc
-        run: pdoc backend/repograph --html -f -o ../docs
-        continue-on-error: true
+        run: pdoc repograph --html -f -o ../docs
