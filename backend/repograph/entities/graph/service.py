@@ -23,7 +23,7 @@ from repograph.entities.graph.models.nodes import (
     Module,
     Package,
     Repository,
-    README
+    README,
 )
 from repograph.entities.graph.models.graph import GraphSummary, CallGraph
 
@@ -598,7 +598,7 @@ class GraphService:
             """
             MATCH ()-[r]-() RETURN DISTINCT r as `relationship`, type(r) as `type`
             """,
-            graph_name=graph
+            graph_name=graph,
         )
 
         nodes = self.repository.execute_query(
@@ -607,18 +607,18 @@ class GraphService:
             COALESCE(n.name, n.path, n.summarization, n.short_description, n.long_description, n.license_type) as `name`,
             labels(n) as `type`
             """,
-            graph_name=graph
+            graph_name=graph,
         )
 
         call_graph.links.extend(
             list(
                 map(
                     lambda rel: CallGraph.Relationship(
-                        from_id=rel['relationship'].start_node.identity,
-                        to_id=rel['relationship'].end_node.identity,
-                        type=rel['type']
+                        from_id=rel["relationship"].start_node.identity,
+                        to_id=rel["relationship"].end_node.identity,
+                        type=rel["type"],
                     ),
-                    relationships
+                    relationships,
                 )
             )
         )
@@ -627,12 +627,12 @@ class GraphService:
             list(
                 map(
                     lambda node: CallGraph.Node(
-                        id=node['identity'],
-                        name=node['name'],
+                        id=node["identity"],
+                        name=node["name"],
                         canonical_name="",
-                        type=node['type'][0]
+                        type=node["type"][0],
                     ),
-                    nodes
+                    nodes,
                 )
             )
         )

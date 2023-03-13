@@ -17,7 +17,6 @@ TEMP_OUTPUT = "./tmp"
 
 
 class TestBuildService(unittest.TestCase):
-
     def setUp(self) -> None:
         self.summarizeMock = MagicMock()
         self.summarizeMock.summarize_function.return_value = "FAKE SUMMARIZATION"
@@ -25,13 +24,23 @@ class TestBuildService(unittest.TestCase):
         self.txMock = MagicMock(autospec=Transaction)
         self.graphMock = MagicMock(autospec=GraphService)
         self.metadataMock = MagicMock(autospec=MetadataService)
-        self.service = BuildService(self.graphMock, self.summarizeMock, self.metadataMock)
+        self.service = BuildService(
+            self.graphMock, self.summarizeMock, self.metadataMock
+        )
 
     @parameterized.expand([[THIS_DIR + "/../../../../demo/pyLODE"]])
     def test_build_no_errors(self, path: str):
         self.graphMock.get_transaction.return_value = self.txMock
-        self.graphMock.get_system_transaction.return_value.__enter__.return_value = (MagicMock(), MagicMock())
-        self.graphMock.create_graph.return_value = Graph(name="name", neo4j_name="name", description="description", created=datetime.datetime.now())
+        self.graphMock.get_system_transaction.return_value.__enter__.return_value = (
+            MagicMock(),
+            MagicMock(),
+        )
+        self.graphMock.create_graph.return_value = Graph(
+            name="name",
+            neo4j_name="name",
+            description="description",
+            created=datetime.datetime.now(),
+        )
 
         try:
             self.service.build([path], "name", "description", prune=True)

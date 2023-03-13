@@ -32,14 +32,15 @@ repositories = [
     "RDFLib/pyLODE",
     "PyCQA/flake8",
     "OmkarPathak/pygorithm",
-    "py2neo-org/py2neo"
+    "py2neo-org/py2neo",
 ]
 
-data = pd.read_csv('./evaluation/software_type_benchmark.csv', sep = ",")
+data = pd.read_csv("./evaluation/software_type_benchmark.csv", sep=",")
 
-repositories = repositories + list(data['repository'])
+repositories = repositories + list(data["repository"])
 
 configure_logging(logging.CRITICAL)
+
 
 @inject
 def collect(
@@ -52,12 +53,14 @@ def collect(
         )
         writer.writerow(["Repository", "Success", "Time (s)", "Nodes", "Relationships"])
         for repo in tqdm(repositories):
-            name = repo.split('/')[1].lower()
-            name = name.translate(str.maketrans('', '', string.punctuation))
+            name = repo.split("/")[1].lower()
+            name = name.translate(str.maketrans("", "", string.punctuation))
             d = f"./{name}"
 
             try:
-                subprocess.run(["git", "clone", f"https://github.com/{repo.lower()}", d])
+                subprocess.run(
+                    ["git", "clone", f"https://github.com/{repo.lower()}", d]
+                )
 
                 start = time.time()
                 build.build(
