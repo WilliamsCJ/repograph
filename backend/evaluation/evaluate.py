@@ -51,13 +51,13 @@ def collect(
             csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
         )
         writer.writerow(["Repository", "Success", "Time (s)", "Nodes", "Relationships"])
-        for path in tqdm(repositories):
-            name = path.split('/')[1].lower()
+        for repo in tqdm(repositories):
+            name = repo.split('/')[1].lower()
             name = name.translate(str.maketrans('', '', string.punctuation))
             d = f"./{name}"
 
             try:
-                subprocess.run(["git", "clone", f"https://github.com/{path.lower()}", d])
+                subprocess.run(["git", "clone", f"https://github.com/{repo.lower()}", d])
 
                 start = time.time()
                 build.build(
@@ -70,7 +70,7 @@ def collect(
                 summary = graph.get_summary(f"{name}")
                 writer.writerow(
                     [
-                        name,
+                        repo,
                         "True",
                         execution_time,
                         summary.nodes_total,
@@ -81,7 +81,7 @@ def collect(
                 print("ERROR: ", e)
                 writer.writerow(
                     [
-                        name,
+                        repo,
                         "False",
                         0,
                         0,
