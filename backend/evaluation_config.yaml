@@ -5,3 +5,4 @@ password: s3cr3t
 database: neo4j
 metadata_db: ./evaluation/test.db
 summarize: True
+search: True

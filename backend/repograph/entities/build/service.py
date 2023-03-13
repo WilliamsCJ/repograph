@@ -72,7 +72,6 @@ class BuildService:
                     input_path,
                     "-o",
                     output_path,
-                    "-md",
                     "-rm",
                     "-si",
                     "-ld",
