@@ -7,6 +7,7 @@ import csv
 import logging
 import os
 import shutil
+import subprocess
 import time
 
 # pip imports
@@ -25,62 +26,72 @@ from repograph.entities.graph.service import GraphService
 # Utils
 from repograph.utils.logging import configure_logging
 
-paths = [
-    "./demo/pygorithm",
-    "./demo/pyLODE",
-    "./demo/flake8",
-    "./demo/fastapi",
+repositories = [
+    "tiangolo/fastapi",
+    "RDFLib/pyLODE",
+    "PyCQA/flake8",
+    "OmkarPathak/pygorithm",
+    "py2neo-org/py2neo"
 ]
 
-repositories = [
-    ("pygorithm", "pygorithm"),
-    ("pyLODE", "pylode"),
-    ("flake8", "flake8"),
-    ("fastapi", "fastapi"),
-]
+data = pd.read_csv('./evaluation/software_type_benchmark.csv', sep = ",")
+
+repositories = repositories + list(data['repository'])
 
 configure_logging(logging.CRITICAL)
-
 
 @inject
 def collect(
     build: BuildService = Provide[ApplicationContainer.build.container.service],
     graph: GraphService = Provide[ApplicationContainer.graph.container.service],
 ):
-    with open("./evaluation/processing_time.csv", "w+", newline="") as csvfile:
+    with open("./evaluation/results.csv", "w+", newline="") as csvfile:
         writer = csv.writer(
             csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
         )
-        writer.writerow(["Repository", "Time (s)", "Nodes", "Relationships"])
-        for i in tqdm(range(3)):
-            for path, name in tqdm(repositories):
-                shutil.copytree(f"../demo/{path}", f"./evaluation/{path}")
-                path = f"./evaluation/{path}"
+        writer.writerow(["Repository", "Success", "Time (s)", "Nodes", "Relationships"])
+        for path in tqdm(repositories):
+            name = path.split('/')[1].lower()
+            d = f"./{name}"
 
-                try:
-                    start = time.time()
-                    build.build(
-                        [path],
-                        f"{name}{i}",
-                        "",
-                        prune=True,
-                    )
-                    execution_time = time.time() - start
-                    summary = graph.get_summary(f"{name}{i}")
-                    writer.writerow(
-                        [
-                            name,
-                            execution_time,
-                            summary.nodes_total,
-                            summary.relationships_total,
-                        ]
-                    )
-                finally:
-                    shutil.rmtree(path)
+            try:
+                subprocess.run(["git", "clone", f"https://github.com/{path.lower()}", d])
+
+                start = time.time()
+                build.build(
+                    [d],
+                    f"{name}",
+                    "",
+                    prune=True,
+                )
+                execution_time = time.time() - start
+                summary = graph.get_summary(f"{name}")
+                writer.writerow(
+                    [
+                        name,
+                        "True",
+                        execution_time,
+                        summary.nodes_total,
+                        summary.relationships_total,
+                    ]
+                )
+            except Exception as e:
+                print("ERROR: ", e)
+                writer.writerow(
+                    [
+                        name,
+                        "False",
+                        0,
+                        0,
+                        0,
+                    ]
+                )
+            finally:
+                shutil.rmtree(d)
 
 
 def plot():
-    df = pd.read_csv("./evaluation/processing_time.csv")
+    df = pd.read_csv("./evaluation/results.csv")
     print(df)
 
     ax1 = seaborn.scatterplot(x="Nodes", y="Time (s)", data=df, hue="Repository").set(
