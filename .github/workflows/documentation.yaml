@@ -25,3 +25,7 @@ jobs:
         run: pip install pdoc3
       - name: Generate docs with pdoc
         run: pdoc repograph --html -f -o ../docs
+      - name: commit
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Generated backend documentation
