@@ -52,7 +52,7 @@ from repograph.entities.graph.models.nodes import (
     Module,
     Package,
     Repository,
-    README
+    README,
 )
 from repograph.entities.graph.models.graph import GraphSummary, CallGraph
 
@@ -627,7 +627,7 @@ class GraphService:
             &#34;&#34;&#34;
             MATCH ()-[r]-() RETURN DISTINCT r as `relationship`, type(r) as `type`
             &#34;&#34;&#34;,
-            graph_name=graph
+            graph_name=graph,
         )
 
         nodes = self.repository.execute_query(
@@ -636,18 +636,18 @@ class GraphService:
             COALESCE(n.name, n.path, n.summarization, n.short_description, n.long_description, n.license_type) as `name`,
             labels(n) as `type`
             &#34;&#34;&#34;,
-            graph_name=graph
+            graph_name=graph,
         )
 
         call_graph.links.extend(
             list(
                 map(
                     lambda rel: CallGraph.Relationship(
-                        from_id=rel[&#39;relationship&#39;].start_node.identity,
-                        to_id=rel[&#39;relationship&#39;].end_node.identity,
-                        type=rel[&#39;type&#39;]
+                        from_id=rel[&#34;relationship&#34;].start_node.identity,
+                        to_id=rel[&#34;relationship&#34;].end_node.identity,
+                        type=rel[&#34;type&#34;],
                     ),
-                    relationships
+                    relationships,
                 )
             )
         )
@@ -656,12 +656,12 @@ class GraphService:
             list(
                 map(
                     lambda node: CallGraph.Node(
-                        id=node[&#39;identity&#39;],
-                        name=node[&#39;name&#39;],
+                        id=node[&#34;identity&#34;],
+                        name=node[&#34;name&#34;],
                         canonical_name=&#34;&#34;,
-                        type=node[&#39;type&#39;][0]
+                        type=node[&#34;type&#34;][0],
                     ),
-                    nodes
+                    nodes,
                 )
             )
         )
@@ -1252,7 +1252,7 @@ class GraphService:
             &#34;&#34;&#34;
             MATCH ()-[r]-() RETURN DISTINCT r as `relationship`, type(r) as `type`
             &#34;&#34;&#34;,
-            graph_name=graph
+            graph_name=graph,
         )
 
         nodes = self.repository.execute_query(
@@ -1261,18 +1261,18 @@ class GraphService:
             COALESCE(n.name, n.path, n.summarization, n.short_description, n.long_description, n.license_type) as `name`,
             labels(n) as `type`
             &#34;&#34;&#34;,
-            graph_name=graph
+            graph_name=graph,
         )
 
         call_graph.links.extend(
             list(
                 map(
                     lambda rel: CallGraph.Relationship(
-                        from_id=rel[&#39;relationship&#39;].start_node.identity,
-                        to_id=rel[&#39;relationship&#39;].end_node.identity,
-                        type=rel[&#39;type&#39;]
+                        from_id=rel[&#34;relationship&#34;].start_node.identity,
+                        to_id=rel[&#34;relationship&#34;].end_node.identity,
+                        type=rel[&#34;type&#34;],
                     ),
-                    relationships
+                    relationships,
                 )
             )
         )
@@ -1281,12 +1281,12 @@ class GraphService:
             list(
                 map(
                     lambda node: CallGraph.Node(
-                        id=node[&#39;identity&#39;],
-                        name=node[&#39;name&#39;],
+                        id=node[&#34;identity&#34;],
+                        name=node[&#34;name&#34;],
                         canonical_name=&#34;&#34;,
-                        type=node[&#39;type&#39;][0]
+                        type=node[&#34;type&#34;][0],
                     ),
-                    nodes
+                    nodes,
                 )
             )
         )
@@ -1843,7 +1843,7 @@ Returns:</p></div>
         &#34;&#34;&#34;
         MATCH ()-[r]-() RETURN DISTINCT r as `relationship`, type(r) as `type`
         &#34;&#34;&#34;,
-        graph_name=graph
+        graph_name=graph,
     )
 
     nodes = self.repository.execute_query(
@@ -1852,18 +1852,18 @@ Returns:</p></div>
         COALESCE(n.name, n.path, n.summarization, n.short_description, n.long_description, n.license_type) as `name`,
         labels(n) as `type`
         &#34;&#34;&#34;,
-        graph_name=graph
+        graph_name=graph,
     )
 
     call_graph.links.extend(
         list(
             map(
                 lambda rel: CallGraph.Relationship(
-                    from_id=rel[&#39;relationship&#39;].start_node.identity,
-                    to_id=rel[&#39;relationship&#39;].end_node.identity,
-                    type=rel[&#39;type&#39;]
+                    from_id=rel[&#34;relationship&#34;].start_node.identity,
+                    to_id=rel[&#34;relationship&#34;].end_node.identity,
+                    type=rel[&#34;type&#34;],
                 ),
-                relationships
+                relationships,
             )
         )
     )
@@ -1872,12 +1872,12 @@ Returns:</p></div>
         list(
             map(
                 lambda node: CallGraph.Node(
-                    id=node[&#39;identity&#39;],
-                    name=node[&#39;name&#39;],
+                    id=node[&#34;identity&#34;],
+                    name=node[&#34;name&#34;],
                     canonical_name=&#34;&#34;,
-                    type=node[&#39;type&#39;][0]
+                    type=node[&#34;type&#34;][0],
                 ),
-                nodes
+                nodes,
             )
         )
     )
