@@ -63,3 +63,13 @@ class GraphInfo(BaseModel):
 
     class Config:
         allow_population_by_field_name = True
+
+
+class CircularDependency(BaseModel):
+    files: str = Field(..., alias="Files")
+    length: int = Field(..., alias="Length")
+
+
+class CircularDependencyResult(BaseModel):
+    columns: List[str]
+    data: List[CircularDependency]

@@ -11,6 +11,7 @@ import {
   getIncorrectAndMissingDocstrings,
   getMissingDependencies,
 } from "../../../lib/issues";
+import { CircularDependencyResult } from "../../../types/graph";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // @ts-ignore
@@ -29,13 +30,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export type GraphIssuesPageProps = {
-  cyclicalDependencies: number;
+  cyclicalDependencies: CircularDependencyResult;
   missingDependencies: number;
   incorrectDocstrings: number;
   missingDocstrings: number;
 };
 
-const GraphIssues: NextPage<GraphIssuesPageProps> = (props) => {
+const GraphIssues: NextPage<GraphIssuesPageProps> = (props: GraphIssuesPageProps) => {
   return (
     <DefaultLayout buttons={[]} heading="Issues">
       <Issues {...props} />

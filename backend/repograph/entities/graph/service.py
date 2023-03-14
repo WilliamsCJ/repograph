@@ -25,7 +25,7 @@ from repograph.entities.graph.models.nodes import (
     Repository,
     README,
 )
-from repograph.entities.graph.models.graph import GraphSummary, CallGraph
+from repograph.entities.graph.models.graph import GraphSummary, CallGraph, CircularDependency
 
 # Graph entity imports
 from repograph.entities.graph.repository import GraphRepository
@@ -61,11 +61,11 @@ class GraphService:
         self.metadata = metadata
 
     def create_graph(
-        self,
-        name: str,
-        description: str,
-        system_tx: neo4jTransaction,
-        metadata_tx: Connection,
+            self,
+            name: str,
+            description: str,
+            system_tx: neo4jTransaction,
+            metadata_tx: Connection,
     ) -> Graph:
         """Create a new graph.
 
@@ -151,7 +151,7 @@ class GraphService:
         self.repository.add(*args, tx=tx, graph_name=graph_name)
 
     def bulk_add(
-        self, nodes: List[Node], relationships: List[Relationship], graph_name: str
+            self, nodes: List[Node], relationships: List[Relationship], graph_name: str
     ):
         """Bulk add nodes and relationships.
 
@@ -231,7 +231,7 @@ class GraphService:
         return self.repository.get_all_nodes_by_label(Docstring, graph_name=graph)
 
     def get_function_summarizations(
-        self, graph_name: str, repository_name: str = None
+            self, graph_name: str, repository_name: str = None
     ) -> Dict[str, Function]:
         """Converts all Function nodes into a list of tuples.
 
@@ -360,7 +360,7 @@ class GraphService:
 
         return call_graph
 
-    def get_cyclical_dependencies(self, graph: str) -> int:
+    def get_cyclical_dependencies(self, graph: str) -> List[CircularDependency]:
         """Get the number of cyclical dependencies in the specified graph.
 
         Args:
@@ -377,9 +377,10 @@ class GraphService:
         cycles = set()
 
         for cycle in result:
-            cycles.add(frozenset(map(lambda x: x.identity, cycle.get("nodes"))))
+            cycles.add(
+                frozenset(map(lambda x: f"{x['canonical_name']}.{x['extension']}", cycle.get("nodes"))))
 
-        return len(cycles)
+        return list(map(lambda c: CircularDependency(files=" -> ".join(list(c) + list(c)[0]), length=len(list(c))), list(cycles)))
 
     def get_missing_dependencies(self, graph: str) -> int:
         """Get the number of dependencies that are missing from the requirements.
@@ -399,7 +400,7 @@ class GraphService:
         return len(result)
 
     def get_readme_files(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -> List[JSONDict]:
         """Get README files for the given graph
 
@@ -424,7 +425,7 @@ class GraphService:
         return result
 
     def get_requirements(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -> List[JSONDict]:
         """Get the requirements for the given graph.
 
@@ -447,7 +448,7 @@ class GraphService:
         )
 
     def get_licenses(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -> List[JSONDict]:
         """Get the licenses for the given graph.
 
@@ -471,7 +472,7 @@ class GraphService:
         )
 
     def get_docstrings_full(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -> List[JSONDict]:
         """Get the docstrings and functions for the given graph.
 
@@ -496,7 +497,7 @@ class GraphService:
         )
 
     def get_summarizations(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -> List[JSONDict]:
         """Get the summarizations and functions for the given graph.
 
@@ -542,7 +543,7 @@ class GraphService:
         )
 
     def get_functions_and_classes(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -> List[JSONDict]:
         """Get the function and class names for the given graph.
 

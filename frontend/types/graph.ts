@@ -45,3 +45,18 @@ export type GraphInfo = {
   summary: GraphSummary;
   graph: CallGraph;
 };
+
+export interface IssuesResult {
+  columns: string[]
+  data: any[]
+}
+
+export type CircularDependency = {
+  files: string;
+  length: number;
+}
+
+export type CircularDependencyResult = {
+  columns: string[]
+  data: CircularDependency[]
+}

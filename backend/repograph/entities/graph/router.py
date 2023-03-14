@@ -9,7 +9,7 @@ from typing import List
 from fastapi import APIRouter, status
 
 # Model imports
-from repograph.entities.graph.models.graph import CallGraph, GraphInfo
+from repograph.entities.graph.models.graph import CallGraph, CircularDependencyResult
 
 # Graph entity imports
 from repograph.entities.graph.service import GraphService
@@ -78,7 +78,10 @@ class GraphRouter:
         return self.service.get_graph(graph)
 
     async def cyclical_dependencies(self, graph: str):
-        return self.service.get_cyclical_dependencies(graph)
+        return CircularDependencyResult(
+            columns=["Files", "Length"],
+            data=self.service.get_cyclical_dependencies(graph)
+        )
 
     async def missing_dependencies(self, graph: str):
         return self.service.get_missing_dependencies(graph)

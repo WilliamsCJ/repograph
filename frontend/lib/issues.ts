@@ -1,13 +1,15 @@
+import { CircularDependencyResult } from "../types/graph";
+
 export async function getCyclicalDependencies(
   graphName: string
-): Promise<number> {
+): Promise<CircularDependencyResult> {
   const res = await fetch(
     `http://${
       process.env.NODE_ENV == "development" ? "localhost" : "repograph-backend"
     }:3000/graph/${graphName}/cylical-dependencies`
   );
 
-  return (await res.json()) as number;
+  return (await res.json()) as CircularDependencyResult;
 }
 
 export async function getMissingDependencies(
