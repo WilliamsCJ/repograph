@@ -9,6 +9,7 @@ from logging import getLogger
 import re
 from sqlite3 import Connection
 from typing import Dict, List, Optional
+import sys
 
 # pip imports
 from py2neo import Transaction
@@ -392,9 +393,11 @@ class GraphService:
             List[MissingRequirement]: The list of missing requirements found.
         """
         result = self.repository.execute_query(
-            "MATCH (n:Package) WHERE (n.inferred) = true AND  NOT (n)-[*]->(:Repository) RETURN DISTINCT n.canonical_name as `name`",
+            "MATCH (n:Package|Module) WHERE (n.inferred) = true AND  NOT (n)<-[*]-()  RETURN DISTINCT n.canonical_name as `name`",
             graph_name=graph,
         )
+
+        result = list(filter(lambda n: n['name'] not in sys.stdlib_module_names, list(result)))
 
         return list(map(lambda n: MissingRequirement(Package=n['name']), list(result)))
 
@@ -579,6 +582,7 @@ class GraphService:
             """,
             graph_name=graph,
         )
+
         return list(
             set([item for sublist in result for item in sublist["Repositories"]])
         )

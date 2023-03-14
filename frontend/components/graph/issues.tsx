@@ -18,6 +18,7 @@ import {
 import { StatsCardProps } from "./summary";
 import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "../core/table";
 import { CircularDependencyResult, IssuesResult, MissingDependencyResult } from "../../types/graph";
+import { Pagination } from "./search/pagination";
 
 /**
  * Props for Issues component.
@@ -87,6 +88,8 @@ const IssueCard: React.FC<IssueCardProps> = ({ title, value, onClick }) => {
 const Issues: React.FC<IssuesProps> = (props) => {
   const [ data, setData ] = useState<IssuesResult|null>(null);
   const [ title, setTitle ] = useState<string|null>(null);
+  const [offset, setOffset] = useState(0);
+  const limit = 10;
 
   return (
     <>
@@ -131,7 +134,7 @@ const Issues: React.FC<IssuesProps> = (props) => {
           </TableHeader>
           <TableBody>
             {data.data
-            // .slice(offset, offset + limit)
+            .slice(offset, offset + limit)
             .map((row: any, index: number) => (
             <TableRow key={index}>
               <>
@@ -147,6 +150,14 @@ const Issues: React.FC<IssuesProps> = (props) => {
         :
         <BoldDetailText>Select an issue for more detail</BoldDetailText>
       }
+      {data && data.data.length > limit && (
+        <Pagination
+          offset={offset}
+          setOffset={setOffset}
+          limit={limit}
+          total={data.data.length}
+        />
+      )}
     </>
   );
 };
