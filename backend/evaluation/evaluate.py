@@ -80,6 +80,7 @@ def collect(
                         summary.relationships_total,
                     ]
                 )
+                graph.delete_graph(name)
             except Exception as e:
                 print("ERROR: ", e)
                 writer.writerow(
