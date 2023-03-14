@@ -17,14 +17,14 @@ import {
 // Types
 import { StatsCardProps } from "./summary";
 import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "../core/table";
-import { CircularDependencyResult, IssuesResult } from "../../types/graph";
+import { CircularDependencyResult, IssuesResult, MissingDependencyResult } from "../../types/graph";
 
 /**
  * Props for Issues component.
  */
 export type IssuesProps = {
   cyclicalDependencies: CircularDependencyResult;
-  missingDependencies: number;
+  missingDependencies: MissingDependencyResult;
   incorrectDocstrings: number;
   missingDocstrings: number;
 };
@@ -42,6 +42,7 @@ export type IssueCardProps = {
  * IssueCard component makes up a single issue metric within the Issues component.
  * @param title
  * @param value
+ * @param onClick
  * @constructor
  */
 const IssueCard: React.FC<IssueCardProps> = ({ title, value, onClick }) => {
@@ -85,6 +86,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ title, value, onClick }) => {
  */
 const Issues: React.FC<IssuesProps> = (props) => {
   const [ data, setData ] = useState<IssuesResult|null>(null);
+  const [ title, setTitle ] = useState<string|null>(null);
 
   return (
     <>
@@ -92,12 +94,18 @@ const Issues: React.FC<IssuesProps> = (props) => {
         <IssueCard
           title="Circular Dependencies"
           value={props.cyclicalDependencies.data.length}
-          onClick={() => setData(props.cyclicalDependencies)}
+          onClick={() => {
+            setData(props.cyclicalDependencies)
+            setTitle("Cyclical Dependencies")
+          }}
         />
         <IssueCard
           title="Missing Dependencies"
-          value={props.missingDependencies}
-          onClick={() => alert("hi")}
+          value={props.missingDependencies.data.length}
+          onClick={() => {
+            setData(props.missingDependencies)
+            setTitle("Missing Dependencies")
+          }}
         />
         <IssueCard
           title="Possible Incorrect Docstrings"
@@ -110,6 +118,7 @@ const Issues: React.FC<IssuesProps> = (props) => {
           onClick={() => alert("hi")}
         />
       </dl>
+      {title && <BoldDetailText>{title}</BoldDetailText>}
       {data ?
         <Table>
           <TableHeader>
@@ -126,7 +135,7 @@ const Issues: React.FC<IssuesProps> = (props) => {
             .map((row: any, index: number) => (
             <TableRow key={index}>
               <>
-                <TableCell>{index + 1}</TableCell>
+                <TableCell>{(index + 1).toString()}</TableCell>
                 {Object.values(row).map((item) => (
                 <TableCell>{item as string}</TableCell>
                 ))}

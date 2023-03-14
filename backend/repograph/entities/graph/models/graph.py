@@ -2,7 +2,7 @@
 Models representing elements of the Repograph
 """
 # base imports
-from typing import List
+from typing import List, Union
 
 # pip imports
 from pydantic import BaseModel, Field
@@ -70,6 +70,10 @@ class CircularDependency(BaseModel):
     length: int = Field(..., alias="Length")
 
 
-class CircularDependencyResult(BaseModel):
+class MissingRequirement(BaseModel):
+    package: str = Field(..., alias="Package")
+
+
+class IssuesResult(BaseModel):
     columns: List[str]
-    data: List[CircularDependency]
+    data: Union[List[CircularDependency], List[MissingRequirement]]

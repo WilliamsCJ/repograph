@@ -60,3 +60,12 @@ export type CircularDependencyResult = {
   columns: string[]
   data: CircularDependency[]
 }
+
+export type MissingDependency = {
+  package: string;
+}
+
+export type MissingDependencyResult = {
+  columns: string[]
+  data: MissingDependency[]
+}

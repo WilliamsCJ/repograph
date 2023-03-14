@@ -25,7 +25,7 @@ from repograph.entities.graph.models.nodes import (
     Repository,
     README,
 )
-from repograph.entities.graph.models.graph import GraphSummary, CallGraph, CircularDependency
+from repograph.entities.graph.models.graph import GraphSummary, CallGraph, CircularDependency, MissingRequirement
 
 # Graph entity imports
 from repograph.entities.graph.repository import GraphRepository
@@ -367,10 +367,10 @@ class GraphService:
             graph (str): The name of the graph to check.
 
         Returns:
-            int: The number of unique cyclical dependencies.
+            List[CircularDependency]: The list of unique cyclical dependencies found.
         """
         result = self.repository.execute_query(
-            "MATCH p=(n)-[:Imports|Calls*]->(n) RETURN nodes(p) as `nodes`",
+            "MATCH p=(n)-[:Imports|Calls*2..]->(n) RETURN nodes(p) as `nodes`",
             graph_name=graph,
         )
 
@@ -380,24 +380,23 @@ class GraphService:
             cycles.add(
                 frozenset(map(lambda x: f"{x['canonical_name']}.{x['extension']}", cycle.get("nodes"))))
 
-        return list(map(lambda c: CircularDependency(files=" -> ".join(list(c) + list(c)[0]), length=len(list(c))), list(cycles)))
+        return list(map(lambda c: CircularDependency(files=" -> ".join(list(c) + [list(c)[0]]), length=len(list(c))), list(cycles)))
 
-    def get_missing_dependencies(self, graph: str) -> int:
+    def get_missing_dependencies(self, graph: str) -> List[MissingRequirement]:
         """Get the number of dependencies that are missing from the requirements.
 
         Args:
             graph (str): The name of the graph to check.
 
         Returns:
-            int: The number of unique packages (inferred) that have no relationship to
-                 the Repository node(s).
+            List[MissingRequirement]: The list of missing requirements found.
         """
         result = self.repository.execute_query(
-            "MATCH (n:Package) WHERE (n.inferred) = true AND  NOT (n)-[*]->(:Repository) RETURN DISTINCT n",
+            "MATCH (n:Package) WHERE (n.inferred) = true AND  NOT (n)-[*]->(:Repository) RETURN DISTINCT n.canonical_name as `name`",
             graph_name=graph,
         )
 
-        return len(result)
+        return list(map(lambda n: MissingRequirement(Package=n['name']), list(result)))
 
     def get_readme_files(
             self, graph: str, repository: Optional[str] = None
@@ -585,13 +584,13 @@ class GraphService:
         )
 
     def get_graph(self, graph: str) -> CallGraph:
-        """
+        """Get an entire graph. All nodes and relationships
 
         Args:
-            graph:
+            graph (str): Name of graph to fetch
 
         Returns:
-
+            CallGraph
         """
         call_graph = CallGraph()
 
