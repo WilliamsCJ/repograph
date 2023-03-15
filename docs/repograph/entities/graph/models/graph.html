@@ -121,7 +121,12 @@ class PossibleIncorrectDocstring(BaseModel):
 
 class IssuesResult(BaseModel):
     columns: List[str]
-    data: Union[List[CircularDependency], List[MissingRequirement], List[PossibleIncorrectDocstring], List[MissingDocstring]]</code></pre>
+    data: Union[
+        List[CircularDependency],
+        List[MissingRequirement],
+        List[PossibleIncorrectDocstring],
+        List[MissingDocstring],
+    ]</code></pre>
 </details>
 </section>
 <section>
@@ -382,7 +387,12 @@ class IssuesResult(BaseModel):
 </summary>
 <pre><code class="python">class IssuesResult(BaseModel):
     columns: List[str]
-    data: Union[List[CircularDependency], List[MissingRequirement], List[PossibleIncorrectDocstring], List[MissingDocstring]]</code></pre>
+    data: Union[
+        List[CircularDependency],
+        List[MissingRequirement],
+        List[PossibleIncorrectDocstring],
+        List[MissingDocstring],
+    ]</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
