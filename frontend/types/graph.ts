@@ -47,39 +47,39 @@ export type GraphInfo = {
 };
 
 export interface IssuesResult {
-  columns: string[]
-  data: any[]
+  columns: string[];
+  data: any[];
 }
 
 export type CircularDependency = {
   files: string;
   length: number;
-}
+};
 
 export type CircularDependencyResult = {
-  columns: string[]
-  data: CircularDependency[]
-}
+  columns: string[];
+  data: CircularDependency[];
+};
 
 export type MissingDependency = {
   package: string;
-}
+};
 
 export type MissingDependencyResult = {
-  columns: string[]
-  data: MissingDependency[]
-}
+  columns: string[];
+  data: MissingDependency[];
+};
 
 export type MissingDocstring = {
   name: string;
   type: string;
   repository: string;
-}
+};
 
 export type MissingDocstringResult = {
-  columns: string[]
-  data: MissingDocstring[]
-}
+  columns: string[];
+  data: MissingDocstring[];
+};
 
 export type PossibleIncorrectDocstring = {
   name: string;
@@ -88,14 +88,14 @@ export type PossibleIncorrectDocstring = {
   summarization: string;
   docstring: string;
   similarity: number;
-}
+};
 
 export type PossibleIncorrectDocstringResult = {
-  columns: string[]
-  data: PossibleIncorrectDocstring[]
-}
+  columns: string[];
+  data: PossibleIncorrectDocstring[];
+};
 
 export type IncorrectAndMissingDocstringsResult = {
-  incorrect: PossibleIncorrectDocstringResult
-  missing: MissingDependencyResult
-}
+  incorrect: PossibleIncorrectDocstringResult;
+  missing: MissingDependencyResult;
+};

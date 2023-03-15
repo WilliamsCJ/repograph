@@ -16,12 +16,20 @@ import {
 
 // Types
 import { StatsCardProps } from "./summary";
-import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "../core/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "../core/table";
 import {
   CircularDependencyResult,
   IssuesResult,
-  MissingDependencyResult, MissingDocstringResult,
-  PossibleIncorrectDocstringResult
+  MissingDependencyResult,
+  MissingDocstringResult,
+  PossibleIncorrectDocstringResult,
 } from "../../types/graph";
 import { Pagination } from "./search/pagination";
 
@@ -69,7 +77,10 @@ const IssueCard: React.FC<IssueCardProps> = ({ title, value, onClick }) => {
     );
   } else {
     return (
-      <RedCard size={tw`shadow-sm col-span-1 row-span-2 cursor-pointer`} onClick={onClick}>
+      <RedCard
+        size={tw`shadow-sm col-span-1 row-span-2 cursor-pointer`}
+        onClick={onClick}
+      >
         <div css={[tw`h-full w-full p-4 overflow-hidden relative`]}>
           <Text tw="truncate">{title}</Text>
           <NumericalValue tw="mt-2">{value}</NumericalValue>
@@ -91,8 +102,8 @@ const IssueCard: React.FC<IssueCardProps> = ({ title, value, onClick }) => {
  * @param props
  */
 const Issues: React.FC<IssuesProps> = (props) => {
-  const [ data, setData ] = useState<IssuesResult|null>(null);
-  const [ title, setTitle ] = useState<string|null>(null);
+  const [data, setData] = useState<IssuesResult | null>(null);
+  const [title, setTitle] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
   const limit = 5;
 
@@ -103,64 +114,64 @@ const Issues: React.FC<IssuesProps> = (props) => {
           title="Circular Dependencies"
           value={props.cyclicalDependencies.data.length}
           onClick={() => {
-            setData(props.cyclicalDependencies)
-            setTitle("Cyclical Dependencies")
+            setData(props.cyclicalDependencies);
+            setTitle("Cyclical Dependencies");
           }}
         />
         <IssueCard
           title="Missing Dependencies"
           value={props.missingDependencies.data.length}
           onClick={() => {
-            setData(props.missingDependencies)
-            setTitle("Missing Dependencies")
+            setData(props.missingDependencies);
+            setTitle("Missing Dependencies");
           }}
         />
         <IssueCard
           title="Possible Incorrect Docstrings"
           value={props.incorrectDocstrings.data.length}
           onClick={() => {
-            setData(props.incorrectDocstrings)
-            setTitle("Incorrect Docstrings")
+            setData(props.incorrectDocstrings);
+            setTitle("Incorrect Docstrings");
           }}
         />
         <IssueCard
           title="Missing Docstrings"
           value={props.missingDocstrings.data.length}
           onClick={() => {
-            setData(props.missingDocstrings)
-            setTitle("Missing Docstrings")
+            setData(props.missingDocstrings);
+            setTitle("Missing Docstrings");
           }}
         />
       </dl>
       {title && <BoldDetailText>{title}</BoldDetailText>}
-      {data ?
+      {data ? (
         <Table>
           <TableHeader>
             <>
               <TableHeaderCell>#</TableHeaderCell>
               {data.columns.map((column: string) => (
-              <TableHeaderCell>{column}</TableHeaderCell>
+                <TableHeaderCell>{column}</TableHeaderCell>
               ))}
             </>
           </TableHeader>
           <TableBody>
             {data.data
-            .slice(offset, offset + limit)
-            .map((row: any, index: number) => (
-            <TableRow key={index}>
-              <>
-                <TableCell>{(index + 1).toString()}</TableCell>
-                {Object.values(row).map((item) => (
-                <TableCell>{item as string}</TableCell>
-                ))}
-              </>
-            </TableRow>
-            ))}
+              .slice(offset, offset + limit)
+              .map((row: any, index: number) => (
+                <TableRow key={index}>
+                  <>
+                    <TableCell>{(index + 1).toString()}</TableCell>
+                    {Object.values(row).map((item) => (
+                      <TableCell>{item as string}</TableCell>
+                    ))}
+                  </>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
-        :
+      ) : (
         <BoldDetailText>Select an issue for more detail</BoldDetailText>
-      }
+      )}
       {data && data.data.length > limit && (
         <Pagination
           offset={offset}

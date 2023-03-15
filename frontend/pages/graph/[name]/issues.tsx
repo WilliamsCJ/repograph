@@ -9,12 +9,14 @@ import { GetServerSideProps, NextPage } from "next";
 import {
   getCyclicalDependencies,
   getIncorrectDocstrings,
-  getMissingDependencies, getMissingDocstrings,
+  getMissingDependencies,
+  getMissingDocstrings,
 } from "../../../lib/issues";
 import {
   CircularDependencyResult,
-  MissingDependencyResult, MissingDocstringResult,
-  PossibleIncorrectDocstringResult
+  MissingDependencyResult,
+  MissingDocstringResult,
+  PossibleIncorrectDocstringResult,
 } from "../../../types/graph";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -38,7 +40,9 @@ export type GraphIssuesPageProps = {
   missingDocstrings: MissingDocstringResult;
 };
 
-const GraphIssues: NextPage<GraphIssuesPageProps> = (props: GraphIssuesPageProps) => {
+const GraphIssues: NextPage<GraphIssuesPageProps> = (
+  props: GraphIssuesPageProps
+) => {
   return (
     <DefaultLayout buttons={[]} heading="Issues">
       <Issues {...props} />

@@ -1,8 +1,9 @@
 import {
   CircularDependencyResult,
   IncorrectAndMissingDocstringsResult,
-  MissingDependencyResult, MissingDocstringResult,
-  PossibleIncorrectDocstringResult
+  MissingDependencyResult,
+  MissingDocstringResult,
+  PossibleIncorrectDocstringResult,
 } from "../types/graph";
 
 export async function getCyclicalDependencies(
@@ -42,12 +43,12 @@ export async function getIncorrectDocstrings(
 }
 
 export async function getMissingDocstrings(
-graphName: string
+  graphName: string
 ): Promise<MissingDocstringResult> {
   const res = await fetch(
-  `http://${
-  process.env.NODE_ENV == "development" ? "localhost" : "repograph-backend"
-  }:3000/graph/${graphName}/missing-docstrings`
+    `http://${
+      process.env.NODE_ENV == "development" ? "localhost" : "repograph-backend"
+    }:3000/graph/${graphName}/missing-docstrings`
   );
 
   return (await res.json()) as MissingDocstringResult;

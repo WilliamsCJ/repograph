@@ -47,7 +47,11 @@ export const Card: React.FC<DefaultCardProps> = ({ children, ...props }) => (
  * @param props
  */
 const GreenCard: React.FC<DefaultCardProps> = ({ children, ...props }) => (
-  <div ref={props.ref} css={[GreenBackground, GreenBorder, props.size]} onClick={props.onClick}>
+  <div
+    ref={props.ref}
+    css={[GreenBackground, GreenBorder, props.size]}
+    onClick={props.onClick}
+  >
     {children}
   </div>
 );
@@ -59,7 +63,11 @@ const GreenCard: React.FC<DefaultCardProps> = ({ children, ...props }) => (
  * @param props
  */
 const RedCard: React.FC<DefaultCardProps> = ({ children, ...props }) => (
-  <div ref={props.ref} css={[RedBackground, RedBorder, props.size]} onClick={props.onClick}>
+  <div
+    ref={props.ref}
+    css={[RedBackground, RedBorder, props.size]}
+    onClick={props.onClick}
+  >
     {children}
   </div>
 );
