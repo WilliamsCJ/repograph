@@ -10,6 +10,7 @@ from typing import List
 # pip imports
 from fastapi import APIRouter
 
+from repograph.entities.graph.models.graph import IssuesResult
 # Build entity imports
 from repograph.entities.search.service import SearchService
 
@@ -51,8 +52,13 @@ class SearchRouter:
 
         self.graphRouter = APIRouter(tags=["Graph"], prefix="/graph/{graph}")
         self.graphRouter.add_api_route(
-            "/incorrect-and-missing-docstrings",
+            "/incorrect-docstrings",
             self.incorrect_docstrings,
+            methods=["GET"],
+        )
+        self.graphRouter.add_api_route(
+            "/missing-docstrings",
+            self.missing_docstrings,
             methods=["GET"],
         )
 
@@ -66,8 +72,18 @@ class SearchRouter:
         return results
 
     async def incorrect_docstrings(self, graph: str):
-        incorrect, missing = self.service.find_possible_incorrect_docstrings(graph)
-        return [incorrect, missing]
+        incorrect = self.service.find_incorrect_docstrings(graph)
+        return IssuesResult(
+            columns=["Name", "Type", "Repository"],
+            data=incorrect
+        )
+
+    async def missing_docstrings(self, graph: str):
+        missing = self.service.find_missing_docstrings(graph)
+        return IssuesResult(
+            columns=["Name", "Type", "Summarization", "Docstring", "Similarity", "Repository"],
+            data=missing
+        )
 
     async def available_queries(self):
         return self.service.get_available_search_queries()

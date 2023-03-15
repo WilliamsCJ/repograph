@@ -68,12 +68,29 @@ class GraphInfo(BaseModel):
 class CircularDependency(BaseModel):
     files: str = Field(..., alias="Files")
     length: int = Field(..., alias="Length")
+    repository: str = Field(..., alias="Repository")
 
 
 class MissingRequirement(BaseModel):
     package: str = Field(..., alias="Package")
+    repository: str = Field(..., alias="Repository")
+
+
+class MissingDocstring(BaseModel):
+    name: str = Field(..., alias="Name")
+    type: str = Field(..., alias="Type")
+    repository: str = Field(..., alias="Repository")
+
+
+class PossibleIncorrectDocstring(BaseModel):
+    name: str = Field(..., alias="Name")
+    type: str = Field(..., alias="Type")
+    summarization: str = Field(..., alias="Summarization")
+    docstring: str = Field(..., alias="Docstring")
+    similarity: float = Field(..., alias="Similarity")
+    repository: str = Field(..., alias="Repository")
 
 
 class IssuesResult(BaseModel):
     columns: List[str]
-    data: Union[List[CircularDependency], List[MissingRequirement]]
+    data: Union[List[CircularDependency], List[MissingRequirement], List[PossibleIncorrectDocstring], List[MissingDocstring]]

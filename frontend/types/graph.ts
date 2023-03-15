@@ -69,3 +69,33 @@ export type MissingDependencyResult = {
   columns: string[]
   data: MissingDependency[]
 }
+
+export type MissingDocstring = {
+  name: string;
+  type: string;
+  repository: string;
+}
+
+export type MissingDocstringResult = {
+  columns: string[]
+  data: MissingDocstring[]
+}
+
+export type PossibleIncorrectDocstring = {
+  name: string;
+  type: string;
+  repository: string;
+  summarization: string;
+  docstring: string;
+  similarity: number;
+}
+
+export type PossibleIncorrectDocstringResult = {
+  columns: string[]
+  data: PossibleIncorrectDocstring[]
+}
+
+export type IncorrectAndMissingDocstringsResult = {
+  incorrect: PossibleIncorrectDocstringResult
+  missing: MissingDependencyResult
+}

@@ -17,7 +17,12 @@ import {
 // Types
 import { StatsCardProps } from "./summary";
 import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "../core/table";
-import { CircularDependencyResult, IssuesResult, MissingDependencyResult } from "../../types/graph";
+import {
+  CircularDependencyResult,
+  IssuesResult,
+  MissingDependencyResult, MissingDocstringResult,
+  PossibleIncorrectDocstringResult
+} from "../../types/graph";
 import { Pagination } from "./search/pagination";
 
 /**
@@ -26,8 +31,8 @@ import { Pagination } from "./search/pagination";
 export type IssuesProps = {
   cyclicalDependencies: CircularDependencyResult;
   missingDependencies: MissingDependencyResult;
-  incorrectDocstrings: number;
-  missingDocstrings: number;
+  incorrectDocstrings: PossibleIncorrectDocstringResult;
+  missingDocstrings: MissingDocstringResult;
 };
 
 /**
@@ -112,13 +117,19 @@ const Issues: React.FC<IssuesProps> = (props) => {
         />
         <IssueCard
           title="Possible Incorrect Docstrings"
-          value={props.incorrectDocstrings}
-          onClick={() => alert("hi")}
+          value={props.incorrectDocstrings.data.length}
+          onClick={() => {
+            setData(props.incorrectDocstrings)
+            setTitle("Incorrect Docstrings")
+          }}
         />
         <IssueCard
           title="Missing Docstrings"
-          value={props.missingDocstrings}
-          onClick={() => alert("hi")}
+          value={props.missingDocstrings.data.length}
+          onClick={() => {
+            setData(props.missingDocstrings)
+            setTitle("Missing Docstrings")
+          }}
         />
       </dl>
       {title && <BoldDetailText>{title}</BoldDetailText>}
