@@ -13,7 +13,11 @@ from typing import Optional, Tuple, List
 # pip imports
 from sentence_transformers import SentenceTransformer, util
 
-from repograph.entities.graph.models.graph import PossibleIncorrectDocstring, MissingDocstring
+from repograph.entities.graph.models.graph import (
+    PossibleIncorrectDocstring,
+    MissingDocstring,
+)
+
 # Model imports
 from repograph.entities.search.models import (
     AvailableSearchQuery,
@@ -108,10 +112,17 @@ class SearchService:
             "MATCH (n:Docstring)-[:Documents]-(m) WHERE "
             "COALESCE(n.short_description, n.long_description) IS NULL RETURN m.canonical_name "
             "as `name`, labels(m) as `type`, m.repository_name as `repository`",
-            graph_name=graph
+            graph_name=graph,
         )
 
-        return list(map(lambda m: MissingDocstring(Name=m['name'], Type=m['type'][0], Repository=m['repository']), list(missing)))
+        return list(
+            map(
+                lambda m: MissingDocstring(
+                    Name=m["name"], Type=m["type"][0], Repository=m["repository"]
+                ),
+                list(missing),
+            )
+        )
 
     def find_incorrect_docstrings(self, graph: str) -> List[PossibleIncorrectDocstring]:
         """Find possibly incorrect docstrings.
@@ -129,24 +140,26 @@ class SearchService:
             "IS NOT NULL AND n.summarization IS NOT NULL RETURN n.summarization as `summarization`, "
             "COALESCE(n.short_description, n.long_description) as `docstring`,  "
             "m.canonical_name as `name`, labels(m) as `type`, m.repository_name as `repository`",
-            graph_name=graph
+            graph_name=graph,
         )
 
         low_scores = []
         for docstring in list(docstrings):
-            embedding_1 = self.model.encode(docstring['summarization'])
-            embedding_2 = self.model.encode([docstring['docstring'], ""])
+            embedding_1 = self.model.encode(docstring["summarization"])
+            embedding_2 = self.model.encode([docstring["docstring"], ""])
             score = util.dot_score(embedding_1, embedding_2)[0].cpu().tolist()[0]
 
             if score < 0.4:
-                low_scores.append(PossibleIncorrectDocstring(
-                    Name=docstring['name'],
-                    Type=docstring['type'][0],
-                    Summarization=docstring['summarization'],
-                    Docstring=docstring['docstring'],
-                    Similarity=score,
-                    Repository=docstring['repository']
-                ))
+                low_scores.append(
+                    PossibleIncorrectDocstring(
+                        Name=docstring["name"],
+                        Type=docstring["type"][0],
+                        Summarization=docstring["summarization"],
+                        Docstring=docstring["docstring"],
+                        Similarity=score,
+                        Repository=docstring["repository"],
+                    )
+                )
 
         return low_scores
 

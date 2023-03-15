@@ -92,4 +92,9 @@ class PossibleIncorrectDocstring(BaseModel):
 
 class IssuesResult(BaseModel):
     columns: List[str]
-    data: Union[List[CircularDependency], List[MissingRequirement], List[PossibleIncorrectDocstring], List[MissingDocstring]]
+    data: Union[
+        List[CircularDependency],
+        List[MissingRequirement],
+        List[PossibleIncorrectDocstring],
+        List[MissingDocstring],
+    ]

@@ -80,13 +80,13 @@ class GraphRouter:
     async def cyclical_dependencies(self, graph: str) -> IssuesResult:
         return IssuesResult(
             columns=["Files", "Length"],
-            data=self.service.get_cyclical_dependencies(graph)
+            data=self.service.get_cyclical_dependencies(graph),
         )
 
     async def missing_dependencies(self, graph: str) -> IssuesResult:
         return IssuesResult(
             columns=["Package", "Repository"],
-            data=self.service.get_missing_dependencies(graph)
+            data=self.service.get_missing_dependencies(graph),
         )
 
     async def call_graph_by_id(self, graph: str, node_id: int) -> CallGraph:
