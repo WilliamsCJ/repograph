@@ -8,34 +8,41 @@ import { DefaultLayout } from "../../../components/core/layout";
 import { GetServerSideProps, NextPage } from "next";
 import {
   getCyclicalDependencies,
-  getIncorrectAndMissingDocstrings,
+  getIncorrectDocstrings,
   getMissingDependencies,
+  getMissingDocstrings,
 } from "../../../lib/issues";
+import {
+  CircularDependencyResult,
+  MissingDependencyResult,
+  MissingDocstringResult,
+  PossibleIncorrectDocstringResult,
+} from "../../../types/graph";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // @ts-ignore
   const { name } = context.params;
 
-  const docstrings = await getIncorrectAndMissingDocstrings(name);
-
   return {
     props: {
       cyclicalDependencies: await getCyclicalDependencies(name),
       missingDependencies: await getMissingDependencies(name),
-      incorrectDocstrings: docstrings[0],
-      missingDocstrings: docstrings[1],
+      incorrectDocstrings: await getIncorrectDocstrings(name),
+      missingDocstrings: await getMissingDocstrings(name),
     },
   };
 };
 
 export type GraphIssuesPageProps = {
-  cyclicalDependencies: number;
-  missingDependencies: number;
-  incorrectDocstrings: number;
-  missingDocstrings: number;
+  cyclicalDependencies: CircularDependencyResult;
+  missingDependencies: MissingDependencyResult;
+  incorrectDocstrings: PossibleIncorrectDocstringResult;
+  missingDocstrings: MissingDocstringResult;
 };
 
-const GraphIssues: NextPage<GraphIssuesPageProps> = (props) => {
+const GraphIssues: NextPage<GraphIssuesPageProps> = (
+  props: GraphIssuesPageProps
+) => {
   return (
     <DefaultLayout buttons={[]} heading="Issues">
       <Issues {...props} />

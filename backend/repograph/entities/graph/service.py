@@ -9,6 +9,7 @@ from logging import getLogger
 import re
 from sqlite3 import Connection
 from typing import Dict, List, Optional
+import sys
 
 # pip imports
 from py2neo import Transaction
@@ -25,7 +26,12 @@ from repograph.entities.graph.models.nodes import (
     Repository,
     README,
 )
-from repograph.entities.graph.models.graph import GraphSummary, CallGraph
+from repograph.entities.graph.models.graph import (
+    GraphSummary,
+    CallGraph,
+    CircularDependency,
+    MissingRequirement,
+)
 
 # Graph entity imports
 from repograph.entities.graph.repository import GraphRepository
@@ -360,43 +366,68 @@ class GraphService:
 
         return call_graph
 
-    def get_cyclical_dependencies(self, graph: str) -> int:
+    def get_cyclical_dependencies(self, graph: str) -> List[CircularDependency]:
         """Get the number of cyclical dependencies in the specified graph.
 
         Args:
             graph (str): The name of the graph to check.
 
         Returns:
-            int: The number of unique cyclical dependencies.
+            List[CircularDependency]: The list of unique cyclical dependencies found.
         """
         result = self.repository.execute_query(
-            "MATCH p=(n)-[:Imports|Calls*]->(n) RETURN nodes(p) as `nodes`",
+            "MATCH p=(n)-[:Imports|Calls*2..]->(n) RETURN nodes(p) as `nodes`",
             graph_name=graph,
         )
 
         cycles = set()
 
         for cycle in result:
-            cycles.add(frozenset(map(lambda x: x.identity, cycle.get("nodes"))))
+            cycles.add(
+                frozenset(
+                    map(
+                        lambda x: f"{x['canonical_name']}.{x['extension']}",
+                        cycle.get("nodes"),
+                    )
+                )
+            )
 
-        return len(cycles)
+        return list(
+            map(
+                lambda c: CircularDependency(
+                    Files=" -> ".join(list(c) + [list(c)[0]]), Length=len(list(c))
+                ),
+                list(cycles),
+            )
+        )
 
-    def get_missing_dependencies(self, graph: str) -> int:
+    def get_missing_dependencies(self, graph: str) -> List[MissingRequirement]:
         """Get the number of dependencies that are missing from the requirements.
 
         Args:
             graph (str): The name of the graph to check.
 
         Returns:
-            int: The number of unique packages (inferred) that have no relationship to
-                 the Repository node(s).
+            List[MissingRequirement]: The list of missing requirements found.
         """
         result = self.repository.execute_query(
-            "MATCH (n:Package) WHERE (n.inferred) = true AND  NOT (n)-[*]->(:Repository) RETURN DISTINCT n",
+            "MATCH (n:Package|Module) WHERE (n.inferred) = true AND  NOT (n)<-[*]-()  "
+            "RETURN DISTINCT n.canonical_name as `name`, n.repository_name as `repository`",
             graph_name=graph,
         )
 
-        return len(result)
+        result = list(
+            filter(lambda n: n["name"] not in sys.stdlib_module_names, list(result))
+        )
+
+        return list(
+            map(
+                lambda n: MissingRequirement(
+                    Package=n["name"], Repository=n["repository"]
+                ),
+                list(result),
+            )
+        )
 
     def get_readme_files(
         self, graph: str, repository: Optional[str] = None
@@ -579,18 +610,19 @@ class GraphService:
             """,
             graph_name=graph,
         )
+
         return list(
             set([item for sublist in result for item in sublist["Repositories"]])
         )
 
     def get_graph(self, graph: str) -> CallGraph:
-        """
+        """Get an entire graph. All nodes and relationships
 
         Args:
-            graph:
+            graph (str): Name of graph to fetch
 
         Returns:
-
+            CallGraph
         """
         call_graph = CallGraph()
 

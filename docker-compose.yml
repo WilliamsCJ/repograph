@@ -35,6 +35,8 @@ services:
     volumes:
       - ./backend/repograph:/code/repograph
       - ./.sqlite:/code/sqlite
+      - ./.cache:/root/.cache
+      - ./.nltk:/nltk_data
     networks:
       - repograph-network
     depends_on:

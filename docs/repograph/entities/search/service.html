@@ -46,6 +46,7 @@ from typing import Optional, Tuple, List
 # pip imports
 from sentence_transformers import SentenceTransformer, util
 
+from repograph.entities.graph.models.graph import PossibleIncorrectDocstring, MissingDocstring
 # Model imports
 from repograph.entities.search.models import (
     AvailableSearchQuery,
@@ -127,8 +128,26 @@ class SearchService:
             total=len(score_pairs), limit=limit, offset=offset, results=results
         )
 
-    def find_possible_incorrect_docstrings(self, graph: str) -&gt; Tuple[int, int]:
-        &#34;&#34;&#34;Find the number of possibly incorrect docstrings.
+    def find_missing_docstrings(self, graph: str) -&gt; List[MissingDocstring]:
+        &#34;&#34;&#34;Find nodes missing docstrings
+
+        Args:
+            graph (str): Graph to query.
+
+        Returns:
+            List[MissingDocstring]: Results
+        &#34;&#34;&#34;
+        missing = self.graph.repository.execute_query(
+            &#34;MATCH (n:Docstring)-[:Documents]-(m) WHERE &#34;
+            &#34;COALESCE(n.short_description, n.long_description) IS NULL RETURN m.canonical_name &#34;
+            &#34;as `name`, labels(m) as `type`, m.repository_name as `repository`&#34;,
+            graph_name=graph
+        )
+
+        return list(map(lambda m: MissingDocstring(Name=m[&#39;name&#39;], Type=m[&#39;type&#39;][0], Repository=m[&#39;repository&#39;]), list(missing)))
+
+    def find_incorrect_docstrings(self, graph: str) -&gt; List[PossibleIncorrectDocstring]:
+        &#34;&#34;&#34;Find possibly incorrect docstrings.
 
         Cosine similarity between docstring and generated summarization is less than 0.5
 
@@ -136,44 +155,33 @@ class SearchService:
             graph (str): The graph name.
 
         Returns:
-            int: The number of low scores
-            int: The number of functions that were missing docstrings to compare against
+            List[PossibleIncorrectDocstring]: The possibly incorrect docstrings
         &#34;&#34;&#34;
-        docstrings = self.graph.get_docstrings(graph)
-        docstrings_with_summarizations = list(
-            filter(lambda x: x.summarization is not None, docstrings)
+        docstrings = self.graph.repository.execute_query(
+            &#34;MATCH (n:Docstring)-[:Documents]-&gt;(m) WHERE COALESCE(n.short_description, n.long_description) &#34;
+            &#34;IS NOT NULL AND n.summarization IS NOT NULL RETURN n.summarization as `summarization`, &#34;
+            &#34;COALESCE(n.short_description, n.long_description) as `docstring`,  &#34;
+            &#34;m.canonical_name as `name`, labels(m) as `type`, m.repository_name as `repository`&#34;,
+            graph_name=graph
         )
-        total = len(docstrings_with_summarizations)
 
-        docstrings_with_original = list(
-            filter(
-                lambda x: x.short_description is not None
-                or x.long_description is not None,
-                docstrings_with_summarizations,
-            )
-        )
-        missing_docstring = total - len(docstrings_with_original)
-
-        pairs = list(
-            map(
-                lambda x: (
-                    x.summarization,
-                    str(x.short_description or &#34;&#34;) + str(x.long_description or &#34;&#34;),
-                ),
-                docstrings_with_original,
-            )
-        )
-        low_scores = 0
-
-        for summarization, docstring in pairs:
-            embedding_1 = self.model.encode(summarization)
-            embedding_2 = self.model.encode([docstring, &#34;&#34;])
+        low_scores = []
+        for docstring in list(docstrings):
+            embedding_1 = self.model.encode(docstring[&#39;summarization&#39;])
+            embedding_2 = self.model.encode([docstring[&#39;docstring&#39;], &#34;&#34;])
             score = util.dot_score(embedding_1, embedding_2)[0].cpu().tolist()[0]
 
-            if score &lt; 0.5:
-                low_scores += 1
+            if score &lt; 0.4:
+                low_scores.append(PossibleIncorrectDocstring(
+                    Name=docstring[&#39;name&#39;],
+                    Type=docstring[&#39;type&#39;][0],
+                    Summarization=docstring[&#39;summarization&#39;],
+                    Docstring=docstring[&#39;docstring&#39;],
+                    Similarity=score,
+                    Repository=docstring[&#39;repository&#39;]
+                ))
 
-        return low_scores, missing_docstring
+        return low_scores
 
     def get_available_search_queries(self) -&gt; List[AvailableSearchQuery]:
         available = [
@@ -421,8 +429,26 @@ class SearchService:
             total=len(score_pairs), limit=limit, offset=offset, results=results
         )
 
-    def find_possible_incorrect_docstrings(self, graph: str) -&gt; Tuple[int, int]:
-        &#34;&#34;&#34;Find the number of possibly incorrect docstrings.
+    def find_missing_docstrings(self, graph: str) -&gt; List[MissingDocstring]:
+        &#34;&#34;&#34;Find nodes missing docstrings
+
+        Args:
+            graph (str): Graph to query.
+
+        Returns:
+            List[MissingDocstring]: Results
+        &#34;&#34;&#34;
+        missing = self.graph.repository.execute_query(
+            &#34;MATCH (n:Docstring)-[:Documents]-(m) WHERE &#34;
+            &#34;COALESCE(n.short_description, n.long_description) IS NULL RETURN m.canonical_name &#34;
+            &#34;as `name`, labels(m) as `type`, m.repository_name as `repository`&#34;,
+            graph_name=graph
+        )
+
+        return list(map(lambda m: MissingDocstring(Name=m[&#39;name&#39;], Type=m[&#39;type&#39;][0], Repository=m[&#39;repository&#39;]), list(missing)))
+
+    def find_incorrect_docstrings(self, graph: str) -&gt; List[PossibleIncorrectDocstring]:
+        &#34;&#34;&#34;Find possibly incorrect docstrings.
 
         Cosine similarity between docstring and generated summarization is less than 0.5
 
@@ -430,44 +456,33 @@ class SearchService:
             graph (str): The graph name.
 
         Returns:
-            int: The number of low scores
-            int: The number of functions that were missing docstrings to compare against
+            List[PossibleIncorrectDocstring]: The possibly incorrect docstrings
         &#34;&#34;&#34;
-        docstrings = self.graph.get_docstrings(graph)
-        docstrings_with_summarizations = list(
-            filter(lambda x: x.summarization is not None, docstrings)
+        docstrings = self.graph.repository.execute_query(
+            &#34;MATCH (n:Docstring)-[:Documents]-&gt;(m) WHERE COALESCE(n.short_description, n.long_description) &#34;
+            &#34;IS NOT NULL AND n.summarization IS NOT NULL RETURN n.summarization as `summarization`, &#34;
+            &#34;COALESCE(n.short_description, n.long_description) as `docstring`,  &#34;
+            &#34;m.canonical_name as `name`, labels(m) as `type`, m.repository_name as `repository`&#34;,
+            graph_name=graph
         )
-        total = len(docstrings_with_summarizations)
 
-        docstrings_with_original = list(
-            filter(
-                lambda x: x.short_description is not None
-                or x.long_description is not None,
-                docstrings_with_summarizations,
-            )
-        )
-        missing_docstring = total - len(docstrings_with_original)
-
-        pairs = list(
-            map(
-                lambda x: (
-                    x.summarization,
-                    str(x.short_description or &#34;&#34;) + str(x.long_description or &#34;&#34;),
-                ),
-                docstrings_with_original,
-            )
-        )
-        low_scores = 0
-
-        for summarization, docstring in pairs:
-            embedding_1 = self.model.encode(summarization)
-            embedding_2 = self.model.encode([docstring, &#34;&#34;])
+        low_scores = []
+        for docstring in list(docstrings):
+            embedding_1 = self.model.encode(docstring[&#39;summarization&#39;])
+            embedding_2 = self.model.encode([docstring[&#39;docstring&#39;], &#34;&#34;])
             score = util.dot_score(embedding_1, embedding_2)[0].cpu().tolist()[0]
 
-            if score &lt; 0.5:
-                low_scores += 1
+            if score &lt; 0.4:
+                low_scores.append(PossibleIncorrectDocstring(
+                    Name=docstring[&#39;name&#39;],
+                    Type=docstring[&#39;type&#39;][0],
+                    Summarization=docstring[&#39;summarization&#39;],
+                    Docstring=docstring[&#39;docstring&#39;],
+                    Similarity=score,
+                    Repository=docstring[&#39;repository&#39;]
+                ))
 
-        return low_scores, missing_docstring
+        return low_scores
 
     def get_available_search_queries(self) -&gt; List[AvailableSearchQuery]:
         available = [
@@ -644,11 +659,11 @@ class SearchService:
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="repograph.entities.search.service.SearchService.find_possible_incorrect_docstrings"><code class="name flex">
-<span>def <span class="ident">find_possible_incorrect_docstrings</span></span>(<span>self, graph: str) ‑> Tuple[int, int]</span>
+<dt id="repograph.entities.search.service.SearchService.find_incorrect_docstrings"><code class="name flex">
+<span>def <span class="ident">find_incorrect_docstrings</span></span>(<span>self, graph: str) ‑> List[<a title="repograph.entities.graph.models.graph.PossibleIncorrectDocstring" href="../graph/models/graph.html#repograph.entities.graph.models.graph.PossibleIncorrectDocstring">PossibleIncorrectDocstring</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Find the number of possibly incorrect docstrings.</p>
+<div class="desc"><p>Find possibly incorrect docstrings.</p>
 <p>Cosine similarity between docstring and generated summarization is less than 0.5</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -657,17 +672,15 @@ class SearchService:
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>int</code></dt>
-<dd>The number of low scores</dd>
-<dt><code>int</code></dt>
-<dd>The number of functions that were missing docstrings to compare against</dd>
+<dt><code>List[PossibleIncorrectDocstring]</code></dt>
+<dd>The possibly incorrect docstrings</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def find_possible_incorrect_docstrings(self, graph: str) -&gt; Tuple[int, int]:
-    &#34;&#34;&#34;Find the number of possibly incorrect docstrings.
+<pre><code class="python">def find_incorrect_docstrings(self, graph: str) -&gt; List[PossibleIncorrectDocstring]:
+    &#34;&#34;&#34;Find possibly incorrect docstrings.
 
     Cosine similarity between docstring and generated summarization is less than 0.5
 
@@ -675,44 +688,71 @@ class SearchService:
         graph (str): The graph name.
 
     Returns:
-        int: The number of low scores
-        int: The number of functions that were missing docstrings to compare against
+        List[PossibleIncorrectDocstring]: The possibly incorrect docstrings
     &#34;&#34;&#34;
-    docstrings = self.graph.get_docstrings(graph)
-    docstrings_with_summarizations = list(
-        filter(lambda x: x.summarization is not None, docstrings)
+    docstrings = self.graph.repository.execute_query(
+        &#34;MATCH (n:Docstring)-[:Documents]-&gt;(m) WHERE COALESCE(n.short_description, n.long_description) &#34;
+        &#34;IS NOT NULL AND n.summarization IS NOT NULL RETURN n.summarization as `summarization`, &#34;
+        &#34;COALESCE(n.short_description, n.long_description) as `docstring`,  &#34;
+        &#34;m.canonical_name as `name`, labels(m) as `type`, m.repository_name as `repository`&#34;,
+        graph_name=graph
     )
-    total = len(docstrings_with_summarizations)
 
-    docstrings_with_original = list(
-        filter(
-            lambda x: x.short_description is not None
-            or x.long_description is not None,
-            docstrings_with_summarizations,
-        )
-    )
-    missing_docstring = total - len(docstrings_with_original)
-
-    pairs = list(
-        map(
-            lambda x: (
-                x.summarization,
-                str(x.short_description or &#34;&#34;) + str(x.long_description or &#34;&#34;),
-            ),
-            docstrings_with_original,
-        )
-    )
-    low_scores = 0
-
-    for summarization, docstring in pairs:
-        embedding_1 = self.model.encode(summarization)
-        embedding_2 = self.model.encode([docstring, &#34;&#34;])
+    low_scores = []
+    for docstring in list(docstrings):
+        embedding_1 = self.model.encode(docstring[&#39;summarization&#39;])
+        embedding_2 = self.model.encode([docstring[&#39;docstring&#39;], &#34;&#34;])
         score = util.dot_score(embedding_1, embedding_2)[0].cpu().tolist()[0]
 
-        if score &lt; 0.5:
-            low_scores += 1
+        if score &lt; 0.4:
+            low_scores.append(PossibleIncorrectDocstring(
+                Name=docstring[&#39;name&#39;],
+                Type=docstring[&#39;type&#39;][0],
+                Summarization=docstring[&#39;summarization&#39;],
+                Docstring=docstring[&#39;docstring&#39;],
+                Similarity=score,
+                Repository=docstring[&#39;repository&#39;]
+            ))
 
-    return low_scores, missing_docstring</code></pre>
+    return low_scores</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.search.service.SearchService.find_missing_docstrings"><code class="name flex">
+<span>def <span class="ident">find_missing_docstrings</span></span>(<span>self, graph: str) ‑> List[<a title="repograph.entities.graph.models.graph.MissingDocstring" href="../graph/models/graph.html#repograph.entities.graph.models.graph.MissingDocstring">MissingDocstring</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Find nodes missing docstrings</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
+<dd>Graph to query.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[MissingDocstring]</code></dt>
+<dd>Results</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_missing_docstrings(self, graph: str) -&gt; List[MissingDocstring]:
+    &#34;&#34;&#34;Find nodes missing docstrings
+
+    Args:
+        graph (str): Graph to query.
+
+    Returns:
+        List[MissingDocstring]: Results
+    &#34;&#34;&#34;
+    missing = self.graph.repository.execute_query(
+        &#34;MATCH (n:Docstring)-[:Documents]-(m) WHERE &#34;
+        &#34;COALESCE(n.short_description, n.long_description) IS NULL RETURN m.canonical_name &#34;
+        &#34;as `name`, labels(m) as `type`, m.repository_name as `repository`&#34;,
+        graph_name=graph
+    )
+
+    return list(map(lambda m: MissingDocstring(Name=m[&#39;name&#39;], Type=m[&#39;type&#39;][0], Repository=m[&#39;repository&#39;]), list(missing)))</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.search.service.SearchService.find_similar_functions_by_query"><code class="name flex">
@@ -1111,7 +1151,8 @@ class SearchService:
 <li>
 <h4><code><a title="repograph.entities.search.service.SearchService" href="#repograph.entities.search.service.SearchService">SearchService</a></code></h4>
 <ul class="">
-<li><code><a title="repograph.entities.search.service.SearchService.find_possible_incorrect_docstrings" href="#repograph.entities.search.service.SearchService.find_possible_incorrect_docstrings">find_possible_incorrect_docstrings</a></code></li>
+<li><code><a title="repograph.entities.search.service.SearchService.find_incorrect_docstrings" href="#repograph.entities.search.service.SearchService.find_incorrect_docstrings">find_incorrect_docstrings</a></code></li>
+<li><code><a title="repograph.entities.search.service.SearchService.find_missing_docstrings" href="#repograph.entities.search.service.SearchService.find_missing_docstrings">find_missing_docstrings</a></code></li>
 <li><code><a title="repograph.entities.search.service.SearchService.find_similar_functions_by_query" href="#repograph.entities.search.service.SearchService.find_similar_functions_by_query">find_similar_functions_by_query</a></code></li>
 <li><code><a title="repograph.entities.search.service.SearchService.get_available_search_queries" href="#repograph.entities.search.service.SearchService.get_available_search_queries">get_available_search_queries</a></code></li>
 <li><code><a title="repograph.entities.search.service.SearchService.graph" href="#repograph.entities.search.service.SearchService.graph">graph</a></code></li>

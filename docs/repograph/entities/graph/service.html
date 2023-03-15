@@ -38,6 +38,7 @@ from logging import getLogger
 import re
 from sqlite3 import Connection
 from typing import Dict, List, Optional
+import sys
 
 # pip imports
 from py2neo import Transaction
@@ -54,7 +55,7 @@ from repograph.entities.graph.models.nodes import (
     Repository,
     README,
 )
-from repograph.entities.graph.models.graph import GraphSummary, CallGraph
+from repograph.entities.graph.models.graph import GraphSummary, CallGraph, CircularDependency, MissingRequirement
 
 # Graph entity imports
 from repograph.entities.graph.repository import GraphRepository
@@ -90,11 +91,11 @@ class GraphService:
         self.metadata = metadata
 
     def create_graph(
-        self,
-        name: str,
-        description: str,
-        system_tx: neo4jTransaction,
-        metadata_tx: Connection,
+            self,
+            name: str,
+            description: str,
+            system_tx: neo4jTransaction,
+            metadata_tx: Connection,
     ) -&gt; Graph:
         &#34;&#34;&#34;Create a new graph.
 
@@ -180,7 +181,7 @@ class GraphService:
         self.repository.add(*args, tx=tx, graph_name=graph_name)
 
     def bulk_add(
-        self, nodes: List[Node], relationships: List[Relationship], graph_name: str
+            self, nodes: List[Node], relationships: List[Relationship], graph_name: str
     ):
         &#34;&#34;&#34;Bulk add nodes and relationships.
 
@@ -260,7 +261,7 @@ class GraphService:
         return self.repository.get_all_nodes_by_label(Docstring, graph_name=graph)
 
     def get_function_summarizations(
-        self, graph_name: str, repository_name: str = None
+            self, graph_name: str, repository_name: str = None
     ) -&gt; Dict[str, Function]:
         &#34;&#34;&#34;Converts all Function nodes into a list of tuples.
 
@@ -389,46 +390,49 @@ class GraphService:
 
         return call_graph
 
-    def get_cyclical_dependencies(self, graph: str) -&gt; int:
+    def get_cyclical_dependencies(self, graph: str) -&gt; List[CircularDependency]:
         &#34;&#34;&#34;Get the number of cyclical dependencies in the specified graph.
 
         Args:
             graph (str): The name of the graph to check.
 
         Returns:
-            int: The number of unique cyclical dependencies.
+            List[CircularDependency]: The list of unique cyclical dependencies found.
         &#34;&#34;&#34;
         result = self.repository.execute_query(
-            &#34;MATCH p=(n)-[:Imports|Calls*]-&gt;(n) RETURN nodes(p) as `nodes`&#34;,
+            &#34;MATCH p=(n)-[:Imports|Calls*2..]-&gt;(n) RETURN nodes(p) as `nodes`&#34;,
             graph_name=graph,
         )
 
         cycles = set()
 
         for cycle in result:
-            cycles.add(frozenset(map(lambda x: x.identity, cycle.get(&#34;nodes&#34;))))
+            cycles.add(
+                frozenset(map(lambda x: f&#34;{x[&#39;canonical_name&#39;]}.{x[&#39;extension&#39;]}&#34;, cycle.get(&#34;nodes&#34;))))
 
-        return len(cycles)
+        return list(map(lambda c: CircularDependency(Files=&#34; -&gt; &#34;.join(list(c) + [list(c)[0]]), Length=len(list(c))), list(cycles)))
 
-    def get_missing_dependencies(self, graph: str) -&gt; int:
+    def get_missing_dependencies(self, graph: str) -&gt; List[MissingRequirement]:
         &#34;&#34;&#34;Get the number of dependencies that are missing from the requirements.
 
         Args:
             graph (str): The name of the graph to check.
 
         Returns:
-            int: The number of unique packages (inferred) that have no relationship to
-                 the Repository node(s).
+            List[MissingRequirement]: The list of missing requirements found.
         &#34;&#34;&#34;
         result = self.repository.execute_query(
-            &#34;MATCH (n:Package) WHERE (n.inferred) = true AND  NOT (n)-[*]-&gt;(:Repository) RETURN DISTINCT n&#34;,
+            &#34;MATCH (n:Package|Module) WHERE (n.inferred) = true AND  NOT (n)&lt;-[*]-()  &#34;
+            &#34;RETURN DISTINCT n.canonical_name as `name`, n.repository_name as `repository`&#34;,
             graph_name=graph,
         )
 
-        return len(result)
+        result = list(filter(lambda n: n[&#39;name&#39;] not in sys.stdlib_module_names, list(result)))
+
+        return list(map(lambda n: MissingRequirement(Package=n[&#39;name&#39;], Repository=n[&#39;repository&#39;]), list(result)))
 
     def get_readme_files(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get README files for the given graph
 
@@ -453,7 +457,7 @@ class GraphService:
         return result
 
     def get_requirements(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the requirements for the given graph.
 
@@ -476,7 +480,7 @@ class GraphService:
         )
 
     def get_licenses(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the licenses for the given graph.
 
@@ -500,7 +504,7 @@ class GraphService:
         )
 
     def get_docstrings_full(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the docstrings and functions for the given graph.
 
@@ -525,7 +529,7 @@ class GraphService:
         )
 
     def get_summarizations(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the summarizations and functions for the given graph.
 
@@ -571,7 +575,7 @@ class GraphService:
         )
 
     def get_functions_and_classes(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the function and class names for the given graph.
 
@@ -608,18 +612,19 @@ class GraphService:
             &#34;&#34;&#34;,
             graph_name=graph,
         )
+
         return list(
             set([item for sublist in result for item in sublist[&#34;Repositories&#34;]])
         )
 
     def get_graph(self, graph: str) -&gt; CallGraph:
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Get an entire graph. All nodes and relationships
 
         Args:
-            graph:
+            graph (str): Name of graph to fetch
 
         Returns:
-
+            CallGraph
         &#34;&#34;&#34;
         call_graph = CallGraph()
 
@@ -715,11 +720,11 @@ class GraphService:
         self.metadata = metadata
 
     def create_graph(
-        self,
-        name: str,
-        description: str,
-        system_tx: neo4jTransaction,
-        metadata_tx: Connection,
+            self,
+            name: str,
+            description: str,
+            system_tx: neo4jTransaction,
+            metadata_tx: Connection,
     ) -&gt; Graph:
         &#34;&#34;&#34;Create a new graph.
 
@@ -805,7 +810,7 @@ class GraphService:
         self.repository.add(*args, tx=tx, graph_name=graph_name)
 
     def bulk_add(
-        self, nodes: List[Node], relationships: List[Relationship], graph_name: str
+            self, nodes: List[Node], relationships: List[Relationship], graph_name: str
     ):
         &#34;&#34;&#34;Bulk add nodes and relationships.
 
@@ -885,7 +890,7 @@ class GraphService:
         return self.repository.get_all_nodes_by_label(Docstring, graph_name=graph)
 
     def get_function_summarizations(
-        self, graph_name: str, repository_name: str = None
+            self, graph_name: str, repository_name: str = None
     ) -&gt; Dict[str, Function]:
         &#34;&#34;&#34;Converts all Function nodes into a list of tuples.
 
@@ -1014,46 +1019,49 @@ class GraphService:
 
         return call_graph
 
-    def get_cyclical_dependencies(self, graph: str) -&gt; int:
+    def get_cyclical_dependencies(self, graph: str) -&gt; List[CircularDependency]:
         &#34;&#34;&#34;Get the number of cyclical dependencies in the specified graph.
 
         Args:
             graph (str): The name of the graph to check.
 
         Returns:
-            int: The number of unique cyclical dependencies.
+            List[CircularDependency]: The list of unique cyclical dependencies found.
         &#34;&#34;&#34;
         result = self.repository.execute_query(
-            &#34;MATCH p=(n)-[:Imports|Calls*]-&gt;(n) RETURN nodes(p) as `nodes`&#34;,
+            &#34;MATCH p=(n)-[:Imports|Calls*2..]-&gt;(n) RETURN nodes(p) as `nodes`&#34;,
             graph_name=graph,
         )
 
         cycles = set()
 
         for cycle in result:
-            cycles.add(frozenset(map(lambda x: x.identity, cycle.get(&#34;nodes&#34;))))
+            cycles.add(
+                frozenset(map(lambda x: f&#34;{x[&#39;canonical_name&#39;]}.{x[&#39;extension&#39;]}&#34;, cycle.get(&#34;nodes&#34;))))
 
-        return len(cycles)
+        return list(map(lambda c: CircularDependency(Files=&#34; -&gt; &#34;.join(list(c) + [list(c)[0]]), Length=len(list(c))), list(cycles)))
 
-    def get_missing_dependencies(self, graph: str) -&gt; int:
+    def get_missing_dependencies(self, graph: str) -&gt; List[MissingRequirement]:
         &#34;&#34;&#34;Get the number of dependencies that are missing from the requirements.
 
         Args:
             graph (str): The name of the graph to check.
 
         Returns:
-            int: The number of unique packages (inferred) that have no relationship to
-                 the Repository node(s).
+            List[MissingRequirement]: The list of missing requirements found.
         &#34;&#34;&#34;
         result = self.repository.execute_query(
-            &#34;MATCH (n:Package) WHERE (n.inferred) = true AND  NOT (n)-[*]-&gt;(:Repository) RETURN DISTINCT n&#34;,
+            &#34;MATCH (n:Package|Module) WHERE (n.inferred) = true AND  NOT (n)&lt;-[*]-()  &#34;
+            &#34;RETURN DISTINCT n.canonical_name as `name`, n.repository_name as `repository`&#34;,
             graph_name=graph,
         )
 
-        return len(result)
+        result = list(filter(lambda n: n[&#39;name&#39;] not in sys.stdlib_module_names, list(result)))
+
+        return list(map(lambda n: MissingRequirement(Package=n[&#39;name&#39;], Repository=n[&#39;repository&#39;]), list(result)))
 
     def get_readme_files(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get README files for the given graph
 
@@ -1078,7 +1086,7 @@ class GraphService:
         return result
 
     def get_requirements(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the requirements for the given graph.
 
@@ -1101,7 +1109,7 @@ class GraphService:
         )
 
     def get_licenses(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the licenses for the given graph.
 
@@ -1125,7 +1133,7 @@ class GraphService:
         )
 
     def get_docstrings_full(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the docstrings and functions for the given graph.
 
@@ -1150,7 +1158,7 @@ class GraphService:
         )
 
     def get_summarizations(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the summarizations and functions for the given graph.
 
@@ -1196,7 +1204,7 @@ class GraphService:
         )
 
     def get_functions_and_classes(
-        self, graph: str, repository: Optional[str] = None
+            self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the function and class names for the given graph.
 
@@ -1233,18 +1241,19 @@ class GraphService:
             &#34;&#34;&#34;,
             graph_name=graph,
         )
+
         return list(
             set([item for sublist in result for item in sublist[&#34;Repositories&#34;]])
         )
 
     def get_graph(self, graph: str) -&gt; CallGraph:
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Get an entire graph. All nodes and relationships
 
         Args:
-            graph:
+            graph (str): Name of graph to fetch
 
         Returns:
-
+            CallGraph
         &#34;&#34;&#34;
         call_graph = CallGraph()
 
@@ -1356,7 +1365,7 @@ class GraphService:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def bulk_add(
-    self, nodes: List[Node], relationships: List[Relationship], graph_name: str
+        self, nodes: List[Node], relationships: List[Relationship], graph_name: str
 ):
     &#34;&#34;&#34;Bulk add nodes and relationships.
 
@@ -1391,11 +1400,11 @@ metadata_tx:</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def create_graph(
-    self,
-    name: str,
-    description: str,
-    system_tx: neo4jTransaction,
-    metadata_tx: Connection,
+        self,
+        name: str,
+        description: str,
+        system_tx: neo4jTransaction,
+        metadata_tx: Connection,
 ) -&gt; Graph:
     &#34;&#34;&#34;Create a new graph.
 
@@ -1568,7 +1577,7 @@ metadata_tx:</p>
 </details>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_cyclical_dependencies"><code class="name flex">
-<span>def <span class="ident">get_cyclical_dependencies</span></span>(<span>self, graph: str) ‑> int</span>
+<span>def <span class="ident">get_cyclical_dependencies</span></span>(<span>self, graph: str) ‑> List[<a title="repograph.entities.graph.models.graph.CircularDependency" href="models/graph.html#repograph.entities.graph.models.graph.CircularDependency">CircularDependency</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get the number of cyclical dependencies in the specified graph.</p>
@@ -1579,33 +1588,34 @@ metadata_tx:</p>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>int</code></dt>
-<dd>The number of unique cyclical dependencies.</dd>
+<dt><code>List[CircularDependency]</code></dt>
+<dd>The list of unique cyclical dependencies found.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_cyclical_dependencies(self, graph: str) -&gt; int:
+<pre><code class="python">def get_cyclical_dependencies(self, graph: str) -&gt; List[CircularDependency]:
     &#34;&#34;&#34;Get the number of cyclical dependencies in the specified graph.
 
     Args:
         graph (str): The name of the graph to check.
 
     Returns:
-        int: The number of unique cyclical dependencies.
+        List[CircularDependency]: The list of unique cyclical dependencies found.
     &#34;&#34;&#34;
     result = self.repository.execute_query(
-        &#34;MATCH p=(n)-[:Imports|Calls*]-&gt;(n) RETURN nodes(p) as `nodes`&#34;,
+        &#34;MATCH p=(n)-[:Imports|Calls*2..]-&gt;(n) RETURN nodes(p) as `nodes`&#34;,
         graph_name=graph,
     )
 
     cycles = set()
 
     for cycle in result:
-        cycles.add(frozenset(map(lambda x: x.identity, cycle.get(&#34;nodes&#34;))))
+        cycles.add(
+            frozenset(map(lambda x: f&#34;{x[&#39;canonical_name&#39;]}.{x[&#39;extension&#39;]}&#34;, cycle.get(&#34;nodes&#34;))))
 
-    return len(cycles)</code></pre>
+    return list(map(lambda c: CircularDependency(Files=&#34; -&gt; &#34;.join(list(c) + [list(c)[0]]), Length=len(list(c))), list(cycles)))</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_docstrings"><code class="name flex">
@@ -1655,7 +1665,7 @@ metadata_tx:</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_docstrings_full(
-    self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
 ) -&gt; List[JSONDict]:
     &#34;&#34;&#34;Get the docstrings and functions for the given graph.
 
@@ -1740,7 +1750,7 @@ graph to search against.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_function_summarizations(
-    self, graph_name: str, repository_name: str = None
+        self, graph_name: str, repository_name: str = None
 ) -&gt; Dict[str, Function]:
     &#34;&#34;&#34;Converts all Function nodes into a list of tuples.
 
@@ -1794,7 +1804,7 @@ graph to search against.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_functions_and_classes(
-    self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
 ) -&gt; List[JSONDict]:
     &#34;&#34;&#34;Get the function and class names for the given graph.
 
@@ -1821,21 +1831,26 @@ graph to search against.</dd>
 <span>def <span class="ident">get_graph</span></span>(<span>self, graph: str) ‑> <a title="repograph.entities.graph.models.graph.CallGraph" href="models/graph.html#repograph.entities.graph.models.graph.CallGraph">CallGraph</a></span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="args">Args</h2>
-<p>graph:
-Returns:</p></div>
+<div class="desc"><p>Get an entire graph. All nodes and relationships</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of graph to fetch</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>CallGraph</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_graph(self, graph: str) -&gt; CallGraph:
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Get an entire graph. All nodes and relationships
 
     Args:
-        graph:
+        graph (str): Name of graph to fetch
 
     Returns:
-
+        CallGraph
     &#34;&#34;&#34;
     call_graph = CallGraph()
 
@@ -1904,7 +1919,7 @@ Returns:</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_licenses(
-    self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
 ) -&gt; List[JSONDict]:
     &#34;&#34;&#34;Get the licenses for the given graph.
 
@@ -1929,7 +1944,7 @@ Returns:</p></div>
 </details>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_missing_dependencies"><code class="name flex">
-<span>def <span class="ident">get_missing_dependencies</span></span>(<span>self, graph: str) ‑> int</span>
+<span>def <span class="ident">get_missing_dependencies</span></span>(<span>self, graph: str) ‑> List[<a title="repograph.entities.graph.models.graph.MissingRequirement" href="models/graph.html#repograph.entities.graph.models.graph.MissingRequirement">MissingRequirement</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get the number of dependencies that are missing from the requirements.</p>
@@ -1940,30 +1955,31 @@ Returns:</p></div>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>int</code></dt>
-<dd>The number of unique packages (inferred) that have no relationship to
-the Repository node(s).</dd>
+<dt><code>List[MissingRequirement]</code></dt>
+<dd>The list of missing requirements found.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_missing_dependencies(self, graph: str) -&gt; int:
+<pre><code class="python">def get_missing_dependencies(self, graph: str) -&gt; List[MissingRequirement]:
     &#34;&#34;&#34;Get the number of dependencies that are missing from the requirements.
 
     Args:
         graph (str): The name of the graph to check.
 
     Returns:
-        int: The number of unique packages (inferred) that have no relationship to
-             the Repository node(s).
+        List[MissingRequirement]: The list of missing requirements found.
     &#34;&#34;&#34;
     result = self.repository.execute_query(
-        &#34;MATCH (n:Package) WHERE (n.inferred) = true AND  NOT (n)-[*]-&gt;(:Repository) RETURN DISTINCT n&#34;,
+        &#34;MATCH (n:Package|Module) WHERE (n.inferred) = true AND  NOT (n)&lt;-[*]-()  &#34;
+        &#34;RETURN DISTINCT n.canonical_name as `name`, n.repository_name as `repository`&#34;,
         graph_name=graph,
     )
 
-    return len(result)</code></pre>
+    result = list(filter(lambda n: n[&#39;name&#39;] not in sys.stdlib_module_names, list(result)))
+
+    return list(map(lambda n: MissingRequirement(Package=n[&#39;name&#39;], Repository=n[&#39;repository&#39;]), list(result)))</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_readme_files"><code class="name flex">
@@ -1985,7 +2001,7 @@ the Repository node(s).</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_readme_files(
-    self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
 ) -&gt; List[JSONDict]:
     &#34;&#34;&#34;Get README files for the given graph
 
@@ -2041,6 +2057,7 @@ the Repository node(s).</dd>
         &#34;&#34;&#34;,
         graph_name=graph,
     )
+
     return list(
         set([item for sublist in result for item in sublist[&#34;Repositories&#34;]])
     )</code></pre>
@@ -2065,7 +2082,7 @@ the Repository node(s).</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_requirements(
-    self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
 ) -&gt; List[JSONDict]:
     &#34;&#34;&#34;Get the requirements for the given graph.
 
@@ -2107,7 +2124,7 @@ the Repository node(s).</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_summarizations(
-    self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
 ) -&gt; List[JSONDict]:
     &#34;&#34;&#34;Get the summarizations and functions for the given graph.
 

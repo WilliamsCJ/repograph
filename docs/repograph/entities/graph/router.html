@@ -38,7 +38,7 @@ from typing import List
 from fastapi import APIRouter, status
 
 # Model imports
-from repograph.entities.graph.models.graph import CallGraph, GraphInfo
+from repograph.entities.graph.models.graph import CallGraph, IssuesResult
 
 # Graph entity imports
 from repograph.entities.graph.service import GraphService
@@ -106,11 +106,17 @@ class GraphRouter:
     async def get_all(self, graph: str) -&gt; CallGraph:
         return self.service.get_graph(graph)
 
-    async def cyclical_dependencies(self, graph: str):
-        return self.service.get_cyclical_dependencies(graph)
+    async def cyclical_dependencies(self, graph: str) -&gt; IssuesResult:
+        return IssuesResult(
+            columns=[&#34;Files&#34;, &#34;Length&#34;],
+            data=self.service.get_cyclical_dependencies(graph)
+        )
 
-    async def missing_dependencies(self, graph: str):
-        return self.service.get_missing_dependencies(graph)
+    async def missing_dependencies(self, graph: str) -&gt; IssuesResult:
+        return IssuesResult(
+            columns=[&#34;Package&#34;, &#34;Repository&#34;],
+            data=self.service.get_missing_dependencies(graph)
+        )
 
     async def call_graph_by_id(self, graph: str, node_id: int) -&gt; CallGraph:
         return self.service.get_call_graph_by_id(node_id, graph)
@@ -118,7 +124,7 @@ class GraphRouter:
     async def get_repositories(self, graph: str) -&gt; List[str]:
         return self.service.get_repository_names(graph)
 
-    async def delete_graph(self, graph: str):
+    async def delete_graph(self, graph: str) -&gt; None:
         self.service.delete_graph(graph)</code></pre>
 </details>
 </section>
@@ -203,11 +209,17 @@ class GraphRouter:
     async def get_all(self, graph: str) -&gt; CallGraph:
         return self.service.get_graph(graph)
 
-    async def cyclical_dependencies(self, graph: str):
-        return self.service.get_cyclical_dependencies(graph)
+    async def cyclical_dependencies(self, graph: str) -&gt; IssuesResult:
+        return IssuesResult(
+            columns=[&#34;Files&#34;, &#34;Length&#34;],
+            data=self.service.get_cyclical_dependencies(graph)
+        )
 
-    async def missing_dependencies(self, graph: str):
-        return self.service.get_missing_dependencies(graph)
+    async def missing_dependencies(self, graph: str) -&gt; IssuesResult:
+        return IssuesResult(
+            columns=[&#34;Package&#34;, &#34;Repository&#34;],
+            data=self.service.get_missing_dependencies(graph)
+        )
 
     async def call_graph_by_id(self, graph: str, node_id: int) -&gt; CallGraph:
         return self.service.get_call_graph_by_id(node_id, graph)
@@ -215,7 +227,7 @@ class GraphRouter:
     async def get_repositories(self, graph: str) -&gt; List[str]:
         return self.service.get_repository_names(graph)
 
-    async def delete_graph(self, graph: str):
+    async def delete_graph(self, graph: str) -&gt; None:
         self.service.delete_graph(graph)</code></pre>
 </details>
 <h3>Class variables</h3>
@@ -241,7 +253,7 @@ class GraphRouter:
 </details>
 </dd>
 <dt id="repograph.entities.graph.router.GraphRouter.cyclical_dependencies"><code class="name flex">
-<span>async def <span class="ident">cyclical_dependencies</span></span>(<span>self, graph: str)</span>
+<span>async def <span class="ident">cyclical_dependencies</span></span>(<span>self, graph: str) ‑> <a title="repograph.entities.graph.models.graph.IssuesResult" href="models/graph.html#repograph.entities.graph.models.graph.IssuesResult">IssuesResult</a></span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -249,12 +261,15 @@ class GraphRouter:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def cyclical_dependencies(self, graph: str):
-    return self.service.get_cyclical_dependencies(graph)</code></pre>
+<pre><code class="python">async def cyclical_dependencies(self, graph: str) -&gt; IssuesResult:
+    return IssuesResult(
+        columns=[&#34;Files&#34;, &#34;Length&#34;],
+        data=self.service.get_cyclical_dependencies(graph)
+    )</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.graph.router.GraphRouter.delete_graph"><code class="name flex">
-<span>async def <span class="ident">delete_graph</span></span>(<span>self, graph: str)</span>
+<span>async def <span class="ident">delete_graph</span></span>(<span>self, graph: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -262,7 +277,7 @@ class GraphRouter:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def delete_graph(self, graph: str):
+<pre><code class="python">async def delete_graph(self, graph: str) -&gt; None:
     self.service.delete_graph(graph)</code></pre>
 </details>
 </dd>
@@ -293,7 +308,7 @@ class GraphRouter:
 </details>
 </dd>
 <dt id="repograph.entities.graph.router.GraphRouter.missing_dependencies"><code class="name flex">
-<span>async def <span class="ident">missing_dependencies</span></span>(<span>self, graph: str)</span>
+<span>async def <span class="ident">missing_dependencies</span></span>(<span>self, graph: str) ‑> <a title="repograph.entities.graph.models.graph.IssuesResult" href="models/graph.html#repograph.entities.graph.models.graph.IssuesResult">IssuesResult</a></span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -301,8 +316,11 @@ class GraphRouter:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def missing_dependencies(self, graph: str):
-    return self.service.get_missing_dependencies(graph)</code></pre>
+<pre><code class="python">async def missing_dependencies(self, graph: str) -&gt; IssuesResult:
+    return IssuesResult(
+        columns=[&#34;Package&#34;, &#34;Repository&#34;],
+        data=self.service.get_missing_dependencies(graph)
+    )</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.graph.router.GraphRouter.summary"><code class="name flex">

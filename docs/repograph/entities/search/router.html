@@ -39,6 +39,7 @@ from typing import List
 # pip imports
 from fastapi import APIRouter
 
+from repograph.entities.graph.models.graph import IssuesResult
 # Build entity imports
 from repograph.entities.search.service import SearchService
 
@@ -80,8 +81,13 @@ class SearchRouter:
 
         self.graphRouter = APIRouter(tags=[&#34;Graph&#34;], prefix=&#34;/graph/{graph}&#34;)
         self.graphRouter.add_api_route(
-            &#34;/incorrect-and-missing-docstrings&#34;,
+            &#34;/incorrect-docstrings&#34;,
             self.incorrect_docstrings,
+            methods=[&#34;GET&#34;],
+        )
+        self.graphRouter.add_api_route(
+            &#34;/missing-docstrings&#34;,
+            self.missing_docstrings,
             methods=[&#34;GET&#34;],
         )
 
@@ -95,8 +101,18 @@ class SearchRouter:
         return results
 
     async def incorrect_docstrings(self, graph: str):
-        incorrect, missing = self.service.find_possible_incorrect_docstrings(graph)
-        return [incorrect, missing]
+        incorrect = self.service.find_incorrect_docstrings(graph)
+        return IssuesResult(
+            columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Summarization&#34;, &#34;Docstring&#34;, &#34;Similarity&#34;, &#34;Repository&#34;],
+            data=incorrect
+        )
+
+    async def missing_docstrings(self, graph: str):
+        missing = self.service.find_missing_docstrings(graph)
+        return IssuesResult(
+            columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Repository&#34;],
+            data=missing
+        )
 
     async def available_queries(self):
         return self.service.get_available_search_queries()
@@ -158,8 +174,13 @@ class SearchRouter:
 
         self.graphRouter = APIRouter(tags=[&#34;Graph&#34;], prefix=&#34;/graph/{graph}&#34;)
         self.graphRouter.add_api_route(
-            &#34;/incorrect-and-missing-docstrings&#34;,
+            &#34;/incorrect-docstrings&#34;,
             self.incorrect_docstrings,
+            methods=[&#34;GET&#34;],
+        )
+        self.graphRouter.add_api_route(
+            &#34;/missing-docstrings&#34;,
+            self.missing_docstrings,
             methods=[&#34;GET&#34;],
         )
 
@@ -173,8 +194,18 @@ class SearchRouter:
         return results
 
     async def incorrect_docstrings(self, graph: str):
-        incorrect, missing = self.service.find_possible_incorrect_docstrings(graph)
-        return [incorrect, missing]
+        incorrect = self.service.find_incorrect_docstrings(graph)
+        return IssuesResult(
+            columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Summarization&#34;, &#34;Docstring&#34;, &#34;Similarity&#34;, &#34;Repository&#34;],
+            data=incorrect
+        )
+
+    async def missing_docstrings(self, graph: str):
+        missing = self.service.find_missing_docstrings(graph)
+        return IssuesResult(
+            columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Repository&#34;],
+            data=missing
+        )
 
     async def available_queries(self):
         return self.service.get_available_search_queries()
@@ -221,8 +252,28 @@ class SearchRouter:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def incorrect_docstrings(self, graph: str):
-    incorrect, missing = self.service.find_possible_incorrect_docstrings(graph)
-    return [incorrect, missing]</code></pre>
+    incorrect = self.service.find_incorrect_docstrings(graph)
+    return IssuesResult(
+        columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Summarization&#34;, &#34;Docstring&#34;, &#34;Similarity&#34;, &#34;Repository&#34;],
+        data=incorrect
+    )</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.search.router.SearchRouter.missing_docstrings"><code class="name flex">
+<span>async def <span class="ident">missing_docstrings</span></span>(<span>self, graph: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def missing_docstrings(self, graph: str):
+    missing = self.service.find_missing_docstrings(graph)
+    return IssuesResult(
+        columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Repository&#34;],
+        data=missing
+    )</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.search.router.SearchRouter.query_search"><code class="name flex">
@@ -287,6 +338,7 @@ class SearchRouter:
 <ul class="">
 <li><code><a title="repograph.entities.search.router.SearchRouter.available_queries" href="#repograph.entities.search.router.SearchRouter.available_queries">available_queries</a></code></li>
 <li><code><a title="repograph.entities.search.router.SearchRouter.incorrect_docstrings" href="#repograph.entities.search.router.SearchRouter.incorrect_docstrings">incorrect_docstrings</a></code></li>
+<li><code><a title="repograph.entities.search.router.SearchRouter.missing_docstrings" href="#repograph.entities.search.router.SearchRouter.missing_docstrings">missing_docstrings</a></code></li>
 <li><code><a title="repograph.entities.search.router.SearchRouter.query_search" href="#repograph.entities.search.router.SearchRouter.query_search">query_search</a></code></li>
 <li><code><a title="repograph.entities.search.router.SearchRouter.semantic_search" href="#repograph.entities.search.router.SearchRouter.semantic_search">semantic_search</a></code></li>
 <li><code><a title="repograph.entities.search.router.SearchRouter.service" href="#repograph.entities.search.router.SearchRouter.service">service</a></code></li>

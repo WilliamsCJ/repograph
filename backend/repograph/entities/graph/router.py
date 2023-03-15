@@ -9,7 +9,7 @@ from typing import List
 from fastapi import APIRouter, status
 
 # Model imports
-from repograph.entities.graph.models.graph import CallGraph, GraphInfo
+from repograph.entities.graph.models.graph import CallGraph, IssuesResult
 
 # Graph entity imports
 from repograph.entities.graph.service import GraphService
@@ -77,11 +77,17 @@ class GraphRouter:
     async def get_all(self, graph: str) -> CallGraph:
         return self.service.get_graph(graph)
 
-    async def cyclical_dependencies(self, graph: str):
-        return self.service.get_cyclical_dependencies(graph)
+    async def cyclical_dependencies(self, graph: str) -> IssuesResult:
+        return IssuesResult(
+            columns=["Files", "Length"],
+            data=self.service.get_cyclical_dependencies(graph),
+        )
 
-    async def missing_dependencies(self, graph: str):
-        return self.service.get_missing_dependencies(graph)
+    async def missing_dependencies(self, graph: str) -> IssuesResult:
+        return IssuesResult(
+            columns=["Package", "Repository"],
+            data=self.service.get_missing_dependencies(graph),
+        )
 
     async def call_graph_by_id(self, graph: str, node_id: int) -> CallGraph:
         return self.service.get_call_graph_by_id(node_id, graph)
@@ -89,5 +95,5 @@ class GraphRouter:
     async def get_repositories(self, graph: str) -> List[str]:
         return self.service.get_repository_names(graph)
 
-    async def delete_graph(self, graph: str):
+    async def delete_graph(self, graph: str) -> None:
         self.service.delete_graph(graph)
