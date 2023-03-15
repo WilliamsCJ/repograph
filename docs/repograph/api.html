@@ -38,6 +38,7 @@ import logging
 from dependency_injector.wiring import inject, Provide
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 from yaml import UnsafeLoader
 
 # Application Container
@@ -111,7 +112,9 @@ if __name__ == &#34;__main__&#34;:
     container.config.from_yaml(&#34;../config.yaml&#34;, loader=UnsafeLoader)
     container.wire(modules=[__name__])
 
-    app = create_app()</code></pre>
+    app = create_app()
+
+    uvicorn.run(app, host=&#34;0.0.0.0&#34;, port=3000)</code></pre>
 </details>
 </section>
 <section>
