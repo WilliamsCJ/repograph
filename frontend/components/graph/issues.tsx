@@ -94,7 +94,7 @@ const Issues: React.FC<IssuesProps> = (props) => {
   const [ data, setData ] = useState<IssuesResult|null>(null);
   const [ title, setTitle ] = useState<string|null>(null);
   const [offset, setOffset] = useState(0);
-  const limit = 10;
+  const limit = 5;
 
   return (
     <>

@@ -68,7 +68,6 @@ class GraphInfo(BaseModel):
 class CircularDependency(BaseModel):
     files: str = Field(..., alias="Files")
     length: int = Field(..., alias="Length")
-    repository: str = Field(..., alias="Repository")
 
 
 class MissingRequirement(BaseModel):

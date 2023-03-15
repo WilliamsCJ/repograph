@@ -111,7 +111,7 @@ class SearchService:
             graph_name=graph
         )
 
-        return list(map(lambda m: MissingDocstring(name=m['name'], type=m['type'][0], repository=m['repository']), list(missing)))
+        return list(map(lambda m: MissingDocstring(Name=m['name'], Type=m['type'][0], Repository=m['repository']), list(missing)))
 
     def find_incorrect_docstrings(self, graph: str) -> List[PossibleIncorrectDocstring]:
         """Find possibly incorrect docstrings.
@@ -126,9 +126,9 @@ class SearchService:
         """
         docstrings = self.graph.repository.execute_query(
             "MATCH (n:Docstring)-[:Documents]->(m) WHERE COALESCE(n.short_description, n.long_description) "
-            "IS NOT NULL RETURN n.summarization as `summarization`, "
+            "IS NOT NULL AND n.summarization IS NOT NULL RETURN n.summarization as `summarization`, "
             "COALESCE(n.short_description, n.long_description) as `docstring`,  "
-            "m.canonical_name as `describing`, m.repository_name as `repository`",
+            "m.canonical_name as `name`, labels(m) as `type`, m.repository_name as `repository`",
             graph_name=graph
         )
 
@@ -140,12 +140,12 @@ class SearchService:
 
             if score < 0.4:
                 low_scores.append(PossibleIncorrectDocstring(
-                    name=docstring['name'],
-                    type=docstring['type'][0],
-                    summarization=docstring['summarization'],
-                    docstring=docstring['docstring'],
-                    score=score,
-                    repository_name=docstring['repository_name']
+                    Name=docstring['name'],
+                    Type=docstring['type'][0],
+                    Summarization=docstring['summarization'],
+                    Docstring=docstring['docstring'],
+                    Similarity=score,
+                    Repository=docstring['repository']
                 ))
 
         return low_scores

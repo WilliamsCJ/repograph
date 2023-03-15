@@ -74,14 +74,14 @@ class SearchRouter:
     async def incorrect_docstrings(self, graph: str):
         incorrect = self.service.find_incorrect_docstrings(graph)
         return IssuesResult(
-            columns=["Name", "Type", "Repository"],
+            columns=["Name", "Type", "Summarization", "Docstring", "Similarity", "Repository"],
             data=incorrect
         )
 
     async def missing_docstrings(self, graph: str):
         missing = self.service.find_missing_docstrings(graph)
         return IssuesResult(
-            columns=["Name", "Type", "Summarization", "Docstring", "Similarity", "Repository"],
+            columns=["Name", "Type", "Repository"],
             data=missing
         )
 

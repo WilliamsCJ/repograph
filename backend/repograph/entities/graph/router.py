@@ -85,7 +85,7 @@ class GraphRouter:
 
     async def missing_dependencies(self, graph: str) -> IssuesResult:
         return IssuesResult(
-            columns=["Package"],
+            columns=["Package", "Repository"],
             data=self.service.get_missing_dependencies(graph)
         )
 

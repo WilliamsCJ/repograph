@@ -381,7 +381,7 @@ class GraphService:
             cycles.add(
                 frozenset(map(lambda x: f"{x['canonical_name']}.{x['extension']}", cycle.get("nodes"))))
 
-        return list(map(lambda c: CircularDependency(files=" -> ".join(list(c) + [list(c)[0]]), length=len(list(c))), list(cycles)))
+        return list(map(lambda c: CircularDependency(Files=" -> ".join(list(c) + [list(c)[0]]), Length=len(list(c))), list(cycles)))
 
     def get_missing_dependencies(self, graph: str) -> List[MissingRequirement]:
         """Get the number of dependencies that are missing from the requirements.
@@ -393,13 +393,14 @@ class GraphService:
             List[MissingRequirement]: The list of missing requirements found.
         """
         result = self.repository.execute_query(
-            "MATCH (n:Package|Module) WHERE (n.inferred) = true AND  NOT (n)<-[*]-()  RETURN DISTINCT n.canonical_name as `name`",
+            "MATCH (n:Package|Module) WHERE (n.inferred) = true AND  NOT (n)<-[*]-()  "
+            "RETURN DISTINCT n.canonical_name as `name`, n.repository_name as `repository`",
             graph_name=graph,
         )
 
         result = list(filter(lambda n: n['name'] not in sys.stdlib_module_names, list(result)))
 
-        return list(map(lambda n: MissingRequirement(Package=n['name']), list(result)))
+        return list(map(lambda n: MissingRequirement(Package=n['name'], Repository=n['repository']), list(result)))
 
     def get_readme_files(
             self, graph: str, repository: Optional[str] = None
