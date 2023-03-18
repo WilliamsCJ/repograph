@@ -6,8 +6,6 @@ Evaluate the performance of RepoGraph
 import csv
 import logging
 import os
-import shutil
-import subprocess
 import time
 import string
 
@@ -27,17 +25,18 @@ from repograph.entities.graph.service import GraphService
 # Utils
 from repograph.utils.logging import configure_logging
 
-repositories = [
-    "tiangolo/fastapi",
-    "RDFLib/pyLODE",
-    "PyCQA/flake8",
-    "OmkarPathak/pygorithm",
-    "py2neo-org/py2neo",
-]
+# repositories = [
+#     "tiangolo/fastapi",
+#     "RDFLib/pyLODE",
+#     "PyCQA/flake8",
+#     "OmkarPathak/pygorithm",
+#     "py2neo-org/py2neo",
+# ]
 
 data = pd.read_csv("./evaluation/software_type_benchmark.csv", sep=",")
 
-repositories = repositories + list(data["repository"])
+# repositories = repositories + list(data["repository"])
+repositories = list(data["repository"])
 
 configure_logging(logging.CRITICAL)
 
@@ -47,11 +46,11 @@ def collect(
     build: BuildService = Provide[ApplicationContainer.build.container.service],
     graph: GraphService = Provide[ApplicationContainer.graph.container.service],
 ):
-    with open("./evaluation/results.csv", "w+", newline="") as csvfile:
+    with open("./evaluation/results.csv", "a+", newline="") as csvfile:
         writer = csv.writer(
             csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
         )
-        writer.writerow(["Repository", "Success", "Time (s)", "Nodes", "Relationships"])
+        # writer.writerow(["Repository", "Success", "Time (s)", "Nodes", "Relationships"])
         for repo in tqdm(repositories):
             name = repo.split("/")[1].lower()
             d = f"./evaluation/{name}"
@@ -92,19 +91,40 @@ def collect(
 
 def plot():
     df = pd.read_csv("./evaluation/results.csv")
-    print(df)
 
-    ax1 = seaborn.scatterplot(x="Nodes", y="Time (s)", data=df, hue="Repository").set(
+    fig1 = plt.figure()
+    ax1 = plt.axes()
+    seaborn.scatterplot(x="Nodes", y="Time (s)", data=df, ax=ax1).set(
         title="Nodes Created vs Processing Time"
     )
-    fig1 = ax1.get_figure()
     fig1.savefig("./evaluation/processing_time_vs_nodes.png")
+
     plt.clf()
-    ax2 = seaborn.scatterplot(
-        x="Relationships", y="Time (s)", data=df, hue="Repository"
+
+    fig2 = plt.figure()
+    ax2 = plt.axes()
+    seaborn.scatterplot(
+        x="Relationships", y="Time (s)", data=df, ax=ax2
     ).set(title="Relationships Created vs Processing Time")
-    fig2 = ax2.get_figure()
     fig2.savefig("./evaluation/processing_time_vs_relationships.png")
+
+    plt.clf()
+
+    fig1 = plt.figure()
+    ax1 = plt.axes()
+    seaborn.scatterplot(x="Nodes", y="Time (s)", data=df[df['Nodes'] < 30000], ax=ax1).set(
+        title="Nodes Created vs Processing Time (Nodes < 30,000)"
+    )
+    fig1.savefig("./evaluation/processing_time_vs_nodes_filtered.png")
+
+    plt.clf()
+
+    fig2 = plt.figure()
+    ax2 = plt.axes()
+    seaborn.scatterplot(
+        x="Relationships", y="Time (s)", data=df[df['Relationships'] < 30000], ax=ax2
+    ).set(title="Relationships Created vs Processing Time (Relationships < 30,000)")
+    fig2.savefig("./evaluation/processing_time_vs_relationships_filtered.png")
 
 
 if __name__ == "__main__":

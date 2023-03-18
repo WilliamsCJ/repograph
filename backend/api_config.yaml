@@ -3,6 +3,6 @@ driver_uri: bolt://repograph-database:7687
 username: neo4j
 password: s3cr3t
 database: neo4j
-search: True
-summarize: True
+search: False
+summarize: False
 metadata_db: /code/sqlite/graphs.db

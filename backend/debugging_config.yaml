@@ -5,3 +5,4 @@ password: s3cr3t
 database: neo4j
 metadata_db: ../../.sqlite/graphs.db
 summarize: False
+search: False
