@@ -9,6 +9,8 @@
 **/requirements_*.txt
 !**/requirements_test.txt
 
+backend/evaluation/*/
+
 
 # Demo repositories
 demo/*
