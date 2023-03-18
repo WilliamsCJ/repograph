@@ -7,7 +7,6 @@ import csv
 import logging
 import os
 import shutil
-import subprocess
 import time
 import string
 
@@ -35,10 +34,6 @@ repositories = [
     "py2neo-org/py2neo",
 ]
 
-data = pd.read_csv("./evaluation/software_type_benchmark.csv", sep=",")
-
-repositories = repositories + list(data["repository"])
-
 configure_logging(logging.CRITICAL)
 
 
@@ -47,21 +42,17 @@ def collect(
     build: BuildService = Provide[ApplicationContainer.build.container.service],
     graph: GraphService = Provide[ApplicationContainer.graph.container.service],
 ):
-    with open("./evaluation/results.csv", "w+", newline="") as csvfile:
+    with open("./evaluation/results_with_summarization.csv", "w+", newline="") as csvfile:
         writer = csv.writer(
             csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
         )
         writer.writerow(["Repository", "Success", "Time (s)", "Nodes", "Relationships"])
         for repo in tqdm(repositories):
             name = repo.split("/")[1].lower()
+            d = f"./evaluation/{name}"
             name = name.translate(str.maketrans("", "", string.punctuation))
-            d = f"./{name}"
 
             try:
-                subprocess.run(
-                    ["git", "clone", f"https://github.com/{repo.lower()}", d]
-                )
-
                 start = time.time()
                 build.build(
                     [d],
@@ -97,20 +88,30 @@ def collect(
 
 
 def plot():
-    df = pd.read_csv("./evaluation/results.csv")
-    print(df)
+    df = pd.read_csv("./evaluation/results_with_summarization.csv")
 
-    ax1 = seaborn.scatterplot(x="Nodes", y="Time (s)", data=df, hue="Repository").set(
+    fig1 = plt.figure()
+    ax1 = plt.axes()
+    seaborn.scatterplot(x="Nodes", y="Time (s)", data=df, ax=ax1).set(
         title="Nodes Created vs Processing Time"
     )
-    fig1 = ax1.get_figure()
     fig1.savefig("./evaluation/processing_time_vs_nodes.png")
+
     plt.clf()
-    ax2 = seaborn.scatterplot(
-        x="Relationships", y="Time (s)", data=df, hue="Repository"
+
+    fig2 = plt.figure()
+    ax2 = plt.axes()
+    seaborn.scatterplot(
+        x="Relationships", y="Time (s)", data=df, ax=ax2
     ).set(title="Relationships Created vs Processing Time")
-    fig2 = ax2.get_figure()
     fig2.savefig("./evaluation/processing_time_vs_relationships.png")
+
+    plt.clf()
+
+    print("Success vs Failure:")
+    print(df['Success'].value_counts(ascending=True))
+    print("Time-outs:")
+    print((df['Time (s)'].isna()).sum())
 
 
 if __name__ == "__main__":
