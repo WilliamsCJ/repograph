@@ -1,5 +1,7 @@
 # Demonstration
 
+Demonstration. Several specific directories are included.
+
 To begin, clone the demo repositories by running the following from this directory:
 
 ```shell
