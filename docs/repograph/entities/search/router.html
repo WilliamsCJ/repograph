@@ -40,6 +40,7 @@ from typing import List
 from fastapi import APIRouter
 
 from repograph.entities.graph.models.graph import IssuesResult
+
 # Build entity imports
 from repograph.entities.search.service import SearchService
 
@@ -103,16 +104,20 @@ class SearchRouter:
     async def incorrect_docstrings(self, graph: str):
         incorrect = self.service.find_incorrect_docstrings(graph)
         return IssuesResult(
-            columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Summarization&#34;, &#34;Docstring&#34;, &#34;Similarity&#34;, &#34;Repository&#34;],
-            data=incorrect
+            columns=[
+                &#34;Name&#34;,
+                &#34;Type&#34;,
+                &#34;Summarization&#34;,
+                &#34;Docstring&#34;,
+                &#34;Similarity&#34;,
+                &#34;Repository&#34;,
+            ],
+            data=incorrect,
         )
 
     async def missing_docstrings(self, graph: str):
         missing = self.service.find_missing_docstrings(graph)
-        return IssuesResult(
-            columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Repository&#34;],
-            data=missing
-        )
+        return IssuesResult(columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Repository&#34;], data=missing)
 
     async def available_queries(self):
         return self.service.get_available_search_queries()
@@ -196,16 +201,20 @@ class SearchRouter:
     async def incorrect_docstrings(self, graph: str):
         incorrect = self.service.find_incorrect_docstrings(graph)
         return IssuesResult(
-            columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Summarization&#34;, &#34;Docstring&#34;, &#34;Similarity&#34;, &#34;Repository&#34;],
-            data=incorrect
+            columns=[
+                &#34;Name&#34;,
+                &#34;Type&#34;,
+                &#34;Summarization&#34;,
+                &#34;Docstring&#34;,
+                &#34;Similarity&#34;,
+                &#34;Repository&#34;,
+            ],
+            data=incorrect,
         )
 
     async def missing_docstrings(self, graph: str):
         missing = self.service.find_missing_docstrings(graph)
-        return IssuesResult(
-            columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Repository&#34;],
-            data=missing
-        )
+        return IssuesResult(columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Repository&#34;], data=missing)
 
     async def available_queries(self):
         return self.service.get_available_search_queries()
@@ -254,8 +263,15 @@ class SearchRouter:
 <pre><code class="python">async def incorrect_docstrings(self, graph: str):
     incorrect = self.service.find_incorrect_docstrings(graph)
     return IssuesResult(
-        columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Summarization&#34;, &#34;Docstring&#34;, &#34;Similarity&#34;, &#34;Repository&#34;],
-        data=incorrect
+        columns=[
+            &#34;Name&#34;,
+            &#34;Type&#34;,
+            &#34;Summarization&#34;,
+            &#34;Docstring&#34;,
+            &#34;Similarity&#34;,
+            &#34;Repository&#34;,
+        ],
+        data=incorrect,
     )</code></pre>
 </details>
 </dd>
@@ -270,10 +286,7 @@ class SearchRouter:
 </summary>
 <pre><code class="python">async def missing_docstrings(self, graph: str):
     missing = self.service.find_missing_docstrings(graph)
-    return IssuesResult(
-        columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Repository&#34;],
-        data=missing
-    )</code></pre>
+    return IssuesResult(columns=[&#34;Name&#34;, &#34;Type&#34;, &#34;Repository&#34;], data=missing)</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.search.router.SearchRouter.query_search"><code class="name flex">
