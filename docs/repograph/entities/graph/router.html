@@ -109,13 +109,13 @@ class GraphRouter:
     async def cyclical_dependencies(self, graph: str) -&gt; IssuesResult:
         return IssuesResult(
             columns=[&#34;Files&#34;, &#34;Length&#34;],
-            data=self.service.get_cyclical_dependencies(graph)
+            data=self.service.get_cyclical_dependencies(graph),
         )
 
     async def missing_dependencies(self, graph: str) -&gt; IssuesResult:
         return IssuesResult(
             columns=[&#34;Package&#34;, &#34;Repository&#34;],
-            data=self.service.get_missing_dependencies(graph)
+            data=self.service.get_missing_dependencies(graph),
         )
 
     async def call_graph_by_id(self, graph: str, node_id: int) -&gt; CallGraph:
@@ -212,13 +212,13 @@ class GraphRouter:
     async def cyclical_dependencies(self, graph: str) -&gt; IssuesResult:
         return IssuesResult(
             columns=[&#34;Files&#34;, &#34;Length&#34;],
-            data=self.service.get_cyclical_dependencies(graph)
+            data=self.service.get_cyclical_dependencies(graph),
         )
 
     async def missing_dependencies(self, graph: str) -&gt; IssuesResult:
         return IssuesResult(
             columns=[&#34;Package&#34;, &#34;Repository&#34;],
-            data=self.service.get_missing_dependencies(graph)
+            data=self.service.get_missing_dependencies(graph),
         )
 
     async def call_graph_by_id(self, graph: str, node_id: int) -&gt; CallGraph:
@@ -264,7 +264,7 @@ class GraphRouter:
 <pre><code class="python">async def cyclical_dependencies(self, graph: str) -&gt; IssuesResult:
     return IssuesResult(
         columns=[&#34;Files&#34;, &#34;Length&#34;],
-        data=self.service.get_cyclical_dependencies(graph)
+        data=self.service.get_cyclical_dependencies(graph),
     )</code></pre>
 </details>
 </dd>
@@ -319,7 +319,7 @@ class GraphRouter:
 <pre><code class="python">async def missing_dependencies(self, graph: str) -&gt; IssuesResult:
     return IssuesResult(
         columns=[&#34;Package&#34;, &#34;Repository&#34;],
-        data=self.service.get_missing_dependencies(graph)
+        data=self.service.get_missing_dependencies(graph),
     )</code></pre>
 </details>
 </dd>
