@@ -32,7 +32,7 @@ repositories = [
     "PyCQA/flake8",
     "OmkarPathak/pygorithm",
     "py2neo-org/py2neo",
-    "psf/black"
+    "psf/black",
 ]
 
 configure_logging(logging.CRITICAL)
@@ -43,7 +43,9 @@ def collect(
     build: BuildService = Provide[ApplicationContainer.build.container.service],
     graph: GraphService = Provide[ApplicationContainer.graph.container.service],
 ):
-    with open("./evaluation/results_with_summarization.csv", "w+", newline="") as csvfile:
+    with open(
+        "./evaluation/results_with_summarization.csv", "w+", newline=""
+    ) as csvfile:
         writer = csv.writer(
             csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
         )
@@ -100,18 +102,18 @@ def plot():
 
     fig2 = plt.figure()
     ax2 = plt.axes()
-    seaborn.scatterplot(
-        x="Relationships", y="Time (s)", data=df, ax=ax2
-    ).set(title="Relationships Created vs Processing Time")
+    seaborn.scatterplot(x="Relationships", y="Time (s)", data=df, ax=ax2).set(
+        title="Relationships Created vs Processing Time"
+    )
     fig2.savefig("./evaluation/processing_time_vs_relationships_summarization.png")
 
     plt.clf()
 
     fig1 = plt.figure()
     ax1 = plt.axes()
-    seaborn.scatterplot(x="Nodes", y="Time (s)", data=df[df['Nodes'] < 6000], ax=ax1).set(
-        title="Nodes Created vs Processing Time (Nodes < 6,000)"
-    )
+    seaborn.scatterplot(
+        x="Nodes", y="Time (s)", data=df[df["Nodes"] < 6000], ax=ax1
+    ).set(title="Nodes Created vs Processing Time (Nodes < 6,000)")
     fig1.savefig("./evaluation/processing_time_vs_nodes_summarization_filtered.png")
 
     plt.clf()
@@ -119,16 +121,18 @@ def plot():
     fig2 = plt.figure()
     ax2 = plt.axes()
     seaborn.scatterplot(
-        x="Relationships", y="Time (s)", data=df[df['Relationships'] < 10000], ax=ax2
+        x="Relationships", y="Time (s)", data=df[df["Relationships"] < 10000], ax=ax2
     ).set(title="Relationships Created vs Processing Time (Relationships < 10,000)")
-    fig2.savefig("./evaluation/processing_time_vs_relationships_summarization_filtered.png")
+    fig2.savefig(
+        "./evaluation/processing_time_vs_relationships_summarization_filtered.png"
+    )
 
     plt.clf()
 
     print("Success vs Failure:")
-    print(df['Success'].value_counts(ascending=True))
+    print(df["Success"].value_counts(ascending=True))
     print("Time-outs:")
-    print((df['Time (s)'].isna()).sum())
+    print((df["Time (s)"].isna()).sum())
 
 
 if __name__ == "__main__":
