@@ -90,6 +90,8 @@ Tips for contributing to/developing RepoGraph.
 
 ### Testing
 
+Before testing, please clone the demo directories. See `demo/README.md`
+
 From the project root, run:
 
 ```shell
