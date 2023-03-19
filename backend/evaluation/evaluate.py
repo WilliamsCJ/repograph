@@ -109,7 +109,7 @@ def plot():
 
     fig1 = plt.figure()
     ax1 = plt.axes()
-    seaborn.scatterplot(x="Nodes", y="Time (s)", data=df, ax=ax1).set(
+    seaborn.scatterplot(x="Nodes", y="Time (s)", data=df[df['Nodes'] < 6000], ax=ax1).set(
         title="Nodes Created vs Processing Time (Nodes < 6,000)"
     )
     fig1.savefig("./evaluation/processing_time_vs_nodes_summarization_filtered.png")
@@ -119,7 +119,7 @@ def plot():
     fig2 = plt.figure()
     ax2 = plt.axes()
     seaborn.scatterplot(
-        x="Relationships", y="Time (s)", data=df, ax=ax2
+        x="Relationships", y="Time (s)", data=df[df['Relationships'] < 10000], ax=ax2
     ).set(title="Relationships Created vs Processing Time (Relationships < 10,000)")
     fig2.savefig("./evaluation/processing_time_vs_relationships_summarization_filtered.png")
 
@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
     open("./evaluation/test.db", "w")
 
-    print("Evaluating processing times...")
+    print("Evaluating processing times (with function summarizations)...")
 
     try:
         collect()
