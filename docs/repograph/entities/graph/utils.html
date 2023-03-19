@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>repograph.entities.graph API documentation</title>
-<meta name="description" content="" />
+<title>repograph.entities.graph.utils API documentation</title>
+<meta name="description" content="Utility functions for the graph entity." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,46 +19,181 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>repograph.entities.graph</code></h1>
+<h1 class="title">Module <code>repograph.entities.graph.utils</code></h1>
 </header>
 <section id="section-intro">
+<p>Utility functions for the graph entity.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Utility functions for the graph entity.
+&#34;&#34;&#34;
+# Base imports
+from pathlib import PurePath
+from logging import getLogger
+from typing import Tuple
+
+# Logging
+log = getLogger(&#34;repograph.entities.graph.utils&#34;)
+
+
+def get_path_name(file_path: str) -&gt; str:
+    &#34;&#34;&#34;Gets the name of the file or directory pointed to by the file path.
+
+    Args:
+        file_path (str): The file path to find the name of.
+
+    Returns:
+        str: The name of the file or directory in the file path.
+    &#34;&#34;&#34;
+    pure_path = PurePath(file_path)
+    return pure_path.parts[-1]
+
+
+def get_path_parent(file_path: str) -&gt; str:
+    &#34;&#34;&#34;Gets the path of the parent for a given file_path.
+
+    Args:
+        file_path (str): The file path to find the parent of.
+
+    Returns:
+        str: Parent file path
+    &#34;&#34;&#34;
+    pure_path = PurePath(file_path)
+    return str(pure_path.parent)
+
+
+def get_package_parent_and_name(package: str) -&gt; Tuple[str, str]:
+    &#34;&#34;&#34;Get the package parent.
+
+    Args:
+        package (str): Package to parse.
+
+    Returns:
+        str: The parent package
+        str: The package name
+    &#34;&#34;&#34;
+    parts = package.split(&#34;.&#34;)
+
+    if len(parts) == 1:
+        return &#34;&#34;, package
+
+    return &#34;.&#34;.join(parts[:-1]), parts[-1]</code></pre>
+</details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="repograph.entities.graph.container" href="container.html">repograph.entities.graph.container</a></code></dt>
+<dt id="repograph.entities.graph.utils.get_package_parent_and_name"><code class="name flex">
+<span>def <span class="ident">get_package_parent_and_name</span></span>(<span>package: str) ‑> Tuple[str, str]</span>
+</code></dt>
 <dd>
-<div class="desc"><p>Container for graph entity for dependency injection.</p></div>
+<div class="desc"><p>Get the package parent.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>package</code></strong> :&ensp;<code>str</code></dt>
+<dd>Package to parse.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>The parent package</dd>
+<dt><code>str</code></dt>
+<dd>The package name</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_package_parent_and_name(package: str) -&gt; Tuple[str, str]:
+    &#34;&#34;&#34;Get the package parent.
+
+    Args:
+        package (str): Package to parse.
+
+    Returns:
+        str: The parent package
+        str: The package name
+    &#34;&#34;&#34;
+    parts = package.split(&#34;.&#34;)
+
+    if len(parts) == 1:
+        return &#34;&#34;, package
+
+    return &#34;.&#34;.join(parts[:-1]), parts[-1]</code></pre>
+</details>
 </dd>
-<dt><code class="name"><a title="repograph.entities.graph.exceptions" href="exceptions.html">repograph.entities.graph.exceptions</a></code></dt>
+<dt id="repograph.entities.graph.utils.get_path_name"><code class="name flex">
+<span>def <span class="ident">get_path_name</span></span>(<span>file_path: str) ‑> str</span>
+</code></dt>
 <dd>
-<div class="desc"><p>Custom exceptions for the graph entity.</p></div>
+<div class="desc"><p>Gets the name of the file or directory pointed to by the file path.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>file_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>The file path to find the name of.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>The name of the file or directory in the file path.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_path_name(file_path: str) -&gt; str:
+    &#34;&#34;&#34;Gets the name of the file or directory pointed to by the file path.
+
+    Args:
+        file_path (str): The file path to find the name of.
+
+    Returns:
+        str: The name of the file or directory in the file path.
+    &#34;&#34;&#34;
+    pure_path = PurePath(file_path)
+    return pure_path.parts[-1]</code></pre>
+</details>
 </dd>
-<dt><code class="name"><a title="repograph.entities.graph.models" href="models/index.html">repograph.entities.graph.models</a></code></dt>
+<dt id="repograph.entities.graph.utils.get_path_parent"><code class="name flex">
+<span>def <span class="ident">get_path_parent</span></span>(<span>file_path: str) ‑> str</span>
+</code></dt>
 <dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="repograph.entities.graph.repository" href="repository.html">repograph.entities.graph.repository</a></code></dt>
-<dd>
-<div class="desc"><p>Graph database repository.</p></div>
-</dd>
-<dt><code class="name"><a title="repograph.entities.graph.router" href="router.html">repograph.entities.graph.router</a></code></dt>
-<dd>
-<div class="desc"><p>Routing for build entity.</p></div>
-</dd>
-<dt><code class="name"><a title="repograph.entities.graph.service" href="service.html">repograph.entities.graph.service</a></code></dt>
-<dd>
-<div class="desc"><p>Graph entity application logic.</p></div>
-</dd>
-<dt><code class="name"><a title="repograph.entities.graph.utils" href="utils.html">repograph.entities.graph.utils</a></code></dt>
-<dd>
-<div class="desc"><p>Utility functions for the graph entity.</p></div>
+<div class="desc"><p>Gets the path of the parent for a given file_path.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>file_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>The file path to find the parent of.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>Parent file path</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_path_parent(file_path: str) -&gt; str:
+    &#34;&#34;&#34;Gets the path of the parent for a given file_path.
+
+    Args:
+        file_path (str): The file path to find the parent of.
+
+    Returns:
+        str: Parent file path
+    &#34;&#34;&#34;
+    pure_path = PurePath(file_path)
+    return str(pure_path.parent)</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -71,18 +206,14 @@
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="repograph.entities" href="../index.html">repograph.entities</a></code></li>
+<li><code><a title="repograph.entities.graph" href="index.html">repograph.entities.graph</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="repograph.entities.graph.container" href="container.html">repograph.entities.graph.container</a></code></li>
-<li><code><a title="repograph.entities.graph.exceptions" href="exceptions.html">repograph.entities.graph.exceptions</a></code></li>
-<li><code><a title="repograph.entities.graph.models" href="models/index.html">repograph.entities.graph.models</a></code></li>
-<li><code><a title="repograph.entities.graph.repository" href="repository.html">repograph.entities.graph.repository</a></code></li>
-<li><code><a title="repograph.entities.graph.router" href="router.html">repograph.entities.graph.router</a></code></li>
-<li><code><a title="repograph.entities.graph.service" href="service.html">repograph.entities.graph.service</a></code></li>
-<li><code><a title="repograph.entities.graph.utils" href="utils.html">repograph.entities.graph.utils</a></code></li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="repograph.entities.graph.utils.get_package_parent_and_name" href="#repograph.entities.graph.utils.get_package_parent_and_name">get_package_parent_and_name</a></code></li>
+<li><code><a title="repograph.entities.graph.utils.get_path_name" href="#repograph.entities.graph.utils.get_path_name">get_path_name</a></code></li>
+<li><code><a title="repograph.entities.graph.utils.get_path_parent" href="#repograph.entities.graph.utils.get_path_parent">get_path_parent</a></code></li>
 </ul>
 </li>
 </ul>
