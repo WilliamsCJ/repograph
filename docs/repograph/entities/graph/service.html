@@ -55,7 +55,12 @@ from repograph.entities.graph.models.nodes import (
     Repository,
     README,
 )
-from repograph.entities.graph.models.graph import GraphSummary, CallGraph, CircularDependency, MissingRequirement
+from repograph.entities.graph.models.graph import (
+    GraphSummary,
+    CallGraph,
+    CircularDependency,
+    MissingRequirement,
+)
 
 # Graph entity imports
 from repograph.entities.graph.repository import GraphRepository
@@ -66,7 +71,7 @@ from repograph.entities.metadata.service import MetadataService
 
 # Exceptions
 from repograph.entities.graph.exceptions import InvalidGraphNameError
-from repograph.utils.json import JSONDict
+from repograph.utils import JSONDict
 
 # Configure logging
 log = getLogger(&#34;repograph.entities.graph.service&#34;)
@@ -91,11 +96,11 @@ class GraphService:
         self.metadata = metadata
 
     def create_graph(
-            self,
-            name: str,
-            description: str,
-            system_tx: neo4jTransaction,
-            metadata_tx: Connection,
+        self,
+        name: str,
+        description: str,
+        system_tx: neo4jTransaction,
+        metadata_tx: Connection,
     ) -&gt; Graph:
         &#34;&#34;&#34;Create a new graph.
 
@@ -181,7 +186,7 @@ class GraphService:
         self.repository.add(*args, tx=tx, graph_name=graph_name)
 
     def bulk_add(
-            self, nodes: List[Node], relationships: List[Relationship], graph_name: str
+        self, nodes: List[Node], relationships: List[Relationship], graph_name: str
     ):
         &#34;&#34;&#34;Bulk add nodes and relationships.
 
@@ -261,7 +266,7 @@ class GraphService:
         return self.repository.get_all_nodes_by_label(Docstring, graph_name=graph)
 
     def get_function_summarizations(
-            self, graph_name: str, repository_name: str = None
+        self, graph_name: str, repository_name: str = None
     ) -&gt; Dict[str, Function]:
         &#34;&#34;&#34;Converts all Function nodes into a list of tuples.
 
@@ -408,9 +413,22 @@ class GraphService:
 
         for cycle in result:
             cycles.add(
-                frozenset(map(lambda x: f&#34;{x[&#39;canonical_name&#39;]}.{x[&#39;extension&#39;]}&#34;, cycle.get(&#34;nodes&#34;))))
+                frozenset(
+                    map(
+                        lambda x: f&#34;{x[&#39;canonical_name&#39;]}.{x[&#39;extension&#39;]}&#34;,
+                        cycle.get(&#34;nodes&#34;),
+                    )
+                )
+            )
 
-        return list(map(lambda c: CircularDependency(Files=&#34; -&gt; &#34;.join(list(c) + [list(c)[0]]), Length=len(list(c))), list(cycles)))
+        return list(
+            map(
+                lambda c: CircularDependency(
+                    Files=&#34; -&gt; &#34;.join(list(c) + [list(c)[0]]), Length=len(list(c))
+                ),
+                list(cycles),
+            )
+        )
 
     def get_missing_dependencies(self, graph: str) -&gt; List[MissingRequirement]:
         &#34;&#34;&#34;Get the number of dependencies that are missing from the requirements.
@@ -427,12 +445,21 @@ class GraphService:
             graph_name=graph,
         )
 
-        result = list(filter(lambda n: n[&#39;name&#39;] not in sys.stdlib_module_names, list(result)))
+        result = list(
+            filter(lambda n: n[&#34;name&#34;] not in sys.stdlib_module_names, list(result))
+        )
 
-        return list(map(lambda n: MissingRequirement(Package=n[&#39;name&#39;], Repository=n[&#39;repository&#39;]), list(result)))
+        return list(
+            map(
+                lambda n: MissingRequirement(
+                    Package=n[&#34;name&#34;], Repository=n[&#34;repository&#34;]
+                ),
+                list(result),
+            )
+        )
 
     def get_readme_files(
-            self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get README files for the given graph
 
@@ -457,7 +484,7 @@ class GraphService:
         return result
 
     def get_requirements(
-            self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the requirements for the given graph.
 
@@ -480,7 +507,7 @@ class GraphService:
         )
 
     def get_licenses(
-            self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the licenses for the given graph.
 
@@ -504,7 +531,7 @@ class GraphService:
         )
 
     def get_docstrings_full(
-            self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the docstrings and functions for the given graph.
 
@@ -529,7 +556,7 @@ class GraphService:
         )
 
     def get_summarizations(
-            self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the summarizations and functions for the given graph.
 
@@ -575,7 +602,7 @@ class GraphService:
         )
 
     def get_functions_and_classes(
-            self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the function and class names for the given graph.
 
@@ -720,11 +747,11 @@ class GraphService:
         self.metadata = metadata
 
     def create_graph(
-            self,
-            name: str,
-            description: str,
-            system_tx: neo4jTransaction,
-            metadata_tx: Connection,
+        self,
+        name: str,
+        description: str,
+        system_tx: neo4jTransaction,
+        metadata_tx: Connection,
     ) -&gt; Graph:
         &#34;&#34;&#34;Create a new graph.
 
@@ -810,7 +837,7 @@ class GraphService:
         self.repository.add(*args, tx=tx, graph_name=graph_name)
 
     def bulk_add(
-            self, nodes: List[Node], relationships: List[Relationship], graph_name: str
+        self, nodes: List[Node], relationships: List[Relationship], graph_name: str
     ):
         &#34;&#34;&#34;Bulk add nodes and relationships.
 
@@ -890,7 +917,7 @@ class GraphService:
         return self.repository.get_all_nodes_by_label(Docstring, graph_name=graph)
 
     def get_function_summarizations(
-            self, graph_name: str, repository_name: str = None
+        self, graph_name: str, repository_name: str = None
     ) -&gt; Dict[str, Function]:
         &#34;&#34;&#34;Converts all Function nodes into a list of tuples.
 
@@ -1037,9 +1064,22 @@ class GraphService:
 
         for cycle in result:
             cycles.add(
-                frozenset(map(lambda x: f&#34;{x[&#39;canonical_name&#39;]}.{x[&#39;extension&#39;]}&#34;, cycle.get(&#34;nodes&#34;))))
+                frozenset(
+                    map(
+                        lambda x: f&#34;{x[&#39;canonical_name&#39;]}.{x[&#39;extension&#39;]}&#34;,
+                        cycle.get(&#34;nodes&#34;),
+                    )
+                )
+            )
 
-        return list(map(lambda c: CircularDependency(Files=&#34; -&gt; &#34;.join(list(c) + [list(c)[0]]), Length=len(list(c))), list(cycles)))
+        return list(
+            map(
+                lambda c: CircularDependency(
+                    Files=&#34; -&gt; &#34;.join(list(c) + [list(c)[0]]), Length=len(list(c))
+                ),
+                list(cycles),
+            )
+        )
 
     def get_missing_dependencies(self, graph: str) -&gt; List[MissingRequirement]:
         &#34;&#34;&#34;Get the number of dependencies that are missing from the requirements.
@@ -1056,12 +1096,21 @@ class GraphService:
             graph_name=graph,
         )
 
-        result = list(filter(lambda n: n[&#39;name&#39;] not in sys.stdlib_module_names, list(result)))
+        result = list(
+            filter(lambda n: n[&#34;name&#34;] not in sys.stdlib_module_names, list(result))
+        )
 
-        return list(map(lambda n: MissingRequirement(Package=n[&#39;name&#39;], Repository=n[&#39;repository&#39;]), list(result)))
+        return list(
+            map(
+                lambda n: MissingRequirement(
+                    Package=n[&#34;name&#34;], Repository=n[&#34;repository&#34;]
+                ),
+                list(result),
+            )
+        )
 
     def get_readme_files(
-            self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get README files for the given graph
 
@@ -1086,7 +1135,7 @@ class GraphService:
         return result
 
     def get_requirements(
-            self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the requirements for the given graph.
 
@@ -1109,7 +1158,7 @@ class GraphService:
         )
 
     def get_licenses(
-            self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the licenses for the given graph.
 
@@ -1133,7 +1182,7 @@ class GraphService:
         )
 
     def get_docstrings_full(
-            self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the docstrings and functions for the given graph.
 
@@ -1158,7 +1207,7 @@ class GraphService:
         )
 
     def get_summarizations(
-            self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the summarizations and functions for the given graph.
 
@@ -1204,7 +1253,7 @@ class GraphService:
         )
 
     def get_functions_and_classes(
-            self, graph: str, repository: Optional[str] = None
+        self, graph: str, repository: Optional[str] = None
     ) -&gt; List[JSONDict]:
         &#34;&#34;&#34;Get the function and class names for the given graph.
 
@@ -1365,7 +1414,7 @@ class GraphService:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def bulk_add(
-        self, nodes: List[Node], relationships: List[Relationship], graph_name: str
+    self, nodes: List[Node], relationships: List[Relationship], graph_name: str
 ):
     &#34;&#34;&#34;Bulk add nodes and relationships.
 
@@ -1400,11 +1449,11 @@ metadata_tx:</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def create_graph(
-        self,
-        name: str,
-        description: str,
-        system_tx: neo4jTransaction,
-        metadata_tx: Connection,
+    self,
+    name: str,
+    description: str,
+    system_tx: neo4jTransaction,
+    metadata_tx: Connection,
 ) -&gt; Graph:
     &#34;&#34;&#34;Create a new graph.
 
@@ -1613,9 +1662,22 @@ metadata_tx:</p>
 
     for cycle in result:
         cycles.add(
-            frozenset(map(lambda x: f&#34;{x[&#39;canonical_name&#39;]}.{x[&#39;extension&#39;]}&#34;, cycle.get(&#34;nodes&#34;))))
+            frozenset(
+                map(
+                    lambda x: f&#34;{x[&#39;canonical_name&#39;]}.{x[&#39;extension&#39;]}&#34;,
+                    cycle.get(&#34;nodes&#34;),
+                )
+            )
+        )
 
-    return list(map(lambda c: CircularDependency(Files=&#34; -&gt; &#34;.join(list(c) + [list(c)[0]]), Length=len(list(c))), list(cycles)))</code></pre>
+    return list(
+        map(
+            lambda c: CircularDependency(
+                Files=&#34; -&gt; &#34;.join(list(c) + [list(c)[0]]), Length=len(list(c))
+            ),
+            list(cycles),
+        )
+    )</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_docstrings"><code class="name flex">
@@ -1665,7 +1727,7 @@ metadata_tx:</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_docstrings_full(
-        self, graph: str, repository: Optional[str] = None
+    self, graph: str, repository: Optional[str] = None
 ) -&gt; List[JSONDict]:
     &#34;&#34;&#34;Get the docstrings and functions for the given graph.
 
@@ -1750,7 +1812,7 @@ graph to search against.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_function_summarizations(
-        self, graph_name: str, repository_name: str = None
+    self, graph_name: str, repository_name: str = None
 ) -&gt; Dict[str, Function]:
     &#34;&#34;&#34;Converts all Function nodes into a list of tuples.
 
@@ -1804,7 +1866,7 @@ graph to search against.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_functions_and_classes(
-        self, graph: str, repository: Optional[str] = None
+    self, graph: str, repository: Optional[str] = None
 ) -&gt; List[JSONDict]:
     &#34;&#34;&#34;Get the function and class names for the given graph.
 
@@ -1919,7 +1981,7 @@ graph to search against.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_licenses(
-        self, graph: str, repository: Optional[str] = None
+    self, graph: str, repository: Optional[str] = None
 ) -&gt; List[JSONDict]:
     &#34;&#34;&#34;Get the licenses for the given graph.
 
@@ -1977,9 +2039,18 @@ graph to search against.</dd>
         graph_name=graph,
     )
 
-    result = list(filter(lambda n: n[&#39;name&#39;] not in sys.stdlib_module_names, list(result)))
+    result = list(
+        filter(lambda n: n[&#34;name&#34;] not in sys.stdlib_module_names, list(result))
+    )
 
-    return list(map(lambda n: MissingRequirement(Package=n[&#39;name&#39;], Repository=n[&#39;repository&#39;]), list(result)))</code></pre>
+    return list(
+        map(
+            lambda n: MissingRequirement(
+                Package=n[&#34;name&#34;], Repository=n[&#34;repository&#34;]
+            ),
+            list(result),
+        )
+    )</code></pre>
 </details>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_readme_files"><code class="name flex">
@@ -2001,7 +2072,7 @@ graph to search against.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_readme_files(
-        self, graph: str, repository: Optional[str] = None
+    self, graph: str, repository: Optional[str] = None
 ) -&gt; List[JSONDict]:
     &#34;&#34;&#34;Get README files for the given graph
 
@@ -2082,7 +2153,7 @@ graph to search against.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_requirements(
-        self, graph: str, repository: Optional[str] = None
+    self, graph: str, repository: Optional[str] = None
 ) -&gt; List[JSONDict]:
     &#34;&#34;&#34;Get the requirements for the given graph.
 
@@ -2124,7 +2195,7 @@ graph to search against.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_summarizations(
-        self, graph: str, repository: Optional[str] = None
+    self, graph: str, repository: Optional[str] = None
 ) -&gt; List[JSONDict]:
     &#34;&#34;&#34;Get the summarizations and functions for the given graph.
 
