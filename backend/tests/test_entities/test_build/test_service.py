@@ -28,16 +28,17 @@ class TestBuildService(unittest.TestCase):
             self.graphMock, self.summarizeMock, self.metadataMock
         )
 
-    @parameterized.expand([
-        [THIS_DIR + "/../../../../demo/pyLODE"],
-        [THIS_DIR + "/../../../../demo/black"],
-        [THIS_DIR + "/../../../../demo/fastapi"],
-        [THIS_DIR + "/../../../../demo/flake8"],
-        [THIS_DIR + "/../../../../demo/pygorithm"],
-        [THIS_DIR + "/../../../../demo/starlette"],
-        [THIS_DIR + "/../../../../demo/missing_dependency"],
-        [THIS_DIR + "/../../../../demo/circular_dependency"]
-    ],
+    @parameterized.expand(
+        [
+            [THIS_DIR + "/../../../../demo/pyLODE"],
+            [THIS_DIR + "/../../../../demo/black"],
+            [THIS_DIR + "/../../../../demo/fastapi"],
+            [THIS_DIR + "/../../../../demo/flake8"],
+            [THIS_DIR + "/../../../../demo/pygorithm"],
+            [THIS_DIR + "/../../../../demo/starlette"],
+            [THIS_DIR + "/../../../../demo/missing_dependency"],
+            [THIS_DIR + "/../../../../demo/circular_dependency"],
+        ],
     )
     def test_build_no_errors(self, path: str):
         self.graphMock.get_transaction.return_value = self.txMock
@@ -57,18 +58,22 @@ class TestBuildService(unittest.TestCase):
         except Exception:
             self.fail("Test failed with exception")
 
-    @parameterized.expand([
-        [[
-            THIS_DIR + "/../../../../demo/pyLODE",
-            THIS_DIR + "/../../../../demo/black",
-            THIS_DIR + "/../../../../demo/fastapi",
-            THIS_DIR + "/../../../../demo/flake8",
-            THIS_DIR + "/../../../../demo/pygorithm",
-            THIS_DIR + "/../../../../demo/starlette",
-            THIS_DIR + "/../../../../demo/missing_dependency",
-            THIS_DIR + "/../../../../demo/circular_dependency"
-        ]]
-    ])
+    @parameterized.expand(
+        [
+            [
+                [
+                    THIS_DIR + "/../../../../demo/pyLODE",
+                    THIS_DIR + "/../../../../demo/black",
+                    THIS_DIR + "/../../../../demo/fastapi",
+                    THIS_DIR + "/../../../../demo/flake8",
+                    THIS_DIR + "/../../../../demo/pygorithm",
+                    THIS_DIR + "/../../../../demo/starlette",
+                    THIS_DIR + "/../../../../demo/missing_dependency",
+                    THIS_DIR + "/../../../../demo/circular_dependency",
+                ]
+            ]
+        ]
+    )
     def test_build_multiple_no_errors(self, paths):
         self.graphMock.get_transaction.return_value = self.txMock
         self.graphMock.get_system_transaction.return_value.__enter__.return_value = (
