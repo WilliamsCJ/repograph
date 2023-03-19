@@ -1,0 +1,7 @@
+Repository,Success,Time (s),Nodes,Relationships
+tiangolo/fastapi,True,1759.812348127365,12307,19946
+RDFLib/pyLODE,True,40.59961295127869,510,780
+PyCQA/flake8,True,176.1303322315216,2302,3001
+OmkarPathak/pygorithm,True,318.049213886261,3424,4205
+py2neo-org/py2neo,True,564.565831899643,5538,7246
+psf/black,True,233.17346668243408,3045,4044

@@ -32,6 +32,7 @@ repositories = [
     "PyCQA/flake8",
     "OmkarPathak/pygorithm",
     "py2neo-org/py2neo",
+    "psf/black"
 ]
 
 configure_logging(logging.CRITICAL)
@@ -83,8 +84,6 @@ def collect(
                         0,
                     ]
                 )
-            finally:
-                shutil.rmtree(d)
 
 
 def plot():
@@ -95,7 +94,7 @@ def plot():
     seaborn.scatterplot(x="Nodes", y="Time (s)", data=df, ax=ax1).set(
         title="Nodes Created vs Processing Time"
     )
-    fig1.savefig("./evaluation/processing_time_vs_nodes.png")
+    fig1.savefig("./evaluation/processing_time_vs_summarization_nodes.png")
 
     plt.clf()
 
@@ -104,7 +103,25 @@ def plot():
     seaborn.scatterplot(
         x="Relationships", y="Time (s)", data=df, ax=ax2
     ).set(title="Relationships Created vs Processing Time")
-    fig2.savefig("./evaluation/processing_time_vs_relationships.png")
+    fig2.savefig("./evaluation/processing_time_vs_relationships_summarization.png")
+
+    plt.clf()
+
+    fig1 = plt.figure()
+    ax1 = plt.axes()
+    seaborn.scatterplot(x="Nodes", y="Time (s)", data=df, ax=ax1).set(
+        title="Nodes Created vs Processing Time (Nodes < 6,000)"
+    )
+    fig1.savefig("./evaluation/processing_time_vs_nodes_summarization_filtered.png")
+
+    plt.clf()
+
+    fig2 = plt.figure()
+    ax2 = plt.axes()
+    seaborn.scatterplot(
+        x="Relationships", y="Time (s)", data=df, ax=ax2
+    ).set(title="Relationships Created vs Processing Time (Relationships < 10,000)")
+    fig2.savefig("./evaluation/processing_time_vs_relationships_summarization_filtered.png")
 
     plt.clf()
 
