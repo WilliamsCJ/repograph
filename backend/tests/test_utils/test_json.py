@@ -1,6 +1,6 @@
 import unittest
 from parameterized import parameterized
-from repograph.utils.json import parse_min_max_line_numbers
+from repograph.entities.build.utils import parse_min_max_line_numbers
 
 
 class TestJSONUtils(unittest.TestCase):

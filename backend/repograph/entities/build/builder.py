@@ -48,22 +48,12 @@ from repograph.entities.graph.models.relationships import (
 
 # Utility imports
 from repograph.utils.builtin import PYTHON_BUILT_IN_FUNCTIONS
-from repograph.utils.json import (
-    JSONDict,
-    convert_dependencies_map_to_set,
-    parse_min_max_line_numbers,
-    marshall_json_to_string,
-)
-from repograph.entities.build.utils import find_node_object_by_name
-from repograph.utils.paths import (
-    strip_file_path_prefix,
-    is_root_folder,
-    get_path_name,
-    get_path_root,
-    get_path_parent,
-    get_package_parent_and_name,
-    get_module_and_object_from_canonical_object_name,
-)
+from repograph.utils import JSONDict
+from repograph.entities.build.utils import find_node_object_by_name, strip_file_path_prefix, \
+    is_root_folder, get_path_root, get_module_and_object_from_canonical_object_name, \
+    convert_dependencies_map_to_set, marshall_json_to_string, parse_min_max_line_numbers
+from repograph.entities.graph.utils import get_path_name, get_path_parent, \
+    get_package_parent_and_name
 
 ADDITIONAL_KEYS = ["requirements", "directory_tree", "license", "readme_files"]
 

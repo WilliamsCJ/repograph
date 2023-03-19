@@ -6,13 +6,9 @@ from enum import Enum
 from typing import Any, Optional
 
 from repograph.entities.graph.models.base import Node
-from repograph.utils.json import JSONDict
-from repograph.utils.paths import (
-    get_path_name,
-    get_path_parent,
-    get_package_parent_and_name,
-)
-
+from repograph.utils import JSONDict
+from repograph.entities.graph.utils import get_path_name, get_path_parent, \
+    get_package_parent_and_name
 
 PYTHON_EXTENSION = ".py"
 

@@ -42,7 +42,7 @@ from repograph.entities.metadata.service import MetadataService
 
 # Exceptions
 from repograph.entities.graph.exceptions import InvalidGraphNameError
-from repograph.utils.json import JSONDict
+from repograph.utils import JSONDict
 
 # Configure logging
 log = getLogger("repograph.entities.graph.service")
