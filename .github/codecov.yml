@@ -7,7 +7,7 @@ coverage:
     - "**/router.py"
     - "**/api.py"
     - "**/cli.py"
-    - "backend/utils/logging.py"
+    - "backend/repograph/utils/logging.py"
   status:
       project:
         default:

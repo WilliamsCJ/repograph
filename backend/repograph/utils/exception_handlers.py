@@ -39,7 +39,9 @@ async def base_exception_handler(_: Request, e: RepographException):
     Returns:
         JSONResponse containing ErrorResponse.
     """
-    return JSONResponse(ErrorResponse(message=e.message).dict(), status_code=e.code)
+    return JSONResponse(
+        ErrorResponse(message=e.message).dict(), status_code=e.code
+    )  # pragma: no cover
 
 
 async def generic_exception_handler(_: Request, __: Exception):
@@ -51,6 +53,6 @@ async def generic_exception_handler(_: Request, __: Exception):
     Returns:
         JSONResponse containing ErrorResponse.
     """
-    return JSONResponse(
+    return JSONResponse(  # pragma: no cover
         ErrorResponse(message="Internal Server Error").dict(), status_code=500
     )

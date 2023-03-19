@@ -1,9 +1,11 @@
 # RepoGraph
 
-![Workflow](https://github.com/WilliamsCJ/repograph/actions/workflows/python.yaml/badge.svg)
+[![Workflow](https://github.com/WilliamsCJ/repograph/actions/workflows/python.yaml/badge.svg)](https://github.com/WilliamsCJ/repograph/actions)
 [![codecov](https://codecov.io/gh/WilliamsCJ/repograph/branch/main/graph/badge.svg?token=1WYUIBCMQF)](https://codecov.io/gh/WilliamsCJ/repograph)
 
-Knowledge Graph extraction and semantic code search for Python repositories.
+[![Share to Community](https://huggingface.co/datasets/huggingface/badges/raw/main/powered-by-huggingface-light.svg)](https://huggingface.co/cjwilliams/codet5-base-python-sum)
+
+Knowledge Graphs and Semantic Search for Python Repositories using Neo4j.
 
 ## Requirements
 
@@ -84,20 +86,18 @@ See `demo/README.md`.
 
 ## Development
 
-Tips for contributing to/developing repograph.
-
-### Pre-commit Hooks
-
-Pre-commit hooks can be used to speed up development by running linting, tests, etc. when you commit.
-
-To install:
-
-```bash
-pip3 install -r requirements-test.txt
-pre-commit install
-```
+Tips for contributing to/developing RepoGraph.
 
 ### Testing
+
+Before testing, please clone the demo directories. See `demo/README.md`
+
+From the project root, run:
+
+```shell
+cd backend
+python -m unittest
+```
 
 #### Coverage
 
