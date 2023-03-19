@@ -26,7 +26,17 @@ class TestRepographBuilderIntegration(unittest.TestCase):
             self.summarizeMock, TEMP_OUTPUT, "TEST", self.graphMock, self.txMock
         )
 
-    @parameterized.expand([[THIS_DIR + "/../../../../demo/pyLODE"]])
+    @parameterized.expand([
+        [THIS_DIR + "/../../../../demo/pyLODE"],
+        [THIS_DIR + "/../../../../demo/black"],
+        [THIS_DIR + "/../../../../demo/fastapi"],
+        [THIS_DIR + "/../../../../demo/flake8"],
+        [THIS_DIR + "/../../../../demo/pygorithm"],
+        [THIS_DIR + "/../../../../demo/starlette"],
+        [THIS_DIR + "/../../../../demo/missing_dependency"],
+        [THIS_DIR + "/../../../../demo/circular_dependency"]
+
+    ])
     def test_build_no_errors(self, path: str):
         try:
             BuildService.call_inspect4py(path, TEMP_OUTPUT)
