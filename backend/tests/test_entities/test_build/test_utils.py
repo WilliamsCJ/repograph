@@ -2,7 +2,14 @@ import unittest
 from parameterized import parameterized
 
 from repograph.entities.graph.models.nodes import Class
-from repograph.entities.build.utils import find_node_object_by_name, find_requirements, strip_file_path_prefix, is_root_folder, get_path_root, get_module_and_object_from_canonical_object_name
+from repograph.entities.build.utils import (
+    find_node_object_by_name,
+    find_requirements,
+    strip_file_path_prefix,
+    is_root_folder,
+    get_path_root,
+    get_module_and_object_from_canonical_object_name,
+)
 
 
 class TestBuildUtils(unittest.TestCase):
