@@ -243,7 +243,6 @@ export type ComboSearchBarInputSectionProps = {
 const ComboSearchBarInputSection: React.FC<ComboSearchBarInputSectionProps> = (
   props
 ) => {
-  const [selectedQuery, setSelectedQuery] = useState(null);
   const [query, setQuery] = useState("");
 
   // Filter the queries
@@ -320,6 +319,7 @@ export type SelectSectionProps = {
   placeholder: string;
   label: string;
   options: string[];
+  setRepository: any;
 };
 
 const SelectInputSection: React.FC<SelectSectionProps> = (props) => {
@@ -337,7 +337,10 @@ const SelectInputSection: React.FC<SelectSectionProps> = (props) => {
         >
           <Listbox
             value={field.value}
-            onChange={(e) => setFieldValue(field.name, e, false)}
+            onChange={(e) => {
+              setFieldValue(field.name, e, false)
+              props.setRepository(e)
+            }}
           >
             <Listbox.Button
               css={[
