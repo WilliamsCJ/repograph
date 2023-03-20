@@ -229,6 +229,11 @@ class SearchService:
                 name=&#34;Search function and classes&#34;,
                 function=self.search_functions_and_classes,
             ),
+            AvailableSearchQuery(
+                id=7,
+                name=&#34;Search repository metadata&#34;,
+                function=self.search_metadata,
+            ),
         ]
         return available
 
@@ -356,6 +361,15 @@ class SearchService:
 
         return SearchQueryResult(
             columns=[&#34;Repository&#34;, &#34;Name&#34;, &#34;Type&#34;], data=results, size=len(results)
+        )
+
+    def search_metadata(self, graph_name: str, repository: Optional[str] = None):
+        results = self.graph.get_repository_metadata(
+            graph_name, repository=repository
+        )
+
+        return SearchQueryResult(
+            columns=[&#34;Repository&#34;, &#34;Metadata&#34;], data=results, size=len(results)
         )</code></pre>
 </details>
 </section>
@@ -539,6 +553,11 @@ class SearchService:
                 name=&#34;Search function and classes&#34;,
                 function=self.search_functions_and_classes,
             ),
+            AvailableSearchQuery(
+                id=7,
+                name=&#34;Search repository metadata&#34;,
+                function=self.search_metadata,
+            ),
         ]
         return available
 
@@ -666,6 +685,15 @@ class SearchService:
 
         return SearchQueryResult(
             columns=[&#34;Repository&#34;, &#34;Name&#34;, &#34;Type&#34;], data=results, size=len(results)
+        )
+
+    def search_metadata(self, graph_name: str, repository: Optional[str] = None):
+        results = self.graph.get_repository_metadata(
+            graph_name, repository=repository
+        )
+
+        return SearchQueryResult(
+            columns=[&#34;Repository&#34;, &#34;Metadata&#34;], data=results, size=len(results)
         )</code></pre>
 </details>
 <h3>Class variables</h3>
@@ -898,6 +926,11 @@ class SearchService:
             name=&#34;Search function and classes&#34;,
             function=self.search_functions_and_classes,
         ),
+        AvailableSearchQuery(
+            id=7,
+            name=&#34;Search repository metadata&#34;,
+            function=self.search_metadata,
+        ),
     ]
     return available</code></pre>
 </details>
@@ -1050,6 +1083,25 @@ class SearchService:
     )</code></pre>
 </details>
 </dd>
+<dt id="repograph.entities.search.service.SearchService.search_metadata"><code class="name flex">
+<span>def <span class="ident">search_metadata</span></span>(<span>self, graph_name: str, repository: Optional[str] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def search_metadata(self, graph_name: str, repository: Optional[str] = None):
+    results = self.graph.get_repository_metadata(
+        graph_name, repository=repository
+    )
+
+    return SearchQueryResult(
+        columns=[&#34;Repository&#34;, &#34;Metadata&#34;], data=results, size=len(results)
+    )</code></pre>
+</details>
+</dd>
 <dt id="repograph.entities.search.service.SearchService.search_readmes"><code class="name flex">
 <span>def <span class="ident">search_readmes</span></span>(<span>self, graph_name: str, repository: Optional[str] = None)</span>
 </code></dt>
@@ -1192,6 +1244,7 @@ class SearchService:
 <li><code><a title="repograph.entities.search.service.SearchService.search_files" href="#repograph.entities.search.service.SearchService.search_files">search_files</a></code></li>
 <li><code><a title="repograph.entities.search.service.SearchService.search_functions_and_classes" href="#repograph.entities.search.service.SearchService.search_functions_and_classes">search_functions_and_classes</a></code></li>
 <li><code><a title="repograph.entities.search.service.SearchService.search_licenses" href="#repograph.entities.search.service.SearchService.search_licenses">search_licenses</a></code></li>
+<li><code><a title="repograph.entities.search.service.SearchService.search_metadata" href="#repograph.entities.search.service.SearchService.search_metadata">search_metadata</a></code></li>
 <li><code><a title="repograph.entities.search.service.SearchService.search_readmes" href="#repograph.entities.search.service.SearchService.search_readmes">search_readmes</a></code></li>
 <li><code><a title="repograph.entities.search.service.SearchService.search_requirements" href="#repograph.entities.search.service.SearchService.search_requirements">search_requirements</a></code></li>
 <li><code><a title="repograph.entities.search.service.SearchService.search_summarizations" href="#repograph.entities.search.service.SearchService.search_summarizations">search_summarizations</a></code></li>

@@ -72,7 +72,9 @@ async def base_exception_handler(_: Request, e: RepographException):
     Returns:
         JSONResponse containing ErrorResponse.
     &#34;&#34;&#34;
-    return JSONResponse(ErrorResponse(message=e.message).dict(), status_code=e.code)  # pragma: no cover
+    return JSONResponse(
+        ErrorResponse(message=e.message).dict(), status_code=e.code
+    )  # pragma: no cover
 
 
 async def generic_exception_handler(_: Request, __: Exception):
@@ -124,7 +126,9 @@ This handler is for all other Exceptions, to provide a formatted response.</p>
     Returns:
         JSONResponse containing ErrorResponse.
     &#34;&#34;&#34;
-    return JSONResponse(ErrorResponse(message=e.message).dict(), status_code=e.code)  # pragma: no cover</code></pre>
+    return JSONResponse(
+        ErrorResponse(message=e.message).dict(), status_code=e.code
+    )  # pragma: no cover</code></pre>
 </details>
 </dd>
 <dt id="repograph.utils.exception_handlers.generic_exception_handler"><code class="name flex">
