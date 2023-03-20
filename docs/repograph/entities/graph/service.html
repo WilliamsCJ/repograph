@@ -33,6 +33,7 @@ Graph entity application logic.
 # Base imports
 import contextlib
 import datetime
+import json
 import traceback
 from logging import getLogger
 import re
@@ -623,6 +624,29 @@ class GraphService:
             &#34;&#34;&#34;,
             graph_name=graph,
         )
+
+    def get_repository_metadata(self, graph: str, repository: Optional[str] = None) -&gt; List[JSONDict]:
+        &#34;&#34;&#34;Get the metadata for the given repository.
+
+        Args:
+            graph (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            List[JSONDict]
+        &#34;&#34;&#34;
+        if not repository:
+            repository = &#34;.*&#34;
+
+        result = self.repository.execute_query(
+            f&#34;&#34;&#34;
+            MATCH (r:Repository) WHERE r.name =~ &#39;{repository}&#39;
+            RETURN DISTINCT r.name as `name`, properties(r) as `properties`
+            &#34;&#34;&#34;,
+            graph_name=graph,
+        )
+
+        return list(map(lambda x: {&#39;Repository&#39;: x[&#39;name&#39;], &#39;Metadata&#39;: json.dumps(x[&#39;properties&#39;], sort_keys=True)}, result))
 
     def get_repository_names(self, graph: str) -&gt; List[str]:
         &#34;&#34;&#34;Get the names of repositories in the graph.
@@ -1274,6 +1298,29 @@ class GraphService:
             &#34;&#34;&#34;,
             graph_name=graph,
         )
+
+    def get_repository_metadata(self, graph: str, repository: Optional[str] = None) -&gt; List[JSONDict]:
+        &#34;&#34;&#34;Get the metadata for the given repository.
+
+        Args:
+            graph (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            List[JSONDict]
+        &#34;&#34;&#34;
+        if not repository:
+            repository = &#34;.*&#34;
+
+        result = self.repository.execute_query(
+            f&#34;&#34;&#34;
+            MATCH (r:Repository) WHERE r.name =~ &#39;{repository}&#39;
+            RETURN DISTINCT r.name as `name`, properties(r) as `properties`
+            &#34;&#34;&#34;,
+            graph_name=graph,
+        )
+
+        return list(map(lambda x: {&#39;Repository&#39;: x[&#39;name&#39;], &#39;Metadata&#39;: json.dumps(x[&#39;properties&#39;], sort_keys=True)}, result))
 
     def get_repository_names(self, graph: str) -&gt; List[str]:
         &#34;&#34;&#34;Get the names of repositories in the graph.
@@ -2097,6 +2144,48 @@ graph to search against.</dd>
     return result</code></pre>
 </details>
 </dd>
+<dt id="repograph.entities.graph.service.GraphService.get_repository_metadata"><code class="name flex">
+<span>def <span class="ident">get_repository_metadata</span></span>(<span>self, graph: str, repository: Optional[str] = None) ‑> List[Dict[str, Any]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the metadata for the given repository.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
+<dd>The graph to search.</dd>
+<dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
+<dd>Repository to filter by.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>List[JSONDict]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_repository_metadata(self, graph: str, repository: Optional[str] = None) -&gt; List[JSONDict]:
+    &#34;&#34;&#34;Get the metadata for the given repository.
+
+    Args:
+        graph (str): The graph to search.
+        repository (str, Optional): Repository to filter by.
+
+    Returns:
+        List[JSONDict]
+    &#34;&#34;&#34;
+    if not repository:
+        repository = &#34;.*&#34;
+
+    result = self.repository.execute_query(
+        f&#34;&#34;&#34;
+        MATCH (r:Repository) WHERE r.name =~ &#39;{repository}&#39;
+        RETURN DISTINCT r.name as `name`, properties(r) as `properties`
+        &#34;&#34;&#34;,
+        graph_name=graph,
+    )
+
+    return list(map(lambda x: {&#39;Repository&#39;: x[&#39;name&#39;], &#39;Metadata&#39;: json.dumps(x[&#39;properties&#39;], sort_keys=True)}, result))</code></pre>
+</details>
+</dd>
 <dt id="repograph.entities.graph.service.GraphService.get_repository_names"><code class="name flex">
 <span>def <span class="ident">get_repository_names</span></span>(<span>self, graph: str) ‑> List[str]</span>
 </code></dt>
@@ -2387,6 +2476,7 @@ def get_transaction(self, graph_name):
 <li><code><a title="repograph.entities.graph.service.GraphService.get_licenses" href="#repograph.entities.graph.service.GraphService.get_licenses">get_licenses</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.get_missing_dependencies" href="#repograph.entities.graph.service.GraphService.get_missing_dependencies">get_missing_dependencies</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.get_readme_files" href="#repograph.entities.graph.service.GraphService.get_readme_files">get_readme_files</a></code></li>
+<li><code><a title="repograph.entities.graph.service.GraphService.get_repository_metadata" href="#repograph.entities.graph.service.GraphService.get_repository_metadata">get_repository_metadata</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.get_repository_names" href="#repograph.entities.graph.service.GraphService.get_repository_names">get_repository_names</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.get_requirements" href="#repograph.entities.graph.service.GraphService.get_requirements">get_requirements</a></code></li>
 <li><code><a title="repograph.entities.graph.service.GraphService.get_summarizations" href="#repograph.entities.graph.service.GraphService.get_summarizations">get_summarizations</a></code></li>
