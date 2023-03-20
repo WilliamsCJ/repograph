@@ -35,7 +35,7 @@ class BuildService:
         graph: GraphService,
         summarization: SummarizationService,
         metadata: MetadataService,
-        extract_metadata: bool = True
+        extract_metadata: bool = False
     ):
         """Constructor
 
