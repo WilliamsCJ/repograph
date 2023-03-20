@@ -45,7 +45,7 @@ const CypherSearch = ({
   const [results, setResults] = useState<SearchQueryResult | undefined>(
     undefined
   );
-  const [repository, setRepository] = useState<string|null>(null);
+  const [repository, setRepository] = useState<string | null>(null);
 
   // Pagination state
   const [offset, setOffset] = useState(0);
@@ -54,7 +54,7 @@ const CypherSearch = ({
   // Query executor
   const executeQuery = async (
     query: AvailableSearchQuery,
-    repository: string|null
+    repository: string | null
   ) => {
     try {
       setQuery(query);
@@ -71,7 +71,7 @@ const CypherSearch = ({
     }
   };
 
-  console.log(repository)
+  console.log(repository);
 
   // Effects hook to re-execute query on pagination
   useEffect(() => {
