@@ -331,9 +331,7 @@ class SearchService:
         )
 
     def search_metadata(self, graph_name: str, repository: Optional[str] = None):
-        results = self.graph.get_repository_metadata(
-            graph_name, repository=repository
-        )
+        results = self.graph.get_repository_metadata(graph_name, repository=repository)
 
         return SearchQueryResult(
             columns=["Repository", "Metadata"], data=results, size=len(results)

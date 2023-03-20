@@ -596,7 +596,9 @@ class GraphService:
             graph_name=graph,
         )
 
-    def get_repository_metadata(self, graph: str, repository: Optional[str] = None) -> List[JSONDict]:
+    def get_repository_metadata(
+        self, graph: str, repository: Optional[str] = None
+    ) -> List[JSONDict]:
         """Get the metadata for the given repository.
 
         Args:
@@ -617,7 +619,15 @@ class GraphService:
             graph_name=graph,
         )
 
-        return list(map(lambda x: {'Repository': x['name'], 'Metadata': json.dumps(x['properties'], sort_keys=True)}, result))
+        return list(
+            map(
+                lambda x: {
+                    "Repository": x["name"],
+                    "Metadata": json.dumps(x["properties"], sort_keys=True),
+                },
+                result,
+            )
+        )
 
     def get_repository_names(self, graph: str) -> List[str]:
         """Get the names of repositories in the graph.
