@@ -9,6 +9,6 @@ module.exports = withTwin({
   },
   i18n: {
     locales: ["en"],
-    defaultLocale: "en"
+    defaultLocale: "en",
   },
 });

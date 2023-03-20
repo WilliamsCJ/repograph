@@ -59,7 +59,7 @@ export async function getAvailableSearchQueries(
 
 export async function getSearchQuery(
   graph: string,
-  repository: string|null,
+  repository: string | null,
   queryID: number,
   limit: number,
   offset: number

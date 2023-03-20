@@ -46,7 +46,6 @@ const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
     repository: null,
   };
 
-
   return (
     <Formik
       // @ts-ignore

@@ -338,8 +338,8 @@ const SelectInputSection: React.FC<SelectSectionProps> = (props) => {
           <Listbox
             value={field.value}
             onChange={(e) => {
-              setFieldValue(field.name, e, false)
-              props.setRepository(e)
+              setFieldValue(field.name, e, false);
+              props.setRepository(e);
             }}
           >
             <Listbox.Button
