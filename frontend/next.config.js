@@ -7,4 +7,8 @@ module.exports = withTwin({
   typescript: {
     ignoreBuildErrors: true,
   },
+  i18n: {
+    locales: ["en"],
+    defaultLocale: "en"
+  },
 });

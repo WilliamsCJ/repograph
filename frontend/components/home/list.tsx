@@ -31,7 +31,7 @@ export type GraphListProps = {
  */
 const GraphList: React.FC<GraphListProps> = ({ graphs }) => {
   const rows = graphs.map((graph, index) => (
-    <GraphListRow graph={graph} index={index} total={graphs.length} />
+    <GraphListRow key={index} graph={graph} index={index} total={graphs.length} />
   ));
 
   return <List rows={rows} />;

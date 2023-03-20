@@ -16,6 +16,7 @@ import { getGraphListings } from "../lib/home";
 
 // Types
 import { SWRConfig } from "swr";
+import Head from "next/head";
 
 /**
  * Page props.
@@ -51,6 +52,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Home: NextPage<HomePageProps> = ({ fallback }) => {
   return (
     <DefaultLayout buttons={[<NewButton />]} heading="Your Graphs">
+      <Head>
+        <title>RepoGraph - Home</title>
+      </Head>
       <SWRConfig value={{ fallback }}>
         <GraphListingComponent />
       </SWRConfig>
