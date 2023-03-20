@@ -4,6 +4,7 @@ Graph entity application logic.
 # Base imports
 import contextlib
 import datetime
+import json
 import traceback
 from logging import getLogger
 import re
@@ -594,6 +595,29 @@ class GraphService:
             """,
             graph_name=graph,
         )
+
+    def get_repository_metadata(self, graph: str, repository: Optional[str] = None) -> List[JSONDict]:
+        """Get the metadata for the given repository.
+
+        Args:
+            graph (str): The graph to search.
+            repository (str, Optional): Repository to filter by.
+
+        Returns:
+            List[JSONDict]
+        """
+        if not repository:
+            repository = ".*"
+
+        result = self.repository.execute_query(
+            f"""
+            MATCH (r:Repository) WHERE r.name =~ '{repository}'
+            RETURN DISTINCT r.name as `name`, properties(r) as `properties`
+            """,
+            graph_name=graph,
+        )
+
+        return list(map(lambda x: {'Repository': x['name'], 'Metadata': json.dumps(x['properties'], sort_keys=True)}, result))
 
     def get_repository_names(self, graph: str) -> List[str]:
         """Get the names of repositories in the graph.

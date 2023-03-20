@@ -196,6 +196,11 @@ class SearchService:
                 name="Search function and classes",
                 function=self.search_functions_and_classes,
             ),
+            AvailableSearchQuery(
+                id=7,
+                name="Search repository metadata",
+                function=self.search_metadata,
+            ),
         ]
         return available
 
@@ -323,4 +328,13 @@ class SearchService:
 
         return SearchQueryResult(
             columns=["Repository", "Name", "Type"], data=results, size=len(results)
+        )
+
+    def search_metadata(self, graph_name: str, repository: Optional[str] = None):
+        results = self.graph.get_repository_metadata(
+            graph_name, repository=repository
+        )
+
+        return SearchQueryResult(
+            columns=["Repository", "Metadata"], data=results, size=len(results)
         )

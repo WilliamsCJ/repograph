@@ -29,7 +29,8 @@ class BuildContainer(DeclarativeContainer):
         BuildService,
         graph=graph,
         summarization=summarization,
-        metadata=metadata
+        metadata=metadata,
+        extract_metadata=config.extract_metadata
     )
 
     router: Singleton[BuildRouter] = Singleton(

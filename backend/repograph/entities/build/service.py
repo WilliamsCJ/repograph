@@ -35,6 +35,7 @@ class BuildService:
         graph: GraphService,
         summarization: SummarizationService,
         metadata: MetadataService,
+        extract_metadata: bool = True
     ):
         """Constructor
 
@@ -46,9 +47,9 @@ class BuildService:
         self.graph = graph
         self.summarization = summarization
         self.metadata = metadata
+        self.extract_metadata = extract_metadata
 
-    @staticmethod
-    def call_inspect4py(input_path: str, output_path: str) -> str:
+    def call_inspect4py(self, input_path: str, output_path: str) -> str:
         """Call inspect4py for code analysis and extraction.
 
         Args:
@@ -65,8 +66,7 @@ class BuildService:
         )
 
         try:
-            subprocess.check_output(
-                [
+            args = [
                     "inspect4py",
                     "-i",
                     input_path,
@@ -80,7 +80,11 @@ class BuildService:
                     "-dt",
                     "-cl",
                 ]
-            )
+
+            if self.extract_metadata:
+                args.append("-md")
+
+            subprocess.check_output(args)
         except subprocess.CalledProcessError as e:
             log.critical(e)
             raise e
