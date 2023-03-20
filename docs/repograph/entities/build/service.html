@@ -63,6 +63,7 @@ class BuildService:
         graph: GraphService,
         summarization: SummarizationService,
         metadata: MetadataService,
+        extract_metadata: bool = False
     ):
         &#34;&#34;&#34;Constructor
 
@@ -74,9 +75,9 @@ class BuildService:
         self.graph = graph
         self.summarization = summarization
         self.metadata = metadata
+        self.extract_metadata = extract_metadata
 
-    @staticmethod
-    def call_inspect4py(input_path: str, output_path: str) -&gt; str:
+    def call_inspect4py(self, input_path: str, output_path: str) -&gt; str:
         &#34;&#34;&#34;Call inspect4py for code analysis and extraction.
 
         Args:
@@ -93,8 +94,7 @@ class BuildService:
         )
 
         try:
-            subprocess.check_output(
-                [
+            args = [
                     &#34;inspect4py&#34;,
                     &#34;-i&#34;,
                     input_path,
@@ -108,7 +108,11 @@ class BuildService:
                     &#34;-dt&#34;,
                     &#34;-cl&#34;,
                 ]
-            )
+
+            if self.extract_metadata:
+                args.append(&#34;-md&#34;)
+
+            subprocess.check_output(args)
         except subprocess.CalledProcessError as e:
             log.critical(e)
             raise e
@@ -246,7 +250,7 @@ class BuildService:
 <dl>
 <dt id="repograph.entities.build.service.BuildService"><code class="flex name class">
 <span>class <span class="ident">BuildService</span></span>
-<span>(</span><span>graph: <a title="repograph.entities.graph.service.GraphService" href="../graph/service.html#repograph.entities.graph.service.GraphService">GraphService</a>, summarization: <a title="repograph.entities.summarization.service.SummarizationService" href="../summarization/service.html#repograph.entities.summarization.service.SummarizationService">SummarizationService</a>, metadata: <a title="repograph.entities.metadata.service.MetadataService" href="../metadata/service.html#repograph.entities.metadata.service.MetadataService">MetadataService</a>)</span>
+<span>(</span><span>graph: <a title="repograph.entities.graph.service.GraphService" href="../graph/service.html#repograph.entities.graph.service.GraphService">GraphService</a>, summarization: <a title="repograph.entities.summarization.service.SummarizationService" href="../summarization/service.html#repograph.entities.summarization.service.SummarizationService">SummarizationService</a>, metadata: <a title="repograph.entities.metadata.service.MetadataService" href="../metadata/service.html#repograph.entities.metadata.service.MetadataService">MetadataService</a>, extract_metadata: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Constructor</p>
@@ -275,6 +279,7 @@ class BuildService:
         graph: GraphService,
         summarization: SummarizationService,
         metadata: MetadataService,
+        extract_metadata: bool = False
     ):
         &#34;&#34;&#34;Constructor
 
@@ -286,9 +291,9 @@ class BuildService:
         self.graph = graph
         self.summarization = summarization
         self.metadata = metadata
+        self.extract_metadata = extract_metadata
 
-    @staticmethod
-    def call_inspect4py(input_path: str, output_path: str) -&gt; str:
+    def call_inspect4py(self, input_path: str, output_path: str) -&gt; str:
         &#34;&#34;&#34;Call inspect4py for code analysis and extraction.
 
         Args:
@@ -305,8 +310,7 @@ class BuildService:
         )
 
         try:
-            subprocess.check_output(
-                [
+            args = [
                     &#34;inspect4py&#34;,
                     &#34;-i&#34;,
                     input_path,
@@ -320,7 +324,11 @@ class BuildService:
                     &#34;-dt&#34;,
                     &#34;-cl&#34;,
                 ]
-            )
+
+            if self.extract_metadata:
+                args.append(&#34;-md&#34;)
+
+            subprocess.check_output(args)
         except subprocess.CalledProcessError as e:
             log.critical(e)
             raise e
@@ -467,66 +475,6 @@ class BuildService:
 </dl>
 <h3>Static methods</h3>
 <dl>
-<dt id="repograph.entities.build.service.BuildService.call_inspect4py"><code class="name flex">
-<span>def <span class="ident">call_inspect4py</span></span>(<span>input_path: str, output_path: str) ‑> str</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Call inspect4py for code analysis and extraction.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>input_path</code></strong> :&ensp;<code>str</code></dt>
-<dd>The path of the repository</dd>
-<dt><strong><code>output_path</code></strong> :&ensp;<code>str</code></dt>
-<dd>The path to output inspect4py to.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>output_path (str)</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def call_inspect4py(input_path: str, output_path: str) -&gt; str:
-    &#34;&#34;&#34;Call inspect4py for code analysis and extraction.
-
-    Args:
-        input_path (str): The path of the repository
-        output_path (str): The path to output inspect4py to.
-
-    Returns:
-        output_path (str)
-    &#34;&#34;&#34;
-    log.info(
-        &#34;Extracting information from %s using inspect4py to %s...&#34;,
-        input_path,
-        output_path,
-    )
-
-    try:
-        subprocess.check_output(
-            [
-                &#34;inspect4py&#34;,
-                &#34;-i&#34;,
-                input_path,
-                &#34;-o&#34;,
-                output_path,
-                &#34;-rm&#34;,
-                &#34;-si&#34;,
-                &#34;-ld&#34;,
-                &#34;-sc&#34;,
-                &#34;-ast&#34;,
-                &#34;-dt&#34;,
-                &#34;-cl&#34;,
-            ]
-        )
-    except subprocess.CalledProcessError as e:
-        log.critical(e)
-        raise e
-
-    log.info(&#34;Done!&#34;)
-    return output_path</code></pre>
-</details>
-</dd>
 <dt id="repograph.entities.build.service.BuildService.cleanup_inspect4py_output"><code class="name flex">
 <span>def <span class="ident">cleanup_inspect4py_output</span></span>(<span>) ‑> None</span>
 </code></dt>
@@ -704,6 +652,68 @@ graph using the input repositories.</p>
         failure,
         len(input_list),
     )</code></pre>
+</details>
+</dd>
+<dt id="repograph.entities.build.service.BuildService.call_inspect4py"><code class="name flex">
+<span>def <span class="ident">call_inspect4py</span></span>(<span>self, input_path: str, output_path: str) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Call inspect4py for code analysis and extraction.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>input_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>The path of the repository</dd>
+<dt><strong><code>output_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>The path to output inspect4py to.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>output_path (str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def call_inspect4py(self, input_path: str, output_path: str) -&gt; str:
+    &#34;&#34;&#34;Call inspect4py for code analysis and extraction.
+
+    Args:
+        input_path (str): The path of the repository
+        output_path (str): The path to output inspect4py to.
+
+    Returns:
+        output_path (str)
+    &#34;&#34;&#34;
+    log.info(
+        &#34;Extracting information from %s using inspect4py to %s...&#34;,
+        input_path,
+        output_path,
+    )
+
+    try:
+        args = [
+                &#34;inspect4py&#34;,
+                &#34;-i&#34;,
+                input_path,
+                &#34;-o&#34;,
+                output_path,
+                &#34;-rm&#34;,
+                &#34;-si&#34;,
+                &#34;-ld&#34;,
+                &#34;-sc&#34;,
+                &#34;-ast&#34;,
+                &#34;-dt&#34;,
+                &#34;-cl&#34;,
+            ]
+
+        if self.extract_metadata:
+            args.append(&#34;-md&#34;)
+
+        subprocess.check_output(args)
+    except subprocess.CalledProcessError as e:
+        log.critical(e)
+        raise e
+
+    log.info(&#34;Done!&#34;)
+    return output_path</code></pre>
 </details>
 </dd>
 </dl>
