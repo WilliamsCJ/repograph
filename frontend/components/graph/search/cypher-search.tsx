@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useState } from "react";
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 
 // Styling
 import "twin.macro";
@@ -45,6 +45,7 @@ const CypherSearch = ({
   const [results, setResults] = useState<SearchQueryResult | undefined>(
     undefined
   );
+  const [repository, setRepository] = useState<string | null>(null);
 
   // Pagination state
   const [offset, setOffset] = useState(0);
@@ -53,7 +54,7 @@ const CypherSearch = ({
   // Query executor
   const executeQuery = async (
     query: AvailableSearchQuery,
-    repository: string
+    repository: string | null
   ) => {
     try {
       setQuery(query);
@@ -70,10 +71,12 @@ const CypherSearch = ({
     }
   };
 
+  console.log(repository);
+
   // Effects hook to re-execute query on pagination
   useEffect(() => {
     if (results && query) {
-      executeQuery(query).then();
+      executeQuery(query, repository).then();
       topRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [offset]);
@@ -86,6 +89,7 @@ const CypherSearch = ({
         executeQuery={executeQuery}
         available={available}
         repositories={repositories}
+        setRepository={setRepository}
       />
       <div tw="mt-6">
         {results && (

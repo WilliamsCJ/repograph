@@ -364,9 +364,7 @@ class SearchService:
         )
 
     def search_metadata(self, graph_name: str, repository: Optional[str] = None):
-        results = self.graph.get_repository_metadata(
-            graph_name, repository=repository
-        )
+        results = self.graph.get_repository_metadata(graph_name, repository=repository)
 
         return SearchQueryResult(
             columns=[&#34;Repository&#34;, &#34;Metadata&#34;], data=results, size=len(results)
@@ -688,9 +686,7 @@ class SearchService:
         )
 
     def search_metadata(self, graph_name: str, repository: Optional[str] = None):
-        results = self.graph.get_repository_metadata(
-            graph_name, repository=repository
-        )
+        results = self.graph.get_repository_metadata(graph_name, repository=repository)
 
         return SearchQueryResult(
             columns=[&#34;Repository&#34;, &#34;Metadata&#34;], data=results, size=len(results)
@@ -1093,9 +1089,7 @@ class SearchService:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def search_metadata(self, graph_name: str, repository: Optional[str] = None):
-    results = self.graph.get_repository_metadata(
-        graph_name, repository=repository
-    )
+    results = self.graph.get_repository_metadata(graph_name, repository=repository)
 
     return SearchQueryResult(
         columns=[&#34;Repository&#34;, &#34;Metadata&#34;], data=results, size=len(results)

@@ -35,7 +35,7 @@ class TestBuildService(unittest.TestCase):
             [THIS_DIR + "/../../../../demo/fastapi"],
             [THIS_DIR + "/../../../../demo/flake8"],
             [THIS_DIR + "/../../../../demo/pygorithm"],
-            [THIS_DIR + "/../../../../demo/starlette"],
+            [THIS_DIR + "/../../../../demo/py2neo"],
             [THIS_DIR + "/../../../../demo/missing_dependency"],
             [THIS_DIR + "/../../../../demo/circular_dependency"],
         ],
@@ -67,7 +67,7 @@ class TestBuildService(unittest.TestCase):
                     THIS_DIR + "/../../../../demo/fastapi",
                     THIS_DIR + "/../../../../demo/flake8",
                     THIS_DIR + "/../../../../demo/pygorithm",
-                    THIS_DIR + "/../../../../demo/starlette",
+                    THIS_DIR + "/../../../../demo/py2neo",
                     THIS_DIR + "/../../../../demo/missing_dependency",
                     THIS_DIR + "/../../../../demo/circular_dependency",
                 ]

@@ -19,6 +19,7 @@ import {
 
 // Types
 import { AvailableSearchQuery } from "../../../types/search";
+import Head from "next/head";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // @ts-ignore
@@ -62,6 +63,9 @@ const GraphSearch: NextPage<GraphSearchPageProps> = ({
 
   return (
     <DefaultLayout buttons={[]} heading="Search" topRef={topRef}>
+      <Head>
+        <title>{`RepoGraph - ${graph} - Search`}</title>
+      </Head>
       <TabGroup titles={options} panels={panels} />
     </DefaultLayout>
   );

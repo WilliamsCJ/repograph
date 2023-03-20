@@ -19,6 +19,7 @@ import { Card } from "../../../components/core/card";
 import tw from "twin.macro";
 import useSWR from "swr";
 import fetcher from "../../../utils/fetcher";
+import Head from "next/head";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // @ts-ignore
@@ -46,6 +47,9 @@ const GraphHome: NextPage<GraphHomePageProps> = ({ name, summary }) => {
       buttons={[<DeleteGraphButton graphName={name} />]}
       heading="Summary"
     >
+      <Head>
+        <title>{`RepoGraph - ${name}`}</title>
+      </Head>
       <Summary summary={summary} />
       <Card size={tw`h-full`}>
         <GraphCard

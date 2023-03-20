@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MutableRefObject, useRef } from "react";
 
 // Styling
 import "twin.macro";
@@ -24,6 +24,7 @@ import { Listbox } from "@headlessui/react";
 export type ComboSearchBarProps = {
   available: AvailableSearchQuery[];
   repositories: string[];
+  setRepository: any;
 } & SearchBarProps;
 
 /**
@@ -53,6 +54,8 @@ const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
       onSubmit={async (values, actions) => {
         props.executeQuery(values.query, values.repository);
       }}
+      // @ts-ignore
+      innerRef={props.formRef}
     >
       <Form>
         <div tw="flex flex-col sm:flex-row w-full gap-4 items-start mt-6">
@@ -69,6 +72,7 @@ const ComboSearchBar: React.FC<ComboSearchBarProps> = (props) => {
             placeholder="All"
             label="Repository"
             options={props.repositories}
+            setRepository={props.setRepository}
           />
           <Button text="Search" />
         </div>

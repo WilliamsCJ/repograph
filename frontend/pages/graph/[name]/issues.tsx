@@ -18,6 +18,7 @@ import {
   MissingDocstringResult,
   PossibleIncorrectDocstringResult,
 } from "../../../types/graph";
+import Head from "next/head";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // @ts-ignore
@@ -25,6 +26,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
+      name: name,
       cyclicalDependencies: await getCyclicalDependencies(name),
       missingDependencies: await getMissingDependencies(name),
       incorrectDocstrings: await getIncorrectDocstrings(name),
@@ -34,6 +36,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export type GraphIssuesPageProps = {
+  name: string;
   cyclicalDependencies: CircularDependencyResult;
   missingDependencies: MissingDependencyResult;
   incorrectDocstrings: PossibleIncorrectDocstringResult;
@@ -45,6 +48,9 @@ const GraphIssues: NextPage<GraphIssuesPageProps> = (
 ) => {
   return (
     <DefaultLayout buttons={[]} heading="Issues">
+      <Head>
+        <title>{`RepoGraph - ${props.name} - Issues`}</title>
+      </Head>
       <Issues {...props} />
     </DefaultLayout>
   );
