@@ -156,7 +156,7 @@ class SearchService:
                         Type=docstring["type"][0],
                         Summarization=docstring["summarization"],
                         Docstring=docstring["docstring"],
-                        Similarity=score,
+                        Similarity=round(score, 3),
                         Repository=docstring["repository"],
                     )
                 )
