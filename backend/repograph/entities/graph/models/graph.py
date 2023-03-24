@@ -2,7 +2,7 @@
 Models representing elements of the Repograph
 """
 # base imports
-from typing import List, Union
+from typing import List, Union, Optional
 
 # pip imports
 from pydantic import BaseModel, Field
@@ -38,9 +38,9 @@ class GraphSummary(BaseModel):
 class CallGraph(BaseModel):
     class Node(BaseModel):
         id: str
-        name: str
-        canonical_name: str
-        type: str
+        name: Optional[str]
+        canonical_name: Optional[str]
+        type: Optional[str]
 
     class Relationship(BaseModel):
         from_id: str = Field(..., alias="source")

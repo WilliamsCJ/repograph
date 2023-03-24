@@ -322,7 +322,7 @@ class RepographBuilder:
             parent = self.directories.get(child.parent_path, None)
 
             if not parent:
-                parent = Directory(child.parent_path, self.repository_name)
+                parent = Directory(child.parent_path, self.repository_name, inferred=True)
                 relationship = Contains(parent, child, self.repository_name)
                 self.graph.add(parent, tx=self.tx, graph_name=self.graph_name)
                 self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
@@ -342,7 +342,7 @@ class RepographBuilder:
             return existing_parent
 
         # If it doesn't exist create a new Directory and then call the recursive function.
-        new_parent = Directory(parent_path, self.repository_name)
+        new_parent = Directory(parent_path, self.repository_name, inferred=True)
         self.graph.add(new_parent, tx=self.tx, graph_name=self.graph_name)
         self.directories[new_parent.path] = new_parent
         add_parents_recursively(new_parent)
