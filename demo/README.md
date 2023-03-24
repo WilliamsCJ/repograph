@@ -1,6 +1,6 @@
 # Demonstration
 
-Demonstration. Several specific directories are included.
+Demonstration. Several specific directories are included.Ω
 
 To begin, clone the demo repositories by running the following from this directory:
 
@@ -42,6 +42,8 @@ Return all requirements defined by a given repository.
 
 ```
 MATCH (r:Repository)-[s:Requires]->(d) WHERE r.name = 'REPO NAME' RETURN r.name as `Repository`, d.name as `Dependency`, s.version as `Version`
+MATCH (r:Repository)-[s:Requires]->(d) WHERE r.name =~ '<REPO>' RETURN r.name as `Repository`, d.name as `Dependency`, s.specifications as `Specifications`
+
 ```
 
 Query options for repository (`<REPO>`):
@@ -55,7 +57,7 @@ Query options for repository (`<REPO>`):
 Return the text of all README files contained within a repository.
 
 ```
-MATCH (n:README)-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' RETURN n.path as `README File`, n.content as `Contents`
+MATCH (n:README)-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' RETURN r.name as `Repository`, n.path as `File`, n.content as `Contents`
 ```
 
 Query options for repository (`<REPO>`):
@@ -64,7 +66,7 @@ Query options for repository (`<REPO>`):
 - Wildcard, e.g. `.*`
 - Multiple repositories, e.g. `pyLODE|fastapi`
 
-### Select the metadata of a given repo
+### Select the metadata of a given repo TODO:
 
 Select the metadata of a particular repository, or all.
 
@@ -98,8 +100,9 @@ Query options for repository (`<REPO>`):
 Selects the docstrings contained with a given repository
 
 ```
-MATCH (n:Docstring)-[Documents]-(f:Function)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository) WHERE
-n.short_description IS NOT NULL AND r.name =~ '<REPO>' RETURN r.name as `Repository`, f.name as `Function Name`,
+MATCH (n:Docstring)-[Documents]-(f:Function)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository)
+WHERE (n.short_description IS NOT NULL OR n.long_description IS NOT NULL)
+AND r.name =~ '<REPO>' RETURN r.name as `Repository`, f.name as `Function Name`,
 n.short_description as `Docstring Summary`, n.long_description as `Doctring Body`
 ```
 
@@ -114,9 +117,10 @@ Query options for repository (`<REPO>`):
 Selects the function summarizations that belong to a particular repository.
 
 ```
-MATCH (n:Docstring)-[:Documents]-(f)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository) WHERE n.summarization
-IS NOT NULL AND r.name =~ '<REPO>' RETURN r.name as `Repository`, f.name as `Function`,
-n.summarization as `Summarization`, f.source_code as `Source Code`
+MATCH (n:Docstring)-[:Documents]-(f)-[:HasFunction|HasMethod]-()-[:Contains*1..]-(r:Repository)
+WHERE n.summarization IS NOT NULL AND r.name =~ '<REPO>'
+RETURN r.name as `Repository`, f.name as `Function`,
+n.summarization as `Summarization`
 ```
 
 Query options for repository (`<REPO>`):
@@ -145,8 +149,8 @@ Query options for repository (`<REPO>`):
 Return the function and class names contained within a given repo.
 
 ```
-MATCH (n:Class|Function)-[:HasFunction|HasMethod*0..]-()-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>'
-RETURN r.name as `Repository`, n.name as `Name`, labels(n) as `Type`
+MATCH (n:Class|Function)-[:HasFunction|HasMethod*0..]-()-[:Contains*1..]-(r:Repository)
+WHERE r.name =~ '<REPO>' RETURN r.name as `Repository`, n.name as `Name`, labels(n) as `Type`
 ```
 
 Query options for repository (`<REPO>`):
@@ -189,23 +193,3 @@ Query options for function (`<FUNCTION>`):
 
 - Exact canonical name, e.g. `pylode.utils.rdf_obj_html`
 - Wildcard query to match only the function name, e.g. `.*rdf_obj_html`
-
-### Select the dependencies of a given file in a given repo
-
-Select the nodes imported by/dependencies of a given file in a given repository.
-
-```
-MATCH (i)-[:ImportedBy]-(m:Module)-[:Contains*1..]-(r:Repository) WHERE r.name =~ '<REPO>' AND m.name =~ '<MODULE>'
-RETURN i, m
-```
-
-Query options for repository (`<REPO>`):
-
-- Repository name, e.g. `pyLODE`
-- Wildcard, e.g. `.*`
-- Multiple repositories, e.g. `pyLODE|fastapi`
-
-Query options for function (`<MODULE>`):
-
-- Exact canonical name, e.g. `test_errors`
-- Wildcard query to match only the function name, e.g. `.*`

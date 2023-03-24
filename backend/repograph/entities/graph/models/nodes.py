@@ -172,23 +172,32 @@ class Directory(Node):
         name (str): The name of the directory.
         path (str): The path of the directory.
         parent_path (str): The parent directory of the folder.
+        inferred (bool): Whether this directory has been inferred when walking paths provided by
+                         inspect4py
     """
 
     name: str
     path: str
     parent_path: str
+    inferred: bool = False
 
-    def __init__(self, path: str, repository_name: str):
+    def __init__(self, path: str, repository_name: str, inferred: bool = False):
         """Create directory
 
         Args:
             repository_name (str): Repository name
             path (str): Path of directory
+            inferred (bool): Whether this directory has been inferred when walking paths provided by
+                         inspect4py
         """
         name = get_path_name(path)
         parent = get_path_parent(path)
         super().__init__(
-            path=path, name=name, parent_path=parent, repository_name=repository_name
+            path=path,
+            name=name,
+            parent_path=parent,
+            repository_name=repository_name,
+            inferred=inferred,
         )
 
 
