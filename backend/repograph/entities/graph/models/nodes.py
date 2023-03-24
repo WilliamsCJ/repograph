@@ -193,7 +193,11 @@ class Directory(Node):
         name = get_path_name(path)
         parent = get_path_parent(path)
         super().__init__(
-            path=path, name=name, parent_path=parent, repository_name=repository_name, inferred=inferred
+            path=path,
+            name=name,
+            parent_path=parent,
+            repository_name=repository_name,
+            inferred=inferred,
         )
 
 
