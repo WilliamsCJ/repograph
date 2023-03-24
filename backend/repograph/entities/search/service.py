@@ -149,14 +149,14 @@ class SearchService:
             embedding_2 = self.model.encode([docstring["docstring"], ""])
             score = util.dot_score(embedding_1, embedding_2)[0].cpu().tolist()[0]
 
-            if score < 0.4:
+            if score < 0.25:
                 low_scores.append(
                     PossibleIncorrectDocstring(
                         Name=docstring["name"],
                         Type=docstring["type"][0],
                         Summarization=docstring["summarization"],
                         Docstring=docstring["docstring"],
-                        Similarity=score,
+                        Similarity=round(score, 3),
                         Repository=docstring["repository"],
                     )
                 )

@@ -182,14 +182,14 @@ class SearchService:
             embedding_2 = self.model.encode([docstring[&#34;docstring&#34;], &#34;&#34;])
             score = util.dot_score(embedding_1, embedding_2)[0].cpu().tolist()[0]
 
-            if score &lt; 0.4:
+            if score &lt; 0.25:
                 low_scores.append(
                     PossibleIncorrectDocstring(
                         Name=docstring[&#34;name&#34;],
                         Type=docstring[&#34;type&#34;][0],
                         Summarization=docstring[&#34;summarization&#34;],
                         Docstring=docstring[&#34;docstring&#34;],
-                        Similarity=score,
+                        Similarity=round(score, 3),
                         Repository=docstring[&#34;repository&#34;],
                     )
                 )
@@ -504,14 +504,14 @@ class SearchService:
             embedding_2 = self.model.encode([docstring[&#34;docstring&#34;], &#34;&#34;])
             score = util.dot_score(embedding_1, embedding_2)[0].cpu().tolist()[0]
 
-            if score &lt; 0.4:
+            if score &lt; 0.25:
                 low_scores.append(
                     PossibleIncorrectDocstring(
                         Name=docstring[&#34;name&#34;],
                         Type=docstring[&#34;type&#34;][0],
                         Summarization=docstring[&#34;summarization&#34;],
                         Docstring=docstring[&#34;docstring&#34;],
-                        Similarity=score,
+                        Similarity=round(score, 3),
                         Repository=docstring[&#34;repository&#34;],
                     )
                 )
@@ -750,14 +750,14 @@ class SearchService:
         embedding_2 = self.model.encode([docstring[&#34;docstring&#34;], &#34;&#34;])
         score = util.dot_score(embedding_1, embedding_2)[0].cpu().tolist()[0]
 
-        if score &lt; 0.4:
+        if score &lt; 0.25:
             low_scores.append(
                 PossibleIncorrectDocstring(
                     Name=docstring[&#34;name&#34;],
                     Type=docstring[&#34;type&#34;][0],
                     Summarization=docstring[&#34;summarization&#34;],
                     Docstring=docstring[&#34;docstring&#34;],
-                    Similarity=score,
+                    Similarity=round(score, 3),
                     Repository=docstring[&#34;repository&#34;],
                 )
             )
