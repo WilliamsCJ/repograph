@@ -954,7 +954,7 @@ class RepographBuilder:
                                 # If more than one match we log this inconsistency,
                                 # but add all import relationships
                                 if len(matching_objects) > 1:
-                                    log.warning(
+                                    log.debug(
                                         "More than 1 matching object found in import."
                                     )
 
@@ -1008,8 +1008,7 @@ class RepographBuilder:
                             )
                             self.module_dependencies[module].append(imported_object)
             except Exception as e:
-                log.error("Couldn't parse dependency (%s). An error occurred: %s", module, e)
-
+                log.warning("Couldn't parse dependency (%s). An error occurred: %s", module, e)
 
         # Second pass on unresolved dependencies that are likely to be imports of other modules.
         unresolved = unresolved_dependencies
@@ -1214,7 +1213,7 @@ class RepographBuilder:
             for file_name, file_info in files.items():
                 module = self.modules.get(file_name)
                 if not module:
-                    log.error("Couldn't find existing Module node. Skipping!")
+                    log.warning("Couldn't find existing Module node. Skipping!")
                     continue
 
                 module_objects = self.module_objects.get(module, [])
@@ -1321,7 +1320,7 @@ class RepographBuilder:
 
                 self.graph.add(relationship, tx=self.tx, graph_name=self.graph_name)
             except Exception as e:
-                log.error("Unable to parse call (%s). An error occurred: %s", call, e)
+                log.warning("Unable to parse call (%s). An error occurred: %s", call, e)
 
     def _parse_extends(self) -> None:
         """Parse extends/super class information.
