@@ -1,5 +1,4 @@
 # pragma: no cover
-# TODO: Maybe some unit tests?
 """
 Routing for build entity.
 """
@@ -26,7 +25,7 @@ class BuildRouter:
 
     def __init__(self, service: BuildService):
         self.service = service
-        self.router = APIRouter(prefix="/graph")
+        self.router = APIRouter(prefix="/graph", tags=["Build"])
         self.router.add_api_route("/build", self.build, methods=["POST"])
 
     def _cleanup_inputs(self, inputs: List[str]):
