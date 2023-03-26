@@ -46,6 +46,7 @@ p.add_argument(
     "--input", required=True, action="append", help="The directory_info.json file."
 )
 p.add_argument("--name", required=True, help="The name of the graph.")
+p.add_argument("--description", required=True, help="A short description of the graph.")
 p.add_argument(
     "--prune",
     required=False,
@@ -74,6 +75,7 @@ p.add_argument(
 def main(
     input_list: List[str],
     name: str,
+    description: str,
     build: BuildService = Provide[ApplicationContainer.build.container.service],
     prune: bool = False,
 ) -> None:
@@ -87,13 +89,14 @@ def main(
     Args:
         input_list (List[str]): The list of input paths for the build service.
         name (str): The graph name
+        description (str): The graph name
         build (BuildService): The injected Build Service.
         prune (bool): Whether to call build.build with the prune flag.
 
     Returns:
         None
     """
-    build.build(input_list, name, "", prune=prune)  # TODO: Add description flag
+    build.build(input_list, name, description, prune=prune)
 
 
 if __name__ == "__main__":
@@ -103,4 +106,4 @@ if __name__ == "__main__":
     container.config.from_dict(vars(args))
     container.wire(modules=[__name__])
 
-    main(args.input, args.name, prune=args.prune)
+    main(args.input, args.name, args.description, prune=args.prune)

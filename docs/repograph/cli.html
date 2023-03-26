@@ -75,6 +75,7 @@ p.add_argument(
     &#34;--input&#34;, required=True, action=&#34;append&#34;, help=&#34;The directory_info.json file.&#34;
 )
 p.add_argument(&#34;--name&#34;, required=True, help=&#34;The name of the graph.&#34;)
+p.add_argument(&#34;--description&#34;, required=True, help=&#34;A short description of the graph.&#34;)
 p.add_argument(
     &#34;--prune&#34;,
     required=False,
@@ -103,6 +104,7 @@ p.add_argument(
 def main(
     input_list: List[str],
     name: str,
+    description: str,
     build: BuildService = Provide[ApplicationContainer.build.container.service],
     prune: bool = False,
 ) -&gt; None:
@@ -116,13 +118,14 @@ def main(
     Args:
         input_list (List[str]): The list of input paths for the build service.
         name (str): The graph name
+        description (str): The graph name
         build (BuildService): The injected Build Service.
         prune (bool): Whether to call build.build with the prune flag.
 
     Returns:
         None
     &#34;&#34;&#34;
-    build.build(input_list, name, &#34;&#34;, prune=prune)  # TODO: Add description flag
+    build.build(input_list, name, description, prune=prune)
 
 
 if __name__ == &#34;__main__&#34;:
@@ -132,7 +135,7 @@ if __name__ == &#34;__main__&#34;:
     container.config.from_dict(vars(args))
     container.wire(modules=[__name__])
 
-    main(args.input, args.name, prune=args.prune)</code></pre>
+    main(args.input, args.name, args.description, prune=args.prune)</code></pre>
 </details>
 </section>
 <section>
@@ -143,7 +146,7 @@ if __name__ == &#34;__main__&#34;:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="repograph.cli.main"><code class="name flex">
-<span>def <span class="ident">main</span></span>(<span>input_list: List[str], name: str, build: <a title="repograph.entities.build.service.BuildService" href="entities/build/service.html#repograph.entities.build.service.BuildService">BuildService</a> = &lt;dependency_injector.wiring.Provide object&gt;, prune: bool = False) ‑> None</span>
+<span>def <span class="ident">main</span></span>(<span>input_list: List[str], name: str, description: str, build: <a title="repograph.entities.build.service.BuildService" href="entities/build/service.html#repograph.entities.build.service.BuildService">BuildService</a> = &lt;dependency_injector.wiring.Provide object&gt;, prune: bool = False) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Main function of CLI script.</p>
@@ -155,6 +158,8 @@ runtime.</p>
 <dt><strong><code>input_list</code></strong> :&ensp;<code>List[str]</code></dt>
 <dd>The list of input paths for the build service.</dd>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The graph name</dd>
+<dt><strong><code>description</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph name</dd>
 <dt><strong><code>build</code></strong> :&ensp;<code>BuildService</code></dt>
 <dd>The injected Build Service.</dd>
@@ -171,6 +176,7 @@ runtime.</p>
 def main(
     input_list: List[str],
     name: str,
+    description: str,
     build: BuildService = Provide[ApplicationContainer.build.container.service],
     prune: bool = False,
 ) -&gt; None:
@@ -184,13 +190,14 @@ def main(
     Args:
         input_list (List[str]): The list of input paths for the build service.
         name (str): The graph name
+        description (str): The graph name
         build (BuildService): The injected Build Service.
         prune (bool): Whether to call build.build with the prune flag.
 
     Returns:
         None
     &#34;&#34;&#34;
-    build.build(input_list, name, &#34;&#34;, prune=prune)  # TODO: Add description flag</code></pre>
+    build.build(input_list, name, description, prune=prune)</code></pre>
 </details>
 </dd>
 </dl>

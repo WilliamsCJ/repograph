@@ -28,7 +28,6 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python"># pragma: no cover
-# TODO: Maybe some unit tests?
 &#34;&#34;&#34;
 Routing for build entity.
 &#34;&#34;&#34;
@@ -55,7 +54,7 @@ class BuildRouter:
 
     def __init__(self, service: BuildService):
         self.service = service
-        self.router = APIRouter(prefix=&#34;/graph&#34;)
+        self.router = APIRouter(prefix=&#34;/graph&#34;, tags=[&#34;Build&#34;])
         self.router.add_api_route(&#34;/build&#34;, self.build, methods=[&#34;POST&#34;])
 
     def _cleanup_inputs(self, inputs: List[str]):
@@ -127,7 +126,7 @@ class BuildRouter:
 
     def __init__(self, service: BuildService):
         self.service = service
-        self.router = APIRouter(prefix=&#34;/graph&#34;)
+        self.router = APIRouter(prefix=&#34;/graph&#34;, tags=[&#34;Build&#34;])
         self.router.add_api_route(&#34;/build&#34;, self.build, methods=[&#34;POST&#34;])
 
     def _cleanup_inputs(self, inputs: List[str]):
