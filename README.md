@@ -86,7 +86,7 @@ See `demo/README.md`.
 
 ## Development
 
-Tips for contributing to/developing RepoGraph.
+Tips for contributing to RepoGraph.
 
 ### Testing
 
