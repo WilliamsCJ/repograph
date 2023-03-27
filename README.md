@@ -37,7 +37,7 @@ wait for the Neo4J container._
 
 ### Alternative Method
 
-If you are not able to use Docker Compose (i.e. on the lab machines), the following Podman commands can be run to start the application: 
+If you are not able to use Docker Compose (i.e. on the lab machines), the following Podman commands can be run to start the application:
 
 ```shell
 podman build -t localhost/repograph-backend:latest -f backend/Dockerfile backend
