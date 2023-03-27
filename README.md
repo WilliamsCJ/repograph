@@ -9,7 +9,7 @@ Knowledge Graphs and Semantic Search for Python Repositories using Neo4j.
 
 ## Structure
 
-Running repograph consists of three components: the Neo4j database, the backend server and a user interface.
+Running RepoGraph consists of three components: the Neo4j database, the backend server and a user interface.
 Two user interfaces are provided: a Command-Line Interface (CLI) or a browser web app.
 
 ## Requirements
