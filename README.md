@@ -74,7 +74,7 @@ python3 -m repograph.cli --help
 
 _Note: If using the Neo4J instance created by running the backend (see above), the only
 available option for `--database` is `neo4j`. This is due to limitations in the
-[Community Edition license](https://neo4j.com/licensing/)._
+[Community Edition license](https://neo4j.com/licensing/).
 
 ### Accessing the browser web app
 
