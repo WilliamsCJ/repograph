@@ -23,7 +23,7 @@ Several example notebooks are provided for testing and evaluation purposes. Thes
 the running of the repograph CLI to generate knowledge graphs and provide an easily and repeatable
 way to run [Cypher](https://neo4j.com/developer/cypher/) queries.
 
-### Running the backend
+### Running the application
 
 From the project root, run:
 
@@ -34,6 +34,28 @@ docker-compose up
 
 _Note: It can take up to a minute for the frontend and backend containers to start as they have to
 wait for the Neo4J container._
+
+### Alternative Method
+
+If you are not able to use Docker Compose (i.e. on the lab machines), the following Podman commands can be run to start the application:
+
+```shell
+podman build -t localhost/repograph-backend:latest -f backend/Dockerfile backend
+
+podman build -t localhost/repograph-frontend:latest -f frontend/Dockerfile frontend
+
+podman network create repograph-network
+
+podman run -d --network=repograph-network -p 7474:7474 -p 7687:7687 --name neo4j --network-alias repograph-database -e NEO4J_AUTH='neo4j/s3cr3t' -e NEO4J_dbms_security_auth__minimum__password__length=1 -e NEO4J_ACCEPT_LICENSE_AGREEMENT=yes neo4j:5.4.0-enterprise
+
+podman run -d --network=repograph-network -p 3000:3000 --name repograph-backend --network-alias repograph-backend -v `pwd`/.sqlite:/code/sqlite -v `pwd`/.cache:/root/.cache -v `pwd`/.nltk:/nltk_data repograph-backend:latest
+
+podman run -d --network=repograph-network -p 8080:8080 --name repograph-frontend --network-alias repograph-frontend repograph-frontend:latest
+```
+
+### Accessing the browser web app
+
+The browser web app can be accessed at `http://localhost:8080`
 
 #### Accessing the Neo4J database
 
@@ -75,10 +97,6 @@ python3 -m repograph.cli --help
 _Note: If using the Neo4J instance created by running the backend (see above), the only
 available option for `--database` is `neo4j`. This is due to limitations in the
 [Community Edition license](https://neo4j.com/licensing/).
-
-### Accessing the browser web app
-
-The browser web app can be accessed at `http://localhost:8080`
 
 ## Demonstration
 
