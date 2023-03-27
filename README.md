@@ -37,7 +37,7 @@ wait for the Neo4J container._
 
 ### Alternative Method
 
-If you are not able to use Docker Compose (i.e. on the lab machines), the following Podman commands can be run to start the application:
+If you are not able to use Docker Compose (i.e. on the lab machines), please run the following Podman commands (in order and allowing time for each one to complete before executing the next) from the project root:
 
 ```shell
 podman build -t localhost/repograph-backend:latest -f backend/Dockerfile backend
@@ -45,6 +45,8 @@ podman build -t localhost/repograph-backend:latest -f backend/Dockerfile backend
 podman build -t localhost/repograph-frontend:latest -f frontend/Dockerfile frontend
 
 podman network create repograph-network
+
+mkdir .sqlite .cache .nltk
 
 podman run -d --network=repograph-network -p 7474:7474 -p 7687:7687 --name neo4j --network-alias repograph-database -e NEO4J_AUTH='neo4j/s3cr3t' -e NEO4J_dbms_security_auth__minimum__password__length=1 -e NEO4J_ACCEPT_LICENSE_AGREEMENT=yes neo4j:5.4.0-enterprise
 
