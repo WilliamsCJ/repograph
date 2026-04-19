@@ -93,7 +93,7 @@ neo4j==5.5.0
 neo4j-driver==5.5.0
 neotime==1.7.4
 nest-asyncio==1.5.6
-nltk==3.8.1
+nltk==3.9.4
 notebook==6.5.3
 notebook_shim==0.2.2
 numpy==1.24.1
