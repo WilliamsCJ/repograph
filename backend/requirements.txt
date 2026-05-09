@@ -14,7 +14,7 @@ backports.functools-lru-cache==1.6.4
 beautifulsoup4==4.11.2
 bigcode-astgen==0.2.1
 black==22.12.0
-bleach==6.0.0
+bleach==6.3.0
 CacheControl==0.12.11
 certifi==2022.12.7
 cffi==1.15.1
@@ -164,7 +164,7 @@ tabulate==0.9.0
 tenacity==8.1.0
 terminado==0.17.1
 threadpoolctl==3.1.0
-tinycss2==1.2.1
+tinycss2==1.4.0
 tokenizers==0.13.2
 tomli==2.0.1
 torch==1.13.1
