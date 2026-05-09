@@ -64,12 +64,13 @@ jedi==0.18.2
 Jinja2==3.1.2
 joblib==1.2.0
 json2html==1.3.0
-jsonschema==4.17.3
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
 jupyter==1.0.0
 jupyter_client==8.0.3
 jupyter-console==6.6.3
 jupyter_core==5.2.0
-jupyter-events==0.6.3
+jupyter-events==0.12.1
 jupyter_server==2.18.0
 jupyter_server_terminals==0.4.4
 jupyterlab-pygments==0.2.2
@@ -98,7 +99,8 @@ nltk==3.9.4
 notebook==6.5.3
 notebook_shim==0.2.2
 numpy==1.24.1
-packaging==21.3
+overrides==7.7.0
+packaging==26.2
 pandas==1.5.3
 pandocfilters==1.5.0
 pansi==2020.7.3
@@ -127,6 +129,8 @@ pyflakes==3.0.1
 Pygments==2.14.0
 pyparsing==3.0.9
 pyrsistent==0.19.3
+referencing==0.37.0
+rpds-py==0.30.0
 python-dateutil==2.8.2
 python-json-logger==2.0.7
 python-multipart==0.0.27
@@ -143,7 +147,7 @@ rich==13.3.1
 scikit-learn==1.2.1
 scipy==1.10.0
 seaborn==0.12.2
-Send2Trash==1.8.0
+Send2Trash==2.1.0
 sentence-transformers==2.2.2
 sentencepiece==0.1.97
 setuptools==54.2.0
@@ -175,7 +179,7 @@ urllib3==1.26.14
 uvicorn==0.20.0
 wcwidth==0.2.6
 webencodings==0.5.1
-websocket-client==1.5.1
+websocket-client==1.9.0
 wheel==0.38.4
 widgetsnbextension==4.0.5
 yarl==1.17.2
