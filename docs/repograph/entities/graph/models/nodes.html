@@ -68,16 +68,18 @@ el.replaceWith(d);
     type: Optional[str] = &#34;Any&#34;</code></pre>
 </details>
 <div class="desc"><p>Node representing an argument to a function.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The variable name</dd>
 <dt><strong><code>type</code></strong> :&ensp;<code>str</code></dt>
 <dd>The inferred type of the variable, usually from a type hint.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -123,8 +125,9 @@ specifically with a Node object.</p>
 <div class="desc"><p>Node represents a generic Node in Repograph.</p>
 <p>All Node types inherit from this class.</p>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -166,8 +169,9 @@ specifically with a Node object.</p>
     inferred: bool = False</code></pre>
 </details>
 <div class="desc"><p>Represents a Python class.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The class name.</dd>
 <dt><strong><code>min_line_number</code></strong> :&ensp;<code>Optional[int]</code></dt>
@@ -178,8 +182,9 @@ specifically with a Node object.</p>
 <dd>This object was inferred when parsing dependencies or calls. Default False.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -263,8 +268,9 @@ specifically with a Node object.</p>
         )</code></pre>
 </details>
 <div class="desc"><p>Represents a folder in a repository.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the directory.</dd>
 <dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
@@ -276,8 +282,9 @@ specifically with a Node object.</p>
 inspect4py</dd>
 </dl>
 <p>Create directory</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>repository_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>Repository name</dd>
 <dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
@@ -336,8 +343,9 @@ inspect4py</dd>
     summarization: Optional[str]</code></pre>
 </details>
 <div class="desc"><p>Represents a docstring for a function or class.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>short_description</code></strong> :&ensp;<code>str</code></dt>
 <dd>The short headline description of the docstring.</dd>
 <dt><strong><code>long_description</code></strong> :&ensp;<code>Optional[str]</code></dt>
@@ -346,8 +354,9 @@ inspect4py</dd>
 <dd>The generated text summary of whatever the docstring is documenting.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -403,8 +412,9 @@ specifically with a Node object.</p>
     default: Optional[Any]</code></pre>
 </details>
 <div class="desc"><p>Represents an argument description with a docstring.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The argument name.</dd>
 <dt><strong><code>description</code></strong> :&ensp;<code>str</code></dt>
@@ -417,8 +427,9 @@ specifically with a Node object.</p>
 <dd>The default value of the argument, if it is optional.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -471,16 +482,18 @@ specifically with a Node object.</p>
     type: Optional[str]</code></pre>
 </details>
 <div class="desc"><p>Represents a raises/exception descritpion within a docstring.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>description</code></strong> :&ensp;<code>str</code></dt>
 <dd>The description of the exception that may be raised.</dd>
 <dt><strong><code>type</code></strong> :&ensp;<code>str</code></dt>
 <dd>The inferred type of the exception, usually from a type hint.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args_1">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -530,8 +543,9 @@ specifically with a Node object.</p>
     is_generator: bool</code></pre>
 </details>
 <div class="desc"><p>Represents a return value description within a docstring.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The argument name.</dd>
 <dt><strong><code>description</code></strong> :&ensp;<code>str</code></dt>
@@ -542,8 +556,9 @@ specifically with a Node object.</p>
 <dd>Whether the return value is a generator.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -614,8 +629,9 @@ specifically with a Node object.</p>
     inferred: bool = False</code></pre>
 </details>
 <div class="desc"><p>Represents a Python function or method.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the function or method.</dd>
 <dt><strong><code>type</code></strong> :&ensp;<code>FunctionType</code></dt>
@@ -634,8 +650,9 @@ specifically with a Node object.</p>
 <dd>This object was inferred when parsing dependencies or calls. Default False.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -720,8 +737,9 @@ specifically with a Node object.</p>
 </details>
 <div class="desc"><p>Represents a software license.
 Defines the licensing terms of a repository.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>text</code></strong> :&ensp;<code>str</code></dt>
 <dd>The raw text of the license.</dd>
 <dt><strong><code>license_type</code></strong> :&ensp;<code>str</code></dt>
@@ -730,8 +748,9 @@ Defines the licensing terms of a repository.</p>
 <dd>The confidence that the specified type matches the extracted text.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -837,8 +856,9 @@ specifically with a Node object.</p>
         )</code></pre>
 </details>
 <div class="desc"><p>Represents a Module within the repository.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The file.</dd>
 <dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
@@ -851,8 +871,9 @@ specifically with a Node object.</p>
 <dd>This object was inferred when parsing dependencies or calls. Default False.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -905,15 +926,15 @@ specifically with a Node object.</p>
 </code></dt>
 <dd>
 <div class="desc"><p>Create an <strong>init</strong> module for a Package.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>parent_canonical_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The canonical name of the parent Package.</dd>
 <dt><strong><code>repository_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the associated repository.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code><a title="repograph.entities.graph.models.nodes.Module" href="#repograph.entities.graph.models.nodes.Module">Module</a></code></dt>
 <dd><strong>init</strong></dd>
 </dl></div>
@@ -950,13 +971,13 @@ specifically with a Node object.</p>
     )</code></pre>
 </details>
 <div class="desc"><p>Update the canonical name of a Module.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>canonical_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The canonical name to update.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code><a title="repograph.entities.graph.models.nodes.Module" href="#repograph.entities.graph.models.nodes.Module">Module</a></code></dt>
 <dd>New Module object.</dd>
 </dl></div>
@@ -1077,8 +1098,9 @@ specifically with a Node object.</p>
         )</code></pre>
 </details>
 <div class="desc"><p>Represents a Python package, either within the repository or external.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the directory.</dd>
 <dt><strong><code>path</code></strong> :&ensp;<code>Optional[str]</code></dt>
@@ -1096,8 +1118,9 @@ specifically with a Node object.</p>
 <dd>This object was inferred when parsing dependencies or calls. Default False.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the package.</dd>
 <dt><strong><code>canonical_name</code></strong> :&ensp;<code>str</code></dt>
@@ -1161,17 +1184,17 @@ the repository. Defaults to False.</dd>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a Package instance from a directory.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
 <dd>The dependency name.</dd>
 <dt><strong><code>canonical_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The canonical name of the package.</dd>
 <dt><strong><code>repository_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the associated repository.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code><a title="repograph.entities.graph.models.nodes.Package" href="#repograph.entities.graph.models.nodes.Package">Package</a></code></dt>
 <dd>A Package instance.</dd>
 </dl></div>
@@ -1181,15 +1204,15 @@ the repository. Defaults to False.</dd>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a Package instance from an external dependency.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>package</code></strong> :&ensp;<code>str</code></dt>
 <dd>The dependency name.</dd>
 <dt><strong><code>repository_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the associated repository.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code><a title="repograph.entities.graph.models.nodes.Package" href="#repograph.entities.graph.models.nodes.Package">Package</a></code></dt>
 <dd>A Package instance.</dd>
 </dl></div>
@@ -1217,16 +1240,18 @@ the repository. Defaults to False.</dd>
     content: str</code></pre>
 </details>
 <div class="desc"><p>Represents a README file in a repository.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
 <dd>The path of the README file.</dd>
 <dt><strong><code>content</code></strong> :&ensp;<code>str</code></dt>
 <dd>The content of the README file.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -1399,16 +1424,18 @@ specifically with a Node object.</p>
         )</code></pre>
 </details>
 <div class="desc"><p>Represents a software repository.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong></dt>
 <dd>The name of the repository.</dd>
 <dt><strong><code>type</code></strong></dt>
 <dd>The inferred repository type.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -1745,8 +1772,9 @@ specifically with a Node object.</p>
 </code></dt>
 <dd>
 <div class="desc"><p>Create from metadata JSON.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>Fallback name for the repository.</dd>
 <dt><strong><code>metadata</code></strong> :&ensp;<code>JSONDict</code></dt>
@@ -1756,8 +1784,9 @@ specifically with a Node object.</p>
 <dt><strong><code>software_type</code></strong> :&ensp;<code>SoftwareType</code></dt>
 <dd>The extracted software type</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>Repository</p></div>
+<p>Returns
+-----=
+Repository</p></div>
 </dd>
 </dl>
 </dd>
@@ -1782,16 +1811,18 @@ specifically with a Node object.</p>
     type: Optional[str] = &#34;Any&#34;</code></pre>
 </details>
 <div class="desc"><p>Node representing a return value from a function.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The variable name</dd>
 <dt><strong><code>type</code></strong> :&ensp;<code>str</code></dt>
 <dd>The inferred type of the variable, usually from a type hint.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -1846,8 +1877,9 @@ specifically with a Node object.</p>
     inferred: bool = False</code></pre>
 </details>
 <div class="desc"><p>Represents a Python variable.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The variable name</dd>
 <dt><strong><code>type</code></strong> :&ensp;<code>str</code></dt>
@@ -1856,8 +1888,9 @@ specifically with a Node object.</p>
 <dd>This object was inferred when parsing dependencies or calls. Default False.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>

@@ -114,8 +114,9 @@ el.replaceWith(d);
         self.repository.update_database(updated_graph)</code></pre>
 </details>
 <div class="desc"><p>Constructor</p>
-<h2 id="args">Args</h2>
-<p>repository:</p></div>
+<p>Args
+-----=
+repository:</p></div>
 <h3>Class variables</h3>
 <dl>
 <dt id="repograph.entities.metadata.service.MetadataService.repository"><code class="name">var <span class="ident">repository</span> : <a title="repograph.entities.metadata.repository.MetadataRepository" href="repository.html#repograph.entities.metadata.repository.MetadataRepository">MetadataRepository</a></code></dt>
@@ -145,13 +146,15 @@ el.replaceWith(d);
     self.repository.delete_database(graph_name)</code></pre>
 </details>
 <div class="desc"><p>Delete the metadata associated with a graph_name.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>graph_name</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<p>Returns
+-----=
+None</p></div>
 </dd>
 <dt id="repograph.entities.metadata.service.MetadataService.get_all_graph_listings"><code class="name flex">
 <span>def <span class="ident">get_all_graph_listings</span></span>(<span>self) ‑> List[<a title="repograph.entities.metadata.models.Graph" href="models.html#repograph.entities.metadata.models.Graph">Graph</a>]</span>
@@ -170,8 +173,9 @@ el.replaceWith(d);
     return self.repository.list_databases()</code></pre>
 </details>
 <div class="desc"><p>Get all graphs</p>
-<h2 id="returns">Returns</h2>
-<p>List[Graph]</p></div>
+<p>Returns
+-----=
+List[Graph]</p></div>
 </dd>
 <dt id="repograph.entities.metadata.service.MetadataService.get_transaction"><code class="name flex">
 <span>def <span class="ident">get_transaction</span></span>(<span>self) ‑> sqlite3.Connection</span>
@@ -207,15 +211,17 @@ el.replaceWith(d);
     self.repository.add_database(graph, tx)</code></pre>
 </details>
 <div class="desc"><p>Register a new graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>Graph</code></dt>
 <dd>Graph metadata.</dd>
 <dt><strong><code>tx</code></strong> :&ensp;<code>sqlite3.Connection</code></dt>
 <dd>The transaction object.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<p>Returns
+-----=
+None</p></div>
 </dd>
 <dt id="repograph.entities.metadata.service.MetadataService.set_graph_status_to_created"><code class="name flex">
 <span>def <span class="ident">set_graph_status_to_created</span></span>(<span>self,<br>graph: <a title="repograph.entities.metadata.models.Graph" href="models.html#repograph.entities.metadata.models.Graph">Graph</a>)</span>
@@ -238,13 +244,15 @@ el.replaceWith(d);
     self.repository.update_database(updated_graph)</code></pre>
 </details>
 <div class="desc"><p>Set the status of a graph to CREATED.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>Graph</code></dt>
 <dd>Original Graph object to update.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<p>Returns
+-----=
+None</p></div>
 </dd>
 </dl>
 </dd>

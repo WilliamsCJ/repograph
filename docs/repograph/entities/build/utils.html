@@ -72,13 +72,15 @@ el.replaceWith(d);
     return converted</code></pre>
 </details>
 <div class="desc"><p>Convert dependencies to a set of names.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>dependencies</code></strong> :&ensp;<code>JSONDict</code></dt>
 <dd>The JSONDict containing dependency information.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>Set[str]</p></div>
+<p>Returns
+-----=
+Set[str]</p></div>
 </dd>
 <dt id="repograph.entities.build.utils.find_node_object_by_name"><code class="name flex">
 <span>def <span class="ident">find_node_object_by_name</span></span>(<span>nodes: List[<a title="repograph.entities.graph.models.nodes.Class" href="../graph/models/nodes.html#repograph.entities.graph.models.nodes.Class">Class</a> | <a title="repograph.entities.graph.models.nodes.Function" href="../graph/models/nodes.html#repograph.entities.graph.models.nodes.Function">Function</a> | <a title="repograph.entities.graph.models.nodes.Module" href="../graph/models/nodes.html#repograph.entities.graph.models.nodes.Module">Module</a>],<br>name: str,<br>strict: bool = True) ‑> <a title="repograph.entities.graph.models.nodes.Class" href="../graph/models/nodes.html#repograph.entities.graph.models.nodes.Class">Class</a> | <a title="repograph.entities.graph.models.nodes.Function" href="../graph/models/nodes.html#repograph.entities.graph.models.nodes.Function">Function</a> | <a title="repograph.entities.graph.models.nodes.Module" href="../graph/models/nodes.html#repograph.entities.graph.models.nodes.Module">Module</a> | None</span>
@@ -141,8 +143,9 @@ el.replaceWith(d);
     return filtered[0]</code></pre>
 </details>
 <div class="desc"><p>Find a Node in a list of Nodes by name.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>nodes</code></strong> :&ensp;<code>List[Union[Class, Function, Module]]</code></dt>
 <dd>The list of Nodes.</dd>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
@@ -150,8 +153,9 @@ el.replaceWith(d);
 <dt><strong><code>strict</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Whether to log a warning if more than one result is found.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>Optional[Union[Class, Function, Module]]</p></div>
+<p>Returns
+-----=
+Optional[Union[Class, Function, Module]]</p></div>
 </dd>
 <dt id="repograph.entities.build.utils.find_requirements"><code class="name flex">
 <span>def <span class="ident">find_requirements</span></span>(<span>path: str) ‑> List[requirements.requirement.Requirement]</span>
@@ -179,13 +183,15 @@ el.replaceWith(d);
     return found</code></pre>
 </details>
 <div class="desc"><p>Find any Python requirements files at the or below the path provided</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
 <dd>Path to start search at</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>List[Requirement]</p></div>
+<p>Returns
+-----=
+List[Requirement]</p></div>
 </dd>
 <dt id="repograph.entities.build.utils.get_module_and_object_from_canonical_object_name"><code class="name flex">
 <span>def <span class="ident">get_module_and_object_from_canonical_object_name</span></span>(<span>canonical_name: str) ‑> Tuple[str | None, str]</span>
@@ -217,13 +223,13 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Split out the canonical module name and object name from a
 canonical object name.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>canonical_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The canonical name of the object.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>str</code></dt>
 <dd>The module canonical name</dd>
 <dt><code>str</code></dt>
@@ -252,13 +258,15 @@ canonical object name.</p>
     return pure_path.parts[0]</code></pre>
 </details>
 <div class="desc"><p>Get the root of the supplied file path.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>file_path</code></strong> :&ensp;<code>str</code></dt>
 <dd>The file path to parse.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>str</p></div>
+<p>Returns
+-----=
+str</p></div>
 </dd>
 <dt id="repograph.entities.build.utils.is_root_folder"><code class="name flex">
 <span>def <span class="ident">is_root_folder</span></span>(<span>file_path: str) ‑> bool</span>
@@ -281,13 +289,13 @@ canonical object name.</p>
     return len(pure_path.parts) == 1</code></pre>
 </details>
 <div class="desc"><p>Checks file path to see if path represents the root of a repository.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>file_path</code></strong> :&ensp;<code>str</code></dt>
 <dd>Module path</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>bool</code></dt>
 <dd>Whether the path represents the root of the repository.</dd>
 </dl></div>
@@ -319,13 +327,15 @@ canonical object name.</p>
             return None</code></pre>
 </details>
 <div class="desc"><p>Serialises a JSONDict to a str.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>json_dict</code></strong> :&ensp;<code>JSONDict</code></dt>
 <dd>The JSON to serialise.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>str, if serialisable. Otherwise None.</p></div>
+<p>Returns
+-----=
+str, if serialisable. Otherwise None.</p></div>
 </dd>
 <dt id="repograph.entities.build.utils.parse_min_max_line_numbers"><code class="name flex">
 <span>def <span class="ident">parse_min_max_line_numbers</span></span>(<span>json: Dict[str, Any]) ‑> Tuple[int | None, int | None]</span>
@@ -356,13 +366,13 @@ canonical object name.</p>
 <div class="desc"><p>Retrieve a tuple of minimum and maximum line numbers from
 the "min_max_lineno" JSON entry.</p>
 <p>Uses .get() to avoid KeyErrors.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>json</code></strong> :&ensp;<code>JSONDict</code></dt>
 <dd>The JSON dictionary.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>Tuple[Optional[int], Optional[int]]</code></dt>
 <dd><em>description</em></dd>
 </dl></div>
@@ -389,13 +399,13 @@ the "min_max_lineno" JSON entry.</p>
         return json_obj</code></pre>
 </details>
 <div class="desc"><p>Reads a JSON object from a file.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>file_path</code></strong> :&ensp;<code>str</code></dt>
 <dd>The path of the file to read.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>Dict[str, Any]</code></dt>
 <dd>The JSON object as a dictiontary.</dd>
 </dl></div>
@@ -422,13 +432,13 @@ the "min_max_lineno" JSON entry.</p>
     return str(pure_path)</code></pre>
 </details>
 <div class="desc"><p>Strips the first part of a file_path.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>file_path</code></strong> :&ensp;<code>str</code></dt>
 <dd>Module path to strip.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>str</code></dt>
 <dd>The stripped file path.</dd>
 </dl></div>
