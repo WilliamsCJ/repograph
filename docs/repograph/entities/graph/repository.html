@@ -215,8 +215,9 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Neo4j repository. Provides specific interface for Neo4j, using py2neo.</p>
 <p>Neo4JDatabase constructor.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>Graph</code></dt>
 <dd>Neo4j database connection.</dd>
 </dl></div>
@@ -227,20 +228,19 @@ el.replaceWith(d);
 </code></dt>
 <dd>
 <div class="desc"><p>Create a new Graph on the Neo4j server.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the graph database.</dd>
 <dt><strong><code>tx</code></strong> :&ensp;<code>Transaction</code></dt>
 <dd>neo4j driver Transaction for system graph.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>Transaction</code></dt>
 <dd>So database creation can be rolled back.</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
+<dt>Raises</dt>
+<dt>-----=</dt>
 <dt><code>GraphExistsError</code></dt>
 <dd>If graph name already exists.</dd>
 </dl></div>
@@ -283,8 +283,9 @@ el.replaceWith(d);
         transaction.commit()</code></pre>
 </details>
 <div class="desc"><p>Add nodes/relationships to the graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>*args</code></strong> :&ensp;<code>BaseSubgraph</code></dt>
 <dd>The nodes and/or relationships to add.</dd>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
@@ -292,8 +293,9 @@ el.replaceWith(d);
 <dt><strong><code>tx</code></strong> :&ensp;<code>Transaction</code></dt>
 <dd>Optional, existing Transaction to use.</dd>
 </dl>
-<h2 id="return">Return</h2>
-<p>None</p></div>
+<p>Return
+-----=
+None</p></div>
 </dd>
 <dt id="repograph.entities.graph.repository.GraphRepository.delete_graph"><code class="name flex">
 <span>def <span class="ident">delete_graph</span></span>(<span>self, graph_name: str) ‑> None</span>
@@ -315,13 +317,15 @@ el.replaceWith(d);
     self._driver.execute_query(f&#34;&#34;&#34;DROP DATABASE {graph_name} IF EXISTS&#34;&#34;&#34;)</code></pre>
 </details>
 <div class="desc"><p>Deletes all nodes from the graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>Graph name to execute query on.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<p>Returns
+-----=
+None</p></div>
 </dd>
 <dt id="repograph.entities.graph.repository.GraphRepository.execute_query"><code class="name flex">
 <span>def <span class="ident">execute_query</span></span>(<span>self, query: str, graph_name: str = None) ‑> List[Dict[str, Any]]</span>
@@ -346,15 +350,17 @@ el.replaceWith(d);
     return cursor.data()</code></pre>
 </details>
 <div class="desc"><p>Execute a Cypher query.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
 <dd>The Cypher query.</dd>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph name to execute query on.</dd>
 </dl>
-<h2 id="return">Return</h2>
-<p>List[Dict[str, Any]]</p></div>
+<p>Return
+-----=
+List[Dict[str, Any]]</p></div>
 </dd>
 <dt id="repograph.entities.graph.repository.GraphRepository.get_all_nodes_by_label"><code class="name flex">
 <span>def <span class="ident">get_all_nodes_by_label</span></span>(<span>self,<br>node_label: type[<a title="repograph.entities.graph.models.base.Node" href="models/base.html#repograph.entities.graph.models.base.Node">Node</a>],<br>graph_name: str = None) ‑> List[<a title="repograph.entities.graph.models.base.Node" href="models/base.html#repograph.entities.graph.models.base.Node">Node</a>]</span>
@@ -392,14 +398,16 @@ el.replaceWith(d);
     return list(map(cast, match.all()))</code></pre>
 </details>
 <div class="desc"><p>Retrieve all nodes with a particular label.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt>node_label(type[Node]): The Node type to fetch. Used to map to label.</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph name to execute query on.</dd>
 </dl>
-<h2 id="return">Return</h2>
-<p>List[Node]</p></div>
+<p>Return
+-----=
+List[Node]</p></div>
 </dd>
 <dt id="repograph.entities.graph.repository.GraphRepository.get_driver_transaction"><code class="name flex">
 <span>def <span class="ident">get_driver_transaction</span></span>(<span>self) ‑> neo4j._sync.work.transaction.Transaction</span>
@@ -440,13 +448,15 @@ el.replaceWith(d);
     )</code></pre>
 </details>
 <div class="desc"><p>Retrieve the number of nodes and relationships in the graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph name to execute query on.</dd>
 </dl>
-<h2 id="return">Return</h2>
-<p>int: Number of nodes
+<p>Return
+-----=
+int: Number of nodes
 int: Number of relationships</p></div>
 </dd>
 <dt id="repograph.entities.graph.repository.GraphRepository.get_transaction"><code class="name flex">
@@ -469,8 +479,9 @@ int: Number of relationships</p></div>
     return self._graph_service[graph_name].begin()</code></pre>
 </details>
 <div class="desc"><p>Begin transaction for named graph</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the graph</dd>
 </dl></div>
@@ -495,13 +506,15 @@ int: Number of relationships</p></div>
     return self._graph_service[graph_name].nodes.match().count() != 0</code></pre>
 </details>
 <div class="desc"><p>Checks whether the graph contains any nodes.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the graph</dd>
 </dl>
-<h2 id="return">Return</h2>
-<p>bool</p></div>
+<p>Return
+-----=
+bool</p></div>
 </dd>
 </dl>
 </dd>
