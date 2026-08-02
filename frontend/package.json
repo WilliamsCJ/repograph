@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
     "start": "next start"
   },
   "babelMacros": {
@@ -20,7 +20,7 @@
     "formik": "^2.2.9",
     "highlight.js": "^11.7.0",
     "moment": "^2.29.4",
-    "next": "latest",
+    "next": "16.2.12",
     "next-themes": "^0.2.1",
     "phosphor-react": "^1.4.1",
     "react": "18.2.0",
@@ -33,7 +33,7 @@
     "tailwind-scrollbar-hide": "^1.1.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.5",
+    "@babel/core": "^7.29.6",
     "@babel/plugin-syntax-typescript": "^7.20.0",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "18.11.3",
@@ -44,11 +44,18 @@
     "autoprefixer": "^10.4.12",
     "babel-loader": "^9.1.0",
     "babel-plugin-macros": "^3.1.0",
-    "postcss": "^8.5.10",
+    "postcss": "^8.5.18",
     "prettier": "^2.8.3",
     "prettier-plugin-tailwindcss": "^0.2.1",
     "tailwindcss": "^3.2.4",
     "twin.macro": "^3.1.0",
-    "typescript": "4.8.4"
+    "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "fast-uri": "^3.1.4",
+    "next": {
+      "postcss": "^8.5.18",
+      "sharp": "^0.35.0"
+    }
   }
 }
