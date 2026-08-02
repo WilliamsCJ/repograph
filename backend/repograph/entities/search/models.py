@@ -5,7 +5,7 @@ Search entity-related models.
 from typing import Callable, List
 
 # pip imports
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 # Model imports
 from repograph.entities.graph.models.nodes import Function
@@ -21,11 +21,12 @@ class SemanticSearchResult(BaseModel):
         score (float): The cosine distance score.
     """
 
-    function: Function = Field(..., exclude={"ast"})
+    function: Function
     summarization: str
     score: float
 
-    @validator("score")
+    @field_validator("score")
+    @classmethod
     def round_score(cls, v):
         """Round match score to 3 decimal places."""
         return round(v, 3)
@@ -41,7 +42,7 @@ class SemanticSearchResultSet(BaseModel):
 class AvailableSearchQuery(BaseModel):
     id: int
     name: str
-    function: Callable
+    function: Callable = Field(..., exclude=True)
 
 
 class SearchQueryResult(BaseModel):

@@ -66,7 +66,7 @@ class Imports(Relationship):
         Module: {Module, Package, Class, Function, Variable},
     }
 
-    alias: Optional[str]
+    alias: Optional[str] = None
 
 
 class HasMethod(Relationship):

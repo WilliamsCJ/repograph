@@ -5,7 +5,7 @@ Models representing elements of the Repograph
 from typing import List, Union, Optional
 
 # pip imports
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class GraphSummary(BaseModel):
@@ -38,20 +38,18 @@ class GraphSummary(BaseModel):
 class CallGraph(BaseModel):
     class Node(BaseModel):
         id: str
-        name: Optional[str]
-        canonical_name: Optional[str]
-        type: Optional[str]
+        name: Optional[str] = None
+        canonical_name: Optional[str] = None
+        type: Optional[str] = None
 
     class Relationship(BaseModel):
         from_id: str = Field(..., alias="source")
         to_id: str = Field(..., alias="target")
         type: str
 
-        class Config:
-            allow_population_by_field_name = True
+        model_config = ConfigDict(validate_by_name=True)
 
-    class Config:
-        allow_population_by_field_name = True
+    model_config = ConfigDict(validate_by_name=True)
 
     nodes: List[Node] = []
     links: List[Relationship] = []
@@ -61,8 +59,7 @@ class GraphInfo(BaseModel):
     summary: GraphSummary
     graph: CallGraph
 
-    class Config:
-        allow_population_by_field_name = True
+    model_config = ConfigDict(validate_by_name=True)
 
 
 class CircularDependency(BaseModel):
