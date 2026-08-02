@@ -1,6 +1,7 @@
 """
 Utility functions for the graph entity.
 """
+
 # Base imports
 from pathlib import PurePath
 from logging import getLogger

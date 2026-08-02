@@ -1,6 +1,7 @@
 """
 Relationships between Nodes.
 """
+
 from typing import List, Optional, Tuple
 
 from repograph.entities.graph.models.base import Relationship

@@ -1,6 +1,7 @@
 """
 Search entity-related models.
 """
+
 # Base imports
 from typing import Callable, List
 

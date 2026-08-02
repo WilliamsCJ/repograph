@@ -7,7 +7,6 @@ from neo4j import Driver, Transaction
 from repograph.entities.graph.models.nodes import Function
 from repograph.entities.graph.repository import GraphRepository
 
-
 GRAPH_NAME = "example"
 
 

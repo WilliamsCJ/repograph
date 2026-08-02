@@ -1,6 +1,7 @@
 """
 Metadata entity application logic.
 """
+
 import sqlite3
 
 # Base imports

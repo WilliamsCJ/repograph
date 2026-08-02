@@ -1,6 +1,7 @@
 """
 Models representing elements of the Repograph
 """
+
 # base imports
 from typing import List, Union, Optional
 

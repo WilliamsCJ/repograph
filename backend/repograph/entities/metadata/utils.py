@@ -1,6 +1,7 @@
 """
 Utils for the Metadata entity
 """
+
 import datetime
 
 FORMAT = "%Y-%m-%d %H:%M:%S"

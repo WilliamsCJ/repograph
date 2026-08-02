@@ -2,6 +2,7 @@
 This module provides custom exception handlers that are triggered when exceptions are raised
 to the router handlers.
 """
+
 # pip imports
 from fastapi import status
 from fastapi.requests import Request

@@ -2,6 +2,7 @@
 """
 Routing for metadata entity.
 """
+
 # pip imports
 from fastapi import APIRouter, status
 
