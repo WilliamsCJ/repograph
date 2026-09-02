@@ -73,12 +73,10 @@ el.replaceWith(d);
         &#34;&#34;&#34;
         self.db_path = db_path
         db = sqlite3.connect(self.db_path)
-        db.execute(
-            &#34;&#34;&#34;
+        db.execute(&#34;&#34;&#34;
             CREATE TABLE IF NOT EXISTS graphs
             (neo4j_name TEXT, name TEXT, description TEXT, created TEXT, status TEXT, PRIMARY KEY(neo4j_name));
-        &#34;&#34;&#34;
-        )
+        &#34;&#34;&#34;)
 
     def get_transaction(self) -&gt; sqlite3.Connection:
         db = sqlite3.connect(self.db_path)

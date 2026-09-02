@@ -1,6 +1,7 @@
 """
 Metadata entity application logic.
 """
+
 import sqlite3
 
 # Base imports
@@ -65,5 +66,5 @@ class MetadataService:
         Returns:
             None
         """
-        updated_graph = graph.copy(update={"status": "CREATED"})
+        updated_graph = graph.model_copy(update={"status": "CREATED"})
         self.repository.update_database(updated_graph)

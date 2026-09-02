@@ -67,7 +67,7 @@ to the router handlers.</p>
         JSONResponse containing ErrorResponse.
     &#34;&#34;&#34;
     return JSONResponse(
-        ErrorResponse(message=e.message).dict(), status_code=e.code
+        ErrorResponse(message=e.message).model_dump(), status_code=e.code
     )  # pragma: no cover</code></pre>
 </details>
 <div class="desc"><p>Generic exception handler.
@@ -102,7 +102,7 @@ JSONResponse containing ErrorResponse.</p></div>
         JSONResponse containing ErrorResponse.
     &#34;&#34;&#34;
     return JSONResponse(  # pragma: no cover
-        ErrorResponse(message=&#34;Internal Server Error&#34;).dict(), status_code=500
+        ErrorResponse(message=&#34;Internal Server Error&#34;).model_dump(), status_code=500
     )</code></pre>
 </details>
 <div class="desc"><p>Generic exception handler.
@@ -154,15 +154,20 @@ JSONResponse containing ErrorResponse.</p></div>
 <dd>Message describe error. Should match status code.</dd>
 </dl>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
-<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
 <dt id="repograph.utils.exception_handlers.ErrorResponse.message"><code class="name">var <span class="ident">message</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.utils.exception_handlers.ErrorResponse.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -237,6 +242,7 @@ JSONResponse containing ErrorResponse.</p></div>
 <h4><code><a title="repograph.utils.exception_handlers.ErrorResponse" href="#repograph.utils.exception_handlers.ErrorResponse">ErrorResponse</a></code></h4>
 <ul class="">
 <li><code><a title="repograph.utils.exception_handlers.ErrorResponse.message" href="#repograph.utils.exception_handlers.ErrorResponse.message">message</a></code></li>
+<li><code><a title="repograph.utils.exception_handlers.ErrorResponse.model_config" href="#repograph.utils.exception_handlers.ErrorResponse.model_config">model_config</a></code></li>
 <li><code><a title="repograph.utils.exception_handlers.ErrorResponse.status" href="#repograph.utils.exception_handlers.ErrorResponse.status">status</a></code></li>
 </ul>
 </li>
