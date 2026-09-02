@@ -103,14 +103,16 @@ and Relationships that compose a Graph.</p>
 <p>The actual Py2Neo Subgraph is stored as a private attribute,
 as multiple inheritance not possible due to layout conflict.
 <a href="https://github.com/pydantic/pydantic/issues/3523s">https://github.com/pydantic/pydantic/issues/3523s</a></p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>_subgraph</code></strong> :&ensp;<code>py2neo.Subgraph</code></dt>
 <dd>Py2neo Node representation.</dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>subgraph</code></strong> :&ensp;<code>py2neo.Subgraph</code></dt>
 <dd>Subgraph - either Node or Relationship.</dd>
 <dt><strong><code>repository_name</code></strong> :&ensp;<code>str</code></dt>
@@ -175,8 +177,9 @@ as multiple inheritance not possible due to layout conflict.
 <div class="desc"><p>Represent an invalid Relationship configuration,
 based on the parent and child types.</p>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>parent</code></strong> :&ensp;<code><a title="repograph.entities.graph.models.base.Node" href="#repograph.entities.graph.models.base.Node">Node</a></code></dt>
 <dd>Parent node.</dd>
 <dt><strong><code>child</code></strong> :&ensp;<code><a title="repograph.entities.graph.models.base.Node" href="#repograph.entities.graph.models.base.Node">Node</a></code></dt>
@@ -232,8 +235,9 @@ based on the parent and child types.</p>
 <div class="desc"><p>Node represents a generic Node in Repograph.</p>
 <p>All Node types inherit from this class.</p>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>**data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>Attribute kwargs</dd>
 </dl>
@@ -326,28 +330,28 @@ specifically with a Node object.</p>
 </details>
 <div class="desc"><p>Relationship represents a generic Relationship in Repograph.</p>
 <p>All Relationships types inherit from this class.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>parent</code></strong> :&ensp;<code><a title="repograph.entities.graph.models.base.Node" href="#repograph.entities.graph.models.base.Node">Node</a></code></dt>
 <dd>The parent Node.</dd>
 <dt><strong><code>child</code></strong> :&ensp;<code><a title="repograph.entities.graph.models.base.Node" href="#repograph.entities.graph.models.base.Node">Node</a></code></dt>
 <dd>The child Node.</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
+<dt>Raises</dt>
+<dt>-----=</dt>
 <dt><code><a title="repograph.entities.graph.models.base.InvalidRelationshipException" href="#repograph.entities.graph.models.base.InvalidRelationshipException">InvalidRelationshipException</a></code></dt>
 <dd><em>description</em></dd>
 </dl>
 <p>Constructor</p>
-<h2 id="args_1">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>parent</code></strong> :&ensp;<code><a title="repograph.entities.graph.models.base.Node" href="#repograph.entities.graph.models.base.Node">Node</a></code></dt>
 <dd>The parent Node.</dd>
 <dt><strong><code>child</code></strong> :&ensp;<code><a title="repograph.entities.graph.models.base.Node" href="#repograph.entities.graph.models.base.Node">Node</a></code></dt>
 <dd>The child Node.</dd>
-</dl>
-<h2 id="raises_1">Raises</h2>
-<dl>
+<dt>Raises</dt>
+<dt>-----=</dt>
 <dt><code><a title="repograph.entities.graph.models.base.InvalidRelationshipException" href="#repograph.entities.graph.models.base.InvalidRelationshipException">InvalidRelationshipException</a></code></dt>
 <dd>If the types of the parent and child Nodes violate
 the mappings in _allowed_types.</dd>
