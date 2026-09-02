@@ -46,6 +46,11 @@ jobs:
       - name: Clone test repos
         run: |
           cd ../demo && ./clone.sh
+      - name: Install inspect4py
+        # inspect4py hard-pins an old setuptools version in its own metadata, which
+        # conflicts with the setuptools pin in requirements.txt, so it's installed
+        # separately with --no-deps (see requirements.txt).
+        run: pip3 install --no-deps "inspect4py==0.0.6"
       - name: Install dependencies
         run: pip3 install -r requirements.txt
       - name: Test with unittest

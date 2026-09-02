@@ -1,9 +1,12 @@
 """
 Nodes.
 """
+
 import datetime
 from enum import Enum
 from typing import Any, Optional
+
+from pydantic import Field
 
 from repograph.entities.graph.models.base import Node
 from repograph.utils import JSONDict
@@ -36,86 +39,86 @@ class Repository(Node):
 
     # Core
     name: str
-    full_name: Optional[str]
-    description: Optional[str]
-    type: Optional[SoftwareType]
-    homepage: Optional[str]
-    html_url: Optional[str]
-    url: Optional[str]
-    default_branch: Optional[str]
-    visibility: Optional[str]
-    language: Optional[str]
+    full_name: Optional[str] = None
+    description: Optional[str] = None
+    type: Optional[SoftwareType] = None
+    homepage: Optional[str] = None
+    html_url: Optional[str] = None
+    url: Optional[str] = None
+    default_branch: Optional[str] = None
+    visibility: Optional[str] = None
+    language: Optional[str] = None
     # Timestamps
-    created_at: Optional[datetime.datetime]
-    updated_at: Optional[datetime.datetime]
-    pushed_at: Optional[datetime.datetime]
+    created_at: Optional[datetime.datetime] = None
+    updated_at: Optional[datetime.datetime] = None
+    pushed_at: Optional[datetime.datetime] = None
     # Metrics
-    size: Optional[int]
-    stargazers_count: Optional[int]
-    watchers_count: Optional[int]
-    forks_count: Optional[int]
-    open_issues_count: Optional[int]
-    forks: Optional[int]
-    open_issues: Optional[int]
-    watchers: Optional[int]
-    network_count: Optional[int]
-    subscribers_count: Optional[int]
+    size: Optional[int] = None
+    stargazers_count: Optional[int] = None
+    watchers_count: Optional[int] = None
+    forks_count: Optional[int] = None
+    open_issues_count: Optional[int] = None
+    forks: Optional[int] = None
+    open_issues: Optional[int] = None
+    watchers: Optional[int] = None
+    network_count: Optional[int] = None
+    subscribers_count: Optional[int] = None
     # Flags
     is_root_package: bool
-    private: Optional[bool]
-    fork: Optional[bool]
-    has_issues: Optional[bool]
-    has_projects: Optional[bool]
-    has_downloads: Optional[bool]
-    has_wiki: Optional[bool]
-    has_pages: Optional[bool]
-    has_discussions: Optional[bool]
-    archived: Optional[bool]
-    disabled: Optional[bool]
-    allows_forking: Optional[bool]
-    is_template: Optional[bool]
-    web_commit_signoff_required: Optional[bool]
+    private: Optional[bool] = None
+    fork: Optional[bool] = None
+    has_issues: Optional[bool] = None
+    has_projects: Optional[bool] = None
+    has_downloads: Optional[bool] = None
+    has_wiki: Optional[bool] = None
+    has_pages: Optional[bool] = None
+    has_discussions: Optional[bool] = None
+    archived: Optional[bool] = None
+    disabled: Optional[bool] = None
+    allows_forking: Optional[bool] = None
+    is_template: Optional[bool] = None
+    web_commit_signoff_required: Optional[bool] = None
     # URLs
-    forks_url: Optional[str]
-    keys_url: Optional[str]
-    collaborators_url: Optional[str]
-    teams_url: Optional[str]
-    hooks_url: Optional[str]
-    issue_events_url: Optional[str]
-    events_url: Optional[str]
-    assignees_url: Optional[str]
-    branches_url: Optional[str]
-    tags_url: Optional[str]
-    blobs_url: Optional[str]
-    git_tags_url: Optional[str]
-    git_refs_url: Optional[str]
-    trees_url: Optional[str]
-    statuses_url: Optional[str]
-    languages_url: Optional[str]
-    stargazers_url: Optional[str]
-    contributors_url: Optional[str]
-    subscribers_url: Optional[str]
-    subscription_url: Optional[str]
-    commits_url: Optional[str]
-    git_commits_url: Optional[str]
-    comments_url: Optional[str]
-    issue_comment_url: Optional[str]
-    contents_url: Optional[str]
-    compare_url: Optional[str]
-    merges_url: Optional[str]
-    archive_url: Optional[str]
-    downloads_url: Optional[str]
-    issues_url: Optional[str]
-    pulls_url: Optional[str]
-    milestones_url: Optional[str]
-    notifications_url: Optional[str]
-    labels_url: Optional[str]
-    releases_url: Optional[str]
-    deployments_url: Optional[str]
-    git_url: Optional[str]
-    ssh_url: Optional[str]
-    clone_url: Optional[str]
-    svn_url: Optional[str]
+    forks_url: Optional[str] = None
+    keys_url: Optional[str] = None
+    collaborators_url: Optional[str] = None
+    teams_url: Optional[str] = None
+    hooks_url: Optional[str] = None
+    issue_events_url: Optional[str] = None
+    events_url: Optional[str] = None
+    assignees_url: Optional[str] = None
+    branches_url: Optional[str] = None
+    tags_url: Optional[str] = None
+    blobs_url: Optional[str] = None
+    git_tags_url: Optional[str] = None
+    git_refs_url: Optional[str] = None
+    trees_url: Optional[str] = None
+    statuses_url: Optional[str] = None
+    languages_url: Optional[str] = None
+    stargazers_url: Optional[str] = None
+    contributors_url: Optional[str] = None
+    subscribers_url: Optional[str] = None
+    subscription_url: Optional[str] = None
+    commits_url: Optional[str] = None
+    git_commits_url: Optional[str] = None
+    comments_url: Optional[str] = None
+    issue_comment_url: Optional[str] = None
+    contents_url: Optional[str] = None
+    compare_url: Optional[str] = None
+    merges_url: Optional[str] = None
+    archive_url: Optional[str] = None
+    downloads_url: Optional[str] = None
+    issues_url: Optional[str] = None
+    pulls_url: Optional[str] = None
+    milestones_url: Optional[str] = None
+    notifications_url: Optional[str] = None
+    labels_url: Optional[str] = None
+    releases_url: Optional[str] = None
+    deployments_url: Optional[str] = None
+    git_url: Optional[str] = None
+    ssh_url: Optional[str] = None
+    clone_url: Optional[str] = None
+    svn_url: Optional[str] = None
 
     @classmethod
     def create_from_metadata(
@@ -218,8 +221,8 @@ class Package(Node):
     name: str
     canonical_name: str
     parent_package: str
-    path: Optional[str]
-    parent_path: Optional[str]
+    path: Optional[str] = None
+    parent_path: Optional[str] = None
     external: bool
     inferred: bool = False
 
@@ -318,9 +321,9 @@ class Module(Node):
     """
 
     name: str
-    canonical_name: Optional[str]
-    path: Optional[str]
-    parent_path: Optional[str]
+    canonical_name: Optional[str] = None
+    path: Optional[str] = None
+    parent_path: Optional[str] = None
     extension: str = PYTHON_EXTENSION
     is_test: bool = False
     inferred: bool = False
@@ -383,9 +386,9 @@ class Class(Node):
     """
 
     name: str
-    canonical_name: Optional[str]
-    min_line_number: Optional[int]
-    max_line_number: Optional[int]
+    canonical_name: Optional[str] = None
+    min_line_number: Optional[int] = None
+    max_line_number: Optional[int] = None
     inferred: bool = False
 
 
@@ -415,11 +418,11 @@ class Function(Node):
     name: str
     type: FunctionType
     builtin: bool = False
-    canonical_name: Optional[str]
-    source_code: Optional[str]
-    ast: Optional[Any]
-    min_line_number: Optional[int]
-    max_line_number: Optional[int]
+    canonical_name: Optional[str] = None
+    source_code: Optional[str] = None
+    ast: Optional[Any] = Field(default=None, exclude=True)
+    min_line_number: Optional[int] = None
+    max_line_number: Optional[int] = None
     inferred: bool = False
 
 
@@ -446,7 +449,7 @@ class Argument(Node):
         type (str): The inferred type of the variable, usually from a type hint.
     """
 
-    name: Optional[str]
+    name: Optional[str] = None
     type: Optional[str] = "Any"
 
 
@@ -458,7 +461,7 @@ class ReturnValue(Node):
         type (str): The inferred type of the variable, usually from a type hint.
     """
 
-    name: Optional[str]
+    name: Optional[str] = None
     type: Optional[str] = "Any"
 
 
@@ -490,9 +493,9 @@ class Docstring(Node):
         summarization (str): The generated text summary of whatever the docstring is documenting.
     """
 
-    short_description: Optional[str]
-    long_description: Optional[str]
-    summarization: Optional[str]
+    short_description: Optional[str] = None
+    long_description: Optional[str] = None
+    summarization: Optional[str] = None
 
 
 class DocstringArgument(Argument):
@@ -506,9 +509,9 @@ class DocstringArgument(Argument):
         default (Optional[Any]): The default value of the argument, if it is optional.
     """
 
-    description: Optional[str]
+    description: Optional[str] = None
     is_optional: bool
-    default: Optional[Any]
+    default: Optional[Any] = None
 
 
 class DocstringReturnValue(ReturnValue):
@@ -521,7 +524,7 @@ class DocstringReturnValue(ReturnValue):
         is_generator (bool): Whether the return value is a generator.
     """
 
-    description: Optional[str]
+    description: Optional[str] = None
     is_generator: bool
 
 
@@ -534,4 +537,4 @@ class DocstringRaises(Node):
     """
 
     description: str
-    type: Optional[str]
+    type: Optional[str] = None

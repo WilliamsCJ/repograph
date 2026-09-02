@@ -6,6 +6,7 @@ Typical usage:
 
     docstring_node = FunctionSummarizer.create_docstring_node(function_node)
 """
+
 # Base imports
 from logging import getLogger
 from typing import Optional, Tuple, List

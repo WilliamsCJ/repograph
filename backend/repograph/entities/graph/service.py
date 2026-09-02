@@ -1,6 +1,7 @@
 """
 Graph entity application logic.
 """
+
 # Base imports
 import contextlib
 import datetime

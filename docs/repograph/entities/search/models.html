@@ -59,14 +59,65 @@ el.replaceWith(d);
 <pre><code class="python">class AvailableSearchQuery(BaseModel):
     id: int
     name: str
-    function: Callable</code></pre>
+    function: Callable = Field(..., exclude=True)</code></pre>
 </details>
-<div class="desc"><p>Create a new model by parsing and validating input data from keyword arguments.</p>
-<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
+<div class="desc"><div class="admonition abstract">
+<p class="admonition-title">Usage Documentation</p>
+<p><a href="../concepts/models.md">Models</a></p>
+</div>
+<p>A base class for creating Pydantic models.</p>
+<dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
+<dt><strong><code>__class_vars__</code></strong></dt>
+<dd>The names of the class variables defined on the model.</dd>
+<dt><strong><code>__private_attributes__</code></strong></dt>
+<dd>Metadata about the private attributes of the model.</dd>
+<dt><strong><code>__signature__</code></strong></dt>
+<dd>The synthesized <code>__init__</code> [<code>Signature</code>][inspect.Signature] of the model.</dd>
+<dt><strong><code>__pydantic_complete__</code></strong></dt>
+<dd>Whether model building is completed, or if there are still undefined fields.</dd>
+<dt><strong><code>__pydantic_core_schema__</code></strong></dt>
+<dd>The core schema of the model.</dd>
+<dt><strong><code>__pydantic_custom_init__</code></strong></dt>
+<dd>Whether the model has a custom <code>__init__</code> function.</dd>
+<dt><strong><code>__pydantic_decorators__</code></strong></dt>
+<dd>Metadata containing the decorators defined on the model.
+This replaces <code>Model.__validators__</code> and <code>Model.__root_validators__</code> from Pydantic V1.</dd>
+<dt><strong><code>__pydantic_generic_metadata__</code></strong></dt>
+<dd>A dictionary containing metadata about generic Pydantic models.
+The <code>origin</code> and <code>args</code> items map to the [<code>__origin__</code>][genericalias.<strong>origin</strong>]
+and [<code>__args__</code>][genericalias.<strong>args</strong>] attributes of [generic aliases][types-genericalias],
+and the <code>parameter</code> item maps to the <code>__parameter__</code> attribute of generic classes.</dd>
+<dt><strong><code>__pydantic_parent_namespace__</code></strong></dt>
+<dd>Parent namespace of the model, used for automatic rebuilding of models.</dd>
+<dt><strong><code>__pydantic_post_init__</code></strong></dt>
+<dd>The name of the post-init method for the model, if defined.</dd>
+<dt><strong><code>__pydantic_root_model__</code></strong></dt>
+<dd>Whether the model is a [<code>RootModel</code>][pydantic.root_model.RootModel].</dd>
+<dt><strong><code>__pydantic_serializer__</code></strong></dt>
+<dd>The <code>pydantic-core</code> <code>SchemaSerializer</code> used to dump instances of the model.</dd>
+<dt><strong><code>__pydantic_validator__</code></strong></dt>
+<dd>The <code>pydantic-core</code> <code>SchemaValidator</code> used to validate instances of the model.</dd>
+<dt><strong><code>__pydantic_fields__</code></strong></dt>
+<dd>A dictionary of field names and their corresponding [<code>FieldInfo</code>][pydantic.fields.FieldInfo] objects.</dd>
+<dt><strong><code>__pydantic_computed_fields__</code></strong></dt>
+<dd>A dictionary of computed field names and their corresponding [<code>ComputedFieldInfo</code>][pydantic.fields.ComputedFieldInfo] objects.</dd>
+<dt><strong><code>__pydantic_extra__</code></strong></dt>
+<dd>A dictionary containing extra values, if [<code>extra</code>][pydantic.config.ConfigDict.extra]
+is set to <code>'allow'</code>.</dd>
+<dt><strong><code>__pydantic_fields_set__</code></strong></dt>
+<dd>The names of fields explicitly set during instantiation.</dd>
+<dt><strong><code>__pydantic_private__</code></strong></dt>
+<dd>Values of private attributes set on the model instance.</dd>
+</dl>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -75,6 +126,10 @@ el.replaceWith(d);
 <div class="desc"></div>
 </dd>
 <dt id="repograph.entities.search.models.AvailableSearchQuery.id"><code class="name">var <span class="ident">id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.search.models.AvailableSearchQuery.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -98,12 +153,63 @@ el.replaceWith(d);
     data: List[JSONDict]
     size: int</code></pre>
 </details>
-<div class="desc"><p>Create a new model by parsing and validating input data from keyword arguments.</p>
-<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
+<div class="desc"><div class="admonition abstract">
+<p class="admonition-title">Usage Documentation</p>
+<p><a href="../concepts/models.md">Models</a></p>
+</div>
+<p>A base class for creating Pydantic models.</p>
+<dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
+<dt><strong><code>__class_vars__</code></strong></dt>
+<dd>The names of the class variables defined on the model.</dd>
+<dt><strong><code>__private_attributes__</code></strong></dt>
+<dd>Metadata about the private attributes of the model.</dd>
+<dt><strong><code>__signature__</code></strong></dt>
+<dd>The synthesized <code>__init__</code> [<code>Signature</code>][inspect.Signature] of the model.</dd>
+<dt><strong><code>__pydantic_complete__</code></strong></dt>
+<dd>Whether model building is completed, or if there are still undefined fields.</dd>
+<dt><strong><code>__pydantic_core_schema__</code></strong></dt>
+<dd>The core schema of the model.</dd>
+<dt><strong><code>__pydantic_custom_init__</code></strong></dt>
+<dd>Whether the model has a custom <code>__init__</code> function.</dd>
+<dt><strong><code>__pydantic_decorators__</code></strong></dt>
+<dd>Metadata containing the decorators defined on the model.
+This replaces <code>Model.__validators__</code> and <code>Model.__root_validators__</code> from Pydantic V1.</dd>
+<dt><strong><code>__pydantic_generic_metadata__</code></strong></dt>
+<dd>A dictionary containing metadata about generic Pydantic models.
+The <code>origin</code> and <code>args</code> items map to the [<code>__origin__</code>][genericalias.<strong>origin</strong>]
+and [<code>__args__</code>][genericalias.<strong>args</strong>] attributes of [generic aliases][types-genericalias],
+and the <code>parameter</code> item maps to the <code>__parameter__</code> attribute of generic classes.</dd>
+<dt><strong><code>__pydantic_parent_namespace__</code></strong></dt>
+<dd>Parent namespace of the model, used for automatic rebuilding of models.</dd>
+<dt><strong><code>__pydantic_post_init__</code></strong></dt>
+<dd>The name of the post-init method for the model, if defined.</dd>
+<dt><strong><code>__pydantic_root_model__</code></strong></dt>
+<dd>Whether the model is a [<code>RootModel</code>][pydantic.root_model.RootModel].</dd>
+<dt><strong><code>__pydantic_serializer__</code></strong></dt>
+<dd>The <code>pydantic-core</code> <code>SchemaSerializer</code> used to dump instances of the model.</dd>
+<dt><strong><code>__pydantic_validator__</code></strong></dt>
+<dd>The <code>pydantic-core</code> <code>SchemaValidator</code> used to validate instances of the model.</dd>
+<dt><strong><code>__pydantic_fields__</code></strong></dt>
+<dd>A dictionary of field names and their corresponding [<code>FieldInfo</code>][pydantic.fields.FieldInfo] objects.</dd>
+<dt><strong><code>__pydantic_computed_fields__</code></strong></dt>
+<dd>A dictionary of computed field names and their corresponding [<code>ComputedFieldInfo</code>][pydantic.fields.ComputedFieldInfo] objects.</dd>
+<dt><strong><code>__pydantic_extra__</code></strong></dt>
+<dd>A dictionary containing extra values, if [<code>extra</code>][pydantic.config.ConfigDict.extra]
+is set to <code>'allow'</code>.</dd>
+<dt><strong><code>__pydantic_fields_set__</code></strong></dt>
+<dd>The names of fields explicitly set during instantiation.</dd>
+<dt><strong><code>__pydantic_private__</code></strong></dt>
+<dd>Values of private attributes set on the model instance.</dd>
+</dl>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -112,6 +218,10 @@ el.replaceWith(d);
 <div class="desc"></div>
 </dd>
 <dt id="repograph.entities.search.models.SearchQueryResult.data"><code class="name">var <span class="ident">data</span> : List[Dict[str, Any]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.search.models.SearchQueryResult.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -139,11 +249,12 @@ el.replaceWith(d);
         score (float): The cosine distance score.
     &#34;&#34;&#34;
 
-    function: Function = Field(..., exclude={&#34;ast&#34;})
+    function: Function
     summarization: str
     score: float
 
-    @validator(&#34;score&#34;)
+    @field_validator(&#34;score&#34;)
+    @classmethod
     def round_score(cls, v):
         &#34;&#34;&#34;Round match score to 3 decimal places.&#34;&#34;&#34;
         return round(v, 3)</code></pre>
@@ -160,15 +271,20 @@ el.replaceWith(d);
 <dd>The cosine distance score.</dd>
 </dl>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
-<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
 <dt id="repograph.entities.search.models.SemanticSearchResult.function"><code class="name">var <span class="ident">function</span> : <a title="repograph.entities.graph.models.nodes.Function" href="../graph/models/nodes.html#repograph.entities.graph.models.nodes.Function">Function</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.search.models.SemanticSearchResult.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -206,16 +322,71 @@ el.replaceWith(d);
     limit: int
     total: int</code></pre>
 </details>
-<div class="desc"><p>Create a new model by parsing and validating input data from keyword arguments.</p>
-<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p></div>
+<div class="desc"><div class="admonition abstract">
+<p class="admonition-title">Usage Documentation</p>
+<p><a href="../concepts/models.md">Models</a></p>
+</div>
+<p>A base class for creating Pydantic models.</p>
+<dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
+<dt><strong><code>__class_vars__</code></strong></dt>
+<dd>The names of the class variables defined on the model.</dd>
+<dt><strong><code>__private_attributes__</code></strong></dt>
+<dd>Metadata about the private attributes of the model.</dd>
+<dt><strong><code>__signature__</code></strong></dt>
+<dd>The synthesized <code>__init__</code> [<code>Signature</code>][inspect.Signature] of the model.</dd>
+<dt><strong><code>__pydantic_complete__</code></strong></dt>
+<dd>Whether model building is completed, or if there are still undefined fields.</dd>
+<dt><strong><code>__pydantic_core_schema__</code></strong></dt>
+<dd>The core schema of the model.</dd>
+<dt><strong><code>__pydantic_custom_init__</code></strong></dt>
+<dd>Whether the model has a custom <code>__init__</code> function.</dd>
+<dt><strong><code>__pydantic_decorators__</code></strong></dt>
+<dd>Metadata containing the decorators defined on the model.
+This replaces <code>Model.__validators__</code> and <code>Model.__root_validators__</code> from Pydantic V1.</dd>
+<dt><strong><code>__pydantic_generic_metadata__</code></strong></dt>
+<dd>A dictionary containing metadata about generic Pydantic models.
+The <code>origin</code> and <code>args</code> items map to the [<code>__origin__</code>][genericalias.<strong>origin</strong>]
+and [<code>__args__</code>][genericalias.<strong>args</strong>] attributes of [generic aliases][types-genericalias],
+and the <code>parameter</code> item maps to the <code>__parameter__</code> attribute of generic classes.</dd>
+<dt><strong><code>__pydantic_parent_namespace__</code></strong></dt>
+<dd>Parent namespace of the model, used for automatic rebuilding of models.</dd>
+<dt><strong><code>__pydantic_post_init__</code></strong></dt>
+<dd>The name of the post-init method for the model, if defined.</dd>
+<dt><strong><code>__pydantic_root_model__</code></strong></dt>
+<dd>Whether the model is a [<code>RootModel</code>][pydantic.root_model.RootModel].</dd>
+<dt><strong><code>__pydantic_serializer__</code></strong></dt>
+<dd>The <code>pydantic-core</code> <code>SchemaSerializer</code> used to dump instances of the model.</dd>
+<dt><strong><code>__pydantic_validator__</code></strong></dt>
+<dd>The <code>pydantic-core</code> <code>SchemaValidator</code> used to validate instances of the model.</dd>
+<dt><strong><code>__pydantic_fields__</code></strong></dt>
+<dd>A dictionary of field names and their corresponding [<code>FieldInfo</code>][pydantic.fields.FieldInfo] objects.</dd>
+<dt><strong><code>__pydantic_computed_fields__</code></strong></dt>
+<dd>A dictionary of computed field names and their corresponding [<code>ComputedFieldInfo</code>][pydantic.fields.ComputedFieldInfo] objects.</dd>
+<dt><strong><code>__pydantic_extra__</code></strong></dt>
+<dd>A dictionary containing extra values, if [<code>extra</code>][pydantic.config.ConfigDict.extra]
+is set to <code>'allow'</code>.</dd>
+<dt><strong><code>__pydantic_fields_set__</code></strong></dt>
+<dd>The names of fields explicitly set during instantiation.</dd>
+<dt><strong><code>__pydantic_private__</code></strong></dt>
+<dd>Values of private attributes set on the model instance.</dd>
+</dl>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
 <dt id="repograph.entities.search.models.SemanticSearchResultSet.limit"><code class="name">var <span class="ident">limit</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.search.models.SemanticSearchResultSet.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -253,6 +424,7 @@ el.replaceWith(d);
 <ul class="">
 <li><code><a title="repograph.entities.search.models.AvailableSearchQuery.function" href="#repograph.entities.search.models.AvailableSearchQuery.function">function</a></code></li>
 <li><code><a title="repograph.entities.search.models.AvailableSearchQuery.id" href="#repograph.entities.search.models.AvailableSearchQuery.id">id</a></code></li>
+<li><code><a title="repograph.entities.search.models.AvailableSearchQuery.model_config" href="#repograph.entities.search.models.AvailableSearchQuery.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.search.models.AvailableSearchQuery.name" href="#repograph.entities.search.models.AvailableSearchQuery.name">name</a></code></li>
 </ul>
 </li>
@@ -261,6 +433,7 @@ el.replaceWith(d);
 <ul class="">
 <li><code><a title="repograph.entities.search.models.SearchQueryResult.columns" href="#repograph.entities.search.models.SearchQueryResult.columns">columns</a></code></li>
 <li><code><a title="repograph.entities.search.models.SearchQueryResult.data" href="#repograph.entities.search.models.SearchQueryResult.data">data</a></code></li>
+<li><code><a title="repograph.entities.search.models.SearchQueryResult.model_config" href="#repograph.entities.search.models.SearchQueryResult.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.search.models.SearchQueryResult.size" href="#repograph.entities.search.models.SearchQueryResult.size">size</a></code></li>
 </ul>
 </li>
@@ -268,6 +441,7 @@ el.replaceWith(d);
 <h4><code><a title="repograph.entities.search.models.SemanticSearchResult" href="#repograph.entities.search.models.SemanticSearchResult">SemanticSearchResult</a></code></h4>
 <ul class="">
 <li><code><a title="repograph.entities.search.models.SemanticSearchResult.function" href="#repograph.entities.search.models.SemanticSearchResult.function">function</a></code></li>
+<li><code><a title="repograph.entities.search.models.SemanticSearchResult.model_config" href="#repograph.entities.search.models.SemanticSearchResult.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.search.models.SemanticSearchResult.round_score" href="#repograph.entities.search.models.SemanticSearchResult.round_score">round_score</a></code></li>
 <li><code><a title="repograph.entities.search.models.SemanticSearchResult.score" href="#repograph.entities.search.models.SemanticSearchResult.score">score</a></code></li>
 <li><code><a title="repograph.entities.search.models.SemanticSearchResult.summarization" href="#repograph.entities.search.models.SemanticSearchResult.summarization">summarization</a></code></li>
@@ -277,6 +451,7 @@ el.replaceWith(d);
 <h4><code><a title="repograph.entities.search.models.SemanticSearchResultSet" href="#repograph.entities.search.models.SemanticSearchResultSet">SemanticSearchResultSet</a></code></h4>
 <ul class="">
 <li><code><a title="repograph.entities.search.models.SemanticSearchResultSet.limit" href="#repograph.entities.search.models.SemanticSearchResultSet.limit">limit</a></code></li>
+<li><code><a title="repograph.entities.search.models.SemanticSearchResultSet.model_config" href="#repograph.entities.search.models.SemanticSearchResultSet.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.search.models.SemanticSearchResultSet.offset" href="#repograph.entities.search.models.SemanticSearchResultSet.offset">offset</a></code></li>
 <li><code><a title="repograph.entities.search.models.SemanticSearchResultSet.results" href="#repograph.entities.search.models.SemanticSearchResultSet.results">results</a></code></li>
 <li><code><a title="repograph.entities.search.models.SemanticSearchResultSet.total" href="#repograph.entities.search.models.SemanticSearchResultSet.total">total</a></code></li>

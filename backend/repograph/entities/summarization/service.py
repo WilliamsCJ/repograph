@@ -6,6 +6,7 @@ Typical usage:
 
     docstring_node = FunctionSummarizer.create_docstring_node(function_node)
 """
+
 # Base imports
 from logging import getLogger
 
@@ -18,9 +19,13 @@ from repograph.entities.graph.models.nodes import Function
 # Utils imports
 from repograph.entities.summarization.utils import clean_source_code
 
-
 # Setup logging
 log = getLogger("repograph.entities.summarization.service")
+
+# Salesforce/codet5-base's special_tokens_map.json stores additional_special_tokens
+# as legacy AddedToken dicts, which newer transformers releases fail to parse. Passing
+# the plain token strings explicitly bypasses that broken auto-loading path.
+CODET5_EXTRA_TOKENS = [f"<extra_id_{i}>" for i in range(100)]
 
 
 class SummarizationService:
@@ -38,7 +43,10 @@ class SummarizationService:
 
         if summarize:
             log.info("Initialising CodeT5 model...")
-            self.tokenizer = RobertaTokenizer.from_pretrained("Salesforce/codet5-base")
+            self.tokenizer = RobertaTokenizer.from_pretrained(
+                "Salesforce/codet5-base",
+                additional_special_tokens=CODET5_EXTRA_TOKENS,
+            )
             self.model = T5ForConditionalGeneration.from_pretrained(
                 "Salesforce/codet5-base-multi-sum"
             )

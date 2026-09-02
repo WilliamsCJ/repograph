@@ -1,12 +1,12 @@
-"""
-"""
+""" """
+
 # Base imports
 from __future__ import annotations
-from typing import Any, Dict, Optional, Set, Union
+from typing import Any, ClassVar, Dict, Optional, Set, Union
 
 # pip imports
 import py2neo
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel, ConfigDict, PrivateAttr
 
 
 class BaseSubgraph(BaseModel):
@@ -26,11 +26,10 @@ class BaseSubgraph(BaseModel):
     """
 
     _subgraph: py2neo.Subgraph = PrivateAttr()
-    id: Optional[int]
+    id: Optional[int] = None
     repository_name: str
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     def __init__(
         self,
@@ -46,9 +45,9 @@ class BaseSubgraph(BaseModel):
             repository_name (str): The name of the repository this node is connected to.
             identity (int, optional): Optional entity ID.
         """
-        self._subgraph = subgraph
-
         super().__init__(id=identity, repository_name=repository_name, **data)
+
+        self._subgraph = subgraph
 
 
 class Node(BaseSubgraph):
@@ -117,7 +116,7 @@ class Relationship(BaseSubgraph):
     parent: Node
     child: Node
 
-    _allowed_types: Optional[Dict[Node, Set[Node]]] = None
+    _allowed_types: ClassVar[Optional[Dict[Node, Set[Node]]]] = None
 
     def __init__(
         self, parent: Node, child: Node, repository_name: str, **data: Any

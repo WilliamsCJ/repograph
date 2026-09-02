@@ -1,6 +1,7 @@
 """
 Metadata repository.
 """
+
 # Base imports
 import sqlite3
 from typing import List
@@ -27,12 +28,10 @@ class MetadataRepository:
         """
         self.db_path = db_path
         db = sqlite3.connect(self.db_path)
-        db.execute(
-            """
+        db.execute("""
             CREATE TABLE IF NOT EXISTS graphs
             (neo4j_name TEXT, name TEXT, description TEXT, created TEXT, status TEXT, PRIMARY KEY(neo4j_name));
-        """
-        )
+        """)
 
     def get_transaction(self) -> sqlite3.Connection:
         db = sqlite3.connect(self.db_path)
