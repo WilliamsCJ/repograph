@@ -2,6 +2,7 @@
 This module provides custom exception handlers that are triggered when exceptions are raised
 to the router handlers.
 """
+
 # pip imports
 from fastapi import status
 from fastapi.requests import Request
@@ -40,7 +41,7 @@ async def base_exception_handler(_: Request, e: RepographException):
         JSONResponse containing ErrorResponse.
     """
     return JSONResponse(
-        ErrorResponse(message=e.message).dict(), status_code=e.code
+        ErrorResponse(message=e.message).model_dump(), status_code=e.code
     )  # pragma: no cover
 
 
@@ -54,5 +55,5 @@ async def generic_exception_handler(_: Request, __: Exception):
         JSONResponse containing ErrorResponse.
     """
     return JSONResponse(  # pragma: no cover
-        ErrorResponse(message="Internal Server Error").dict(), status_code=500
+        ErrorResponse(message="Internal Server Error").model_dump(), status_code=500
     )

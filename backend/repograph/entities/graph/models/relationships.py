@@ -1,6 +1,7 @@
 """
 Relationships between Nodes.
 """
+
 from typing import List, Optional, Tuple
 
 from repograph.entities.graph.models.base import Relationship
@@ -66,7 +67,7 @@ class Imports(Relationship):
         Module: {Module, Package, Class, Function, Variable},
     }
 
-    alias: Optional[str]
+    alias: Optional[str] = None
 
 
 class HasMethod(Relationship):

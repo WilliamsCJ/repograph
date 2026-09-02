@@ -2,6 +2,7 @@
 """
 Command-Line Interface for manual invocation.
 """
+
 # Base imports
 import logging
 from typing import List

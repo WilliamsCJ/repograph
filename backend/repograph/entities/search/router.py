@@ -2,6 +2,7 @@
 """
 Routing for build entity.
 """
+
 # Base imports
 from logging import getLogger
 from typing import List
