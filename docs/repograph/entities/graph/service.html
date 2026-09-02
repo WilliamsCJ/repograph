@@ -714,8 +714,9 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>The GraphService class implements all application-logic related to the graph entity.</p>
 <p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>repository</code></strong> :&ensp;<code>GraphRepository</code></dt>
 <dd>The Neo4j graph repository.</dd>
 <dt><strong><code>metadata</code></strong> :&ensp;<code>MetadataService</code></dt>
@@ -753,8 +754,9 @@ el.replaceWith(d);
     self.repository.add(*args, tx=tx, graph_name=graph_name)</code></pre>
 </details>
 <div class="desc"><p>Add nodes/relationships to the graph</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>*args</code></strong> :&ensp;<code>BaseSubgraph</code></dt>
 <dd>Nodes and/or relationships</dd>
 <dt><strong><code>tx</code></strong> :&ensp;<code>Transaction</code></dt>
@@ -787,8 +789,9 @@ el.replaceWith(d);
     self.repository.add(*nodes, *relationships, graph_name=graph_name)</code></pre>
 </details>
 <div class="desc"><p>Bulk add nodes and relationships.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>nodes</code></strong> :&ensp;<code>List[Node]</code></dt>
 <dd>Nodes to add.</dd>
 <dt><strong><code>relationships</code></strong> :&ensp;<code>List[Relationship]</code></dt>
@@ -796,8 +799,9 @@ el.replaceWith(d);
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The optional graph name to obtain a transaction for.</dd>
 </dl>
-<h2 id="return">Return</h2>
-<p>None</p></div>
+<p>Return
+-----=
+None</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.create_graph"><code class="name flex">
 <span>def <span class="ident">create_graph</span></span>(<span>self,<br>name: str,<br>description: str,<br>system_tx: neo4j._sync.work.transaction.Transaction,<br>metadata_tx: sqlite3.Connection) ‑> <a title="repograph.entities.metadata.models.Graph" href="../metadata/models.html#repograph.entities.metadata.models.Graph">Graph</a></span>
@@ -841,13 +845,15 @@ el.replaceWith(d);
     return graph</code></pre>
 </details>
 <div class="desc"><p>Create a new graph.</p>
-<h2 id="args">Args</h2>
-<p>name:
+<p>Args
+-----=
+name:
 description:
 system_tx:
 metadata_tx:</p>
-<h2 id="returns">Returns</h2>
 <dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>Graph</code></dt>
 <dd>Created Graph object</dd>
 </dl></div>
@@ -873,13 +879,15 @@ metadata_tx:</p>
     self.metadata.delete_graph(name)</code></pre>
 </details>
 <div class="desc"><p>Delete a graph</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of the graph to delete</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<p>Returns
+-----=
+None</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_call_graph_by_id"><code class="name flex">
 <span>def <span class="ident">get_call_graph_by_id</span></span>(<span>self, node_id: int, graph_name: str) ‑> <a title="repograph.entities.graph.models.graph.CallGraph" href="models/graph.html#repograph.entities.graph.models.graph.CallGraph">CallGraph</a></span>
@@ -985,15 +993,17 @@ metadata_tx:</p>
     return call_graph</code></pre>
 </details>
 <div class="desc"><p>Get the call graph for a Function node by its ID.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>node_id</code></strong> :&ensp;<code>int</code></dt>
 <dd>ID of the Function node.</dd>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph name to get function summarizations for.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>CallGraph</p></div>
+<p>Returns
+-----=
+CallGraph</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_cyclical_dependencies"><code class="name flex">
 <span>def <span class="ident">get_cyclical_dependencies</span></span>(<span>self, graph: str) ‑> List[<a title="repograph.entities.graph.models.graph.CircularDependency" href="models/graph.html#repograph.entities.graph.models.graph.CircularDependency">CircularDependency</a>]</span>
@@ -1039,13 +1049,13 @@ metadata_tx:</p>
     )</code></pre>
 </details>
 <div class="desc"><p>Get the number of cyclical dependencies in the specified graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the graph to check.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>List[CircularDependency]</code></dt>
 <dd>The list of unique cyclical dependencies found.</dd>
 </dl></div>
@@ -1070,13 +1080,15 @@ metadata_tx:</p>
     return self.repository.get_all_nodes_by_label(Docstring, graph_name=graph)</code></pre>
 </details>
 <div class="desc"><p>Get Docstring nodes.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>Graph name to query.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>List[Node]</p></div>
+<p>Returns
+-----=
+List[Node]</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_docstrings_full"><code class="name flex">
 <span>def <span class="ident">get_docstrings_full</span></span>(<span>self, graph: str, repository: str | None = None) ‑> List[Dict[str, Any]]</span>
@@ -1112,15 +1124,17 @@ metadata_tx:</p>
     )</code></pre>
 </details>
 <div class="desc"><p>Get the docstrings and functions for the given graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>List[JSONDict]</p></div>
+<p>Returns
+-----=
+List[JSONDict]</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_files"><code class="name flex">
 <span>def <span class="ident">get_files</span></span>(<span>self, graph: str, repository: str | None = None) ‑> List[Dict[str, Any]]</span>
@@ -1152,15 +1166,17 @@ metadata_tx:</p>
     )</code></pre>
 </details>
 <div class="desc"><p>Get the file names for the given graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>List[JSONDict]</p></div>
+<p>Returns
+-----=
+List[JSONDict]</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_function_summarizations"><code class="name flex">
 <span>def <span class="ident">get_function_summarizations</span></span>(<span>self, graph_name: str, repository_name: str = None) ‑> Dict[str, <a title="repograph.entities.graph.models.nodes.Function" href="models/nodes.html#repograph.entities.graph.models.nodes.Function">Function</a>]</span>
@@ -1206,16 +1222,18 @@ metadata_tx:</p>
     )</code></pre>
 </details>
 <div class="desc"><p>Converts all Function nodes into a list of tuples.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph name to get function summarizations for.</dd>
 <dt><strong><code>repository_name</code></strong> :&ensp;<code>str</code>, optional</dt>
 <dd>The specific repository within the
 graph to search against.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>List[Tuple[str, Function]</p></div>
+<p>Returns
+-----=
+List[Tuple[str, Function]</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_functions_and_classes"><code class="name flex">
 <span>def <span class="ident">get_functions_and_classes</span></span>(<span>self, graph: str, repository: str | None = None) ‑> List[Dict[str, Any]]</span>
@@ -1249,15 +1267,17 @@ graph to search against.</dd>
     )</code></pre>
 </details>
 <div class="desc"><p>Get the function and class names for the given graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>List[JSONDict]</p></div>
+<p>Returns
+-----=
+List[JSONDict]</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_graph"><code class="name flex">
 <span>def <span class="ident">get_graph</span></span>(<span>self, graph: str) ‑> <a title="repograph.entities.graph.models.graph.CallGraph" href="models/graph.html#repograph.entities.graph.models.graph.CallGraph">CallGraph</a></span>
@@ -1324,13 +1344,15 @@ graph to search against.</dd>
     return call_graph</code></pre>
 </details>
 <div class="desc"><p>Get an entire graph. All nodes and relationships</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of graph to fetch</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>CallGraph</p></div>
+<p>Returns
+-----=
+CallGraph</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_licenses"><code class="name flex">
 <span>def <span class="ident">get_licenses</span></span>(<span>self, graph: str, repository: str | None = None) ‑> List[Dict[str, Any]]</span>
@@ -1365,15 +1387,17 @@ graph to search against.</dd>
     )</code></pre>
 </details>
 <div class="desc"><p>Get the licenses for the given graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>List[JSONDict]</p></div>
+<p>Returns
+-----=
+List[JSONDict]</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_missing_dependencies"><code class="name flex">
 <span>def <span class="ident">get_missing_dependencies</span></span>(<span>self, graph: str) ‑> List[<a title="repograph.entities.graph.models.graph.MissingRequirement" href="models/graph.html#repograph.entities.graph.models.graph.MissingRequirement">MissingRequirement</a>]</span>
@@ -1412,13 +1436,13 @@ graph to search against.</dd>
     )</code></pre>
 </details>
 <div class="desc"><p>Get the number of dependencies that are missing from the requirements.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the graph to check.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>List[MissingRequirement]</code></dt>
 <dd>The list of missing requirements found.</dd>
 </dl></div>
@@ -1457,15 +1481,17 @@ graph to search against.</dd>
     return result</code></pre>
 </details>
 <div class="desc"><p>Get README files for the given graph</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>List[JSONDict]</p></div>
+<p>Returns
+-----=
+List[JSONDict]</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_repository_metadata"><code class="name flex">
 <span>def <span class="ident">get_repository_metadata</span></span>(<span>self, graph: str, repository: str | None = None) ‑> List[Dict[str, Any]]</span>
@@ -1509,15 +1535,17 @@ graph to search against.</dd>
     )</code></pre>
 </details>
 <div class="desc"><p>Get the metadata for the given repository.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>List[JSONDict]</p></div>
+<p>Returns
+-----=
+List[JSONDict]</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_repository_names"><code class="name flex">
 <span>def <span class="ident">get_repository_names</span></span>(<span>self, graph: str) ‑> List[str]</span>
@@ -1548,13 +1576,15 @@ graph to search against.</dd>
     )</code></pre>
 </details>
 <div class="desc"><p>Get the names of repositories in the graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to query</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>List[str]</p></div>
+<p>Returns
+-----=
+List[str]</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_requirements"><code class="name flex">
 <span>def <span class="ident">get_requirements</span></span>(<span>self, graph: str, repository: str | None = None) ‑> List[Dict[str, Any]]</span>
@@ -1588,15 +1618,17 @@ graph to search against.</dd>
     )</code></pre>
 </details>
 <div class="desc"><p>Get the requirements for the given graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>List[JSONDict]</p></div>
+<p>Returns
+-----=
+List[JSONDict]</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_summarizations"><code class="name flex">
 <span>def <span class="ident">get_summarizations</span></span>(<span>self, graph: str, repository: str | None = None) ‑> List[Dict[str, Any]]</span>
@@ -1632,15 +1664,17 @@ graph to search against.</dd>
     )</code></pre>
 </details>
 <div class="desc"><p>Get the summarizations and functions for the given graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>List[JSONDict]</p></div>
+<p>Returns
+-----=
+List[JSONDict]</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_summary"><code class="name flex">
 <span>def <span class="ident">get_summary</span></span>(<span>self, graph_name: str) ‑> <a title="repograph.entities.graph.models.graph.GraphSummary" href="models/graph.html#repograph.entities.graph.models.graph.GraphSummary">GraphSummary</a></span>
@@ -1705,13 +1739,15 @@ graph to search against.</dd>
     return summary</code></pre>
 </details>
 <div class="desc"><p>Calculate a summary of the graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph name to get summary for.</dd>
 </dl>
-<h2 id="return">Return</h2>
-<p>GraphSummary</p></div>
+<p>Return
+-----=
+GraphSummary</p></div>
 </dd>
 <dt id="repograph.entities.graph.service.GraphService.get_system_transaction"><code class="name flex">
 <span>def <span class="ident">get_system_transaction</span></span>(<span>self)</span>
@@ -1767,8 +1803,9 @@ def get_transaction(self, graph_name):
         tx.rollback()</code></pre>
 </details>
 <div class="desc"><p>Obtain a Neo4j transaction for a given graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name of the graph</dd>
 </dl></div>

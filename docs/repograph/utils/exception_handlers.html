@@ -72,15 +72,17 @@ to the router handlers.</p>
 </details>
 <div class="desc"><p>Generic exception handler.
 This handler is for all other Exceptions, to provide a formatted response.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>_</code></strong> :&ensp;<code>Request</code></dt>
 <dd>FastAPI request object. Not used.</dd>
 <dt><strong><code>e</code></strong> :&ensp;<code><a title="repograph.utils.exception_handlers.RepographException" href="#repograph.utils.exception_handlers.RepographException">RepographException</a></code></dt>
 <dd>The RepographException object.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>JSONResponse containing ErrorResponse.</p></div>
+<p>Returns
+-----=
+JSONResponse containing ErrorResponse.</p></div>
 </dd>
 <dt id="repograph.utils.exception_handlers.generic_exception_handler"><code class="name flex">
 <span>async def <span class="ident">generic_exception_handler</span></span>(<span>_: starlette.requests.Request, __: Exception)</span>
@@ -105,15 +107,17 @@ This handler is for all other Exceptions, to provide a formatted response.</p>
 </details>
 <div class="desc"><p>Generic exception handler.
 This handler is for all other Exceptions, to provide a formatted response.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>_</code></strong> :&ensp;<code>Request</code></dt>
 <dd>FastAPI request object. Not used.</dd>
 <dt><strong><code>__</code></strong> :&ensp;<code>Exception</code></dt>
 <dd>The Exception object.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>JSONResponse containing ErrorResponse.</p></div>
+<p>Returns
+-----=
+JSONResponse containing ErrorResponse.</p></div>
 </dd>
 </dl>
 </section>
@@ -141,8 +145,9 @@ This handler is for all other Exceptions, to provide a formatted response.</p>
     message: str</code></pre>
 </details>
 <div class="desc"><p>Generic error response.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>status</code></strong> :&ensp;<code>str</code></dt>
 <dd>Always "error"</dd>
 <dt><strong><code>message</code></strong> :&ensp;<code>str</code></dt>
