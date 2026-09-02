@@ -64,7 +64,7 @@ el.replaceWith(d);
         type (str): The inferred type of the variable, usually from a type hint.
     &#34;&#34;&#34;
 
-    name: Optional[str]
+    name: Optional[str] = None
     type: Optional[str] = &#34;Any&#34;</code></pre>
 </details>
 <div class="desc"><p>Node representing an argument to a function.</p>
@@ -92,7 +92,6 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
@@ -100,6 +99,10 @@ specifically with a Node object.</p>
 </ul>
 <h3>Class variables</h3>
 <dl>
+<dt id="repograph.entities.graph.models.nodes.Argument.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="repograph.entities.graph.models.nodes.Argument.name"><code class="name">var <span class="ident">name</span> : str | None</code></dt>
 <dd>
 <div class="desc"></div>
@@ -109,6 +112,14 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.Body"><code class="flex name class">
 <span>class <span class="ident">Body</span></span>
@@ -140,7 +151,21 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="repograph.entities.graph.models.nodes.Body.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
 </ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.Class"><code class="flex name class">
@@ -163,9 +188,9 @@ specifically with a Node object.</p>
     &#34;&#34;&#34;
 
     name: str
-    canonical_name: Optional[str]
-    min_line_number: Optional[int]
-    max_line_number: Optional[int]
+    canonical_name: Optional[str] = None
+    min_line_number: Optional[int] = None
+    max_line_number: Optional[int] = None
     inferred: bool = False</code></pre>
 </details>
 <div class="desc"><p>Represents a Python class.</p>
@@ -197,7 +222,6 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -217,11 +241,23 @@ specifically with a Node object.</p>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="repograph.entities.graph.models.nodes.Class.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="repograph.entities.graph.models.nodes.Class.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.Directory"><code class="flex name class">
 <span>class <span class="ident">Directory</span></span>
@@ -298,11 +334,14 @@ inspect4py</dd>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
 <dt id="repograph.entities.graph.models.nodes.Directory.inferred"><code class="name">var <span class="ident">inferred</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.graph.models.nodes.Directory.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -319,6 +358,14 @@ inspect4py</dd>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.Docstring"><code class="flex name class">
 <span>class <span class="ident">Docstring</span></span>
@@ -338,9 +385,9 @@ inspect4py</dd>
         summarization (str): The generated text summary of whatever the docstring is documenting.
     &#34;&#34;&#34;
 
-    short_description: Optional[str]
-    long_description: Optional[str]
-    summarization: Optional[str]</code></pre>
+    short_description: Optional[str] = None
+    long_description: Optional[str] = None
+    summarization: Optional[str] = None</code></pre>
 </details>
 <div class="desc"><p>Represents a docstring for a function or class.</p>
 <dl>
@@ -369,11 +416,14 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
 <dt id="repograph.entities.graph.models.nodes.Docstring.long_description"><code class="name">var <span class="ident">long_description</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.graph.models.nodes.Docstring.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -386,6 +436,14 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.DocstringArgument"><code class="flex name class">
 <span>class <span class="ident">DocstringArgument</span></span>
@@ -407,9 +465,9 @@ specifically with a Node object.</p>
         default (Optional[Any]): The default value of the argument, if it is optional.
     &#34;&#34;&#34;
 
-    description: Optional[str]
+    description: Optional[str] = None
     is_optional: bool
-    default: Optional[Any]</code></pre>
+    default: Optional[Any] = None</code></pre>
 </details>
 <div class="desc"><p>Represents an argument description with a docstring.</p>
 <dl>
@@ -443,7 +501,6 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -459,7 +516,19 @@ specifically with a Node object.</p>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="repograph.entities.graph.models.nodes.DocstringArgument.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.nodes.Argument" href="#repograph.entities.graph.models.nodes.Argument">Argument</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.nodes.Argument.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.DocstringRaises"><code class="flex name class">
 <span>class <span class="ident">DocstringRaises</span></span>
@@ -479,7 +548,7 @@ specifically with a Node object.</p>
     &#34;&#34;&#34;
 
     description: str
-    type: Optional[str]</code></pre>
+    type: Optional[str] = None</code></pre>
 </details>
 <div class="desc"><p>Represents a raises/exception descritpion within a docstring.</p>
 <dl>
@@ -506,11 +575,14 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
 <dt id="repograph.entities.graph.models.nodes.DocstringRaises.description"><code class="name">var <span class="ident">description</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.graph.models.nodes.DocstringRaises.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -519,6 +591,14 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.DocstringReturnValue"><code class="flex name class">
 <span>class <span class="ident">DocstringReturnValue</span></span>
@@ -539,7 +619,7 @@ specifically with a Node object.</p>
         is_generator (bool): Whether the return value is a generator.
     &#34;&#34;&#34;
 
-    description: Optional[str]
+    description: Optional[str] = None
     is_generator: bool</code></pre>
 </details>
 <div class="desc"><p>Represents a return value description within a docstring.</p>
@@ -572,7 +652,6 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -584,7 +663,19 @@ specifically with a Node object.</p>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="repograph.entities.graph.models.nodes.DocstringReturnValue.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.nodes.ReturnValue" href="#repograph.entities.graph.models.nodes.ReturnValue">ReturnValue</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.nodes.ReturnValue.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.Function"><code class="flex name class">
 <span>class <span class="ident">Function</span></span>
@@ -621,11 +712,11 @@ specifically with a Node object.</p>
     name: str
     type: FunctionType
     builtin: bool = False
-    canonical_name: Optional[str]
-    source_code: Optional[str]
-    ast: Optional[Any]
-    min_line_number: Optional[int]
-    max_line_number: Optional[int]
+    canonical_name: Optional[str] = None
+    source_code: Optional[str] = None
+    ast: Optional[Any] = Field(default=None, exclude=True)
+    min_line_number: Optional[int] = None
+    max_line_number: Optional[int] = None
     inferred: bool = False</code></pre>
 </details>
 <div class="desc"><p>Represents a Python function or method.</p>
@@ -665,7 +756,6 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -698,6 +788,10 @@ specifically with a Node object.</p>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="repograph.entities.graph.models.nodes.Function.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="repograph.entities.graph.models.nodes.Function.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
@@ -711,6 +805,14 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.License"><code class="flex name class">
 <span>class <span class="ident">License</span></span>
@@ -763,7 +865,6 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -775,11 +876,23 @@ specifically with a Node object.</p>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="repograph.entities.graph.models.nodes.License.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="repograph.entities.graph.models.nodes.License.text"><code class="name">var <span class="ident">text</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.Module"><code class="flex name class">
 <span>class <span class="ident">Module</span></span>
@@ -802,9 +915,9 @@ specifically with a Node object.</p>
     &#34;&#34;&#34;
 
     name: str
-    canonical_name: Optional[str]
-    path: Optional[str]
-    parent_path: Optional[str]
+    canonical_name: Optional[str] = None
+    path: Optional[str] = None
+    parent_path: Optional[str] = None
     extension: str = PYTHON_EXTENSION
     is_test: bool = False
     inferred: bool = False
@@ -886,7 +999,6 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -903,6 +1015,10 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.Module.is_test"><code class="name">var <span class="ident">is_test</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.graph.models.nodes.Module.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -983,6 +1099,14 @@ specifically with a Node object.</p>
 </dl></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.Package"><code class="flex name class">
 <span>class <span class="ident">Package</span></span>
@@ -1010,8 +1134,8 @@ specifically with a Node object.</p>
     name: str
     canonical_name: str
     parent_package: str
-    path: Optional[str]
-    parent_path: Optional[str]
+    path: Optional[str] = None
+    parent_path: Optional[str] = None
     external: bool
     inferred: bool = False
 
@@ -1144,7 +1268,6 @@ the repository. Defaults to False.</dd>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -1157,6 +1280,10 @@ the repository. Defaults to False.</dd>
 <div class="desc"></div>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.Package.inferred"><code class="name">var <span class="ident">inferred</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.graph.models.nodes.Package.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1218,6 +1345,14 @@ the repository. Defaults to False.</dd>
 </dl></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.README"><code class="flex name class">
 <span>class <span class="ident">README</span></span>
@@ -1264,11 +1399,14 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
 <dt id="repograph.entities.graph.models.nodes.README.content"><code class="name">var <span class="ident">content</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.graph.models.nodes.README.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1277,6 +1415,14 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.Repository"><code class="flex name class">
 <span>class <span class="ident">Repository</span></span>
@@ -1307,86 +1453,86 @@ specifically with a Node object.</p>
 
     # Core
     name: str
-    full_name: Optional[str]
-    description: Optional[str]
-    type: Optional[SoftwareType]
-    homepage: Optional[str]
-    html_url: Optional[str]
-    url: Optional[str]
-    default_branch: Optional[str]
-    visibility: Optional[str]
-    language: Optional[str]
+    full_name: Optional[str] = None
+    description: Optional[str] = None
+    type: Optional[SoftwareType] = None
+    homepage: Optional[str] = None
+    html_url: Optional[str] = None
+    url: Optional[str] = None
+    default_branch: Optional[str] = None
+    visibility: Optional[str] = None
+    language: Optional[str] = None
     # Timestamps
-    created_at: Optional[datetime.datetime]
-    updated_at: Optional[datetime.datetime]
-    pushed_at: Optional[datetime.datetime]
+    created_at: Optional[datetime.datetime] = None
+    updated_at: Optional[datetime.datetime] = None
+    pushed_at: Optional[datetime.datetime] = None
     # Metrics
-    size: Optional[int]
-    stargazers_count: Optional[int]
-    watchers_count: Optional[int]
-    forks_count: Optional[int]
-    open_issues_count: Optional[int]
-    forks: Optional[int]
-    open_issues: Optional[int]
-    watchers: Optional[int]
-    network_count: Optional[int]
-    subscribers_count: Optional[int]
+    size: Optional[int] = None
+    stargazers_count: Optional[int] = None
+    watchers_count: Optional[int] = None
+    forks_count: Optional[int] = None
+    open_issues_count: Optional[int] = None
+    forks: Optional[int] = None
+    open_issues: Optional[int] = None
+    watchers: Optional[int] = None
+    network_count: Optional[int] = None
+    subscribers_count: Optional[int] = None
     # Flags
     is_root_package: bool
-    private: Optional[bool]
-    fork: Optional[bool]
-    has_issues: Optional[bool]
-    has_projects: Optional[bool]
-    has_downloads: Optional[bool]
-    has_wiki: Optional[bool]
-    has_pages: Optional[bool]
-    has_discussions: Optional[bool]
-    archived: Optional[bool]
-    disabled: Optional[bool]
-    allows_forking: Optional[bool]
-    is_template: Optional[bool]
-    web_commit_signoff_required: Optional[bool]
+    private: Optional[bool] = None
+    fork: Optional[bool] = None
+    has_issues: Optional[bool] = None
+    has_projects: Optional[bool] = None
+    has_downloads: Optional[bool] = None
+    has_wiki: Optional[bool] = None
+    has_pages: Optional[bool] = None
+    has_discussions: Optional[bool] = None
+    archived: Optional[bool] = None
+    disabled: Optional[bool] = None
+    allows_forking: Optional[bool] = None
+    is_template: Optional[bool] = None
+    web_commit_signoff_required: Optional[bool] = None
     # URLs
-    forks_url: Optional[str]
-    keys_url: Optional[str]
-    collaborators_url: Optional[str]
-    teams_url: Optional[str]
-    hooks_url: Optional[str]
-    issue_events_url: Optional[str]
-    events_url: Optional[str]
-    assignees_url: Optional[str]
-    branches_url: Optional[str]
-    tags_url: Optional[str]
-    blobs_url: Optional[str]
-    git_tags_url: Optional[str]
-    git_refs_url: Optional[str]
-    trees_url: Optional[str]
-    statuses_url: Optional[str]
-    languages_url: Optional[str]
-    stargazers_url: Optional[str]
-    contributors_url: Optional[str]
-    subscribers_url: Optional[str]
-    subscription_url: Optional[str]
-    commits_url: Optional[str]
-    git_commits_url: Optional[str]
-    comments_url: Optional[str]
-    issue_comment_url: Optional[str]
-    contents_url: Optional[str]
-    compare_url: Optional[str]
-    merges_url: Optional[str]
-    archive_url: Optional[str]
-    downloads_url: Optional[str]
-    issues_url: Optional[str]
-    pulls_url: Optional[str]
-    milestones_url: Optional[str]
-    notifications_url: Optional[str]
-    labels_url: Optional[str]
-    releases_url: Optional[str]
-    deployments_url: Optional[str]
-    git_url: Optional[str]
-    ssh_url: Optional[str]
-    clone_url: Optional[str]
-    svn_url: Optional[str]
+    forks_url: Optional[str] = None
+    keys_url: Optional[str] = None
+    collaborators_url: Optional[str] = None
+    teams_url: Optional[str] = None
+    hooks_url: Optional[str] = None
+    issue_events_url: Optional[str] = None
+    events_url: Optional[str] = None
+    assignees_url: Optional[str] = None
+    branches_url: Optional[str] = None
+    tags_url: Optional[str] = None
+    blobs_url: Optional[str] = None
+    git_tags_url: Optional[str] = None
+    git_refs_url: Optional[str] = None
+    trees_url: Optional[str] = None
+    statuses_url: Optional[str] = None
+    languages_url: Optional[str] = None
+    stargazers_url: Optional[str] = None
+    contributors_url: Optional[str] = None
+    subscribers_url: Optional[str] = None
+    subscription_url: Optional[str] = None
+    commits_url: Optional[str] = None
+    git_commits_url: Optional[str] = None
+    comments_url: Optional[str] = None
+    issue_comment_url: Optional[str] = None
+    contents_url: Optional[str] = None
+    compare_url: Optional[str] = None
+    merges_url: Optional[str] = None
+    archive_url: Optional[str] = None
+    downloads_url: Optional[str] = None
+    issues_url: Optional[str] = None
+    pulls_url: Optional[str] = None
+    milestones_url: Optional[str] = None
+    notifications_url: Optional[str] = None
+    labels_url: Optional[str] = None
+    releases_url: Optional[str] = None
+    deployments_url: Optional[str] = None
+    git_url: Optional[str] = None
+    ssh_url: Optional[str] = None
+    clone_url: Optional[str] = None
+    svn_url: Optional[str] = None
 
     @classmethod
     def create_from_metadata(
@@ -1448,7 +1594,6 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -1652,6 +1797,10 @@ specifically with a Node object.</p>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="repograph.entities.graph.models.nodes.Repository.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="repograph.entities.graph.models.nodes.Repository.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
@@ -1789,6 +1938,14 @@ specifically with a Node object.</p>
 Repository</p></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.ReturnValue"><code class="flex name class">
 <span>class <span class="ident">ReturnValue</span></span>
@@ -1807,7 +1964,7 @@ Repository</p></div>
         type (str): The inferred type of the variable, usually from a type hint.
     &#34;&#34;&#34;
 
-    name: Optional[str]
+    name: Optional[str] = None
     type: Optional[str] = &#34;Any&#34;</code></pre>
 </details>
 <div class="desc"><p>Node representing a return value from a function.</p>
@@ -1835,7 +1992,6 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
@@ -1843,6 +1999,10 @@ specifically with a Node object.</p>
 </ul>
 <h3>Class variables</h3>
 <dl>
+<dt id="repograph.entities.graph.models.nodes.ReturnValue.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="repograph.entities.graph.models.nodes.ReturnValue.name"><code class="name">var <span class="ident">name</span> : str | None</code></dt>
 <dd>
 <div class="desc"></div>
@@ -1852,6 +2012,14 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.Variable"><code class="flex name class">
 <span>class <span class="ident">Variable</span></span>
@@ -1903,7 +2071,6 @@ specifically with a Node object.</p>
 <li><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></li>
 <li><a title="repograph.entities.graph.models.base.BaseSubgraph" href="base.html#repograph.entities.graph.models.base.BaseSubgraph">BaseSubgraph</a></li>
 <li>pydantic.main.BaseModel</li>
-<li>pydantic.utils.Representation</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -1912,6 +2079,10 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 <dt id="repograph.entities.graph.models.nodes.Variable.inferred"><code class="name">var <span class="ident">inferred</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="repograph.entities.graph.models.nodes.Variable.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1924,6 +2095,14 @@ specifically with a Node object.</p>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="repograph.entities.graph.models.base.Node" href="base.html#repograph.entities.graph.models.base.Node">Node</a></b></code>:
+<ul class="hlist">
+<li><code><a title="repograph.entities.graph.models.base.Node.model_post_init" href="base.html#repograph.entities.graph.models.base.BaseSubgraph.model_post_init">model_post_init</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 </dl>
 </section>
@@ -1943,20 +2122,25 @@ specifically with a Node object.</p>
 <li>
 <h4><code><a title="repograph.entities.graph.models.nodes.Argument" href="#repograph.entities.graph.models.nodes.Argument">Argument</a></code></h4>
 <ul class="">
+<li><code><a title="repograph.entities.graph.models.nodes.Argument.model_config" href="#repograph.entities.graph.models.nodes.Argument.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Argument.name" href="#repograph.entities.graph.models.nodes.Argument.name">name</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Argument.type" href="#repograph.entities.graph.models.nodes.Argument.type">type</a></code></li>
 </ul>
 </li>
 <li>
 <h4><code><a title="repograph.entities.graph.models.nodes.Body" href="#repograph.entities.graph.models.nodes.Body">Body</a></code></h4>
+<ul class="">
+<li><code><a title="repograph.entities.graph.models.nodes.Body.model_config" href="#repograph.entities.graph.models.nodes.Body.model_config">model_config</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="repograph.entities.graph.models.nodes.Class" href="#repograph.entities.graph.models.nodes.Class">Class</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="repograph.entities.graph.models.nodes.Class.canonical_name" href="#repograph.entities.graph.models.nodes.Class.canonical_name">canonical_name</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Class.inferred" href="#repograph.entities.graph.models.nodes.Class.inferred">inferred</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Class.max_line_number" href="#repograph.entities.graph.models.nodes.Class.max_line_number">max_line_number</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Class.min_line_number" href="#repograph.entities.graph.models.nodes.Class.min_line_number">min_line_number</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.Class.model_config" href="#repograph.entities.graph.models.nodes.Class.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Class.name" href="#repograph.entities.graph.models.nodes.Class.name">name</a></code></li>
 </ul>
 </li>
@@ -1964,6 +2148,7 @@ specifically with a Node object.</p>
 <h4><code><a title="repograph.entities.graph.models.nodes.Directory" href="#repograph.entities.graph.models.nodes.Directory">Directory</a></code></h4>
 <ul class="">
 <li><code><a title="repograph.entities.graph.models.nodes.Directory.inferred" href="#repograph.entities.graph.models.nodes.Directory.inferred">inferred</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.Directory.model_config" href="#repograph.entities.graph.models.nodes.Directory.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Directory.name" href="#repograph.entities.graph.models.nodes.Directory.name">name</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Directory.parent_path" href="#repograph.entities.graph.models.nodes.Directory.parent_path">parent_path</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Directory.path" href="#repograph.entities.graph.models.nodes.Directory.path">path</a></code></li>
@@ -1973,6 +2158,7 @@ specifically with a Node object.</p>
 <h4><code><a title="repograph.entities.graph.models.nodes.Docstring" href="#repograph.entities.graph.models.nodes.Docstring">Docstring</a></code></h4>
 <ul class="">
 <li><code><a title="repograph.entities.graph.models.nodes.Docstring.long_description" href="#repograph.entities.graph.models.nodes.Docstring.long_description">long_description</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.Docstring.model_config" href="#repograph.entities.graph.models.nodes.Docstring.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Docstring.short_description" href="#repograph.entities.graph.models.nodes.Docstring.short_description">short_description</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Docstring.summarization" href="#repograph.entities.graph.models.nodes.Docstring.summarization">summarization</a></code></li>
 </ul>
@@ -1983,12 +2169,14 @@ specifically with a Node object.</p>
 <li><code><a title="repograph.entities.graph.models.nodes.DocstringArgument.default" href="#repograph.entities.graph.models.nodes.DocstringArgument.default">default</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.DocstringArgument.description" href="#repograph.entities.graph.models.nodes.DocstringArgument.description">description</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.DocstringArgument.is_optional" href="#repograph.entities.graph.models.nodes.DocstringArgument.is_optional">is_optional</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.DocstringArgument.model_config" href="#repograph.entities.graph.models.nodes.DocstringArgument.model_config">model_config</a></code></li>
 </ul>
 </li>
 <li>
 <h4><code><a title="repograph.entities.graph.models.nodes.DocstringRaises" href="#repograph.entities.graph.models.nodes.DocstringRaises">DocstringRaises</a></code></h4>
 <ul class="">
 <li><code><a title="repograph.entities.graph.models.nodes.DocstringRaises.description" href="#repograph.entities.graph.models.nodes.DocstringRaises.description">description</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.DocstringRaises.model_config" href="#repograph.entities.graph.models.nodes.DocstringRaises.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.DocstringRaises.type" href="#repograph.entities.graph.models.nodes.DocstringRaises.type">type</a></code></li>
 </ul>
 </li>
@@ -1997,6 +2185,7 @@ specifically with a Node object.</p>
 <ul class="">
 <li><code><a title="repograph.entities.graph.models.nodes.DocstringReturnValue.description" href="#repograph.entities.graph.models.nodes.DocstringReturnValue.description">description</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.DocstringReturnValue.is_generator" href="#repograph.entities.graph.models.nodes.DocstringReturnValue.is_generator">is_generator</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.DocstringReturnValue.model_config" href="#repograph.entities.graph.models.nodes.DocstringReturnValue.model_config">model_config</a></code></li>
 </ul>
 </li>
 <li>
@@ -2009,6 +2198,7 @@ specifically with a Node object.</p>
 <li><code><a title="repograph.entities.graph.models.nodes.Function.inferred" href="#repograph.entities.graph.models.nodes.Function.inferred">inferred</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Function.max_line_number" href="#repograph.entities.graph.models.nodes.Function.max_line_number">max_line_number</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Function.min_line_number" href="#repograph.entities.graph.models.nodes.Function.min_line_number">min_line_number</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.Function.model_config" href="#repograph.entities.graph.models.nodes.Function.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Function.name" href="#repograph.entities.graph.models.nodes.Function.name">name</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Function.source_code" href="#repograph.entities.graph.models.nodes.Function.source_code">source_code</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Function.type" href="#repograph.entities.graph.models.nodes.Function.type">type</a></code></li>
@@ -2019,6 +2209,7 @@ specifically with a Node object.</p>
 <ul class="">
 <li><code><a title="repograph.entities.graph.models.nodes.License.confidence" href="#repograph.entities.graph.models.nodes.License.confidence">confidence</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.License.license_type" href="#repograph.entities.graph.models.nodes.License.license_type">license_type</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.License.model_config" href="#repograph.entities.graph.models.nodes.License.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.License.text" href="#repograph.entities.graph.models.nodes.License.text">text</a></code></li>
 </ul>
 </li>
@@ -2030,6 +2221,7 @@ specifically with a Node object.</p>
 <li><code><a title="repograph.entities.graph.models.nodes.Module.extension" href="#repograph.entities.graph.models.nodes.Module.extension">extension</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Module.inferred" href="#repograph.entities.graph.models.nodes.Module.inferred">inferred</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Module.is_test" href="#repograph.entities.graph.models.nodes.Module.is_test">is_test</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.Module.model_config" href="#repograph.entities.graph.models.nodes.Module.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Module.name" href="#repograph.entities.graph.models.nodes.Module.name">name</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Module.parent_path" href="#repograph.entities.graph.models.nodes.Module.parent_path">parent_path</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Module.path" href="#repograph.entities.graph.models.nodes.Module.path">path</a></code></li>
@@ -2044,6 +2236,7 @@ specifically with a Node object.</p>
 <li><code><a title="repograph.entities.graph.models.nodes.Package.create_from_external_dependency" href="#repograph.entities.graph.models.nodes.Package.create_from_external_dependency">create_from_external_dependency</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Package.external" href="#repograph.entities.graph.models.nodes.Package.external">external</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Package.inferred" href="#repograph.entities.graph.models.nodes.Package.inferred">inferred</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.Package.model_config" href="#repograph.entities.graph.models.nodes.Package.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Package.name" href="#repograph.entities.graph.models.nodes.Package.name">name</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Package.parent_package" href="#repograph.entities.graph.models.nodes.Package.parent_package">parent_package</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Package.parent_path" href="#repograph.entities.graph.models.nodes.Package.parent_path">parent_path</a></code></li>
@@ -2054,6 +2247,7 @@ specifically with a Node object.</p>
 <h4><code><a title="repograph.entities.graph.models.nodes.README" href="#repograph.entities.graph.models.nodes.README">README</a></code></h4>
 <ul class="">
 <li><code><a title="repograph.entities.graph.models.nodes.README.content" href="#repograph.entities.graph.models.nodes.README.content">content</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.README.model_config" href="#repograph.entities.graph.models.nodes.README.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.README.path" href="#repograph.entities.graph.models.nodes.README.path">path</a></code></li>
 </ul>
 </li>
@@ -2111,6 +2305,7 @@ specifically with a Node object.</p>
 <li><code><a title="repograph.entities.graph.models.nodes.Repository.languages_url" href="#repograph.entities.graph.models.nodes.Repository.languages_url">languages_url</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Repository.merges_url" href="#repograph.entities.graph.models.nodes.Repository.merges_url">merges_url</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Repository.milestones_url" href="#repograph.entities.graph.models.nodes.Repository.milestones_url">milestones_url</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.Repository.model_config" href="#repograph.entities.graph.models.nodes.Repository.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Repository.name" href="#repograph.entities.graph.models.nodes.Repository.name">name</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Repository.network_count" href="#repograph.entities.graph.models.nodes.Repository.network_count">network_count</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Repository.notifications_url" href="#repograph.entities.graph.models.nodes.Repository.notifications_url">notifications_url</a></code></li>
@@ -2144,6 +2339,7 @@ specifically with a Node object.</p>
 <li>
 <h4><code><a title="repograph.entities.graph.models.nodes.ReturnValue" href="#repograph.entities.graph.models.nodes.ReturnValue">ReturnValue</a></code></h4>
 <ul class="">
+<li><code><a title="repograph.entities.graph.models.nodes.ReturnValue.model_config" href="#repograph.entities.graph.models.nodes.ReturnValue.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.ReturnValue.name" href="#repograph.entities.graph.models.nodes.ReturnValue.name">name</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.ReturnValue.type" href="#repograph.entities.graph.models.nodes.ReturnValue.type">type</a></code></li>
 </ul>
@@ -2153,6 +2349,7 @@ specifically with a Node object.</p>
 <ul class="">
 <li><code><a title="repograph.entities.graph.models.nodes.Variable.canonical_name" href="#repograph.entities.graph.models.nodes.Variable.canonical_name">canonical_name</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Variable.inferred" href="#repograph.entities.graph.models.nodes.Variable.inferred">inferred</a></code></li>
+<li><code><a title="repograph.entities.graph.models.nodes.Variable.model_config" href="#repograph.entities.graph.models.nodes.Variable.model_config">model_config</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Variable.name" href="#repograph.entities.graph.models.nodes.Variable.name">name</a></code></li>
 <li><code><a title="repograph.entities.graph.models.nodes.Variable.type" href="#repograph.entities.graph.models.nodes.Variable.type">type</a></code></li>
 </ul>
