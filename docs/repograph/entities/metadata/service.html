@@ -110,7 +110,7 @@ el.replaceWith(d);
         Returns:
             None
         &#34;&#34;&#34;
-        updated_graph = graph.copy(update={&#34;status&#34;: &#34;CREATED&#34;})
+        updated_graph = graph.model_copy(update={&#34;status&#34;: &#34;CREATED&#34;})
         self.repository.update_database(updated_graph)</code></pre>
 </details>
 <div class="desc"><p>Constructor</p>
@@ -240,7 +240,7 @@ None</p></div>
     Returns:
         None
     &#34;&#34;&#34;
-    updated_graph = graph.copy(update={&#34;status&#34;: &#34;CREATED&#34;})
+    updated_graph = graph.model_copy(update={&#34;status&#34;: &#34;CREATED&#34;})
     self.repository.update_database(updated_graph)</code></pre>
 </details>
 <div class="desc"><p>Set the status of a graph to CREATED.</p>

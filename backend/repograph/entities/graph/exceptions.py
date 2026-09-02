@@ -1,9 +1,9 @@
 """
 Custom exceptions for the graph entity.
 """
+
 # pip imports
 from fastapi import status
-
 
 # Exceptions imports
 from repograph.utils.exception_handlers import RepographException

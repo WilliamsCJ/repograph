@@ -1,6 +1,7 @@
 """
 Data models for the Metadata entity.
 """
+
 # Base imports
 import datetime
 

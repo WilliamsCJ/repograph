@@ -1,6 +1,7 @@
 """
 Graph database repository.
 """
+
 # Base imports
 from typing import Any, Dict, List, Tuple
 from logging import getLogger
