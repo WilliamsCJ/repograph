@@ -175,15 +175,17 @@ they were created in.</p>
 </code></dt>
 <dd>
 <div class="desc"><p>Add a Graph to the metadata database.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>Graph</code></dt>
 <dd>Graph metadata.</dd>
 <dt><strong><code>db</code></strong> :&ensp;<code>sqlite3.Connection</code></dt>
 <dd>Transaction</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<p>Returns
+-----=
+None</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -210,13 +212,15 @@ they were created in.</p>
     db.commit()</code></pre>
 </details>
 <div class="desc"><p>Delete graph metadata</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>Neo4j name of the graph.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<p>Returns
+-----=
+None</p></div>
 </dd>
 <dt id="repograph.entities.metadata.repository.MetadataRepository.get_transaction"><code class="name flex">
 <span>def <span class="ident">get_transaction</span></span>(<span>self) ‑> sqlite3.Connection</span>
@@ -262,8 +266,9 @@ they were created in.</p>
     )</code></pre>
 </details>
 <div class="desc"><p>List the metadata for all databases.</p>
-<h2 id="returns">Returns</h2>
-<p>List[Graph]</p></div>
+<p>Returns
+-----=
+List[Graph]</p></div>
 </dd>
 <dt id="repograph.entities.metadata.repository.MetadataRepository.update_database"><code class="name flex">
 <span>def <span class="ident">update_database</span></span>(<span>self,<br>graph: <a title="repograph.entities.metadata.models.Graph" href="models.html#repograph.entities.metadata.models.Graph">Graph</a>) ‑> None</span>
@@ -290,13 +295,15 @@ they were created in.</p>
     db.commit()</code></pre>
 </details>
 <div class="desc"><p>Update the details of a graph.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>Graph</code></dt>
 <dd>Updated Graph object.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<p>Returns
+-----=
+None</p></div>
 </dd>
 </dl>
 </dd>

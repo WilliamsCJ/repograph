@@ -243,8 +243,9 @@ el.replaceWith(d);
         )</code></pre>
 </details>
 <div class="desc"><p>Constructor</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>GraphService</code></dt>
 <dd>The Graph Service.</dd>
 <dt><strong><code>summarization</code></strong> :&ensp;<code>SummarizationService</code></dt>
@@ -293,8 +294,9 @@ def cleanup_inspect4py_output() -&gt; None:
     log.info(&#34;Done!&#34;)</code></pre>
 </details>
 <div class="desc"><p>Remove the temporary inspect4py output folder</p>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<p>Returns
+-----=
+None</p></div>
 </dd>
 <dt id="repograph.entities.build.service.BuildService.parse_inspect4py_output"><code class="name flex">
 <span>def <span class="ident">parse_inspect4py_output</span></span>(<span>path) ‑> Tuple[dict[str, Any], dict[str, Any]]</span>
@@ -331,13 +333,13 @@ def parse_inspect4py_output(path) -&gt; Tuple[dict[str, Any], dict[str, Any]]:
     return di, cg</code></pre>
 </details>
 <div class="desc"><p>Parse the output directory of inspect4py.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
 <dd>Path to the output directory.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>dict[str, Any]</code></dt>
 <dd>directory_info.json</dd>
 <dt><code>dict[str, Any]</code></dt>
@@ -438,8 +440,9 @@ def parse_inspect4py_output(path) -&gt; Tuple[dict[str, Any], dict[str, Any]]:
 </details>
 <div class="desc"><p>Build a
 graph using the input repositories.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>input_list</code></strong> :&ensp;<code>List[str]</code></dt>
 <dd>The list of paths to repositories to add the graph.</dd>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
@@ -449,8 +452,9 @@ graph using the input repositories.</p>
 <dt><strong><code>prune</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Whether to prune existing nodes from the graph.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<p>Returns
+-----=
+None</p></div>
 </dd>
 <dt id="repograph.entities.build.service.BuildService.call_inspect4py"><code class="name flex">
 <span>def <span class="ident">call_inspect4py</span></span>(<span>self, input_path: str, output_path: str) ‑> str</span>
@@ -504,15 +508,17 @@ graph using the input repositories.</p>
     return output_path</code></pre>
 </details>
 <div class="desc"><p>Call inspect4py for code analysis and extraction.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>input_path</code></strong> :&ensp;<code>str</code></dt>
 <dd>The path of the repository</dd>
 <dt><strong><code>output_path</code></strong> :&ensp;<code>str</code></dt>
 <dd>The path to output inspect4py to.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>output_path (str)</p></div>
+<p>Returns
+-----=
+output_path (str)</p></div>
 </dd>
 </dl>
 </dd>

@@ -425,13 +425,13 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Find possibly incorrect docstrings.</p>
 <p>Cosine similarity between docstring and generated summarization is less than 0.5</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph name.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>List[PossibleIncorrectDocstring]</code></dt>
 <dd>The possibly incorrect docstrings</dd>
 </dl></div>
@@ -470,13 +470,13 @@ el.replaceWith(d);
     )</code></pre>
 </details>
 <div class="desc"><p>Find nodes missing docstrings</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>Graph to query.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>List[MissingDocstring]</code></dt>
 <dd>Results</dd>
 </dl></div>
@@ -537,8 +537,9 @@ el.replaceWith(d);
     )</code></pre>
 </details>
 <div class="desc"><p>Finds similar functions using semantic search of function summarizations.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph name.</dd>
 <dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
@@ -548,8 +549,9 @@ el.replaceWith(d);
 <dt><strong><code>limit</code></strong> :&ensp;<code>int</code></dt>
 <dd>The maximum number of results to return in the result set. For pagination.</dd>
 </dl>
-<h2 id="return">Return</h2>
-<p>SemanticSearchResultSet</p></div>
+<p>Return
+-----=
+SemanticSearchResultSet</p></div>
 </dd>
 <dt id="repograph.entities.search.service.SearchService.get_available_search_queries"><code class="name flex">
 <span>def <span class="ident">get_available_search_queries</span></span>(<span>self) ‑> List[<a title="repograph.entities.search.models.AvailableSearchQuery" href="models.html#repograph.entities.search.models.AvailableSearchQuery">AvailableSearchQuery</a>]</span>
@@ -629,15 +631,17 @@ el.replaceWith(d);
     )</code></pre>
 </details>
 <div class="desc"><p>Construct the results for the docstrings query.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>SearchQueryResult</p></div>
+<p>Returns
+-----=
+SearchQueryResult</p></div>
 </dd>
 <dt id="repograph.entities.search.service.SearchService.search_files"><code class="name flex">
 <span>def <span class="ident">search_files</span></span>(<span>self, graph_name: str, repository: str | None = None)</span>
@@ -664,15 +668,17 @@ el.replaceWith(d);
     )</code></pre>
 </details>
 <div class="desc"><p>Construct the results for the files query.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>SearchQueryResult</p></div>
+<p>Returns
+-----=
+SearchQueryResult</p></div>
 </dd>
 <dt id="repograph.entities.search.service.SearchService.search_functions_and_classes"><code class="name flex">
 <span>def <span class="ident">search_functions_and_classes</span></span>(<span>self, graph_name: str, repository: str | None = None)</span>
@@ -703,15 +709,17 @@ el.replaceWith(d);
     )</code></pre>
 </details>
 <div class="desc"><p>Construct the results for the functions and classes query.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>SearchQueryResult</p></div>
+<p>Returns
+-----=
+SearchQueryResult</p></div>
 </dd>
 <dt id="repograph.entities.search.service.SearchService.search_licenses"><code class="name flex">
 <span>def <span class="ident">search_licenses</span></span>(<span>self, graph_name: str, repository: str | None = None)</span>
@@ -740,15 +748,17 @@ el.replaceWith(d);
     )</code></pre>
 </details>
 <div class="desc"><p>Construct the results for the licenses query.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>SearchQueryResult</p></div>
+<p>Returns
+-----=
+SearchQueryResult</p></div>
 </dd>
 <dt id="repograph.entities.search.service.SearchService.search_metadata"><code class="name flex">
 <span>def <span class="ident">search_metadata</span></span>(<span>self, graph_name: str, repository: str | None = None)</span>
@@ -792,15 +802,17 @@ el.replaceWith(d);
     )</code></pre>
 </details>
 <div class="desc"><p>Construct the results for the READMEs query.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>SearchQueryResult</p></div>
+<p>Returns
+-----=
+SearchQueryResult</p></div>
 </dd>
 <dt id="repograph.entities.search.service.SearchService.search_requirements"><code class="name flex">
 <span>def <span class="ident">search_requirements</span></span>(<span>self, graph_name: str, repository: str | None = None) ‑> <a title="repograph.entities.search.models.SearchQueryResult" href="models.html#repograph.entities.search.models.SearchQueryResult">SearchQueryResult</a></span>
@@ -831,15 +843,17 @@ el.replaceWith(d);
     )</code></pre>
 </details>
 <div class="desc"><p>Construct the results for the requirements query.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str</code>, optional</dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>SearchQueryResult</p></div>
+<p>Returns
+-----=
+SearchQueryResult</p></div>
 </dd>
 <dt id="repograph.entities.search.service.SearchService.search_summarizations"><code class="name flex">
 <span>def <span class="ident">search_summarizations</span></span>(<span>self, graph_name: str, repository: str | None = None)</span>
@@ -868,15 +882,17 @@ el.replaceWith(d);
     )</code></pre>
 </details>
 <div class="desc"><p>Construct the results for the summarizations query.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>graph_name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The graph to search.</dd>
 <dt><strong><code>repository</code></strong> :&ensp;<code>str, Optional</code></dt>
 <dd>Repository to filter by.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>SearchQueryResult</p></div>
+<p>Returns
+-----=
+SearchQueryResult</p></div>
 </dd>
 </dl>
 </dd>
