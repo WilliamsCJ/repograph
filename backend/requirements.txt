@@ -3,7 +3,7 @@
 # conflicts with the setuptools pin below and makes the resolver fail outright. It is
 # installed separately with --no-deps in the Dockerfile/CI before this file.
 aiohappyeyeballs==2.5.0
-aiohttp==3.14.3
+aiohttp>=3.14.3
 aiosignal==1.4.0
 annotated-doc==0.0.5
 annotated-types==0.8.0
