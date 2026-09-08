@@ -192,7 +192,7 @@ threadpoolctl==3.1.0
 tinycss2==1.4.0
 tokenizers==0.22.2
 tomli==2.0.1
-torch==2.8.0
+torch==2.13.0
 torchvision==0.23.0
 tornado==6.5.8
 tqdm==4.66.3
